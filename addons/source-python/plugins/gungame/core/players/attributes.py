@@ -50,8 +50,37 @@ class _PlayerAttributes(dict):
         del self[attribute]
 
 # Get the _PlayerAttributes instance
-PlayerAttributes = _PlayerAttributes()
+player_attributes = _PlayerAttributes()
 
 # Register the core attributes
-PlayerAttributes.register_attribute('level', 1)
-PlayerAttributes.register_attribute('multikill', 0)
+player_attributes.register_attribute('level', 1)
+player_attributes.register_attribute('multikill', 0)
+
+
+class _AttributeHook(list):
+    def __init__(self, name):
+        self.name = name
+
+    def append(self, callback):
+        if callback in self:
+            raise
+        if not callable(callback):
+            raise
+        super(_AttributeHook, self).append(callback)
+
+    def remove(self, callback):
+        super(_AttributeHook, self).remove(callback)
+        if not self:
+            attribute_hooks[self.name]
+
+    def call_callbacks(self, player, value):
+        for callback in self:
+            callback(player, self.name, value)
+
+
+class _AttributeHooks(dict):
+    def __missing__(self, item):
+        value = self[item] = _AttributeHook(item)
+        return value
+
+attribute_hooks = _AttributeHooks()

@@ -20,14 +20,14 @@ class GG_Plugin_Loaded(CustomEvent):
     ''''''
 
     plugin = StringVariable('The name of the plugin that was loaded')
-    type = StringVariable('The type of plugin that was loaded')
+    plugin_type = StringVariable('The type of plugin that was loaded')
 
 
 class GG_Plugin_Unloaded(CustomEvent):
     ''''''
 
     plugin = StringVariable('The name of the plugin that was unloaded')
-    type = StringVariable('The type of plugin that was unloaded')
+    plugin_type = StringVariable('The type of plugin that was unloaded')
 
 
 # =============================================================================

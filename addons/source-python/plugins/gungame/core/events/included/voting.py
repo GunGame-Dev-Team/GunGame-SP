@@ -20,9 +20,13 @@ from gungame.core.events.resource import GGResourceFile
 class GG_Vote_Start(CustomEvent):
     ''''''
 
+    vote_type = StringVariable('The type of vote')
+
 
 class GG_Vote_End(CustomEvent):
     ''''''
+
+    winner = StringVariable('The winning choice')
 
 
 class GG_Vote_Submit(CustomEvent):
@@ -34,6 +38,8 @@ class GG_Vote_Submit(CustomEvent):
 
 class GG_Vote_Canceled(CustomEvent):
     ''''''
+
+    reason = StringVariable('The reason the vote was canceled')
 
 
 # =============================================================================

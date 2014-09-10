@@ -5,8 +5,8 @@
 # =============================================================================
 # GunGame Imports
 #   Players
-from gungame.core.players.attributes import PlayerAttributes
-from gungame.core.players.instance import _GunGamePlayer
+from gungame.core.players.attributes import player_attributes
+from gungame.core.players.instance import GunGamePlayer
 
 
 # =============================================================================
@@ -18,8 +18,16 @@ class _PlayerDictionary(dict):
     def __missing__(self, userid):
         '''Called when a userid is not in the dictionary'''
 
+        # Get the player's index
+        index = index_from_userid(userid)
+
+        # Is the player no longer on the server?
+        if index is None:
+            raise ValueError(
+                'Invalid userid "{0}"'.format(userid))
+
         # Get the _GunGamePlayer instance for the userid
-        player = self[userid] = _GunGamePlayer(userid)
+        player = self[userid] = _GunGamePlayer(index)
 
         # Loop through all items in the dictionary
         for other in self:
@@ -46,10 +54,10 @@ class _PlayerDictionary(dict):
             instance = None
 
         # Loop through all registered attributes
-        for attribute in PlayerAttributes:
+        for attribute in player_attributes:
 
             # Does the previous instance have the given attribute?
-            if not instance is None and hasattr(self[instance], attribute):
+            if instance is not None and hasattr(self[instance], attribute):
 
                 # Set the player's attribute to the previous instance's
                 setattr(player, attribute, getattr(instance, attribute))
@@ -58,10 +66,11 @@ class _PlayerDictionary(dict):
             else:
 
                 # Set the player's attribute to the default value
-                setattr(player, attribute, PlayerAttributes[attribute].default)
+                setattr(
+                    player, attribute, player_attributes[attribute].default)
 
         # Was a previous instance found?
-        if not instance is None:
+        if instance is not None:
 
             # Remove the previous instance from the dictionary
             del self[instance]
@@ -70,4 +79,4 @@ class _PlayerDictionary(dict):
         return player
 
 # Get the _PlayerDictionary instance
-PlayerDictionary = _PlayerDictionary()
+player_dictionary = _PlayerDictionary()

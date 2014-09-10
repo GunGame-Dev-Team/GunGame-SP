@@ -92,8 +92,10 @@ def player_death(game_event):
     aplayer = PlayerDictionary[attacker]
     if vplayer.team == aplayer.team:
         return
-    if aplayer.multikill >= get_level_multikill(aplayer.level):
-        if aplayer.level == get_max_levels():
+    if game_event.get_string('weapon') != aplayer.level_weapon:
+        return
+    if aplayer.multikill >= aplayer.level_multikill:
+        if aplayer.level == active_weapon_order.max_levels:
             # Player wins!!!
             return
         aplayer.level += 1
