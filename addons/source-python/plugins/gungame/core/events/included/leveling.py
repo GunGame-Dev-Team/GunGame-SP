@@ -39,6 +39,8 @@ class GG_LevelDown(CustomEvent):
 
     userid = leveler = ShortVariable(
         'The userid of the player that leveled down')
+    attacker = ShortVariable(
+        'The userid of the player that caused the level down')
     old_level = ByteVariable('The old level of the player that leveled down')
     new_level = ByteVariable('The new level of the player that leveled down')
     reason = StringVariable('The reason for the leveldown')
