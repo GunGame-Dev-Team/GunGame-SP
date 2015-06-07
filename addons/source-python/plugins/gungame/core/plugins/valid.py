@@ -47,7 +47,7 @@ class _ValidPlugins(object):
         for plugin_type in ('included', 'custom'):
             if plugin in getattr(self, plugin_type):
                 return plugin_type
-        raise ValueError('No such plugin "%s"' % plugin)
+        raise ValueError('No such plugin "{0}"'.format(plugin))
 
     @property
     def included(self):
@@ -65,9 +65,12 @@ class _ValidPlugins(object):
     def _get_plugins_by_type(plugin_type):
         plugins = {}
         for plugin in GUNGAME_PLUGIN_PATH.joinpath(plugin_type).dirs():
+            if plugin.namebase == '__pycache__':
+                continue
             if not plugin.joinpath(plugin.namebase + '.py').isfile():
                 raise GGPluginFileNotFoundError()
-            module = 'gungame.plugins.%s.%s' % (plugin_type, plugin.namebase)
+            module = 'gungame.plugins.{0}.{1}'.format(
+                plugin_type, plugin.namebase)
             values = __import__(module, fromlist=[''])
             if type(values.__path__).__name__ == '_NamespacePath':
                 continue

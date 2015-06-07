@@ -19,7 +19,7 @@ GGPluginsQueueLogger = GGPluginsLogger.queue
 # >> CLASSES
 # =============================================================================
 class _PluginQueue(dict):
-    ''''''
+    """"""
 
     manager = GGPluginManager
     translations = manager.translations
@@ -46,7 +46,7 @@ class _PluginQueue(dict):
         del self['reload']
 
     def _unload_plugins(self):
-        ''''''
+        """"""
 
         # Loop through all plugins to unload
         for plugin_name in self['unload']:
@@ -59,7 +59,7 @@ class _PluginQueue(dict):
                 'Successful Unload'].get_string(plugin=plugin_name))
 
     def _load_plugins(self):
-        ''''''
+        """"""
 
         # 
         for plugin_name in self['load']:
@@ -81,5 +81,5 @@ class _PluginQueue(dict):
             self.logger.log_message(self.prefix + self.translations[
                 'Successful Load'].get_string(plugin=plugin_name))
 
-# Get the PluginQueue instance
-PluginQueue = _PluginQueue()
+# Get the _PluginQueue instance
+plugin_queue = _PluginQueue()
