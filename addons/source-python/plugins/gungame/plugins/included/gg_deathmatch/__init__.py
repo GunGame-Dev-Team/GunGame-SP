@@ -1,17 +1,19 @@
 # ../gungame/addons/included/gg_deathmatch/__init__.py
 
+"""Respawn players when they die."""
+
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
 # Source.Python Imports
-#   Addons
-from addons.info import AddonInfo
+#   Plugins
+from plugins.info import PluginInfo
 
 
 # =============================================================================
-# >> ADDON INFO
+# >> PLUGIN INFO
 # =============================================================================
-info = AddonInfo()
+info = PluginInfo()
 info.name = 'gg_deathmatch'
 info.title = 'GG Deathmatch'
 info.author = 'GG Dev Team'

@@ -1,11 +1,13 @@
-# ../gungame/addons/included/deathmatch/deathmatch_config.py
+# ../gungame/plugins/included/gg_deathmatch/gg_deathmatch_config.py
+
+"""Creates the gg_deathmatch configuration."""
 
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Python Imports
+# Site-Package Imports
 #   Path
-from path import path
+from path import Path
 
 # GunGame Imports
 #   Config
@@ -17,9 +19,9 @@ from gungame.core.translations.strings import GunGameLangStrings
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
-_name = path(__file__).parent.namebase
+_name = Path(__file__).parent.namebase
 
-_strings = GGLangStrings(_name)
+_strings = GunGameLangStrings(_name)
 
 
 # =============================================================================
