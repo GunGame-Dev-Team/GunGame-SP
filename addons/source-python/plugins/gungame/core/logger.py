@@ -3,7 +3,7 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-from cvar_c import ConVar
+from cvars import ConVar
 from loggers import LogManager
 
 
