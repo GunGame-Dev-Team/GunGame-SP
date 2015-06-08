@@ -47,9 +47,7 @@ class GG_Unload(CustomEvent):
 
     """Called when GunGame is unloading."""
 
-
 # =============================================================================
 # >> RESOURCE FILE
 # =============================================================================
-GGIncludedPlugins = GGResourceFile(
-    'match', GG_Win, GG_Start, GG_Map_End, GG_Load, GG_Unload)
+GGResourceFile('match', GG_Win, GG_Start, GG_Map_End, GG_Load, GG_Unload)

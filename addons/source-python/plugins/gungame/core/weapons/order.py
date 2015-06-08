@@ -1,3 +1,9 @@
+# ../gungame/core/weapons/order.py
+
+"""Provides a weapon order based storage class."""
+
+from random import shuffle
+
 from cvars import ConVar
 from filters.weapons import WeaponClassIter
 from gungame.core.weapons.errors import WeaponOrderError
@@ -11,10 +17,10 @@ _multikill_weapons = _primary_weapons + _secondary_weapons
 
 class WeaponOrder(dict):
 
-    """"""
+    """Dictionary used to store a weapon order."""
 
     def __init__(self, filepath):
-        """"""
+        """Store the values from the given path."""
         super(WeaponOrder, self).__init__()
         with filepath.open() as open_file:
             level = 0
@@ -42,28 +48,31 @@ class WeaponOrder(dict):
 
     @property
     def name(self):
-        """"""
+        """Return the weapon order's name."""
         return self._name
 
     @property
     def filepath(self):
-        """"""
+        """Return the weapon order's file path."""
         return self._filepath
 
     @property
     def title(self):
-        """"""
+        """Return the weapon order's title."""
         return self._title
 
     @property
     def max_levels(self):
+        """Return the maximum number of levels for the weapon order."""
         return len(self)
 
     @property
     def random_order(self):
+        """Return the randomized weapon order."""
         return self._random_order
 
     def randomize_order(self):
+        """Get a randomized weapon order based on the instance."""
         self._random_order = dict()
         randomize_weapons = self.values()
         keep_at_end = list()
@@ -76,27 +85,27 @@ class WeaponOrder(dict):
             randomize_weapons = randomize_weapons[:-len(keep_at_end)]
         shuffle(randomize_weapons)
         randomize_weapons.extend(keep_at_end)
-        for level, value in enumerate(values, 1):
+        for level, value in enumerate(randomize_weapons, 1):
             self._random_order[level] = value
 
 
 class _LevelWeapon(object):
 
-    """"""
+    """Class used to store level specific values."""
 
     def __init__(self, weapon, multikill):
-        """"""
+        """Store the base values."""
         self._weapon = weapon
         self._multikill = multikill
 
     @property
     def weapon(self):
-        """"""
+        """Return the level's weapon."""
         return self._weapon
 
     @property
     def multikill(self):
-        """"""
+        """Return the multikill value for the level."""
         override = ConVar('gg_multikill_override').get_int()
         if self.weapon in _multikill_weapons and override:
             return override

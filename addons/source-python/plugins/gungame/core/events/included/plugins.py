@@ -37,5 +37,4 @@ class GG_Plugin_Unloaded(CustomEvent):
 # =============================================================================
 # >> RESOURCE FILE
 # =============================================================================
-GGIncludedPlugins = GGResourceFile(
-    'plugins', GG_Plugin_Loaded, GG_Plugin_Unloaded)
+GGResourceFile('plugins', GG_Plugin_Loaded, GG_Plugin_Unloaded)

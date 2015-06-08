@@ -1,3 +1,14 @@
-from gungame.core.logger import GGLogger
+# ../gungame/core/__init__.py
 
-GGCoreLogger = GGLogger.core
+"""Core functionality for GunGame."""
+
+# =============================================================================
+# >> IMPORTS
+# =============================================================================
+from gungame.core.logger import gg_logger
+
+
+# =============================================================================
+# >> GLOBAL VARIABLES
+# =============================================================================
+gg_core_logger = gg_logger.core

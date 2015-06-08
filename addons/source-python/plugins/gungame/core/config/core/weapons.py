@@ -1,3 +1,7 @@
+# ../gungame/core/config/core/weapons.py
+
+"""GunGame weapons configuration."""
+
 from gungame.core.config.manager import GunGameConfigManager
 
 with GunGameConfigManager('weapon_settings') as config:

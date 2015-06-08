@@ -1,3 +1,14 @@
-from gungame.core import GGCoreLogger
+# ../gungame/core/plugins/__init__.py
 
-GGPluginsLogger = GGCoreLogger.plugins
+"""Plugin based functionality."""
+
+# =============================================================================
+# >> IMPORTS
+# =============================================================================
+from gungame.core import gg_core_logger
+
+
+# =============================================================================
+# >> GLOBAL VARIABLES
+# =============================================================================
+gg_plugins_logger = gg_core_logger.plugins

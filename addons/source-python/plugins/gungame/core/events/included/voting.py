@@ -51,5 +51,5 @@ class GG_Vote_Canceled(CustomEvent):
 # =============================================================================
 # >> RESOURCE FILE
 # =============================================================================
-GGIncludedPlugins = GGResourceFile(
+GGResourceFile(
     'voting', GG_Vote_Start, GG_Vote_End, GG_Vote_Submit, GG_Vote_Canceled)

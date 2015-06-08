@@ -1,4 +1,4 @@
-# ../gungame/addons/included/gg_deathmatch/gg_deathmatch.py
+# ../gungame/plugins/included/gg_deathmatch/gg_deathmatch.py
 
 """Plugin that respawns players when the die."""
 
@@ -14,6 +14,7 @@ from cvars import ConVar
 #   Events
 from events import Event
 #   Listeners
+from listeners import LevelShutdown
 from listeners.tick import TickRepeat
 from listeners.tick import TickRepeatStatus
 #   Messages
@@ -50,10 +51,11 @@ respawn_delay = ConVar('gg_deathmatch_respawn_delay')
 # =============================================================================
 class Player(PlayerEntity):
 
-    """Class used to interact with a specific player"""
+    """Class used to interact with a specific player."""
 
     def __init__(self, index):
-        """Storethe TickRepeat instance for the player."""
+        """Store the TickRepeat instance for the player."""
+        super(Player, self).__init__(index)
         self._repeat = TickRepeat(self._countdown)
 
     @property
@@ -66,7 +68,7 @@ class Player(PlayerEntity):
         self.repeat.start(1, respawn_delay.get_int())
 
     def _countdown(self):
-        """Sends messages about impending respawn and respawns the player."""
+        """Send messages about impending respawn and respawns the player."""
         # Is the player alive?
         if not self.isdead:
 
@@ -93,11 +95,11 @@ class Player(PlayerEntity):
             self.dispatch_spawn()
 
     def stop_repeat(self):
-        """Stops the player's repeat."""
+        """Stop the player's repeat."""
         self.repeat.stop()
 
     def is_repeat_active(self):
-        """Returns whether the player's repeat is running."""
+        """Return whether the player's repeat is running."""
         return self.repeat.status == TickRepeatStatus.RUNNING
 
 
@@ -165,12 +167,6 @@ def joinclass(playerinfo, command):
 # >> EVENTS
 # =============================================================================
 @Event
-def server_spawn(game_event):
-    """Clears the deathmatch_players dictionary on map change"""
-    deathmatch_players.clear()
-
-
-@Event
 def player_spawn(game_event):
     """Start bot repeats in case they join mid round."""
     # Get the player's userid
@@ -194,3 +190,12 @@ def player_death(game_event):
 
     # Start the player's repeat
     deathmatch_players[userid].start_repeat()
+
+
+# =============================================================================
+# >> LISTENERS
+# =============================================================================
+@LevelShutdown
+def level_shutdown():
+    """Clear the deathmatch_players dictionary on map change."""
+    deathmatch_players.clear()

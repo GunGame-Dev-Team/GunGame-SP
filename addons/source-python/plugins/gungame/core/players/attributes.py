@@ -1,29 +1,31 @@
 # ../gungame/core/players/attributes.py
 
+"""Player attribute functionality."""
+
 
 # =============================================================================
 # >> CLASSES
 # =============================================================================
 class _Attribute(object):
-    """Class used to store an attribute with its default value"""
+
+    """Class used to store an attribute with its default value."""
 
     def __init__(self, default):
-        """Stores the default value on instantiation"""
+        """Store the default value on instantiation."""
         self._default = default
 
     @property
     def default(self):
-        """Returns the default value of the attribute"""
+        """Return the default value of the attribute."""
         return self._default
 
 
 class _PlayerAttributes(dict):
-    """Dictionary class used to store player attributes for GunGame"""
+
+    """Dictionary class used to store player attributes for GunGame."""
 
     def __setitem__(self, item, value):
-        """Override __setitem__ to verify the item is not in the
-            dictionary and the value is an _Attribute instance"""
-
+        """Verify the given values before setting the item."""
         # Is the attribute already in the dictionary?
         if item in self:
 
@@ -43,11 +45,11 @@ class _PlayerAttributes(dict):
         super(_PlayerAttributes, self).__setitem__(item, value)
 
     def register_attribute(self, attribute, default):
-        """Stores the attribute in the dictionary with its default value"""
+        """Store the attribute in the dictionary with its default value."""
         self[attribute] = _Attribute(default)
 
     def unregister_attribute(self, attribute):
-        """Removes the attribute from the dictionary"""
+        """Remove the attribute from the dictionary."""
         del self[attribute]
 
 # Get the _PlayerAttributes instance
@@ -60,22 +62,24 @@ player_attributes.register_attribute('wins', 0)
 
 
 class _AttributeHook(list):
+
+    """Class that stores a list of callbacks for the attribute hook."""
+
     def __init__(self, attribute):
+        """Store the attribute's name."""
+        super(_AttributeHook, self).__init__()
         self.attribute = attribute
 
     def append(self, callback):
+        """Verify the callback is not a member and is callable."""
         if callback in self:
             raise
         if not callable(callback):
             raise
         super(_AttributeHook, self).append(callback)
 
-    def remove(self, callback):
-        super(_AttributeHook, self).remove(callback)
-        if not self:
-            attribute_hooks[self.attribute]
-
     def call_callbacks(self, player, value):
+        """Call all callbacks for the hook."""
         return_value = True
         for callback in self:
             callback_value = callback(player, self.attribute, value)
@@ -85,16 +89,22 @@ class _AttributeHook(list):
 
 
 class _AttributeHooks(dict):
+
+    """Dictionary used to store attribute hooks by name."""
+
     def __missing__(self, attribute):
+        """Add the attribute to the dictionary as a hook."""
         value = self[attribute] = _AttributeHook(attribute)
         return value
 
     def register_callback(self, attribute, callback):
+        """Verify the callback befor adding it to the attribute's hooks."""
         if not callable(callback):
             raise
         self[attribute].append(callback)
 
     def unregister_callback(self, attribute, callback):
+        """Verify the given values before removing the callback."""
         if attribute not in self:
             raise
         if callback not in self[attribute]:

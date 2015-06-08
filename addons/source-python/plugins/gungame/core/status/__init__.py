@@ -1,5 +1,7 @@
 # ../gungame/core/status/__init__.py
 
+"""GunGame status values."""
+
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
@@ -7,11 +9,13 @@
 #   Enum
 from enum import IntEnum
 
+
 # =============================================================================
 # >> CLASSES
 # =============================================================================
 class GunGameStatus(IntEnum):
-    """Base Status values"""
+
+    """Base Status values."""
 
     INACTIVE = 0
     ACTIVE = 1
@@ -20,14 +24,14 @@ class GunGameStatus(IntEnum):
 
 
 class _GunGameStatus(object):
-    """Stores statuses for GunGame"""
+
+    """Stores statuses for GunGame."""
 
     # Set the base attributes all to False to start
     match = loading = round = GunGameStatus.INACTIVE
 
     def __setattr__(self, attribute, value):
-        """Override __setattr__ to only allow proper
-            attributes to be set to proper values"""
+        """Verify the attribute and value prior to setting."""
         # Is the given attribute a GunGame attribute?
         if not hasattr(self, attribute):
 
@@ -35,8 +39,8 @@ class _GunGameStatus(object):
             raise AttributeError(
                 'Cannot set attribute "{0}"'.format(attribute))
 
-        # Is the given value a boolean?
-        if type(value) is not GunGameStatus:
+        # Is the given value a GunGameStatus value?
+        if not isinstance(value, GunGameStatus):
 
             # If not, raise an error
             raise ValueError(

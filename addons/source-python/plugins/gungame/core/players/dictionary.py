@@ -1,5 +1,7 @@
 # ../gungame/core/players/dictionary.py
 
+"""Player storage dictionary."""
+
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
@@ -20,12 +22,12 @@ from gungame.core.players.instance import GunGamePlayer
 # =============================================================================
 class _PlayerDictionary(dict):
 
-    """Dictionary used to store players for GunGame"""
+    """Dictionary used to store players for GunGame."""
 
     _removed_players = defaultdict(dict)
 
     def __missing__(self, userid):
-        """Called when a userid is not in the dictionary"""
+        """Called when a userid is not in the dictionary."""
         # Get the player's index
         index = index_from_userid(userid, False)
 
@@ -75,6 +77,7 @@ class _PlayerDictionary(dict):
         return player
 
     def safe_remove(self, userid):
+        """Store the player's values in case they rejoin."""
         if userid not in self:
             return
         uniqueid = self[userid].uniqueid
@@ -84,6 +87,7 @@ class _PlayerDictionary(dict):
         del self[userid]
 
     def clear(self):
+        """Clear the removed players dictionary and the player dictionary."""
         self._removed_players.clear()
         super(_PlayerDictionary, self).clear()
 

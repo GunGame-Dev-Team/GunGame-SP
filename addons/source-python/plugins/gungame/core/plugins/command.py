@@ -10,17 +10,17 @@
 from plugins.command import SubCommandManager
 
 # Script Imports
-from gungame.core.plugins import GGPluginsLogger
+from gungame.core.plugins import gg_plugins_logger
 from gungame.core.plugins.instance import GGLoadedPlugin
-from gungame.core.plugins.manager import GGPluginManager
+from gungame.core.plugins.manager import gg_plugin_manager
 from gungame.core.plugins.queue import plugin_queue
-from gungame.core.plugins.valid import ValidPlugins
+from gungame.core.plugins.valid import valid_plugins
 
 
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
-GGPluginsCommandLogger = GGPluginsLogger.command
+gg_plugins_command_logger = gg_plugins_logger.command
 
 
 # =============================================================================
@@ -30,22 +30,24 @@ class _GGSubCommandManager(SubCommandManager):
 
     """Class used to integrate the "gg" command."""
 
-    manager = GGPluginManager
+    manager = gg_plugin_manager
     instance = GGLoadedPlugin
-    logger = GGPluginsCommandLogger
+    logger = gg_plugins_command_logger
 
     def __init__(self, *args, **kwargs):
-        """"""
-        # 
+        """Initialize the instance and set the queue prefix."""
+        # Call the super class' __init__
         super(_GGSubCommandManager, self).__init__(*args, **kwargs)
 
-        # 
+        # Set the queue's prefix
         plugin_queue.prefix = self.prefix
 
     def load_plugin(self, plugin_name):
-        """Loads a plugin by name."""
-        """This method is overwritten so that the plugin
-            will be loaded after a one tick delay."""
+        """Load a plugin by name.
+
+        This method is overwritten so that the plugin
+            will be loaded after a one tick delay.
+        """
         # Is the plugin already loaded?
         if plugin_name in self.manager:
 
@@ -60,7 +62,7 @@ class _GGSubCommandManager(SubCommandManager):
             return
 
         # Was an invalid plugin name given?
-        if plugin_name not in ValidPlugins.all:
+        if plugin_name not in valid_plugins.all:
             print('Not a valid plugin!!!')
             return
 
@@ -71,11 +73,13 @@ class _GGSubCommandManager(SubCommandManager):
     load_plugin.args = ['<plugin>']
 
     def unload_plugin(self, plugin_name):
-        """Unloads a plugin by name."""
-        """This method is overwritten so that the plugin
-            will be unloaded after a one tick delay."""
+        """Unload a plugin by name.
+
+        This method is overwritten so that the plugin
+            will be unloaded after a one tick delay.
+        """
         # Is the plugin loaded?
-        if not plugin_name in self.manager:
+        if plugin_name not in self.manager:
 
             # Is the plugin in the "load" queue?
             if 'load' in plugin_queue and plugin_name in plugin_queue['load']:
@@ -92,58 +96,52 @@ class _GGSubCommandManager(SubCommandManager):
     # Set the method's required arguments
     unload_plugin.args = ['<plugin>']
 
-    def reload_plugin(self, plugin_name=None):
-        """Reloads a plugin by name."""
-        """This method is overwritten so that the plugin will properly
-            be unloaded and loaded after a one tick delay each."""
-        # 
-        if plugin_name is None:
+    def reload_plugin(self, plugin_name):
+        """Reload a plugin by name.
 
-            # 
-            
+        This method is overwritten so that the plugin will properly
+            be unloaded and loaded after a one tick delay each.
+        """
+        # Is the plugin not loaded?
+        if plugin_name not in self.manager:
 
-            # 
-            return
-
-        # 
-        if not plugin_name in self.manager:
-
-            # 
+            # Attempt to load the plugin
             self.load_plugin(plugin_name)
 
-            # 
+            # No need to go further
             return
 
-        # 
+        # Add the plugin to the unload queue
         plugin_queue['unload'].add(plugin_name)
 
-        # 
+        # Add the plugin to the reload queue
         plugin_queue['reload'].add(plugin_name)
 
     # Set the method's required arguments
     reload_plugin.args = ['[plugin]']
 
     def print_version(self):
-        """"""
+        """Print the GunGame version information."""
 
     def print_credits(self):
-        """"""
+        """Print the GunGame credits."""
 
     def restart_match(self):
-        """"""
+        """Restart the match."""
+        pass
 
-# 
-GGSubCommandManager = _GGSubCommandManager('gg', 'GunGame base command.')
+# Get the "gg" command instance
+gg_command_manager = _GGSubCommandManager('gg', 'GunGame base command.')
 
-# 
-GGSubCommandManager['load'] = GGSubCommandManager.load_plugin
-GGSubCommandManager['unload'] = GGSubCommandManager.unload_plugin
-GGSubCommandManager['reload'] = GGSubCommandManager.reload_plugin
+# Add the plugin loading sub-commands
+gg_command_manager['load'] = gg_command_manager.load_plugin
+gg_command_manager['unload'] = gg_command_manager.unload_plugin
+gg_command_manager['reload'] = gg_command_manager.reload_plugin
 
-# 
-GGSubCommandManager['list'] = GGSubCommandManager.print_plugins
-GGSubCommandManager['version'] = GGSubCommandManager.print_version
-GGSubCommandManager['credits'] = GGSubCommandManager.print_credits
+# Add the GunGame information sub-commands
+gg_command_manager['list'] = gg_command_manager.print_plugins
+gg_command_manager['version'] = gg_command_manager.print_version
+gg_command_manager['credits'] = gg_command_manager.print_credits
 
-# 
-GGSubCommandManager['restart'] = GGSubCommandManager.restart_match
+# Add the restart sub-command
+gg_command_manager['restart'] = gg_command_manager.restart_match

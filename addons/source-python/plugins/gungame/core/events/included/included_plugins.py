@@ -59,6 +59,6 @@ class GG_Team_Win(CustomEvent):
 # =============================================================================
 # >> RESOURCE FILE
 # =============================================================================
-GGIncludedPlugins = GGResourceFile(
-    'included_plugins', GG_Knife_Steal,
-    GG_Multi_Level, GG_Team_Levelup, GG_Team_Win)
+GGResourceFile(
+    'included_plugins', GG_Knife_Steal, GG_Multi_Level,
+    GG_Team_Levelup, GG_Team_Win)

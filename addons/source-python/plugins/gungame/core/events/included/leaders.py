@@ -1,6 +1,6 @@
 # ../gungame/core/events/included/leaders.py
 
-"""Leader-based events."""
+"""Leader based events."""
 
 # =============================================================================
 # >> IMPORTS
@@ -74,6 +74,6 @@ class GG_Leader_Disconnect(CustomEvent):
 # =============================================================================
 # >> RESOURCE FILE
 # =============================================================================
-GGIncludedPlugins = GGResourceFile(
+GGResourceFile(
     'leaders', GG_New_Leader, GG_Tied_Leader,
     GG_Leader_LostLevel, GG_Leader_Disconnect)

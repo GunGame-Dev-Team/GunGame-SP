@@ -1,7 +1,10 @@
 # ../gungame/gungame.py
 
-""""""
+"""Weapon leveling game modification."""
 
+# =============================================================================
+# >> IMPORTS
+# =============================================================================
 from cvars.tags import sv_tags
 from filters.entities import EntityIter
 from listeners.tick import tick_delays
@@ -15,6 +18,9 @@ from gungame.core.status import gungame_status
 from gungame.core.weapons.manager import weapon_order_manager
 
 
+# =============================================================================
+# >> LOAD & UNLOAD FUNCTIONS
+# =============================================================================
 def load():
     """Initialize GunGame."""
     # Initialize GunGame logging
@@ -74,7 +80,11 @@ def unload():
         entity.enable()
 
 
+# =============================================================================
+# >> HELPER FUNCTIONS
+# =============================================================================
 def start_match():
+    """Start the match if not already started or on hold."""
     if gungame_status.match is not GunGameStatus.INACTIVE:
         return
     GG_Start().fire()

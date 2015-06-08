@@ -1,32 +1,36 @@
 # ../gungame/core/plugins/queue.py
 
+"""Provides a plugin queue class that loads/unloads plugins."""
+
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
 from tick.delays import TickDelays
 
-from gungame.core.plugins import GGPluginsLogger
-from gungame.core.plugins.manager import GGPluginManager
+from gungame.core.plugins import gg_plugins_logger
+from gungame.core.plugins.manager import gg_plugin_manager
 
 
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
-GGPluginsQueueLogger = GGPluginsLogger.queue
+gg_plugins_queue_logger = gg_plugins_logger.queue
 
 
 # =============================================================================
 # >> CLASSES
 # =============================================================================
 class _PluginQueue(dict):
-    """"""
 
-    manager = GGPluginManager
+    """Plugin queue class used to load/unload plugins."""
+
+    manager = gg_plugin_manager
     translations = manager.translations
-    logger = GGPluginsQueueLogger
+    logger = gg_plugins_queue_logger
 
     def __missing__(self, item):
-        if not item in ('load', 'unload', 'reload'):
+        """Add the item to its queue and loop through queues after 1 tick."""
+        if item not in ('load', 'unload', 'reload'):
             raise ValueError('Invalid plugin type "{0}"'.format(item))
         if not self:
             TickDelays.delay(0, self._loop_through_queues)
@@ -34,34 +38,33 @@ class _PluginQueue(dict):
         return value
 
     def _loop_through_queues(self):
+        """Loop through all queues to properly load/unload plugins."""
         if 'unload' in self:
             self._unload_plugins()
             del self['unload']
         if 'load' in self:
             self._load_plugins()
             del self['load']
-        if not 'reload' in self:
+        if 'reload' not in self:
             return
         self['load'] = set(self['reload'])
         del self['reload']
 
     def _unload_plugins(self):
-        """"""
-
+        """Unload all plugins in the unload queue."""
         # Loop through all plugins to unload
         for plugin_name in self['unload']:
 
             # Unload the plugin
-            del GGPluginManager[plugin_name]
+            del gg_plugin_manager[plugin_name]
 
             # Send a message that the plugin was unloaded
             self.logger.log_message(self.prefix + self.translations[
                 'Successful Unload'].get_string(plugin=plugin_name))
 
     def _load_plugins(self):
-        """"""
-
-        # 
+        """Load all plugins in the load queue."""
+        # Loop through all plugins to load
         for plugin_name in self['load']:
 
             # Load the plugin and get its instance

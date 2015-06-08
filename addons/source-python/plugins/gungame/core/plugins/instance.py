@@ -1,9 +1,25 @@
+# ../gungame/core/plugins/instance.py
+
+"""Provides a plugin instance class."""
+
+# =============================================================================
+# >> IMPORTS
+# =============================================================================
 from plugins.instance import LoadedPlugin
-from gungame.core.plugins import GGPluginsLogger
+from gungame.core.plugins import gg_plugins_logger
 
 
-GGPluginsInstanceLogger = GGPluginsLogger.instance
+# =============================================================================
+# >> GLOBAL VARIABLES
+# =============================================================================
+gg_plugins_instance_logger = gg_plugins_logger.instance
 
 
+# =============================================================================
+# >> CLASSES
+# =============================================================================
 class GGLoadedPlugin(LoadedPlugin):
-    logger = GGPluginsInstanceLogger
+
+    """The GunGame plugin class."""
+
+    logger = gg_plugins_instance_logger

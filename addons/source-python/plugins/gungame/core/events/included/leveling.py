@@ -1,6 +1,6 @@
 # ../gungame/core/events/included/leveling.py
 
-"""Events involved in leveling."""
+"""Leveling based events."""
 
 # =============================================================================
 # >> IMPORTS
@@ -49,4 +49,4 @@ class GG_LevelDown(CustomEvent):
 # =============================================================================
 # >> RESOURCE FILE
 # =============================================================================
-GGIncludedPlugins = GGResourceFile('leveling', GG_LevelUp, GG_LevelDown)
+GGResourceFile('leveling', GG_LevelUp, GG_LevelDown)
