@@ -28,6 +28,6 @@ _strings = GunGameLangStrings(_name)
 # >> CONFIGURATION
 # =============================================================================
 with GunGameConfigManager(_name) as config:
-    with config.get_cvar('gg_deathmatch_respawn_delay') as cvar:
-        cvar.default = '2'
-        cvar.text = _strings[cvar.name].get_string()
+    delay = config.get_cvar('gg_deathmatch_respawn_delay')
+    delay.default = '2'
+    delay.text = _strings[delay.name].get_string()
