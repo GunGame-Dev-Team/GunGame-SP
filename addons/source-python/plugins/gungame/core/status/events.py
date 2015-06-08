@@ -27,7 +27,7 @@ def gg_win(game_event):
 
 
 @Event
-def gg_match_end(game_event):
+def gg_map_end(game_event):
     """Set match status to POST when the match has ended without a winner."""
     gungame_status.match = GunGameStatus.POST
 
