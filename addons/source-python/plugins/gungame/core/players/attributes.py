@@ -56,11 +56,12 @@ player_attributes = _PlayerAttributes()
 # Register the core attributes
 player_attributes.register_attribute('level', 1)
 player_attributes.register_attribute('multikill', 0)
+player_attributes.register_attribute('wins', 0)
 
 
 class _AttributeHook(list):
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, attribute):
+        self.attribute = attribute
 
     def append(self, callback):
         if callback in self:
@@ -72,20 +73,20 @@ class _AttributeHook(list):
     def remove(self, callback):
         super(_AttributeHook, self).remove(callback)
         if not self:
-            attribute_hooks[self.name]
+            attribute_hooks[self.attribute]
 
     def call_callbacks(self, player, value):
         return_value = True
         for callback in self:
-            callback_value = callback(player, self.name, value)
+            callback_value = callback(player, self.attribute, value)
             if callback_value is not None and not callback_value:
                 return_value = False
         return return_value
 
 
 class _AttributeHooks(dict):
-    def __missing__(self, item):
-        value = self[item] = _AttributeHook(item)
+    def __missing__(self, attribute):
+        value = self[attribute] = _AttributeHook(attribute)
         return value
 
     def register_callback(self, attribute, callback):
