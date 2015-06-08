@@ -6,10 +6,13 @@
 # >> IMPORTS
 # =============================================================================
 # Source.Python Imports
+#   Cvars
+from cvars import ConVar
 #   Plugins
 from plugins.command import SubCommandManager
 
 # Script Imports
+from gungame.core.plugins import _plugin_strings
 from gungame.core.plugins import gg_plugins_logger
 from gungame.core.plugins.instance import GGLoadedPlugin
 from gungame.core.plugins.manager import gg_plugin_manager
@@ -118,7 +121,56 @@ class _GGSubCommandManager(SubCommandManager):
         plugin_queue['reload'].add(plugin_name)
 
     # Set the method's required arguments
-    reload_plugin.args = ['[plugin]']
+    reload_plugin.args = ['<plugin>']
+
+    def print_plugins(self):
+        """List all currently loaded plugins."""
+        # Get header messages
+        message = self.prefix + _plugin_strings[
+            'Plugins'].get_string() + '\n' + '=' * 61 + '\n\n'
+
+        # Loop through all loaded plugins
+        for plugin_name in sorted(self.manager):
+
+            # Add the plugin's name to the message
+            message += '{0} ({1}):\n'.format(
+                plugin_name, valid_plugins.get_plugin_type(plugin_name))
+
+            # Get the plugin's information
+            instance = valid_plugins.all[plugin_name]
+
+            # Get the description
+            try:
+                description = instance.info.description
+            except KeyError:
+                description = instance.description
+
+            # Add the description
+            message += '\tdescription:\n\t\t{0}\n'.format(description)
+
+            # Loop through all items in the info
+            for item, value in instance.info.items():
+
+                # Is the value a ConVar?
+                if isinstance(value, ConVar):
+
+                    # Get the ConVar's text
+                    value = '{0}:\n\t\t\t{1}: {2}'.format(
+                        value.get_name(),
+                        value_.get_help_text(),
+                        value.get_string())
+
+                # Add the current item to the message
+                message += '\t{0}:\n\t\t{1}\n'.format(item, value)
+
+            # Add 1 blank line between plugins
+            message += '\n'
+
+        # Add the ending separator
+        message += '=' * 61
+
+        # Print the message
+        self.logger.log_message(message)
 
     def print_version(self):
         """Print the GunGame version information."""
