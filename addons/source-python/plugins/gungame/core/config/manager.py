@@ -5,6 +5,7 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+from contextlib import suppress
 from importlib import import_module
 
 from path import Path
@@ -27,12 +28,20 @@ class GunGameConfigManager(ConfigManager):
 
     def __init__(self, name):
         """Add 'gungame' to the path before initializing the instance."""
+        # Start with 'gungame' path
         filepath = Path('gungame')
+
+        # Get the path if file is a valid plugin
         try:
             folder = valid_plugins.get_plugin_type(name)
-            filepath = filepath.joinpath(folder + '_plugin_configs', name)
+            filepath = filepath.joinpath(folder + '_plugins', name)
+
+        # Get the path for a base config
         except ValueError:
             filepath = filepath.joinpath(name)
+
+        # Initialize the config
+        print(filepath)
         super(GunGameConfigManager, self).__init__(filepath)
 
 
@@ -51,6 +60,15 @@ class _ConfigManager(object):
                 continue
             import_module(
                 'gungame.core.config.core.{0}'.format(file.namebase))
+        for plugin_name in valid_plugins.all:
+            plugin_type = valid_plugins.get_plugin_type(plugin_name)
+            '''
+            with suppress(ImportError):
+                import_module('gungame.plugins.{0}.{1}.config'.format(
+                    plugin_type, plugin_name))
+            '''
+            import_module('gungame.plugins.{0}.{1}.config'.format(
+                plugin_type, plugin_name))
         self._executed = True
 
 config_manager = _ConfigManager()

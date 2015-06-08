@@ -14,8 +14,8 @@ from path import Path
 from translations.strings import LangStrings
 
 # GunGame Imports
-#   Addons
-from gungame.core.addons.valid import ValidAddons
+#   Plugins
+from gungame.core.plugins.valid import valid_plugins
 
 
 # =============================================================================
@@ -29,8 +29,8 @@ class GunGameLangStrings(LangStrings):
         """Add 'gungame' to the path prior to initialization."""
         infile = Path('gungame')
         try:
-            folder = ValidAddons.get_addon_type(name)
-            infile = infile.joinpath(folder + '_addon_translations', name)
+            folder = valid_plugins.get_plugin_type(name)
+            infile = infile.joinpath(folder + '_plugins', name)
         except ValueError:
             infile = infile.joinpath(name)
         super(GunGameLangStrings, self).__init__(infile)

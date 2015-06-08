@@ -23,15 +23,20 @@ from messages import HintText
 from players.entity import PlayerEntity
 from players.helpers import index_from_userid
 from players.helpers import userid_from_playerinfo
+
+# GunGame Imports
 #   Translations
-from translations.strings import LangStrings
+from gungame.core.translations.strings import GunGameLangStrings
+
+# Script Imports
+from .info import info
 
 
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
 # Get the message strings
-deathmatch_strings = LangStrings('gungame/gg_deathmatch')
+deathmatch_strings = GunGameLangStrings(info.name)
 
 # Store an empty dictionary
 deathmatch_messages = {}

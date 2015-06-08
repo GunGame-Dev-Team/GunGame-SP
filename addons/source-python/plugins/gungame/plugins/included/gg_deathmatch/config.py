@@ -1,4 +1,4 @@
-# ../gungame/plugins/included/gg_deathmatch/gg_deathmatch_config.py
+# ../gungame/plugins/included/gg_deathmatch/config.py
 
 """Creates the gg_deathmatch configuration."""
 
@@ -16,7 +16,7 @@ from gungame.core.config.manager import GunGameConfigManager
 from gungame.core.translations.strings import GunGameLangStrings
 
 # Script Imports
-from gg_deathmatch.info import info
+from .info import info
 
 
 # =============================================================================
@@ -29,5 +29,7 @@ _strings = GunGameLangStrings(info.name)
 # >> CONFIGURATION
 # =============================================================================
 with GunGameConfigManager(info.name) as config:
-    with config.cvar('gg_deathmatch_respawn_delay', 2) as delay:
-        delay.text = _strings[delay.name].get_string()
+    with config.cvar(
+            'gg_deathmatch_respawn_delay', 2,
+            description=_strings['gg_deathmatch_respawn_delay']) as cvar:
+        cvar.text(_strings[cvar.name + '_text'].get_string())
