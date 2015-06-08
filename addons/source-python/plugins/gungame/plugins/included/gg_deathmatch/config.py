@@ -15,19 +15,19 @@ from gungame.core.config.manager import GunGameConfigManager
 #   Translations
 from gungame.core.translations.strings import GunGameLangStrings
 
+# Script Imports
+from gg_deathmatch.info import info
+
 
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
-_name = Path(__file__).parent.namebase
-
-_strings = GunGameLangStrings(_name)
+_strings = GunGameLangStrings(info.name)
 
 
 # =============================================================================
 # >> CONFIGURATION
 # =============================================================================
-with GunGameConfigManager(_name) as config:
-    delay = config.get_cvar('gg_deathmatch_respawn_delay')
-    delay.default = '2'
-    delay.text = _strings[delay.name].get_string()
+with GunGameConfigManager(info.name) as config:
+    with config.cvar('gg_deathmatch_respawn_delay', 2) as delay:
+        delay.text = _strings[delay.name].get_string()

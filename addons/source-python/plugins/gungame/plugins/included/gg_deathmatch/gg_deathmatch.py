@@ -31,7 +31,7 @@ from translations.strings import LangStrings
 # >> GLOBAL VARIABLES
 # =============================================================================
 # Get the message strings
-deathmatch_strings = LangStrings('gg_deathmatch')
+deathmatch_strings = LangStrings('gungame/gg_deathmatch')
 
 # Store an empty dictionary
 deathmatch_messages = {}
@@ -90,9 +90,7 @@ class Player(PlayerEntity):
             deathmatch_messages['Respawning'].send(self.index)
 
             # Respawn the player
-            self.get_prop('m_iPlayerState').set_int(0)
-            self.get_prop('m_lifeState').set_int(512)
-            self.dispatch_spawn()
+            self.respawn()
 
     def stop_repeat(self):
         """Stop the player's repeat."""
@@ -114,6 +112,17 @@ class _DeathMatchPlayers(dict):
 
         # Return the Player instance
         return value
+
+    def __delitem__(self, userid):
+        """"""
+        if userid in self:
+            self[userid].stop_repeat()
+        super(_DeathMatchPlayers, self).__delitem__(userid)
+
+    def clear(self):
+        """"""
+        for userid in self:
+            del self[userid]
 
 # Get the _DeathMatchPlayers instance
 deathmatch_players = _DeathMatchPlayers()
@@ -190,6 +199,11 @@ def player_death(game_event):
 
     # Start the player's repeat
     deathmatch_players[userid].start_repeat()
+
+
+@Event
+def player_disconnect(game_event):
+    del deathmatch_players[game_event.get_int('userid')]
 
 
 # =============================================================================
