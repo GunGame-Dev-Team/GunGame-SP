@@ -43,11 +43,7 @@ class _GGSubCommandManager(SubCommandManager):
         plugin_queue.prefix = self.prefix
 
     def load_plugin(self, plugin_name):
-        """Load a plugin by name.
-
-        This method is overwritten so that the plugin
-            will be loaded after a one tick delay.
-        """
+        """Load a plugin by name."""
         # Get the plugin name with the gg_ prefix
         if not plugin_name.startswith('gg_'):
             plugin_name = 'gg_' + plugin_name
@@ -77,11 +73,7 @@ class _GGSubCommandManager(SubCommandManager):
     load_plugin.args = ['<plugin>']
 
     def unload_plugin(self, plugin_name):
-        """Unload a plugin by name.
-
-        This method is overwritten so that the plugin
-            will be unloaded after a one tick delay.
-        """
+        """Unload a plugin by name."""
         # Get the plugin name with the gg_ prefix
         if not plugin_name.startswith('gg_'):
             plugin_name = 'gg_' + plugin_name
@@ -105,11 +97,7 @@ class _GGSubCommandManager(SubCommandManager):
     unload_plugin.args = ['<plugin>']
 
     def reload_plugin(self, plugin_name):
-        """Reload a plugin by name.
-
-        This method is overwritten so that the plugin will properly
-            be unloaded and loaded after a one tick delay each.
-        """
+        """Reload a plugin by name."""
         # Get the plugin name with the gg_ prefix
         if not plugin_name.startswith('gg_'):
             plugin_name = 'gg_' + plugin_name

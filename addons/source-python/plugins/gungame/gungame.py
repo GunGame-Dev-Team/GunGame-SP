@@ -13,6 +13,7 @@ from gungame.info import info
 from gungame.core.config.manager import config_manager
 from gungame.core.events.included.match import GG_Start
 from gungame.core.events.storage import gg_resource_list
+from gungame.core.plugins.command import gg_command_manager
 from gungame.core.status import GunGameStatus
 from gungame.core.status import gungame_status
 from gungame.core.weapons.manager import weapon_order_manager
