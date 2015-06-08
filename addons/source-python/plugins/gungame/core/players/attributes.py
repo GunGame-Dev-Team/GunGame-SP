@@ -72,19 +72,44 @@ class _AttributeHook(list):
 
     def append(self, callback):
         """Verify the callback is not a member and is callable."""
+        # Is the callback already registered?
         if callback in self:
-            raise
+            raise ValueError('Callback aready registered.')
+
+        # Is the callback not callable?
         if not callable(callback):
-            raise
+            raise ValueError('Callback is not callable.')
+
+        # Add the callback to the list
         super(_AttributeHook, self).append(callback)
+
+    def remove(self, callback):
+        """Verify the given values before removing the callback."""
+        # Is the callback registered?
+        if callback not in self:
+            raise ValueError('Callback is not registered.')
+
+        # Remove the callback from the list
+        super(_AttributeHook, self).remove(callback)
 
     def call_callbacks(self, player, value):
         """Call all callbacks for the hook."""
+        # Set the default return value
         return_value = True
+
+        # Loop through all callbacks
         for callback in self:
+
+            # Call the callback and get its return value
             callback_value = callback(player, self.attribute, value)
+
+            # Does the current callback want to block setting the attribute?
             if callback_value is not None and not callback_value:
+
+                # Set the attribute to not be changed
                 return_value = False
+
+        # Return whether to block or continue the attribute change
         return return_value
 
 
@@ -98,19 +123,65 @@ class _AttributeHooks(dict):
         return value
 
     def register_callback(self, attribute, callback):
-        """Verify the callback befor adding it to the attribute's hooks."""
-        if not callable(callback):
-            raise
+        """Add the callback to the attribute's list."""
         self[attribute].append(callback)
 
     def unregister_callback(self, attribute, callback):
-        """Verify the given values before removing the callback."""
+        """Verify the attribute before removing the callback."""
+        # Is the attribute hooked?
         if attribute not in self:
-            raise
-        if callback not in self[attribute]:
-            raise
+            raise ValueError(
+                'Attribute "{0}" is not hooked.'.format(attribute))
+
+        # Remove the callback from the attribute's list
         self[attribute].remove(callback)
+
+        # Are there anymore callbacks for the attribute?
         if not self[attribute]:
+
+            # If no more callbacks, remove the attribute from the dictionary
             del self[attribute]
 
-attribute_hooks = _AttributeHooks()
+# Get the pre and post attribute hook instances
+attribute_pre_hooks = _AttributeHooks()
+attribute_post_hooks = _AttributeHooks()
+
+
+class _AttributeDecorator(object):
+
+    """Decorator class used to register callbacks to an attribute."""
+
+    def __init__(self, attribute):
+        """Store the attribute."""
+        self.attribute = attribute
+
+    def __call__(self, callback):
+        """Store the callback and register it to the attribute."""
+        # Store the callback
+        self.callback = callback
+
+        # Register the callback to the attribute
+        self.hook_instance.register_callback(self.attribute, self.callback)
+
+    @property
+    def hook_instance(self):
+        """All sub-classes must define this method."""
+        raise NotImplementedError('hook_instance not defined for class.')
+
+    def _unload_instance(self):
+        """Unregister the callback from the attribute."""
+        self.hook_instance.unregister_callback(self.attribute, self.callback)
+
+
+class AttributePostHook(_AttributeDecorator):
+
+    """Decorator class to register post callbacks to an attribute."""
+
+    hook_instance = attribute_post_hooks
+
+
+class AttributePreHook(_AttributeDecorator):
+
+    """Decorator class to register pre callbacks to an attribute."""
+
+    hook_instance = attribute_pre_hooks

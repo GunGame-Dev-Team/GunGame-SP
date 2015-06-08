@@ -5,7 +5,6 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-from listeners.tick import tick_delays
 from players.entity import PlayerEntity
 from weapons.entity import WeaponEntity
 from weapons.manager import weapon_manager
@@ -16,7 +15,8 @@ from gungame.core.events.included.leveling import GG_LevelDown
 from gungame.core.events.included.leveling import GG_LevelUp
 from gungame.core.events.included.match import GG_Win
 #   Players
-from gungame.core.players.attributes import attribute_hooks
+from gungame.core.players.attributes import attribute_post_hooks
+from gungame.core.players.attributes import attribute_pre_hooks
 from gungame.core.players.attributes import player_attributes
 #   Status
 from gungame.core.status import GunGameStatus
@@ -35,10 +35,15 @@ class GunGamePlayer(PlayerEntity):
     def __setattr__(self, attr, value):
         """Verify that the attribute's value should be set."""
         if (attr in player_attributes and
-                attr in attribute_hooks and hasattr(self, attr)):
-            if not attribute_hooks[attr].call_callbacks(self, value):
+                attr in attribute_pre_hooks and hasattr(self, attr)):
+            if not attribute_pre_hooks[attr].call_callbacks(self, value):
                 return
+        if not hasattr(self, attr) or attr not in attribute_post_hooks:
+            super(GunGamePlayer, self).__setattr__(attr, value)
+            return
+        old_value = getattr(self, attr)
         super(GunGamePlayer, self).__setattr__(attr, value)
+        attribute_post_hooks[attr].call_callbacks(self, value, old_value)
 
     @property
     def level_multikill(self):
@@ -60,8 +65,9 @@ class GunGamePlayer(PlayerEntity):
         for index in self.weapon_indexes():
             entity = WeaponEntity(index)
             if weapon_manager[entity.classname].slot == weapon.slot:
+                self.drop_weapon(entity, None, None)
                 entity.remove()
-        tick_delays.delay(0, self.give_named_item, weapon.name, 0)
+        self.give_named_item(weapon.name, 0)
 
     def increase_level(self, levels, victim=0, reason=''):
         """Increase the player's level by the given amount."""
@@ -72,7 +78,6 @@ class GunGamePlayer(PlayerEntity):
         if new_level > weapon_order_manager.active.max_levels:
             if gungame_status.match is GunGameStatus.POST:
                 return
-            print('WIN')
             win_event = GG_Win()
             win_event.attacker = win_event.winner = self.userid
             win_event.userid = win_event.loser = victim
