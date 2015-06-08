@@ -48,6 +48,10 @@ class _GGSubCommandManager(SubCommandManager):
         This method is overwritten so that the plugin
             will be loaded after a one tick delay.
         """
+        # Get the plugin name with the gg_ prefix
+        if not plugin_name.startswith('gg_'):
+            plugin_name = 'gg_' + plugin_name
+
         # Is the plugin already loaded?
         if plugin_name in self.manager:
 
@@ -78,6 +82,10 @@ class _GGSubCommandManager(SubCommandManager):
         This method is overwritten so that the plugin
             will be unloaded after a one tick delay.
         """
+        # Get the plugin name with the gg_ prefix
+        if not plugin_name.startswith('gg_'):
+            plugin_name = 'gg_' + plugin_name
+
         # Is the plugin loaded?
         if plugin_name not in self.manager:
 
@@ -102,6 +110,10 @@ class _GGSubCommandManager(SubCommandManager):
         This method is overwritten so that the plugin will properly
             be unloaded and loaded after a one tick delay each.
         """
+        # Get the plugin name with the gg_ prefix
+        if not plugin_name.startswith('gg_'):
+            plugin_name = 'gg_' + plugin_name
+
         # Is the plugin not loaded?
         if plugin_name not in self.manager:
 
