@@ -34,16 +34,31 @@ class GunGamePlayer(PlayerEntity):
 
     def __setattr__(self, attr, value):
         """Verify that the attribute's value should be set."""
+        # Are there any pre-hooks for the attribute?
         if (attr in player_attributes and
                 attr in attribute_pre_hooks and hasattr(self, attr)):
+
+            # Do any of the pre-hooks block the setting of the attribute?
             if not attribute_pre_hooks[attr].call_callbacks(self, value):
+
+                # Block the attribute from being set
                 return
-        if not (attr in player_attributes and hasattr(self, attr)
-                and attr not in attribute_post_hooks):
+
+        # Are there any post-hooks for the attribute?
+        if not (attr in player_attributes and hasattr(self, attr) and
+                attr not in attribute_post_hooks):
+
+            # If not, simply set the attribute's value
             super(GunGamePlayer, self).__setattr__(attr, value)
             return
+
+        # Get the value prior to setting
         old_value = getattr(self, attr)
+
+        # Set the attribute's value
         super(GunGamePlayer, self).__setattr__(attr, value)
+
+        # Call all of the attribute's post-hooks
         attribute_post_hooks[attr].call_callbacks(self, value, old_value)
 
     @property

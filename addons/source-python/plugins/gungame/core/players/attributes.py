@@ -92,7 +92,7 @@ class _AttributeHook(list):
         # Remove the callback from the list
         super(_AttributeHook, self).remove(callback)
 
-    def call_callbacks(self, player, value):
+    def call_callbacks(self, player, *args):
         """Call all callbacks for the hook."""
         # Set the default return value
         return_value = True
@@ -101,7 +101,7 @@ class _AttributeHook(list):
         for callback in self:
 
             # Call the callback and get its return value
-            callback_value = callback(player, self.attribute, value)
+            callback_value = callback(player, self.attribute, *args)
 
             # Does the current callback want to block setting the attribute?
             if callback_value is not None and not callback_value:
