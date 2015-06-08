@@ -38,7 +38,8 @@ class GunGamePlayer(PlayerEntity):
                 attr in attribute_pre_hooks and hasattr(self, attr)):
             if not attribute_pre_hooks[attr].call_callbacks(self, value):
                 return
-        if not hasattr(self, attr) or attr not in attribute_post_hooks:
+        if not (attr in player_attributes and hasattr(self, attr)
+                and attr not in attribute_post_hooks):
             super(GunGamePlayer, self).__setattr__(attr, value)
             return
         old_value = getattr(self, attr)
