@@ -5,23 +5,25 @@
 # =============================================================================
 # Python Imports
 #   Enum
-from enum import Enum
+from enum import IntEnum
 
 # =============================================================================
 # >> CLASSES
 # =============================================================================
-class GunGameStatusTypes(Enum):
+class GunGameStatus(IntEnum):
     """Base Status values"""
 
-    INACTIVE = False
-    ACTIVE = True
+    INACTIVE = 0
+    ACTIVE = 1
+    POST = 2
+    ON_HOLD = 3
 
 
 class _GunGameStatus(object):
     """Stores statuses for GunGame"""
 
     # Set the base attributes all to False to start
-    match = loading = round = GunGameStatusTypes.INACTIVE
+    match = loading = round = GunGameStatus.INACTIVE
 
     def __setattr__(self, attribute, value):
         """Override __setattr__ to only allow proper
@@ -34,12 +36,12 @@ class _GunGameStatus(object):
                 'Cannot set attribute "{0}"'.format(attribute))
 
         # Is the given value a boolean?
-        if type(value) is not GunGameStatusTypes:
+        if type(value) is not GunGameStatus:
 
             # If not, raise an error
             raise ValueError(
                 'GunGameStatus attributes can only be set using ' +
-                'GunGameStatusTypes, not "{0}"'.format(type(value).__name__))
+                'GunGameStatus, not "{0}"'.format(type(value).__name__))
 
         # Set the attribute to the given value
         super(_GunGameStatus, self).__setattr__(attribute, value)
