@@ -46,7 +46,7 @@ class GunGamePlayer(PlayerEntity):
 
         # Are there any post-hooks for the attribute?
         if not (attr in player_attributes and hasattr(self, attr) and
-                attr not in attribute_post_hooks):
+                attr in attribute_post_hooks):
 
             # If not, simply set the attribute's value
             super(GunGamePlayer, self).__setattr__(attr, value)
