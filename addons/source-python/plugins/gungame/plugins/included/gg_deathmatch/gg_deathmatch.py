@@ -131,7 +131,7 @@ class _DeathMatchPlayers(dict):
 
     def clear(self):
         """Loop through all userids to call __delitem__ on them."""
-        for userid in self:
+        for userid in list(self):
             del self[userid]
 
 # Get the _DeathMatchPlayers instance
