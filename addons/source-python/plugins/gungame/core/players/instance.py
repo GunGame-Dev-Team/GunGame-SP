@@ -18,6 +18,7 @@ from gungame.core.events.included.match import GG_Win
 from gungame.core.players.attributes import attribute_post_hooks
 from gungame.core.players.attributes import attribute_pre_hooks
 from gungame.core.players.attributes import player_attributes
+from gungame.core.players.messages import _PlayerMessages
 #   Status
 from gungame.core.status import GunGameStatus
 from gungame.core.status import gungame_status
@@ -28,7 +29,7 @@ from gungame.core.weapons.manager import weapon_order_manager
 # =============================================================================
 # >> CLASSES
 # =============================================================================
-class GunGamePlayer(PlayerEntity):
+class GunGamePlayer(PlayerEntity, _PlayerMessages):
 
     """Class used to interact directly with a specific player."""
 
