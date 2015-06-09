@@ -3,3 +3,4 @@ __pycache__/
 *.res
 *_server.ini
 addons/source-python/plugins/gungame/plugins/custom/*
+resource/source-python/translations/gungame/custom_plugins/*.ini
