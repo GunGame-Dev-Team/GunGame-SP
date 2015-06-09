@@ -119,13 +119,18 @@ class _DeathMatchPlayers(dict):
         return value
 
     def __delitem__(self, userid):
-        """"""
+        """Stop the player's repeat before removing them."""
+        # Is the player in the dictionary?
         if userid in self:
+
+            # Stop the player's repeat
             self[userid].stop_repeat()
+
+        # Remove the player from the dictionary
         super(_DeathMatchPlayers, self).__delitem__(userid)
 
     def clear(self):
-        """"""
+        """Loop through all userids to call __delitem__ on them."""
         for userid in self:
             del self[userid]
 
@@ -208,6 +213,7 @@ def player_death(game_event):
 
 @Event
 def player_disconnect(game_event):
+    """Remove the player from the dictionary."""
     del deathmatch_players[game_event.get_int('userid')]
 
 

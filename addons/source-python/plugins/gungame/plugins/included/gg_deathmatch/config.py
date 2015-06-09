@@ -5,10 +5,6 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Site-Package Imports
-#   Path
-from path import Path
-
 # GunGame Imports
 #   Config
 from gungame.core.config.manager import GunGameConfigManager
