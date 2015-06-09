@@ -9,7 +9,7 @@
 #   Config
 from gungame.core.config.manager import GunGameConfigManager
 #   Translations
-from gungame.core.translations.strings import GunGameLangStrings
+from gungame.core.plugins.strings import PluginStrings
 
 # Script Imports
 from .info import info
@@ -18,14 +18,13 @@ from .info import info
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
-_strings = GunGameLangStrings(info.name)
+info.translations = PluginStrings(info.name)
 
 
 # =============================================================================
 # >> CONFIGURATION
 # =============================================================================
 with GunGameConfigManager(info.name) as config:
-    with config.cvar(
-            'gg_deathmatch_respawn_delay', 2,
-            description=_strings['gg_deathmatch_respawn_delay']) as cvar:
-        cvar.text(_strings[cvar.name + '_text'].get_string())
+    with config.cvar('gg_deathmatch_delay', 2, description=info.translations[
+            'gg_deathmatch_delay']) as cvar:
+        cvar.text(info.translations[cvar.name + '_text'].get_string())

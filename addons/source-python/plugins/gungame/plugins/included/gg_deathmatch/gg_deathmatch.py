@@ -26,7 +26,7 @@ from players.helpers import userid_from_playerinfo
 
 # GunGame Imports
 #   Translations
-from gungame.core.translations.strings import GunGameLangStrings
+from gungame.core.plugins.strings import PluginStrings
 
 # Script Imports
 from .info import info
@@ -36,16 +36,16 @@ from .info import info
 # >> GLOBAL VARIABLES
 # =============================================================================
 # Get the message strings
-deathmatch_strings = GunGameLangStrings(info.name)
+info.translations = PluginStrings(info.name)
 
 # Store an empty dictionary
 deathmatch_messages = {}
 
 # Loop through each of the message strings
-for key in deathmatch_strings:
+for key in info.translations:
 
     # Add the message string to the dictionary as a HintText instance
-    deathmatch_messages[key] = HintText(deathmatch_strings[key])
+    deathmatch_messages[key] = HintText(info.translations[key])
 
 # Get the delay ConVar
 respawn_delay = ConVar('gg_deathmatch_respawn_delay')
