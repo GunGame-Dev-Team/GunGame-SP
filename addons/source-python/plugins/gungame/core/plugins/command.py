@@ -155,6 +155,10 @@ class _GGSubCommandManager(SubCommandManager):
             # Loop through all items in the info
             for item, value in instance.info.items():
 
+                # Skip the item if it is a LangStrings instance
+                if isinstance(value, LangStrings):
+                    continue
+
                 # Is the value a ConVar?
                 if isinstance(value, ConVar):
 
@@ -163,13 +167,6 @@ class _GGSubCommandManager(SubCommandManager):
                         value.get_name(),
                         value.get_help_text(),
                         value.get_string())
-
-                # Is the instance a LangStrings instance?
-                if isinstance(value, LangStrings):
-
-                    # Get the LangStrings' path
-                    value = '..' + value._mainfile.replace(
-                        TRANSLATION_PATH, '').replace('\\', '/')
 
                 # Add the current item to the message
                 message += '\t{0}:\n\t\t{1}\n'.format(item, value)
@@ -192,6 +189,11 @@ class _GGSubCommandManager(SubCommandManager):
     def restart_match(self):
         """Restart the match."""
         pass
+
+    def unload_all_plugins(self):
+        """Unload all plugins when GunGame is unloading."""
+        for plugin_name in list(self.manager):
+            del self.manager[plugin_name]
 
 # Get the "gg" command instance
 gg_command_manager = _GGSubCommandManager('gg', 'GunGame base command.')

@@ -20,8 +20,8 @@ from gungame.core.players.attributes import attribute_pre_hooks
 from gungame.core.players.attributes import player_attributes
 from gungame.core.players.messages import _PlayerMessages
 #   Status
+from gungame.core.status import GunGameStatusType
 from gungame.core.status import GunGameStatus
-from gungame.core.status import gungame_status
 #   Weapons
 from gungame.core.weapons.manager import weapon_order_manager
 
@@ -93,7 +93,7 @@ class GunGamePlayer(PlayerEntity, _PlayerMessages):
         old_level = self.level
         new_level = old_level + levels
         if new_level > weapon_order_manager.active.max_levels:
-            if gungame_status.match is GunGameStatus.POST:
+            if GunGameStatus.MATCH is GunGameStatusType.POST:
                 return
             win_event = GG_Win()
             win_event.attacker = win_event.winner = self.userid

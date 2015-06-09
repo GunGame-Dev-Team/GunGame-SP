@@ -1,6 +1,6 @@
 # ../gungame/listeners.py
 
-"""Event and level listeners."""
+"""Event and level listeners and other helper functions."""
 
 # =============================================================================
 # >> IMPORTS
@@ -9,11 +9,13 @@ from cvars import ConVar
 from entities.entity import Entity
 from events import Event
 from filters.entities import EntityIter
+from listeners import LevelInit
 from listeners import LevelShutdown
 
+from gungame.core.events.included.match import GG_Start
 from gungame.core.players.dictionary import player_dictionary
 from gungame.core.status import GunGameStatus
-from gungame.core.status import gungame_status
+from gungame.core.status import GunGameStatusType
 
 
 # =============================================================================
@@ -23,7 +25,7 @@ from gungame.core.status import gungame_status
 def player_spawn(game_event):
     """Give the player their level weapon."""
     # Is GunGame active?
-    if gungame_status.match is not GunGameStatus.ACTIVE:
+    if GunGameStatus.MATCH is not GunGameStatusType.ACTIVE:
         return
 
     # Get the userid of the player
@@ -55,11 +57,11 @@ def player_spawn(game_event):
 def player_death(game_event):
     """Award the killer with a multi-kill increase or level increase."""
     # Is GunGame active?
-    if gungame_status.match is not GunGameStatus.ACTIVE:
+    if GunGameStatus.MATCH is not GunGameStatusType.ACTIVE:
         return
 
     # Is the round active or should kills after the round count?
-    if (gungame_status.round is GunGameStatus.INACTIVE and
+    if (GunGameStatus.ROUND is GunGameStatusType.INACTIVE and
             not ConVar('gg_count_after_round').get_int()):
         return
 
@@ -108,9 +110,16 @@ def player_disconnect(game_event):
 
 @Event
 def round_start(game_event):
-    """Disable buyzones."""
+    """Disable buyzones and set the round status to ACTIVE."""
+    GunGameStatus.ROUND = GunGameStatusType.ACTIVE
     for entity in EntityIter('func_buyzone', return_types='entity'):
         entity.disable()
+
+
+@Event
+def round_end(game_event):
+    """Set the round status to INACTIVE since the round ended."""
+    GunGameStatus.ROUND = GunGameStatusType.INACTIVE
 
 
 # =============================================================================
@@ -119,6 +128,7 @@ def round_start(game_event):
 @Event
 def gg_win(game_event):
     """Increase the win total for the winner and end the map."""
+    GunGameStatus.MATCH = GunGameStatusType.POST
     winner = player_dictionary[game_event.get_int('winner')]
     if not winner.is_fake_client():
         winner.wins += 1
@@ -129,10 +139,38 @@ def gg_win(game_event):
     entity.end_game()
 
 
+@Event
+def gg_map_end(game_event):
+    """Set the match status to POST after the map has ended."""
+    GunGameStatus.MATCH = GunGameStatusType.POST
+
+
+@Event
+def gg_start(game_event):
+    """Set the match status to ACTIVE when it starts."""
+    GunGameStatus.MATCH = GunGameStatusType.ACTIVE
+
+
 # =============================================================================
 # >> LISTENERS
 # =============================================================================
+@LevelInit
+def level_init(mapname):
+    """Set match status to INACTIVE when a new map is started."""
+    GunGameStatus.MATCH = GunGameStatusType.INACTIVE
+
+
 @LevelShutdown
 def level_shutdown():
     """Clear the player dictionary on map change."""
     player_dictionary.clear()
+
+
+# =============================================================================
+# >> HELPER FUNCTIONS
+# =============================================================================
+def start_match():
+    """Start the match if not already started or on hold."""
+    if GunGameStatus.MATCH is not GunGameStatusType.INACTIVE:
+        return
+    GG_Start().fire()

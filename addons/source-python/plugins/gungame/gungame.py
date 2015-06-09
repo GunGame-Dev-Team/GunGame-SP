@@ -11,11 +11,8 @@ from listeners.tick import tick_delays
 
 from gungame.info import info
 from gungame.core.config.manager import config_manager
-from gungame.core.events.included.match import GG_Start
 from gungame.core.events.storage import gg_resource_list
 from gungame.core.plugins.command import gg_command_manager
-from gungame.core.status import GunGameStatus
-from gungame.core.status import gungame_status
 from gungame.core.weapons.manager import weapon_order_manager
 
 
@@ -52,10 +49,7 @@ def load():
     sv_tags.add(info.basename)
 
     # Import the listeners/events
-    import gungame.listeners
-
-    # Import status events
-    import gungame.core.status.events
+    from gungame.listeners import start_match
 
     # Wait 1 tick to see if gg_start should be called
     tick_delays.delay(0, start_match)
@@ -65,6 +59,9 @@ def unload():
     """Clean up GunGame."""
     # Remove gungame from sv_tags
     sv_tags.remove(info.basename)
+
+    # Clean GunGame plugins
+    gg_command_manager.unload_all_plugins()
 
     # Clean GunGame configs
     # Clean GunGame players
@@ -79,13 +76,3 @@ def unload():
     # Re-enable buyzones
     for entity in EntityIter('func_buyzone', return_types='entity'):
         entity.enable()
-
-
-# =============================================================================
-# >> HELPER FUNCTIONS
-# =============================================================================
-def start_match():
-    """Start the match if not already started or on hold."""
-    if gungame_status.match is not GunGameStatus.INACTIVE:
-        return
-    GG_Start().fire()
