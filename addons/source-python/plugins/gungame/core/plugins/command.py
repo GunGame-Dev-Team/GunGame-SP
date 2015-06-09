@@ -8,8 +8,6 @@
 # Source.Python Imports
 #   Cvars
 from cvars import ConVar
-#   Core
-from paths import TRANSLATION_PATH
 #   Plugins
 from plugins.command import SubCommandManager
 #   Translations

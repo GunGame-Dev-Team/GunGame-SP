@@ -11,9 +11,11 @@ from events import Event
 from filters.entities import EntityIter
 from listeners import LevelInit
 from listeners import LevelShutdown
+from listeners.tick import tick_delays
 
 from gungame.core.events.included.match import GG_Start
 from gungame.core.leaders import leader_manager
+from gungame.core.messages import message_manager
 from gungame.core.players.dictionary import player_dictionary
 from gungame.core.status import GunGameStatus
 from gungame.core.status import GunGameStatusType
@@ -105,7 +107,7 @@ def player_death(game_event):
 
 @Event
 def player_activate(game_event):
-    """"""
+    """Add the player to the leader dictionary."""
     leader_manager.add_player(game_event.get_int('userid'))
 
 
@@ -145,6 +147,31 @@ def gg_win(game_event):
     else:
         entity = Entity.create('game_end')
     entity.end_game()
+    if not ConVar('gg_winner_messages').get_int():
+        return
+    message_manager.chat_message(
+        index=winner.index, message='PlayerWon', name=winner.name)
+    for second in range(4):
+        tick_delays.delay(
+            second, message_manager.center_message,
+            message='PlayerWon_Center', name=winner.name)
+    # message_manager.top_message(
+    #     message='PlayerWon', color=<team_color>, time=4.0, name=winner.name)
+
+
+@Event
+def gg_team_win(game_event):
+    """Send team winner messages."""
+    if not ConVar('gg_winner_messages').get_int():
+        return
+    team_name = ''
+    message_manager.chat_message(message='TeamWon', name=team_name)
+    for second in range(4):
+        tick_delays.delay(
+            second, message_manager.center_message,
+            message='TeamWon_Center', name=team_name)
+    # message_manager.top_message(
+    #     message='TeamWon', color=<team_color>, time=4.0, name=team_name)
 
 
 @Event
@@ -161,11 +188,13 @@ def gg_start(game_event):
 
 @Event
 def gg_levelup(game_event):
+    """Set the player's level in the leader dictionary."""
     leader_manager.player_levelup(game_event.get_int('leveler'))
 
 
 @Event
 def gg_leveldown(game_event):
+    """Set the player's level in the leader dictionary."""
     leader_manager.player_leveldown(game_event.get_int('leveler'))
 
 

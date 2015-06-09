@@ -5,10 +5,6 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Python Imports
-#   Path
-from path import Path
-
 # Source.Python Imports
 #   Translations
 from translations.strings import LangStrings
