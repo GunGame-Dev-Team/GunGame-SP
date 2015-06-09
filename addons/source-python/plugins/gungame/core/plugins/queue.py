@@ -11,6 +11,7 @@ from gungame.core.events.included.plugins import GG_Plugin_Loaded
 from gungame.core.events.included.plugins import GG_Plugin_Unloaded
 from gungame.core.plugins import gg_plugins_logger
 from gungame.core.plugins.manager import gg_plugin_manager
+from gungame.core.plugins.valid import valid_plugins
 
 
 # =============================================================================
