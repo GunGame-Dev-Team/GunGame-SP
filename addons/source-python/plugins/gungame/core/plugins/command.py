@@ -8,8 +8,12 @@
 # Source.Python Imports
 #   Cvars
 from cvars import ConVar
+#   Core
+from paths import TRANSLATION_PATH
 #   Plugins
 from plugins.command import SubCommandManager
+#   Translations
+from translations.strings import LangStrings
 
 # Script Imports
 from gungame.core.plugins import _plugin_strings
@@ -127,13 +131,13 @@ class _GGSubCommandManager(SubCommandManager):
         """List all currently loaded plugins."""
         # Get header messages
         message = self.prefix + _plugin_strings[
-            'Plugins'].get_string() + '\n' + '=' * 61 + '\n\n'
+            'Plugins'].get_string() + '\n' + '=' * 61 + '\n'
 
         # Loop through all loaded plugins
         for plugin_name in sorted(self.manager):
 
             # Add the plugin's name to the message
-            message += '{0} ({1}):\n'.format(
+            message += '\n{0} ({1}):\n\n'.format(
                 plugin_name, valid_plugins.get_plugin_type(plugin_name))
 
             # Get the plugin's information
@@ -159,6 +163,13 @@ class _GGSubCommandManager(SubCommandManager):
                         value.get_name(),
                         value.get_help_text(),
                         value.get_string())
+
+                # Is the instance a LangStrings instance?
+                if isinstance(value, LangStrings):
+
+                    # Get the LangStrings' path
+                    value = '..' + value._mainfile.replace(
+                        TRANSLATION_PATH, '').replace('\\', '/')
 
                 # Add the current item to the message
                 message += '\t{0}:\n\t\t{1}\n'.format(item, value)

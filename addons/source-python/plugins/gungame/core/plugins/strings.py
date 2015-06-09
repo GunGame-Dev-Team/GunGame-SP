@@ -1,4 +1,4 @@
-# ../gungame/core/translations/strings.py
+# ../gungame/core/plugins/strings.py
 
 """GunGame translations functionality."""
 
@@ -21,16 +21,11 @@ from gungame.core.plugins.valid import valid_plugins
 # =============================================================================
 # >> CLASSES
 # =============================================================================
-class GunGameLangStrings(LangStrings):
+class PluginStrings(LangStrings):
 
-    """Class used to retrieve GunGame translations."""
+    """Class used to retrieve GunGame sub-plugin translations."""
 
     def __init__(self, name):
-        """Add 'gungame' to the path prior to initialization."""
-        infile = Path('gungame')
-        try:
-            folder = valid_plugins.get_plugin_type(name)
-            infile = infile.joinpath(folder + '_plugins', name)
-        except ValueError:
-            infile = infile.joinpath(name)
-        super(GunGameLangStrings, self).__init__(infile)
+        """Add 'gungame' and the plugin type to the path."""
+        super(PluginStrings, self).__init__('gungame/{0}_plugins/{1}'.format(
+            valid_plugins.get_plugin_type(name), name))
