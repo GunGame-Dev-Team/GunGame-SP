@@ -26,10 +26,11 @@ class GG_New_Leader(CustomEvent):
 
     userid = leveler = ShortVariable(
         'The userid of the player that became the new leader')
-    leaders = StringVariable(
-        'String of current leaders separated by "," e.g. "2,7,9"')
     old_leaders = StringVariable(
         'String of the old leaders separated by "," e.g. "2,7,9"')
+    old_level = ByteVariable('The old leader level')
+    leaders = StringVariable(
+        'String of current leaders separated by "," e.g. "2,7,9"')
     leader_level = ByteVariable("The current leader's level")
 
 
@@ -39,10 +40,10 @@ class GG_Tied_Leader(CustomEvent):
 
     userid = leveler = ShortVariable(
         'The userid of the player that tied the leader(s)')
-    leaders = StringVariable(
-        'String of current leaders separated by "," e.g. "2,7,9"')
     old_leaders = StringVariable(
         'String of the old leaders separated by "," e.g. "2,7,9"')
+    leaders = StringVariable(
+        'String of current leaders separated by "," e.g. "2,7,9"')
     leader_level = ByteVariable("The current leader's level")
 
 
@@ -52,10 +53,11 @@ class GG_Leader_LostLevel(CustomEvent):
 
     userid = leveler = ShortVariable(
         'The userid of the leader that lost a level')
-    leaders = StringVariable(
-        'String of current leaders separated by "," e.g. "2,7,9"')
     old_leaders = StringVariable(
         'String of the old leaders separated by "," e.g. "2,7,9"')
+    old_level = ByteVariable('The old leader level')
+    leaders = StringVariable(
+        'String of current leaders separated by "," e.g. "2,7,9"')
     leader_level = ByteVariable("The current leader's level")
 
 
@@ -64,10 +66,11 @@ class GG_Leader_Disconnect(CustomEvent):
     """Called when the leader disconnects from the server."""
 
     userid = ShortVariable('The userid of the leader that disconnected')
-    leaders = StringVariable(
-        'String of current leaders separated by "," e.g. "2,7,9"')
     old_leaders = StringVariable(
         'String of the old leaders separated by "," e.g. "2,7,9"')
+    old_level = ByteVariable('The old leader level')
+    leaders = StringVariable(
+        'String of current leaders separated by "," e.g. "2,7,9"')
     leader_level = ByteVariable("The current leader's level")
 
 

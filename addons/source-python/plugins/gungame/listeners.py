@@ -13,6 +13,7 @@ from listeners import LevelInit
 from listeners import LevelShutdown
 
 from gungame.core.events.included.match import GG_Start
+from gungame.core.leaders import leader_manager
 from gungame.core.players.dictionary import player_dictionary
 from gungame.core.status import GunGameStatus
 from gungame.core.status import GunGameStatusType
@@ -103,9 +104,16 @@ def player_death(game_event):
 
 
 @Event
+def player_activate(game_event):
+    """"""
+    leader_manager.add_player(game_event.get_int('userid'))
+
+
+@Event
 def player_disconnect(game_event):
     """Store the disconnecting player's values and remove from dictionary."""
     player_dictionary.safe_remove(game_event.get_int('userid'))
+    leader_manager.check_disconnect(game_event.get_int('userid'))
 
 
 @Event
@@ -149,6 +157,16 @@ def gg_map_end(game_event):
 def gg_start(game_event):
     """Set the match status to ACTIVE when it starts."""
     GunGameStatus.MATCH = GunGameStatusType.ACTIVE
+
+
+@Event
+def gg_levelup(game_event):
+    leader_manager.player_levelup(game_event.get_int('leveler'))
+
+
+@Event
+def gg_leveldown(game_event):
+    leader_manager.player_leveldown(game_event.get_int('leveler'))
 
 
 # =============================================================================
