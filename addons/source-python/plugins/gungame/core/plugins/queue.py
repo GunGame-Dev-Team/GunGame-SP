@@ -66,9 +66,9 @@ class _PluginQueue(dict):
                 'Successful Unload'].get_string(plugin=plugin_name))
 
             # Fire the gg_plugin_unloaded event
-            GG_Plugin_Unloaded(
-                plugin=plugin_name,
-                plugin_type=valid_plugins.get_plugin_type(plugin_name)).fire()
+            with GG_Plugin_Unloaded() as event:
+                event.plugin = plugin_name
+                event.plugin_type = valid_plugins.get_plugin_type(plugin_name)
 
     def _load_plugins(self):
         """Load all plugins in the load queue."""
@@ -93,9 +93,9 @@ class _PluginQueue(dict):
                 'Successful Load'].get_string(plugin=plugin_name))
 
             # Fire the gg_plugin_load event
-            GG_Plugin_Loaded(
-                plugin=plugin_name,
-                plugin_type=valid_plugins.get_plugin_type(plugin_name)).fire()
+            with GG_Plugin_Loaded() as event:
+                event.plugin = plugin_name
+                event.plugin_type = valid_plugins.get_plugin_type(plugin_name)
 
 # Get the _PluginQueue instance
 plugin_queue = _PluginQueue()

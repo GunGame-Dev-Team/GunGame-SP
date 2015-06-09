@@ -95,19 +95,20 @@ class GunGamePlayer(PlayerEntity, _PlayerMessages):
         if new_level > weapon_order_manager.active.max_levels:
             if GunGameStatus.MATCH is GunGameStatusType.POST:
                 return
-            win_event = GG_Win()
-            win_event.attacker = win_event.winner = self.userid
-            win_event.userid = win_event.loser = victim
-            win_event.fire()
+            with GG_Win() as event:
+                event.attacker = event.winner = self.userid
+                event.userid = event.loser = victim
             return
         self.level = new_level
         if self.level != new_level:
             return
         self.multikill = 0
-        GG_LevelUp(
-            attacker=self.userid, leveler=self.userid, userid=victim,
-            victim=victim, old_level=old_level, new_level=new_level,
-            reason=reason).fire()
+        with GG_LevelUp() as event:
+            event.attacker = event.leveler = self.userid
+            event.userid = event.victim = victim
+            event.old_level = old_level
+            event.new_level = new_level
+            event.reason = reason
 
     def decrease_level(self, levels, attacker=0, reason=''):
         """Decrease the player's level by the given amount."""
@@ -121,6 +122,9 @@ class GunGamePlayer(PlayerEntity, _PlayerMessages):
         if self.level != new_level:
             return
         self.multikill = 0
-        GG_LevelDown(
-            attacker=attacker, leveler=self.userid, userid=self.userid,
-            old_level=old_level, new_level=new_level, reason=reason).fire()
+        with GG_LevelDown() as event:
+            event.attacker = attacker
+            event.leveler = event.userid = self.userid
+            event.old_level = old_level
+            event.new_level = new_level
+            event.reason = reason
