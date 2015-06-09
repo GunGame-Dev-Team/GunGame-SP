@@ -7,6 +7,8 @@
 # =============================================================================
 from listeners.tick import tick_delays
 
+from gungame.core.events.included.plugins import GG_Plugin_Loaded
+from gungame.core.events.included.plugins import GG_Plugin_Unloaded
 from gungame.core.plugins import gg_plugins_logger
 from gungame.core.plugins.manager import gg_plugin_manager
 
@@ -62,6 +64,11 @@ class _PluginQueue(dict):
             self.logger.log_message(self.prefix + self.translations[
                 'Successful Unload'].get_string(plugin=plugin_name))
 
+            # Fire the gg_plugin_unloaded event
+            GG_Plugin_Unloaded(
+                plugin=plugin_name,
+                plugin_type=valid_plugins.get_plugin_type(plugin_name)).fire()
+
     def _load_plugins(self):
         """Load all plugins in the load queue."""
         # Loop through all plugins to load
@@ -83,6 +90,11 @@ class _PluginQueue(dict):
             # Send a message that the plugin was loaded
             self.logger.log_message(self.prefix + self.translations[
                 'Successful Load'].get_string(plugin=plugin_name))
+
+            # Fire the gg_plugin_load event
+            GG_Plugin_Loaded(
+                plugin=plugin_name,
+                plugin_type=valid_plugins.get_plugin_type(plugin_name)).fire()
 
 # Get the _PluginQueue instance
 plugin_queue = _PluginQueue()

@@ -8,10 +8,6 @@
 from importlib import import_module
 from warnings import warn
 
-# Source.Python Imports
-#   Plugins
-from plugins.info import PluginInfo
-
 # GunGame Imports
 from gungame.core.plugins.paths import GUNGAME_PLUGIN_PATH
 
