@@ -5,7 +5,6 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-from cvars import ConVar
 from filters.players import PlayerIter
 
 from gungame.core.events.included.leaders import GG_Leader_Disconnect
@@ -70,8 +69,8 @@ class _LeaderManager(dict):
                 event.leader_level = new_level
             message = 'Leader_Tied_{0}'.format(
                 'Singular' if count == 2 else 'Plural')
-            self._send_leader_message(
-                message, player.index, count=count,
+            message_manager.chat_message(
+                message=message, index=player.index, count=count,
                 name=player.name, level=new_level)
         else:
             with GG_New_Leader() as event:
@@ -80,8 +79,9 @@ class _LeaderManager(dict):
                 event.old_level = old_level
                 event.leaders = new_leaders
                 event.leader_level = new_level
-            self._send_leader_message(
-                'Leader_New', player.index, name=player.name, level=new_level)
+            message_manager.chat_message(
+                message='Leader_New', index=player.index,
+                name=player.name, level=new_level)
 
     def player_leveldown(self, userid):
         """Set the player's level and see if the leaders changed."""
@@ -124,12 +124,13 @@ class _LeaderManager(dict):
         level = self.leader_level
         if len(current) == 1:
             player = player_dictionary[current[0]]
-            self._send_leader_message(
-                'Leader_New', player.index, name=player.name, level=level)
+            message_manager.chat_message(
+                message='Leader_New', index=player.index,
+                name=player.name, level=level)
         else:
             names = [player_dictionary[player].name for player in current]
-            self._send_leader_message(
-                'Leader_New_Plural', names=names, level=level)
+            message_manager.chat_message(
+                message='Leader_New_Plural', names=names, level=level)
 
     def _get_leader_string(self):
         """Return a string of leader userids."""
@@ -137,12 +138,5 @@ class _LeaderManager(dict):
         if leaders is None:
             return ''
         return ','.join(map(str, leaders))
-
-    @staticmethod
-    def _send_leader_message(message, index=0, **tokens):
-        """Send the given message to players."""
-        if ConVar('gg_leader_messages').get_int():
-            message_manager.chat_message(
-                index=index, message=message, **tokens)
 
 leader_manager = _LeaderManager()

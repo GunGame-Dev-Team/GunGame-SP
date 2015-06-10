@@ -30,6 +30,8 @@ class _MessageManager(dict):
     def __init__(self):
         """Retrieve all core translations and store them in the dictionary."""
         super(_MessageManager, self).__init__()
+        self._hooked_messages = defaultdict()
+        self._hooked_prefixes = defaultdict()
         for file in GUNGAME_TRANSLATION_PATH.joinpath('core').files():
             if file.namebase.endswith('_server'):
                 continue
@@ -41,37 +43,63 @@ class _MessageManager(dict):
                     continue
                 self[key] = value
 
+    def hook_message(self, message_name):
+        """"""
+        self._hooked_messages[message_name] += 1
+
+    def unhook_message(self, message_name):
+        self._hooked_messages[message_name] -= 1
+        if not self._hooked_messages[message_name]:
+            del self._hooked_messages[message_name]
+
+    def hook_prefix(self, message_prefix):
+        """"""
+        self._hooked_prefixes[message_prefix] += 1
+
+    def unhook_prefix(self, message_prefix):
+        self._hooked_prefixes[message_prefix] -= 1
+        if not self._hooked_prefixes[message_prefix]:
+            del self._hooked_prefixes[message_prefix]
+
     def center_message(self, users=None, message='', **tokens):
         """Send a center message to the given players."""
+        message = self._get_message(message)
+        if message is None:
+            return
         if isinstance(users, int):
             users = (users, )
-        message = self._get_message(message)
         instance = TextMsg(
             destination=TextMsg.HUD_PRINTCENTER, message=message, **tokens)
         instance.send(*(users or ()))
 
     def chat_message(self, users=None, index=0, message='', **tokens):
         """Send a chat message to the given players."""
+        message = self._get_message(message)
+        if message is None:
+            return
         if isinstance(users, int):
             users = (users, )
-        message = self._get_message(message)
         instance = SayText2(index=index, message=message, **tokens)
         instance.send(*(users or ()))
 
     def echo_message(self, users=None, message='', **tokens):
         """Send an echo message to the given players."""
+        message = self._get_message(message)
+        if message is None:
+            return
         if isinstance(users, int):
             users = (users, )
-        message = self._get_message(message)
         instance = TextMsg(
             destination=TextMsg.HUD_PRINTCONSOLE, message=message, **tokens)
         instance.send(*(users or ()))
 
     def hint_message(self, users=None, message='', **tokens):
         """Send a hint message to the given players."""
+        message = self._get_message(message)
+        if message is None:
+            return
         if isinstance(users, int):
             users = (users, )
-        message = self._get_message(message)
         instance = HintText(message=message, **tokens)
         instance.send(*(users or ()))
 
@@ -80,9 +108,11 @@ class _MessageManager(dict):
             color2=WHITE, effect=0, fadein=0.0, fadeout=0.0,
             hold=4.0, fxtime=0.0, message='', **tokens):
         """Send a hud message to the given players."""
+        message = self._get_message(message)
+        if message is None:
+            return
         if isinstance(users, int):
             users = (users, )
-        message = self._get_message(message)
         instance = HudMsg(
             x=x, y=y, r1=color1.r, g1=color1.g, b1=color1.b, a1=color1.a,
             r2=color2.r, g2=color2.g, b2=color2.b, a2=color2.a,
@@ -92,9 +122,11 @@ class _MessageManager(dict):
 
     def keyhint_message(self, users=None, message='', **tokens):
         """Send a keyhint message to the given players."""
+        message = self._get_message(message)
+        if message is None:
+            return
         if isinstance(users, int):
             users = (users, )
-        message = self._get_message(message)
         instance = KeyHintText(message=message, **tokens)
         instance.send(*(users or ()))
 
@@ -102,9 +134,11 @@ class _MessageManager(dict):
             self, users=None, panel_type=2, title='',
             message='', visible=True, **tokens):
         """Send a motd message to the given players."""
+        message = self._get_message(message)
+        if message is None:
+            return
         if isinstance(users, int):
             users = (users, )
-        message = self._get_message(message)
         subkeys = {'title': title, 'type': panel_type, 'msg': message}
         instance = VGUIMenu(
             name='info', show=visible, subkeys=subkeys, **tokens)
@@ -113,6 +147,9 @@ class _MessageManager(dict):
     def top_message(
             self, users=None, message='', color=WHITE, time=4.0, **tokens):
         """Send a toptext message to the given players."""
+        message = self._get_message(message)
+        if message is None:
+            return
         if isinstance(users, int):
             users = (users, )
         # message = self._get_message(message)
@@ -127,6 +164,11 @@ class _MessageManager(dict):
 
         # Is the message a registered GunGame translation?
         if message in self:
+            if message in self._hooked_messages:
+                return None
+            for prefix in self._hooked_prefixes:
+                if message.startswith(prefix):
+                    return None
             return self[message]
 
         # Return the string message

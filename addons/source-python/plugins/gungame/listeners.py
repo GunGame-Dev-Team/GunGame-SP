@@ -52,9 +52,7 @@ def player_spawn(game_event):
     if player.is_fake_client():
         return
 
-    if ConVar('gg_level_info').get_int():
-
-        send_level_info(player)
+    send_level_info(player)
 
 
 @Event
@@ -148,8 +146,6 @@ def gg_win(game_event):
     else:
         entity = Entity.create('game_end')
     entity.end_game()
-    if not ConVar('gg_winner_messages').get_int():
-        return
     message_manager.chat_message(
         index=winner.index, message='Player_Won', name=winner.name)
     for second in range(4):
@@ -163,8 +159,6 @@ def gg_win(game_event):
 @Event
 def gg_team_win(game_event):
     """Send team winner messages."""
-    if not ConVar('gg_winner_messages').get_int():
-        return
     team_name = ''
     message_manager.chat_message(message='Team_Won', name=team_name)
     for second in range(4):
@@ -228,8 +222,6 @@ def level_shutdown():
 def post_multikill(player, attribute, new_value, old_value):
     """Send multikill info message."""
     if not new_value:
-        return
-    if not ConVar('gg_level_info').get_int():
         return
     multikill = player.level_multikill
     if multikill == new_value:
