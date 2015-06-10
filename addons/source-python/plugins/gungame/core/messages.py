@@ -43,6 +43,8 @@ class _MessageManager(dict):
 
     def center_message(self, users=None, message='', **tokens):
         """Send a center message to the given players."""
+        if isinstance(users, int):
+            users = (users, )
         message = self._get_message(message)
         instance = TextMsg(
             destination=TextMsg.HUD_PRINTCENTER, message=message, **tokens)
@@ -50,12 +52,16 @@ class _MessageManager(dict):
 
     def chat_message(self, users=None, index=0, message='', **tokens):
         """Send a chat message to the given players."""
+        if isinstance(users, int):
+            users = (users, )
         message = self._get_message(message)
         instance = SayText2(index=index, message=message, **tokens)
         instance.send(*(users or ()))
 
     def echo_message(self, users=None, message='', **tokens):
         """Send an echo message to the given players."""
+        if isinstance(users, int):
+            users = (users, )
         message = self._get_message(message)
         instance = TextMsg(
             destination=TextMsg.HUD_PRINTCONSOLE, message=message, **tokens)
@@ -63,6 +69,8 @@ class _MessageManager(dict):
 
     def hint_message(self, users=None, message='', **tokens):
         """Send a hint message to the given players."""
+        if isinstance(users, int):
+            users = (users, )
         message = self._get_message(message)
         instance = HintText(message=message, **tokens)
         instance.send(*(users or ()))
@@ -72,6 +80,8 @@ class _MessageManager(dict):
             color2=WHITE, effect=0, fadein=0.0, fadeout=0.0,
             hold=4.0, fxtime=0.0, message='', **tokens):
         """Send a hud message to the given players."""
+        if isinstance(users, int):
+            users = (users, )
         message = self._get_message(message)
         instance = HudMsg(
             x=x, y=y, r1=color1.r, g1=color1.g, b1=color1.b, a1=color1.a,
@@ -82,6 +92,8 @@ class _MessageManager(dict):
 
     def keyhint_message(self, users=None, message='', **tokens):
         """Send a keyhint message to the given players."""
+        if isinstance(users, int):
+            users = (users, )
         message = self._get_message(message)
         instance = KeyHintText(message=message, **tokens)
         instance.send(*(users or ()))
@@ -90,6 +102,8 @@ class _MessageManager(dict):
             self, users=None, panel_type=2, title='',
             message='', visible=True, **tokens):
         """Send a motd message to the given players."""
+        if isinstance(users, int):
+            users = (users, )
         message = self._get_message(message)
         subkeys = {'title': title, 'type': panel_type, 'msg': message}
         instance = VGUIMenu(
@@ -99,6 +113,8 @@ class _MessageManager(dict):
     def top_message(
             self, users=None, message='', color=WHITE, time=4.0, **tokens):
         """Send a toptext message to the given players."""
+        if isinstance(users, int):
+            users = (users, )
         # message = self._get_message(message)
         raise NotImplementedError(
             'This feature is not yet implemented as an OOP class in SP')
