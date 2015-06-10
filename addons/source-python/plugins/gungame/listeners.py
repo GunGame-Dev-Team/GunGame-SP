@@ -16,9 +16,11 @@ from listeners.tick import tick_delays
 from gungame.core.events.included.match import GG_Start
 from gungame.core.leaders import leader_manager
 from gungame.core.messages import message_manager
+from gungame.core.players.attributes import AttributePostHook
 from gungame.core.players.dictionary import player_dictionary
 from gungame.core.status import GunGameStatus
 from gungame.core.status import GunGameStatusType
+from gungame.core.weapons.manager import weapon_order_manager
 
 
 # =============================================================================
@@ -50,10 +52,9 @@ def player_spawn(game_event):
     if player.is_fake_client():
         return
 
-    from messages import SayText2
-    SayText2(message='{0} - {1}/{2}'.format(
-        player.level, player.multikill, player.level_multikill)).send(
-            player.index)
+    if ConVar('gg_level_info').get_int():
+
+        send_level_info(player)
 
 
 @Event
@@ -150,13 +151,13 @@ def gg_win(game_event):
     if not ConVar('gg_winner_messages').get_int():
         return
     message_manager.chat_message(
-        index=winner.index, message='PlayerWon', name=winner.name)
+        index=winner.index, message='Player_Won', name=winner.name)
     for second in range(4):
         tick_delays.delay(
             second, message_manager.center_message,
-            message='PlayerWon_Center', name=winner.name)
+            message='Player_Won_Center', name=winner.name)
     # message_manager.top_message(
-    #     message='PlayerWon', color=<team_color>, time=4.0, name=winner.name)
+    #     message='Player_Won', color=<team_color>, time=4.0, name=winner.name)
 
 
 @Event
@@ -165,13 +166,13 @@ def gg_team_win(game_event):
     if not ConVar('gg_winner_messages').get_int():
         return
     team_name = ''
-    message_manager.chat_message(message='TeamWon', name=team_name)
+    message_manager.chat_message(message='Team_Won', name=team_name)
     for second in range(4):
         tick_delays.delay(
             second, message_manager.center_message,
-            message='TeamWon_Center', name=team_name)
+            message='Team_Won_Center', name=team_name)
     # message_manager.top_message(
-    #     message='TeamWon', color=<team_color>, time=4.0, name=team_name)
+    #     message='Team_Won', color=<team_color>, time=4.0, name=team_name)
 
 
 @Event
@@ -188,8 +189,15 @@ def gg_start(game_event):
 
 @Event
 def gg_levelup(game_event):
-    """Set the player's level in the leader dictionary."""
-    leader_manager.player_levelup(game_event.get_int('leveler'))
+    """Increase the player leader level and send level info."""
+    # Get the player's userid
+    userid = game_event.get_int('leveler')
+
+    # Set the player's level in the leader dictionary
+    leader_manager.player_levelup(userid)
+
+    # Send the player their new level info
+    send_level_info(player_dictionary[userid])
 
 
 @Event
@@ -199,7 +207,7 @@ def gg_leveldown(game_event):
 
 
 # =============================================================================
-# >> LISTENERS
+# >> LEVEL LISTENERS
 # =============================================================================
 @LevelInit
 def level_init(mapname):
@@ -214,6 +222,23 @@ def level_shutdown():
 
 
 # =============================================================================
+# >> ATTRIBUTE LISTENERS
+# =============================================================================
+@AttributePostHook('multikill')
+def post_multikill(player, attribute, new_value, old_value):
+    """Send multikill info message."""
+    if not new_value:
+        return
+    if not ConVar('gg_level_info').get_int():
+        return
+    multikill = player.level_multikill
+    if multikill == new_value:
+        return
+    player.hint_message(
+        message='Multikill_Notification', kills=new_value, total=multikill)
+
+
+# =============================================================================
 # >> HELPER FUNCTIONS
 # =============================================================================
 def start_match():
@@ -221,3 +246,33 @@ def start_match():
     if GunGameStatus.MATCH is not GunGameStatusType.INACTIVE:
         return
     GG_Start().fire()
+
+
+def send_level_info(player):
+    """"""
+    language = player.language
+    text = message_manager['LevelInfo_Current_Level'].get_string(
+        language, level=player.level, total=weapon_order_manager.max_levels)
+    text += message_manager['LevelInfo_Current_Weapon'].get_string(
+        language, weapon=player.level_weapon)
+    multikill = player.level_multikill
+    if multikill > 1:
+        text += message_manager['LevelInfo_Required_Kills'].get_string(
+            language, kills=player.multikill, total=multikill)
+    leaders = leader_manager.current_leaders
+    leader_level = leader_manager.leader_level
+    if leaders is None:
+        text += message_manager['LevelInfo_No_Leaders'].get_string(language)
+    elif len(leaders) == 1 and player.userid in leaders:
+        text += message_manager[
+            'LevelInfo_Current_Leader'].get_string(language)
+    elif len(leaders) > 1 and player.userid in leaders:
+        text += message_manager[
+            'LevelInfo_Amongst_Leaders'].get_string(language)
+    else:
+        text += message_manager['LevelInfo_Leader_Level'].get_string(
+            language, level=leader_level,
+            total=weapon_order_manager.max_levels,
+            weapon=weapon_order_manager.active[leader_level].weapon)
+
+    player.hint_message(message=text)

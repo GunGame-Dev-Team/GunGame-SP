@@ -92,7 +92,7 @@ class GunGamePlayer(PlayerEntity, _PlayerMessages):
             raise ValueError()
         old_level = self.level
         new_level = old_level + levels
-        if new_level > weapon_order_manager.active.max_levels:
+        if new_level > weapon_order_manager.max_levels:
             if GunGameStatus.MATCH is GunGameStatusType.POST:
                 return
             with GG_Win() as event:

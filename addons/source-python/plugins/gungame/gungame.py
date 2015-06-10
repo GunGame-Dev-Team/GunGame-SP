@@ -23,11 +23,7 @@ def load():
     """Initialize GunGame."""
     # Initialize GunGame logging
 
-    # Initialize GunGame translations
-
-    # Initialize GunGame commands
-
-    # Initialize GunGame menus
+    # Initialize GunGame commands/menus
 
     # Initialize GunGame weapon orders
     weapon_order_manager.get_weapon_orders()
@@ -64,13 +60,19 @@ def unload():
     gg_command_manager.unload_all_plugins()
 
     # Clean GunGame configs
+
     # Clean GunGame players
+
     # Clean GunGame database
+
     # Clean GunGame sounds
+
     # Clean GunGame events
+
     # Clean GunGame weapon orders
-    # Clean GunGame menus
-    # Clean GunGame translations
+
+    # Clean GunGame commands/menus
+
     # Clean GunGame logging
 
     # Re-enable buyzones

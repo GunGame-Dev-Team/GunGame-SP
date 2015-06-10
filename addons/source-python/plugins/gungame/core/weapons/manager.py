@@ -37,6 +37,11 @@ class _WeaponOrderManager(dict):
         """Return whether or not to use a randomized weapon order."""
         return self._randomize
 
+    @property
+    def max_levels(self):
+        """Return the current weapon order's max levels."""
+        return self.active.max_levels
+
     def get_weapon_orders(self):
         """Retrieve all weapon orders and store them in the dictionary."""
         for file in WEAPON_ORDER_PATH.files():
