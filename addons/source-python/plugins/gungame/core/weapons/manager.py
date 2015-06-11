@@ -5,10 +5,6 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Python Imports
-#   Contextlib
-from contextlib import suppress
-
 # Source.Python Imports
 #   Cvar
 from cvars import ConVar
@@ -104,20 +100,3 @@ class _WeaponOrderManager(dict):
         """Restart the match."""
 
 weapon_order_manager = _WeaponOrderManager()
-
-
-# =============================================================================
-# >> EVENTS
-# =============================================================================
-@Event
-def server_cvar(game_event):
-    """Set the weapon order value if the ConVar is for the weapon order."""
-    cvarname = game_event.get_string('cvarname')
-    cvarvalue = game_event.get_string('cvarvalue')
-    if cvarname == 'gg_weapon_order_file':
-        weapon_order_manager.set_active_weapon_order(cvarvalue)
-    elif cvarname == 'gg_weapon_order_randomize':
-        weapon_order_manager.set_randomize(cvarvalue)
-    elif cvarname == 'gg_multikill_override':
-        with suppress(ValueError):
-            weapon_order_manager.multikill = int(cvarvalue)
