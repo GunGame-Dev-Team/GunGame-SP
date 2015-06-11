@@ -29,7 +29,8 @@ from gungame.core.weapons.manager import weapon_order_manager
 # =============================================================================
 # >> CLASSES
 # =============================================================================
-class GunGamePlayer(PlayerEntity, _PlayerMessages, _PlayerDatabase):
+# class GunGamePlayer(PlayerEntity, _PlayerMessages, _PlayerDatabase):
+class GunGamePlayer(PlayerEntity, _PlayerMessages):
 
     """Class used to interact directly with a specific player."""
 

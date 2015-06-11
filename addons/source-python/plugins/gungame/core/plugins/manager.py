@@ -9,8 +9,8 @@ import sys
 
 from plugins.manager import PluginManager
 
+from gungame.core.paths import GUNGAME_PLUGINS_PATH
 from gungame.core.plugins import gg_plugins_logger
-from gungame.core.plugins.paths import GUNGAME_PLUGIN_PATH
 from gungame.core.plugins.valid import valid_plugins
 
 
@@ -51,7 +51,7 @@ class _GGPluginManager(PluginManager):
 
     def _remove_module(self, module):
         """Remove a module."""
-        plugin_path = GUNGAME_PLUGIN_PATH.joinpath(
+        plugin_path = GUNGAME_PLUGINS_PATH.joinpath(
             valid_plugins.get_plugin_type(self._current_plugin),
             self._current_plugin, '__init__.py')
         if plugin_path == sys.modules[module].__file__:

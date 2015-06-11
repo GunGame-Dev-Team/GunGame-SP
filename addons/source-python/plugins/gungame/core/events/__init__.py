@@ -14,8 +14,9 @@ from importlib import import_module
 from path import Path
 
 # GunGame Imports
+#   Paths
+from gungame.core.paths import GUNGAME_PLUGINS_PATH
 #   Plugins
-from gungame.core.plugins.paths import GUNGAME_PLUGIN_PATH
 from gungame.core.plugins.valid import valid_plugins
 
 
@@ -33,7 +34,7 @@ for event_file in Path(__file__).parent.joinpath('included').files():
 # =============================================================================
 for plugin_name in valid_plugins.all:
     plugin_type = valid_plugins.get_plugin_type(plugin_name)
-    if GUNGAME_PLUGIN_PATH.joinpath(
+    if GUNGAME_PLUGINS_PATH.joinpath(
             plugin_type, plugin_name, 'custom_events.py').isfile():
         import_module(
             'gungame.plugins.{0}.{1}.custom_events'.format(

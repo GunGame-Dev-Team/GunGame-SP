@@ -9,7 +9,7 @@ from importlib import import_module
 from warnings import warn
 
 # GunGame Imports
-from gungame.core.plugins.paths import GUNGAME_PLUGIN_PATH
+from gungame.core.paths import GUNGAME_PLUGINS_PATH
 
 
 # =============================================================================
@@ -78,7 +78,7 @@ class _ValidPlugins(object):
         plugins = {}
 
         # Loop through all plugins
-        for plugin in GUNGAME_PLUGIN_PATH.joinpath(plugin_type).dirs():
+        for plugin in GUNGAME_PLUGINS_PATH.joinpath(plugin_type).dirs():
 
             # Skip the compiled files
             if plugin.namebase == '__pycache__':
