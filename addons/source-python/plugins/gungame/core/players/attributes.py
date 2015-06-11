@@ -58,7 +58,6 @@ player_attributes = _PlayerAttributes()
 # Register the core attributes
 player_attributes.register_attribute('level', 1)
 player_attributes.register_attribute('multikill', 0)
-player_attributes.register_attribute('wins', 0)
 
 
 class _AttributeHook(list):
