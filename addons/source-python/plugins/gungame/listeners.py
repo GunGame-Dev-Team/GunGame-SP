@@ -157,19 +157,6 @@ def gg_win(game_event):
 
 
 @Event
-def gg_team_win(game_event):
-    """Send team winner messages."""
-    team_name = ''
-    message_manager.chat_message(message='Team_Won', name=team_name)
-    for second in range(4):
-        tick_delays.delay(
-            second, message_manager.center_message,
-            message='Team_Won_Center', name=team_name)
-    # message_manager.top_message(
-    #     message='Team_Won', color=<team_color>, time=4.0, name=team_name)
-
-
-@Event
 def gg_map_end(game_event):
     """Set the match status to POST after the map has ended."""
     GunGameStatus.MATCH = GunGameStatusType.POST
