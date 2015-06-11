@@ -44,7 +44,7 @@ def load():
     # Add gungame to sv_tags
     sv_tags.add(info.basename)
 
-    # Import the listeners/events
+    # Import the listeners/events/commands/menus
     from gungame.listeners import start_match
 
     # Wait 1 tick to see if gg_start should be called
