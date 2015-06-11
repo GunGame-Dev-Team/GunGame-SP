@@ -5,6 +5,7 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+from collections import defaultdict
 from warnings import warn
 
 from colors import WHITE
@@ -18,6 +19,13 @@ from translations.strings import LangStrings
 from translations.strings import TranslationStrings
 
 from gungame.core.paths import GUNGAME_TRANSLATION_PATH
+
+
+# =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = ('message_manager',
+           )
 
 
 # =============================================================================
