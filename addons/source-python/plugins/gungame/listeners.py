@@ -195,6 +195,9 @@ def level_init(mapname):
     """Set match status to INACTIVE when a new map is started."""
     GunGameStatus.MATCH = GunGameStatusType.INACTIVE
 
+    # Start match (or warmup)
+    start_match()
+
 
 @LevelShutdown
 def level_shutdown():
@@ -222,6 +225,7 @@ def post_multikill(player, attribute, new_value, old_value):
 # =============================================================================
 def start_match():
     """Start the match if not already started or on hold."""
+    # TODO: implement warmup to start here
     if GunGameStatus.MATCH is not GunGameStatusType.INACTIVE:
         return
     GG_Start().fire()
