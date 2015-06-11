@@ -13,6 +13,7 @@ from gungame.info import info
 from gungame.core.config.manager import config_manager
 from gungame.core.events.storage import gg_resource_list
 from gungame.core.plugins.command import gg_command_manager
+from gungame.core.warmup import warmup_manager
 from gungame.core.weapons.manager import weapon_order_manager
 
 
@@ -40,6 +41,9 @@ def load():
 
     # Set the starting weapon convars
     weapon_order_manager.set_start_convars()
+
+    # Set the warmup weapon
+    warmup_manager.set_warmup_weapon()
 
     # Add gungame to sv_tags
     sv_tags.add(info.basename)

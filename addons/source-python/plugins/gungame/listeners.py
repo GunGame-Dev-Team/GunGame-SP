@@ -5,32 +5,52 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Python Imports
+#   Contextlib
+from contextlib import suppress
+
+# Source.Python Imports
+#   Cvars
 from cvars import ConVar
+#   Entities
 from entities.entity import Entity
+#   Events
 from events import Event
+#   Filters
 from filters.entities import EntityIter
+#   Listeners
 from listeners import LevelInit
 from listeners import LevelShutdown
 from listeners.tick import tick_delays
 
+# GunGame Imports
+#   Events
 from gungame.core.events.included.match import GG_Start
+#   Leaders
 from gungame.core.leaders import leader_manager
+#   Messages
 from gungame.core.messages import message_manager
+#   Players
 from gungame.core.players.attributes import AttributePostHook
 from gungame.core.players.dictionary import player_dictionary
+#   Status
+from gungame.core.status import GunGameMatchStatus
 from gungame.core.status import GunGameStatus
-from gungame.core.status import GunGameStatusType
+from gungame.core.status import GunGameRoundStatus
+#   Warmup
+from gungame.core.warmup import warmup_manager
+#   Weapons
 from gungame.core.weapons.manager import weapon_order_manager
 
 
 # =============================================================================
-# >> GAME EVENTS
+# >> PLAYER GAME EVENTS
 # =============================================================================
 @Event
 def player_spawn(game_event):
     """Give the player their level weapon."""
     # Is GunGame active?
-    if GunGameStatus.MATCH is not GunGameStatusType.ACTIVE:
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         return
 
     # Get the userid of the player
@@ -59,11 +79,11 @@ def player_spawn(game_event):
 def player_death(game_event):
     """Award the killer with a multi-kill increase or level increase."""
     # Is GunGame active?
-    if GunGameStatus.MATCH is not GunGameStatusType.ACTIVE:
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         return
 
     # Is the round active or should kills after the round count?
-    if (GunGameStatus.ROUND is GunGameStatusType.INACTIVE and
+    if (GunGameStatus.ROUND is GunGameRoundStatus.INACTIVE and
             not ConVar('gg_count_after_round').get_int()):
         return
 
@@ -117,10 +137,13 @@ def player_disconnect(game_event):
     leader_manager.check_disconnect(game_event.get_int('userid'))
 
 
+# =============================================================================
+# >> ROUND GAME EVENTS
+# =============================================================================
 @Event
 def round_start(game_event):
     """Disable buyzones and set the round status to ACTIVE."""
-    GunGameStatus.ROUND = GunGameStatusType.ACTIVE
+    GunGameStatus.ROUND = GunGameRoundStatus.ACTIVE
     for entity in EntityIter('func_buyzone', return_types='entity'):
         entity.disable()
 
@@ -128,7 +151,26 @@ def round_start(game_event):
 @Event
 def round_end(game_event):
     """Set the round status to INACTIVE since the round ended."""
-    GunGameStatus.ROUND = GunGameStatusType.INACTIVE
+    GunGameStatus.ROUND = GunGameRoundStatus.INACTIVE
+
+
+# =============================================================================
+# >> OTHER GAME EVENTS
+# =============================================================================
+@Event
+def server_cvar(game_event):
+    """Set the weapon order value if the ConVar is for the weapon order."""
+    cvarname = game_event.get_string('cvarname')
+    cvarvalue = game_event.get_string('cvarvalue')
+    if cvarname == 'gg_weapon_order_file':
+        weapon_order_manager.set_active_weapon_order(cvarvalue)
+    elif cvarname == 'gg_weapon_order_randomize':
+        weapon_order_manager.set_randomize(cvarvalue)
+    elif cvarname == 'gg_multikill_override':
+        with suppress(ValueError):
+            weapon_order_manager.multikill = int(cvarvalue)
+    elif cvarname == 'gg_warmup_weapon':
+        warmup_manager.set_warmup_weapon()
 
 
 # =============================================================================
@@ -137,7 +179,7 @@ def round_end(game_event):
 @Event
 def gg_win(game_event):
     """Increase the win total for the winner and end the map."""
-    GunGameStatus.MATCH = GunGameStatusType.POST
+    GunGameStatus.MATCH = GunGameMatchStatus.POST
     winner = player_dictionary[game_event.get_int('winner')]
     if not winner.is_fake_client():
         winner.wins += 1
@@ -159,13 +201,13 @@ def gg_win(game_event):
 @Event
 def gg_map_end(game_event):
     """Set the match status to POST after the map has ended."""
-    GunGameStatus.MATCH = GunGameStatusType.POST
+    GunGameStatus.MATCH = GunGameMatchStatus.POST
 
 
 @Event
 def gg_start(game_event):
     """Set the match status to ACTIVE when it starts."""
-    GunGameStatus.MATCH = GunGameStatusType.ACTIVE
+    GunGameStatus.MATCH = GunGameMatchStatus.ACTIVE
 
 
 @Event
@@ -193,7 +235,10 @@ def gg_leveldown(game_event):
 @LevelInit
 def level_init(mapname):
     """Set match status to INACTIVE when a new map is started."""
-    GunGameStatus.MATCH = GunGameStatusType.INACTIVE
+    if GunGameStatus.MATCH is GunGameMatchStatus.LOADING:
+        return
+
+    GunGameStatus.MATCH = GunGameMatchStatus.INACTIVE
 
     # Start match (or warmup)
     start_match()
@@ -225,8 +270,9 @@ def post_multikill(player, attribute, new_value, old_value):
 # =============================================================================
 def start_match():
     """Start the match if not already started or on hold."""
-    # TODO: implement warmup to start here
-    if GunGameStatus.MATCH is not GunGameStatusType.INACTIVE:
+    if ConVar('gg_warmup_round').get_int():
+        warmup_manager.start_warmup()
+    if GunGameStatus.MATCH is not GunGameMatchStatus.INACTIVE:
         return
     GG_Start().fire()
 

@@ -12,7 +12,7 @@ from gungame.core.events.included.leveling import GG_LevelUp
 from gungame.core.events.included.match import GG_Win
 #   Status
 from gungame.core.status import GunGameStatus
-from gungame.core.status import GunGameStatusType
+from gungame.core.status import GunGameMatchStatus
 #   Weapons
 from gungame.core.weapons.manager import weapon_order_manager
 
@@ -26,13 +26,13 @@ class _PlayerLevels(object):
 
     def increase_level(self, levels, victim=0, reason=''):
         """Increase the player's level by the given amount."""
+        if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+            return
         if levels < 1:
             raise ValueError()
         old_level = self.level
         new_level = old_level + levels
         if new_level > weapon_order_manager.max_levels:
-            if GunGameStatus.MATCH is GunGameStatusType.POST:
-                return
             with GG_Win() as event:
                 event.attacker = event.winner = self.userid
                 event.userid = event.loser = victim
@@ -50,6 +50,8 @@ class _PlayerLevels(object):
 
     def decrease_level(self, levels, attacker=0, reason=''):
         """Decrease the player's level by the given amount."""
+        if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+            return
         if levels < 1:
             raise ValueError()
         old_level = self.level
