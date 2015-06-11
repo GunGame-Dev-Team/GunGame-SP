@@ -86,12 +86,14 @@ class _ValidPlugins(object):
 
             # Does the primary file not exist?
             if not plugin.joinpath(plugin.namebase + '.py').isfile():
-                warn()
+                warn('{0} plugin "{1}" is missing its base file.'.format(
+                    plugin_type.title(), plugin.namebase))
                 continue
 
             # Does the info file not exist?
             if not plugin.joinpath('info.py').isfile():
-                warn()
+                warn('{0} plugin "{1}" is missing info.py file.'.format(
+                    plugin_type.title(), plugin.namebase))
                 continue
 
             # Get the plugin's description
@@ -104,7 +106,9 @@ class _ValidPlugins(object):
 
             # Does the info have an info attribute?
             if not hasattr(info, 'info'):
-                warn()
+                warn(
+                    '{0} plugin "{1}" '.format(plugin_type.title(), plugin) +
+                    'info.py does not contain an info object.')
                 continue
 
             # Add the plugin to the dictionary

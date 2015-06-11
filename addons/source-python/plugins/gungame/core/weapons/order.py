@@ -2,19 +2,43 @@
 
 """Provides a weapon order based storage class."""
 
+# =============================================================================
+# >> IMPORTS
+# =============================================================================
+# Python Imports
+#   Random
 from random import shuffle
 
+# Source.Python Imports
+#   Cvars
 from cvars import ConVar
+#   Filters
 from filters.weapons import WeaponClassIter
+
+# GunGame Imports
+#   Weapons
 from gungame.core.weapons.errors import WeaponOrderError
 
 
+# =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = ('WeaponOrder',
+           )
+
+
+# =============================================================================
+# >> GLOBAL VARIABLES
+# =============================================================================
 _primary_weapons = list(WeaponClassIter('primary', return_types='basename'))
 _secondary_weapons = list(
     WeaponClassIter('secondary', return_types='basename'))
 _multikill_weapons = _primary_weapons + _secondary_weapons
 
 
+# =============================================================================
+# >> CLASSES
+# =============================================================================
 class WeaponOrder(dict):
 
     """Dictionary used to store a weapon order."""

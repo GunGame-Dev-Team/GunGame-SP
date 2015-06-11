@@ -2,17 +2,36 @@
 
 """Weapon order management."""
 
+# =============================================================================
+# >> IMPORTS
+# =============================================================================
+# Python Imports
+#   Contextlib
 from contextlib import suppress
 
+# Source.Python Imports
+#   Cvar
 from cvars import ConVar
+#   Events
 from events import Event
-from gungame.core.paths import GUNGAME_CFG_PATH
+
+# GunGame Imports
+#   Paths
+from gungame.core.paths import GUNGAME_WEAPON_ORDER_PATH
+#   Weapons
 from gungame.core.weapons.order import WeaponOrder
 
 
-WEAPON_ORDER_PATH = GUNGAME_CFG_PATH.joinpath('weapon_orders')
+# =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = ('weapon_order_manager',
+           )
 
 
+# =============================================================================
+# >> CLASSES
+# =============================================================================
 class _WeaponOrderManager(dict):
 
     """Class used to store weapon orders."""
@@ -44,7 +63,7 @@ class _WeaponOrderManager(dict):
 
     def get_weapon_orders(self):
         """Retrieve all weapon orders and store them in the dictionary."""
-        for file in WEAPON_ORDER_PATH.files():
+        for file in GUNGAME_WEAPON_ORDER_PATH.files():
             self[file.namebase] = WeaponOrder(file)
 
     def set_start_convars(self):
@@ -87,6 +106,9 @@ class _WeaponOrderManager(dict):
 weapon_order_manager = _WeaponOrderManager()
 
 
+# =============================================================================
+# >> EVENTS
+# =============================================================================
 @Event
 def server_cvar(game_event):
     """Set the weapon order value if the ConVar is for the weapon order."""
