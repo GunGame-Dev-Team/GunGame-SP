@@ -5,6 +5,7 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+from contextlib import suppress
 from importlib import import_module
 
 from core import GAME_NAME
@@ -60,7 +61,8 @@ def load():
     GunGameStatus.MATCH = GunGameMatchStatus.INACTIVE
 
     # Import the game specific functionality
-    import_module('gungame.games.{0}'.format(GAME_NAME))
+    with suppress(ImportError):
+        import_module('gungame.games.{0}'.format(GAME_NAME))
 
     # Wait 1 tick to see if gg_start should be called
     tick_delays.delay(0, start_match)
