@@ -5,6 +5,9 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+from importlib import import_module
+
+from core import GAME_NAME
 from cvars.tags import sv_tags
 from filters.entities import EntityIter
 from listeners.tick import tick_delays
@@ -13,6 +16,8 @@ from gungame.info import info
 from gungame.core.config.manager import config_manager
 from gungame.core.events.storage import gg_resource_list
 from gungame.core.plugins.command import gg_command_manager
+from gungame.core.status import GunGameMatchStatus
+from gungame.core.status import GunGameStatus
 from gungame.core.warmup import warmup_manager
 from gungame.core.weapons.manager import weapon_order_manager
 
@@ -49,7 +54,13 @@ def load():
     sv_tags.add(info.basename)
 
     # Import the listeners/events/commands/menus
-    from gungame.listeners import start_match
+    from gungame.core.listeners import start_match
+
+    # Set the match status to inactive now that the loading process is complete
+    GunGameStatus.MATCH = GunGameMatchStatus.INACTIVE
+
+    # Import the game specific functionality
+    import_module('gungame.games.{0}'.format(GAME_NAME))
 
     # Wait 1 tick to see if gg_start should be called
     tick_delays.delay(0, start_match)

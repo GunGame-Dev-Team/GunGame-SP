@@ -6,10 +6,12 @@
 # >> IMPORTS
 # =============================================================================
 from collections import defaultdict
+from contextlib import suppress
 from warnings import warn
 
 from colors import WHITE
-from messages import HudMsg
+with suppress(ImportError):
+    from messages import HudMsg
 from messages import HintText
 from messages import KeyHintText
 from messages import SayText2
