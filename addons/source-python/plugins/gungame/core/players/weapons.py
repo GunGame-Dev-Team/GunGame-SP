@@ -44,4 +44,8 @@ class _PlayerWeapons(object):
             if weapon_manager[entity.classname].slot == weapon.slot:
                 self.drop_weapon(entity, None, None)
                 entity.remove()
-        self.give_named_item(weapon.name, 0)
+        self._give_named_item(weapon.name)
+
+    def _give_named_item(self, weapon):
+        """"""
+        self.give_named_item(weapon, 0)
