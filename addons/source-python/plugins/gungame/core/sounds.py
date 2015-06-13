@@ -8,6 +8,13 @@
 
 
 # =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = ('sound_manager',
+           )
+
+
+# =============================================================================
 # >> CLASSES
 # =============================================================================
 class _SoundManager(object):
@@ -23,4 +30,5 @@ class _SoundManager(object):
     def stop_sound(self, sound, index):
         """Stop the sound from playing from the given index."""
 
+# Get the _SoundManager instance
 sound_manager = _SoundManager()

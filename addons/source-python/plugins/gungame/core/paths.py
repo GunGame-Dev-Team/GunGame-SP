@@ -5,6 +5,8 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Source.Python Imports
+#   Paths
 from paths import CFG_PATH
 from paths import EVENT_PATH
 from paths import LOG_PATH

@@ -1,193 +1,233 @@
-'''
-    cvars:
+# ../gungame/core/warmup.py
 
-        gg_warmup_round:
-            enable/disable
+"""GunGame Warmup Round functionality."""
 
-        gg_warmup_time:
-            time (in seconds) for the warmup to last
-            each extension will be this amount, as well
-
-        gg_warmup_weapon:
-            0 = the first level weapon for the gg_weapon_order_file
-            weapon1
-            weapon1,weapon2,weapon3,etc...
-            random/#random = random weapon
-            DEFAULT: "hegrenade"
-
-        gg_warmup_start_config:
-            config file to execute to determine gameplay in warmup
-
-        gg_warmup_end_config:
-            config file to execute to determine the
-              gameplay for the match after warmup ends
-
-        gg_warmup_min_players:
-            minimum number of players needed to
-              end warmup round without extending
-
-        gg_warmup_max_extensions:
-            the number of extensions after which to just
-              start without waiting for more players
-
-        gg_warmup_players_reached:
-            0 = wait till base warmup time ends before ending warmup
-                this means wait, even if in extended time, till the
-                  extended amount of time has been reached
-            1 = end warmup immediately if in extended time,
-                but continue till
-            2 = end warmup immediately when min players is reached
-
-    commands:
-
-        gg_end_warmup (server command):
-            ends the warmup round immediately
-
-
-    POSSIBLE SETTINGS FOR WARMUP:
-        dead_strip
-        deathmatch
-        dissolver
-        earn_nade
-        elimination
-        ffa
-        multi_nade
-        noblock
-        nocash
-        random_spawn
-        roundend_blocker
-        spawn_protect
-'''
-
+# =============================================================================
+# >> IMPORTS
+# =============================================================================
+# Python Imports
+#   Contextlib
 from contextlib import suppress
+#   Itertools
 from itertools import cycle
+#    Random
 from random import shuffle
+#   Warnings
+from warnings import warn
 
+# Source.Python Imports
+#   Cvars
 from cvars import ConVar
+#   Engines
 from engines.server import engine_server
+#   Filters
 from filters.errors import FilterError
 from filters.players import PlayerIter
 from filters.weapons import WeaponClassIter
+#   Listeners
 from listeners.tick import TickRepeat
 
+# GunGame Imports
+#   Status
+from gungame.core.status import GunGameMatchStatus
+from gungame.core.status import GunGameStatus
+#   Weapons
 from gungame.core.weapons.manager import weapon_order_manager
 
-possible_weapons = set(WeaponClassIter('primary', return_types='basename'))
-possible_weapons.update(set(
+
+# =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = ('warmup_manager',
+           )
+
+# =============================================================================
+# >> GLOBAL VARIABLES
+# =============================================================================
+# Get all possible warmup weapons
+_possible_weapons = set(WeaponClassIter('primary', return_types='basename'))
+_possible_weapons.update(set(
     WeaponClassIter('secondary', return_types='basename')))
-
-possible_weapons.update(set(
+_possible_weapons.update(set(
     WeaponClassIter('explosive', return_types='basename')))
-
 with suppress(FilterError):
-    possible_weapons.update(set(
+    _possible_weapons.update(set(
         WeaponClassIter('incendiary', return_types='basename')))
 
-human_nospec = PlayerIter('human', ['spec', 'un'])
+# Get a generator for human players
+_human_nospec = PlayerIter('human', ['spec', 'un'])
 
 
+# =============================================================================
+# >> CLASSES
+# =============================================================================
 class _WarmupManager(object):
 
-    """"""
+    """Class used to provide warmup functionality."""
 
     def __init__(self):
-        """"""
+        """Store the base attributes."""
         self._repeat = TickRepeat(self._countdown)
         self._extensions = 0
+        self._warmup_time = 0
         self._weapon = None
-        self._weapon_list = None
+        self._weapon_cycle = None
 
     @property
     def repeat(self):
-        """"""
+        """Return the warmup manager repeat."""
         return self._repeat
 
     @property
     def extensions(self):
-        """"""
+        """Return the number of extensions used in warmup."""
         return self._extensions
 
     @property
     def warmup_time(self):
-        """"""
+        """Return the length of the warmup round."""
         return self._warmup_time
 
     @property
     def weapon(self):
-        """"""
+        """Return the warmup weapon."""
         return self._weapon
 
     @property
-    def weapon_list(self):
-        """"""
-        return self._weapon_list
+    def weapon_cycle(self):
+        """Return the cycle of warmup weapons."""
+        return self._weapon_cycle
 
     def set_warmup_weapon(self):
-        """"""
+        """Set the warmup weapon(s)."""
+        # Get the warmup weapon(s)
         warmup_weapon = ConVar('gg_warmup_weapon').get_string()
-        if warmup_weapon in possible_weapons:
-            self._weapon_list = cycle([warmup_weapon])
+
+        # Is the value a specific weapon?
+        if warmup_weapon in _possible_weapons:
+
+            # Set the weapon cycle to include just the weapon
+            self._weapon_cycle = cycle([warmup_weapon])
             return
+
+        # Are all weapons supposed to be used at random?
         if warmup_weapon == 'random':
-            weapons = list(possible_weapons)
+
+            # Set the weapon cycle to a randomized list of all weapons
+            weapons = list(_possible_weapons)
             shuffle(weapons)
-            self._weapon_list = cycle(weapons)
+            self._weapon_cycle = cycle(weapons)
             return
+
+        # Is the value a list of weapons?
         if ',' in warmup_weapon:
+
+            # Store the weapons from the given list to the weapon cycle
             weapons = [weapon for weapon in warmup_weapon.split(
-                ',') if weapon in possible_weapons]
+                ',') if weapon in _possible_weapons]
             if len(weapons):
-                self._weapon_list = cycle(weapons)
+                self._weapon_cycle = cycle(weapons)
                 return
-        self._weapon_list = cycle([weapon_order_manager.active[1].weapon])
+
+        # Store the weapon cycle as the first weapon in the active weapon order
+        self._weapon_cycle = cycle([weapon_order_manager.active[1].weapon])
 
     def start_warmup(self):
-        """"""
+        """Start warmup round."""
+        # Reset the extensions used
         self._extensions = 0
+
+        # Get the amount of time for warmup
         self._warmup_time = ConVar('gg_warmup_time').get_int()
+
+        # Was an invalid value given?
         if self._warmup_time <= 0:
             warn(
                 '"gg_warmup_time" is set to an invalid number.' +
                 '  Skipping warmup round.')
             self.end_warmup()
             return
-        engine_server.server_command('exec {0}'.format(
-            ConVar('gg_warmup_start_config').get_string()))
+
+        # Get the configuration to call on warmup start
+        start_config = ConVar('gg_warmup_start_config').get_string()
+
+        # Is a configuration file supposed to be called?
+        if start_config:
+
+            # Call the start configuration
+            engine_server.server_command('exec {0};'.format(start_config))
+
+        # Get the warmup weapon
         self._find_warmup_weapon()
+
+        # Set the match status
+        GunGameStatus.MATCH = GunGameMatchStatus.WARMUP
+
+        # TODO: Give warmup weapon
+
+        # Start the warmup repeat
         self.repeat.start(1, self._warmup_time)
 
     def end_warmup(self):
-        """"""
+        """End warmup and start the match."""
         # TODO: Call start match
-        engine_server.server_command('exec {0}'.format(
-            ConVar('gg_warmup_end_config').get_string()))
+        # Get the configuration to call on warmup end
+        end_config = ConVar('gg_warmup_end_config').get_string()
+
+        # Is a configuration file supposed to be called?
+        if end_config:
+
+            # Call the end configuration
+            engine_server.server_command('exec {0};'.format(end_config))
 
     def _find_warmup_weapon(self):
-        """"""
-        self._weapon = next(self.weapon_list)
+        """Return the next weapon in the warmup cycle."""
+        self._weapon = next(self.weapon_cycle)
 
     def _countdown(self):
-        """"""
+        """Determine what to do once a second during warmup."""
+        # Get the remaining time for warmup
         remaining = self.repeat.remaining
+
+        # Is there no more time for the warmup?
         if not remaining:
+
+            # End the warmup round
             self.end_warmup()
             return
-        if len(list(human_nospec)) > ConVar('gg_warmup_min_players').get_int():
+
+        # Has the player limit been reached?
+        if len(list(_human_nospec)) > ConVar('gg_warmup_min_players').get_int():
+
+            # Get what to do when the player limit is reached
             players_reached = ConVar('gg_warmup_players_reached').get_int()
+
+            # Should warmup end?
             if players_reached == 2 or (
                     self.extensions and players_reached == 1):
+
+                # Cause warmup to end in 1 second
                 self.repeat.reduce(self.repeat.remaining - 1)
                 return
+
+        # Is there just one second remaining in warmup?
         if remaining == 1:
+
+            # Should warmup be extended?
             if self.extensions < ConVar('gg_warmup_max_extensions').get_int():
+
+                # TODO: send message about the extension
+
+                # Extend the warmup round
                 self._extensions += 1
                 self.repeat.extend(self._warmup_time)
                 return
-        else:
-            # TODO: send message to players about remaining warmup time
-            ...
+
+        # TODO: send message to players about remaining warmup time
+
         if remaining <= 5:
             # TODO: play a beeping sound to indicate warmup ending soon
             ...
 
+# Get the _WarmupManager instance
 warmup_manager = _WarmupManager()
