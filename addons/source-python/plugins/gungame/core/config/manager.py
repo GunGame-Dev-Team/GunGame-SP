@@ -41,7 +41,6 @@ class GunGameConfigManager(ConfigManager):
             filepath = filepath.joinpath(name)
 
         # Initialize the config
-        print(filepath)
         super(GunGameConfigManager, self).__init__(filepath)
 
 

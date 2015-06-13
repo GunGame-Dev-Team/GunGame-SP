@@ -189,11 +189,11 @@ def gg_win(game_event):
         entity = Entity.create('game_end')
     entity.end_game()
     message_manager.chat_message(
-        index=winner.index, message='Player_Won', name=winner.name)
+        index=winner.index, message='Winner_Player', name=winner.name)
     for second in range(4):
         tick_delays.delay(
             second, message_manager.center_message,
-            message='Player_Won_Center', name=winner.name)
+            message='Winner_Player_Center', name=winner.name)
     # message_manager.top_message(
     #     message='Player_Won', color=<team_color>, time=4.0, name=winner.name)
 
