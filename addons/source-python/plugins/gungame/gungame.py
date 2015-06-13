@@ -5,21 +5,36 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Python Imports
+#   Contextlib
 from contextlib import suppress
+#   Importlib
 from importlib import import_module
 
+# Source.Python Imports
+#   Core
 from core import GAME_NAME
+#   Cvars
 from cvars.tags import sv_tags
+#   Filters
 from filters.entities import EntityIter
+#   Listeners
 from listeners.tick import tick_delays
 
+# GunGame Imports
 from gungame.info import info
+#   Config
 from gungame.core.config.manager import config_manager
+#   Events
 from gungame.core.events.storage import gg_resource_list
+#   Plugins
 from gungame.core.plugins.command import gg_command_manager
+#   Status
 from gungame.core.status import GunGameMatchStatus
 from gungame.core.status import GunGameStatus
+#   Warmup
 from gungame.core.warmup import warmup_manager
+#   Weapons
 from gungame.core.weapons.manager import weapon_order_manager
 
 
