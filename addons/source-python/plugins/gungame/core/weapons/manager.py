@@ -8,12 +8,19 @@
 # Source.Python Imports
 #   Cvar
 from cvars import ConVar
+#   Engines
+from engines.server import engine_server
 #   Events
 from events import Event
+#   Listeners
+from listeners.tick import tick_delays
 
 # GunGame Imports
 #   Paths
 from gungame.core.paths import GUNGAME_WEAPON_ORDER_PATH
+#   Status
+from gungame.core.status import GunGameMatchStatus
+from gungame.core.status import GunGameStatus
 #   Weapons
 from gungame.core.weapons.order import WeaponOrder
 
@@ -39,6 +46,7 @@ class _WeaponOrderManager(dict):
         self._order = None
         self._randomize = False
         self.multikill = None
+        self._delay = None
 
     @property
     def active(self):
@@ -80,7 +88,6 @@ class _WeaponOrderManager(dict):
         self._active = value
         if self.randomize:
             self[self._active].randomize_order()
-        self.restart_game()
 
     def set_randomize(self, value):
         """Set the randomize value and randomize the weapon order."""
@@ -98,5 +105,21 @@ class _WeaponOrderManager(dict):
 
     def restart_game(self):
         """Restart the match."""
+        if self.delay is not None:
+            self.delay.cancel()
+        self.delay = tick_delays.delay(1, self._restart_game)
+
+    def _restart_game(self):
+        """"""
+        self._delay = None
+
+        GunGameStatus.MATCH = GunGameMatchStatus.INACTIVE
+
+        # Clear the player dictionary
+        from gungame.core.players.dictionary import player_dictionary
+        player_dictionary.clear()
+
+        # Restart the match
+        engine_server.server_command('mp_restartgame 1;')
 
 weapon_order_manager = _WeaponOrderManager()
