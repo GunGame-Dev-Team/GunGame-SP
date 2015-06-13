@@ -5,10 +5,30 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Python Imports
+#   Enum
+from enum import IntEnum
+
+# Source.Python Imports
+#   Cvars
 from cvars import ConVar
+#   Events
 from events import Event
+#   Filters
 from filters.entities import EntityIter
+#   Weapons
 from weapons.entity import WeaponEntity
+
+
+# =============================================================================
+# >> CONSTANTS
+# =============================================================================
+class ObjectiveType(IntEnum):
+
+    """Class used for objective comparison."""
+
+    BOMBING = 1
+    HOSTAGE = 2
 
 
 # =============================================================================
@@ -52,7 +72,7 @@ def disable_objectives():
     objectives = ConVar('gg_disable_objectives').get_int()
 
     # Do bombing objectives need removed?
-    if objectives in (1, 2):
+    if objectives and ObjectiveType.BOMBING:
 
         # Loop through all bomb targets
         for entity in EntityIter('func_bomb_target', return_types='entity'):
@@ -79,7 +99,7 @@ def disable_objectives():
             entity.remove()
 
     # Do hostage objectives need removed?
-    if objectives in (1, 3):
+    if objectives and ObjectiveType.HOSTAGE:
 
         # Loop through all rescue zones
         for entity in EntityIter('func_hostage_rescue', return_types='entity'):

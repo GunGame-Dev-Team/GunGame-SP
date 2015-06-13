@@ -5,11 +5,18 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Python Imports
+#   Collections
 from collections import defaultdict
+#   Contextlib
 from contextlib import suppress
+#   Warnings
 from warnings import warn
 
+# Source.Python Imports
+#   Colors
 from colors import WHITE
+#   Messages
 with suppress(ImportError):
     from messages import HudMsg
 from messages import HintText
@@ -17,9 +24,14 @@ from messages import KeyHintText
 from messages import SayText2
 from messages import TextMsg
 from messages import VGUIMenu
+#   Paths
+from paths import TRANSLATION_PATH
+#   Translations
 from translations.strings import LangStrings
 from translations.strings import TranslationStrings
 
+# GunGame Imports
+#   Paths
 from gungame.core.paths import GUNGAME_TRANSLATION_PATH
 
 
@@ -42,16 +54,18 @@ class _MessageManager(dict):
         super(_MessageManager, self).__init__()
         self._hooked_messages = defaultdict()
         self._hooked_prefixes = defaultdict()
-        for file in GUNGAME_TRANSLATION_PATH.joinpath('core').files():
+        for file in GUNGAME_TRANSLATION_PATH.walkfiles('*.ini'):
             if file.namebase.endswith('_server'):
                 continue
-            instance = LangStrings('gungame/core/{0}'.format(file.namebase))
+            instance = LangStrings(file.replace(TRANSLATION_PATH, '')[1:~3])
             for key, value in instance.items():
                 if key in self:
                     warn('Translation key "{0}" already registered.'.format(
                         key))
                     continue
                 self[key] = value
+        for key in sorted(self):
+            print(key)
 
     def hook_message(self, message_name):
         """"""

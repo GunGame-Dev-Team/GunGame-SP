@@ -5,20 +5,16 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Source.Python Imports
+#   Cvars
+from cvars.flags import ConVarFlags
+
 # GunGame Imports
 #   Config
 from gungame.core.config.manager import GunGameConfigManager
-#   Translations
-from gungame.core.plugins.strings import PluginStrings
 
 # Script Imports
 from .info import info
-
-
-# =============================================================================
-# >> GLOBAL VARIABLES
-# =============================================================================
-info.translations = PluginStrings(info.name)
 
 
 # =============================================================================
@@ -26,5 +22,8 @@ info.translations = PluginStrings(info.name)
 # =============================================================================
 with GunGameConfigManager(info.name) as config:
     with config.cvar(
-            info.name, 0, description=info.translations[info.name]) as cvar:
-        cvar.text(info.translations[cvar.name + '_text'].get_string())
+            'gg_disable_objectives_type', 0, ConVarFlags.NONE,
+            'Set to the types of objectives to disable.') as cvar:
+        cvar.Options.append('1 = Disable Bombing Objectives.')
+        cvar.Options.append('2 = Disable Hostage Objectives.')
+        cvar.Options.append('3 = Disable Bombing AND Hostage Objectives.')
