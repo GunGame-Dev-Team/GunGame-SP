@@ -12,17 +12,9 @@ from cvars.flags import ConVarFlags
 # GunGame Imports
 #   Config
 from gungame.core.config.manager import GunGameConfigManager
-#   Translations
-from gungame.core.plugins.strings import PluginStrings
 
 # Script Imports
 from .info import info
-
-
-# =============================================================================
-# >> GLOBAL VARIABLES
-# =============================================================================
-info.translations = PluginStrings(info.name)
 
 
 # =============================================================================

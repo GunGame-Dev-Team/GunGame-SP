@@ -71,7 +71,7 @@ def get_levels_to_increase(player, reason):
         if (weapon in _nade_weapons and not skip_nade) or (
                 weapon in _knife_weapons and not skip_knife):
             player.chat_message(
-                message=info.translations['BombingObjective_NoSkip_{0}'.format(
-                reason.title())].get_string(player.language, level=weapon))
+                message='BombingObjective_NoSkip_{0}'.format(
+                    reason.title()), level=weapon))
             return level_increase
     return level_increase

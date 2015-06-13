@@ -5,26 +5,25 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Source.Python Imports
+#   Cvars
+from cvars.flags import ConVarFlags
+
 # GunGame Imports
 #   Config
 from gungame.core.config.manager import GunGameConfigManager
-#   Translations
-from gungame.core.plugins.strings import PluginStrings
 
 # Script Imports
 from .info import info
 
-
-# =============================================================================
-# >> GLOBAL VARIABLES
-# =============================================================================
-info.translations = PluginStrings(info.name)
 
 
 # =============================================================================
 # >> CONFIGURATION
 # =============================================================================
 with GunGameConfigManager(info.name) as config:
-    with config.cvar('gg_deathmatch_delay', 2, description=info.translations[
-            'gg_deathmatch_delay']) as cvar:
-        cvar.text(info.translations[cvar.name + '_text'].get_string())
+    with config.cvar(
+            'gg_deathmatch_delay', 2, ConVarFlags.NONE,
+            'Set to the number of seconds to respawn ' +
+            'players after the die.') as cvar:
+        ...

@@ -33,25 +33,6 @@ from .info import info
 
 
 # =============================================================================
-# >> GLOBAL VARIABLES
-# =============================================================================
-# Get the message strings
-info.translations = PluginStrings(info.name)
-
-# Store an empty dictionary
-deathmatch_messages = {}
-
-# Loop through each of the message strings
-for key in info.translations:
-
-    # Add the message string to the dictionary as a HintText instance
-    deathmatch_messages[key] = HintText(info.translations[key])
-
-# Get the delay ConVar
-respawn_delay = ConVar('gg_deathmatch_respawn_delay')
-
-
-# =============================================================================
 # >> CLASSES
 # =============================================================================
 class Player(PlayerEntity):
@@ -70,7 +51,7 @@ class Player(PlayerEntity):
 
     def start_repeat(self):
         """Start the player's respawn countdown."""
-        self.repeat.start(1, respawn_delay.get_int())
+        self.repeat.start(1, ConVar('gg_deathmatch_respawn_delay').get_int())
 
     def _countdown(self):
         """Send messages about impending respawn and respawns the player."""
@@ -84,15 +65,16 @@ class Player(PlayerEntity):
         if self.repeat.remaining:
 
             # Message the player with the countdown
-            deathmatch_messages['Respawn CountDown'].tokens = {
-                'seconds': self.repeat.remaining}
-            deathmatch_messages['Respawn CountDown'].send(self.index)
+            player_dictionary[self.userid].hint_message(
+                message='DeathMatch_Respawn_CountDown',
+                seconds=self.repeat.remaining)
 
         # Are there no more loops remaining for the player?
         else:
 
             # Message the player that they are respawning
-            deathmatch_messages['Respawning'].send(self.index)
+            player_dictionary[self.userid].hint_message(
+                message='DeathMatch_Respawning')
 
             # Respawn the player
             self.respawn()
@@ -160,7 +142,7 @@ def jointeam(playerinfo, command):
     if player.is_repeat_active():
 
         # Message the player about cancelling their respawn
-        deathmatch_messages['Cancel Team'].send(player.index)
+        player_dictionary[userid].hint_message('DeathMatch_CancelTeam')
 
         # Stop the player's repeat
         player.stop_repeat()
