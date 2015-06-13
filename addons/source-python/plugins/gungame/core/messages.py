@@ -64,8 +64,6 @@ class _MessageManager(dict):
                         key))
                     continue
                 self[key] = value
-        for key in sorted(self):
-            print(key)
 
     def hook_message(self, message_name):
         """"""
