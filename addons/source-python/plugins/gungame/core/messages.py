@@ -54,16 +54,19 @@ class _MessageManager(dict):
         super(_MessageManager, self).__init__()
         self._hooked_messages = defaultdict()
         self._hooked_prefixes = defaultdict()
-        for file in GUNGAME_TRANSLATION_PATH.walkfiles('*.ini'):
-            if file.namebase.endswith('_server'):
-                continue
-            instance = LangStrings(file.replace(TRANSLATION_PATH, '')[1:~3])
-            for key, value in instance.items():
-                if key in self:
-                    warn('Translation key "{0}" already registered.'.format(
-                        key))
+        for folder in GUNGAME_TRANSLATION_PATH.dirs():
+            for file in folder.walkfiles('*.ini'):
+                if file.namebase.endswith('_server'):
                     continue
-                self[key] = value
+                instance = LangStrings(
+                    file.replace(TRANSLATION_PATH, '')[1:~3])
+                for key, value in instance.items():
+                    if key in self:
+                        warn(
+                            'Translation key "{0}" already registered.'.format(
+                            key))
+                        continue
+                    self[key] = value
 
     def hook_message(self, message_name):
         """"""

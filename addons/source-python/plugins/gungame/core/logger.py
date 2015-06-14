@@ -5,16 +5,25 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+from config.manager import ConfigManager
 from cvars import ConVar
+from cvars.flags import ConVarFlags
 from loggers import LogManager
 
 
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
-# Create the logging cvars
-_level = ConVar('gg_logging_level', '0', 0, 'GunGame logging level')
-_areas = ConVar('gg_logging_areas', '1', 0, 'GunGame logging areas')
+# Create the logging config
+with ConfigManager('gungame/logging_settings') as config:
+    with config.cvar(
+            'gg_logging_level', '0', ConVarFlags.NONE,
+            'GunGame logging level') as _level:
+        ...
+    with config.cvar(
+            'gg_logging_areas', '1', ConVarFlags.NONE,
+            'GunGame logging areas') as _areas:
+        ...
 
 # Get the GunGame logger
 gg_logger = LogManager(
