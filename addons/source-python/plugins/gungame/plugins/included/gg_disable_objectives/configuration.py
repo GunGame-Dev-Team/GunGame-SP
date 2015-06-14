@@ -1,4 +1,4 @@
-# ../gungame/plugins/included/gg_disable_objectives/config.py
+# ../gungame/plugins/included/gg_disable_objectives/configuration.py
 
 """Creates the gg_disable_objectives configuration."""
 

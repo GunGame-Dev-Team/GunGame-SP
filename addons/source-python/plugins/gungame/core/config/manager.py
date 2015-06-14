@@ -62,7 +62,7 @@ class _ConfigManager(object):
         for plugin_name in valid_plugins.all:
             plugin_type = valid_plugins.get_plugin_type(plugin_name)
             with suppress(ImportError):
-                import_module('gungame.plugins.{0}.{1}.config'.format(
+                import_module('gungame.plugins.{0}.{1}.configuration'.format(
                     plugin_type, plugin_name))
         self._executed = True
 

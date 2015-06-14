@@ -1,4 +1,4 @@
-# ../gungame/plugins/included/gg_bombing_objective/config.py
+# ../gungame/plugins/included/gg_bombing_objective/configuration.py
 
 """Creates the gg_bombing_objective configuration."""
 

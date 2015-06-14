@@ -1,6 +1,6 @@
-# ../gungame/plugins/included/gg_deathmatch/config.py
+# ../gungame/plugins/included/gg_quick_weapon/configuration.py
 
-"""Creates the gg_deathmatch configuration."""
+"""Creates the gg_quick_weapon configuration."""
 
 # =============================================================================
 # >> IMPORTS
@@ -23,7 +23,7 @@ from .info import info
 # =============================================================================
 with GunGameConfigManager(info.name) as config:
     with config.cvar(
-            'gg_deathmatch_delay', 2, ConVarFlags.NONE,
-            'Set to the number of seconds to respawn ' +
-            'players after the die.') as cvar:
+            'gg_quick_weapon_switch', 0, ConVarFlags.NONE,
+            'Enable/disable allowing players to immediately use ' +
+            'their new weapon upon receiving it.') as cvar:
         ...

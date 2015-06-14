@@ -1,6 +1,6 @@
-# ../gungame/plugins/included/gg_elimination/config.py
+# ../gungame/plugins/included/gg_deathmatch/configuration.py
 
-""""""
+"""Creates the gg_deathmatch configuration."""
 
 # =============================================================================
 # >> IMPORTS
@@ -23,6 +23,7 @@ from .info import info
 # =============================================================================
 with GunGameConfigManager(info.name) as config:
     with config.cvar(
-            'gg_elimination_spawn_joiners', 0, ConVarFlags.NONE,
-            'Enable/Disable spawning late joining players.') as cvar:
+            'gg_deathmatch_delay', 2, ConVarFlags.NONE,
+            'Set to the number of seconds to respawn ' +
+            'players after the die.') as cvar:
         ...

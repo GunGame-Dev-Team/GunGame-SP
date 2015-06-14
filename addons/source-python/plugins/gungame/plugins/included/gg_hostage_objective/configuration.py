@@ -1,4 +1,4 @@
-# ../gungame/plugins/included/gg_hostage_objective/config.py
+# ../gungame/plugins/included/gg_hostage_objective/configuration.py
 
 """Creates the gg_hostage_objective configuration."""
 

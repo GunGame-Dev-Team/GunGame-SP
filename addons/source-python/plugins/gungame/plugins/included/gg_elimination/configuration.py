@@ -1,6 +1,6 @@
-# ../gungame/plugins/included/gg_quick_weapon/config.py
+# ../gungame/plugins/included/gg_elimination/configuration.py
 
-"""Creates the gg_quick_weapon configuration."""
+""""""
 
 # =============================================================================
 # >> IMPORTS
@@ -23,7 +23,6 @@ from .info import info
 # =============================================================================
 with GunGameConfigManager(info.name) as config:
     with config.cvar(
-            'gg_quick_weapon_switch', 0, ConVarFlags.NONE,
-            'Enable/disable allowing players to immediately use ' +
-            'their new weapon upon receiving it.') as cvar:
+            'gg_elimination_spawn_joiners', 0, ConVarFlags.NONE,
+            'Enable/Disable spawning late joining players.') as cvar:
         ...

@@ -63,7 +63,7 @@ def unload():
 # >> GAME EVENTS
 # =============================================================================
 @Event
-def hostage_rescue(game_event):
+def hostage_rescued(game_event):
     """"""
     player = player_dictionary[game_event.get_int('userid')]
     player.hostage_rescues += 1
