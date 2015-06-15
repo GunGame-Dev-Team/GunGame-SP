@@ -1,6 +1,6 @@
-# ../gungame/plugins/included/gg_quick_weapon/configuration.py
+# ../gungame/plugins/included/gg_turbo/configuration.py
 
-"""Creates the gg_quick_weapon configuration."""
+"""Creates the gg_turbo configuration."""
 
 # =============================================================================
 # >> IMPORTS
@@ -23,7 +23,7 @@ from .info import info
 # =============================================================================
 with GunGameConfigManager(info.name) as config:
     with config.cvar(
-            'gg_quick_weapon_switch', 0, ConVarFlags.NONE,
+            'gg_turbo_quick_switch', 0, ConVarFlags.NONE,
             'Enable/disable allowing players to immediately use ' +
             'their new weapon upon receiving it.') as cvar:
         ...
