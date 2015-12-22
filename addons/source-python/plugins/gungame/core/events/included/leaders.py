@@ -21,7 +21,6 @@ from gungame.core.events.resource import GGResourceFile
 # >> CLASSES
 # =============================================================================
 class GG_New_Leader(CustomEvent):
-
     """Called when a player becomes the new leader."""
 
     userid = leveler = ShortVariable(
@@ -35,7 +34,6 @@ class GG_New_Leader(CustomEvent):
 
 
 class GG_Tied_Leader(CustomEvent):
-
     """Called when a player ties the leader."""
 
     userid = leveler = ShortVariable(
@@ -48,7 +46,6 @@ class GG_Tied_Leader(CustomEvent):
 
 
 class GG_Leader_LostLevel(CustomEvent):
-
     """Called when the leader loses a level."""
 
     userid = leveler = ShortVariable(
@@ -62,7 +59,6 @@ class GG_Leader_LostLevel(CustomEvent):
 
 
 class GG_Leader_Disconnect(CustomEvent):
-
     """Called when the leader disconnects from the server."""
 
     userid = ShortVariable('The userid of the leader that disconnected')

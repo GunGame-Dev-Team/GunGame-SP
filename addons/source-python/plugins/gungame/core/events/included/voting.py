@@ -20,21 +20,18 @@ from gungame.core.events.resource import GGResourceFile
 # >> CLASSES
 # =============================================================================
 class GG_Vote_Start(CustomEvent):
-
     """Called when a vote has started."""
 
     vote_type = StringVariable('The type of vote')
 
 
 class GG_Vote_End(CustomEvent):
-
     """Called when a vote ends."""
 
     winner = StringVariable('The winning choice')
 
 
 class GG_Vote_Submit(CustomEvent):
-
     """Called each time a vote is submitted."""
 
     userid = voter = ShortVariable('The userid of the player that voted')
@@ -42,7 +39,6 @@ class GG_Vote_Submit(CustomEvent):
 
 
 class GG_Vote_Canceled(CustomEvent):
-
     """Called when a vote ends by being canceled."""
 
     reason = StringVariable('The reason the vote was canceled')

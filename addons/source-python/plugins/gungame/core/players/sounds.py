@@ -14,7 +14,6 @@ from gungame.core.sounds import sound_manager
 # >> CLASSES
 # =============================================================================
 class _PlayerSounds(object):
-
     """Class used to interact with sounds for a specific player."""
 
     def play_sound(self, sound):

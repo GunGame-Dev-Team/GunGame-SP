@@ -25,7 +25,6 @@ from gungame.core.players.weapons import _PlayerWeapons
 class GunGamePlayer(
         Player, _PlayerLevels, _PlayerMessages,
         _PlayerSounds, _PlayerWeapons):
-
     """Class used to interact directly with a specific player."""
 
     def __setattr__(self, attr, value):

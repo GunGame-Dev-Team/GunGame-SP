@@ -19,7 +19,6 @@ gg_plugins_instance_logger = gg_plugins_logger.instance
 # >> CLASSES
 # =============================================================================
 class GGLoadedPlugin(LoadedPlugin):
-
     """The GunGame plugin class."""
 
     logger = gg_plugins_instance_logger

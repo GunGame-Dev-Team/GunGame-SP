@@ -7,7 +7,6 @@
 # >> CLASSES
 # =============================================================================
 class GGResourceList(list):
-
     """Class used to store a list of all GunGame res files."""
 
     def append(self, resource):

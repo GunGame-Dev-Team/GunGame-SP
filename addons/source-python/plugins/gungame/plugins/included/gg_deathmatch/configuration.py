@@ -13,9 +13,8 @@ from cvars.flags import ConVarFlags
 #   Config
 from gungame.core.config.manager import GunGameConfigManager
 
-# Script Imports
+# Plugin Imports
 from .info import info
-
 
 
 # =============================================================================
@@ -26,4 +25,4 @@ with GunGameConfigManager(info.name) as config:
             'delay', 2, ConVarFlags.NONE,
             'Set to the number of seconds to respawn ' +
             'players after the die.') as delay:
-        ...
+        pass

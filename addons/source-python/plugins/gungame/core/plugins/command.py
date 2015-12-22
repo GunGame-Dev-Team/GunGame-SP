@@ -13,7 +13,7 @@ from plugins.command import SubCommandManager
 #   Translations
 from translations.strings import LangStrings
 
-# Script Imports
+# GunGame Imports
 from gungame.core.plugins import _plugin_strings
 from gungame.core.plugins import gg_plugins_logger
 from gungame.core.plugins.instance import GGLoadedPlugin
@@ -32,7 +32,6 @@ gg_plugins_command_logger = gg_plugins_logger.command
 # >> CLASSES
 # =============================================================================
 class _GGSubCommandManager(SubCommandManager):
-
     """Class used to integrate the "gg" command."""
 
     manager = gg_plugin_manager

@@ -21,7 +21,6 @@ from gungame.core.weapons.manager import weapon_order_manager
 # >> CLASSES
 # =============================================================================
 class _PlayerLevels(object):
-
     """Class used to interact with a player's level attribute."""
 
     def increase_level(self, levels, victim=0, reason=''):

@@ -13,7 +13,7 @@ from path import Path
 #   Events
 from events.resource import ResourceFile
 
-# Script Imports
+# GunGame Imports
 from gungame.core.events.storage import gg_resource_list
 
 
@@ -21,7 +21,6 @@ from gungame.core.events.storage import gg_resource_list
 # >> CLASSES
 # =============================================================================
 class GGResourceFile(ResourceFile):
-
     """Class used for GunGame res files."""
 
     def __init__(self, filepath, *events):

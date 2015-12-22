@@ -19,7 +19,6 @@ from gungame.core.weapons.manager import weapon_order_manager
 # >> CLASSES
 # =============================================================================
 class _PlayerWeapons(object):
-
     """Class used to perform weapon based functionalities with a player."""
 
     @property
@@ -47,5 +46,5 @@ class _PlayerWeapons(object):
         self._give_named_item(weapon.name)
 
     def _give_named_item(self, weapon):
-        """"""
+        """Give the player a weapon."""
         self.give_named_item(weapon, 0)

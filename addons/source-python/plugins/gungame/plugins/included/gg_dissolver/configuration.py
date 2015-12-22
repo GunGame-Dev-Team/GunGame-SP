@@ -8,12 +8,14 @@
 # Source.Python Imports
 #   Cvars
 from cvars.flags import ConVarFlags
+#   Entities
+from entities.constants import DissolveType
 
 # GunGame Imports
 #   Config
 from gungame.core.config.manager import GunGameConfigManager
 
-# Script Imports
+# Plugin Imports
 from .info import info
 
 
@@ -26,7 +28,7 @@ with GunGameConfigManager(info.name) as config:
             'Set to the type of dissolver to use.') as dissolver_type:
         for _name in DissolveType.__members__:
             dissolver_type.Options.append('{0} = {1}'.format(
-                getattr(DissolveType, _name).real, _name)
+                getattr(DissolveType, _name).real, _name))
         _num_dissolve_types = len(DissolveType)
         dissolver_type.Options.append(
             '{0} = RANDOM'.format(_num_dissolve_types))
@@ -36,4 +38,4 @@ with GunGameConfigManager(info.name) as config:
     with config.cvar(
             'magnitude', 2, ConVarFlags.NONE,
             'Set to the magnitude to use when dissolving') as magnitude:
-        ...
+        pass

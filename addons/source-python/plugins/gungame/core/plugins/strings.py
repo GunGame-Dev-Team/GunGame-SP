@@ -18,7 +18,6 @@ from gungame.core.plugins.valid import valid_plugins
 # >> CLASSES
 # =============================================================================
 class PluginStrings(LangStrings):
-
     """Class used to retrieve GunGame sub-plugin translations."""
 
     def __init__(self, name):

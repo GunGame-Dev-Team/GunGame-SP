@@ -11,6 +11,7 @@
 # >> CLASSES
 # =============================================================================
 class _WinsDatabase(object):
+    """Database to store player wins."""
 
     def __init__(self):
         self.connection = connect(GUNGAME_DATA_PATH.joinpath('winners.db'))
@@ -32,14 +33,15 @@ class _WinsDatabase(object):
             """UPDATE WINNERS SET name=?, timestamp=? WHERE uniqueid=?""",
             (player.name, 'strftime("%s", "now")', player.uniqueid))
 
-_wins_database = _WinsDatabase()
+winners_database = _WinsDatabase()
 
 
-class _PlayerDatabase(
+class _PlayerDatabase(object):
+    """Player wins/ranks functionality."""
 
     def _get_wins(self):
         """"""
-        return int(_wins_database.select(
+        return int(winners_database.select(
             'WINNERS', 'wins', 'where uniqueid = "{0}"'.format(
                 self.uniqueid)) or 0)
 
@@ -48,16 +50,16 @@ class _PlayerDatabase(
         if self.is_fake_client():
             return
         if self.wins:
-            ...
+            pass
         else:
-            ...
+            pass
 
     wins = property(_get_wins, _set_wins, '')
 
     def update_timestamp(self):
         """"""
         if self.wins:
-            _wins_database.update_timestamp(player)
+            winners_database.update_timestamp(player)
 
     @property
     def rank(self):

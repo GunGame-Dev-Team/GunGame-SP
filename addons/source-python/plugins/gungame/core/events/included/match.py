@@ -19,7 +19,6 @@ from gungame.core.events.resource import GGResourceFile
 # >> CLASSES
 # =============================================================================
 class GG_Win(CustomEvent):
-
     """Called when a player wins the match."""
 
     attacker = winner = ShortVariable(
@@ -29,22 +28,18 @@ class GG_Win(CustomEvent):
 
 
 class GG_Start(CustomEvent):
-
     """Called when a new match begins."""
 
 
 class GG_Map_End(CustomEvent):
-
     """Called when no winner is declared but the map ends."""
 
 
 class GG_Load(CustomEvent):
-
     """Called when GunGame finishes loading."""
 
 
 class GG_Unload(CustomEvent):
-
     """Called when GunGame is unloading."""
 
 # =============================================================================

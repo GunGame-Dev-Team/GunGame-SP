@@ -9,7 +9,7 @@
 #   Warnings
 from warnings import warn
 
-#Source.Python Imports
+# Source.Python Imports
 #   Core
 from core import GAME_NAME
 
@@ -38,11 +38,11 @@ class _NoMessage(object):
         """Store the message type."""
         self.message_type = message_type
 
-    def _hook_message(*args, **kwargs):
+    def _message_hook(self, *args, **kwargs):
         """Override for messages that do not work."""
         warn('Message type "{0}" not supported for game "{1}".'.format(
             self.message_type, GAME_NAME))
 
 # Set the overrides
-message_manager.hud_message = _NoMessage('HudMsg')._hook_message
-message_manager.top_message = _NoMessage('DialogMsg')._hook_message
+message_manager.hud_message = _NoMessage('HudMsg')._message_hook
+message_manager.top_message = _NoMessage('DialogMsg')._message_hook

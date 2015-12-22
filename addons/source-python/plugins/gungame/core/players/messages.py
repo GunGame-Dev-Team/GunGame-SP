@@ -15,7 +15,6 @@ from gungame.core.messages import message_manager
 # >> CLASSES
 # =============================================================================
 class _PlayerMessages(object):
-
     """Class used to send messages to a specific player."""
 
     def center_message(self, message='', **tokens):

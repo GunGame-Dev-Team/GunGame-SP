@@ -9,26 +9,22 @@
 #   Commands
 from commands import CommandReturn
 from commands.client import ClientCommand
-#   Cvars
-from cvars import ConVar
 #   Events
 from events import Event
 #   Listeners
 from listeners import LevelShutdown
 from listeners.tick import TickRepeat
 from listeners.tick import TickRepeatStatus
-#   Messages
-from messages import HintText
 #   Players
 from players.entity import PlayerEntity
 from players.helpers import index_from_userid
 from players.helpers import userid_from_playerinfo
 
 # GunGame Imports
-#   Translations
-from gungame.core.plugins.strings import PluginStrings
+#   Players
+from gungame.core.players.dictionary import player_dictionary
 
-# Script Imports
+# Plugin Imports
 from .configuration import delay
 
 
@@ -36,7 +32,6 @@ from .configuration import delay
 # >> CLASSES
 # =============================================================================
 class Player(PlayerEntity):
-
     """Class used to interact with a specific player."""
 
     def __init__(self, index):
@@ -88,7 +83,6 @@ class Player(PlayerEntity):
 
 
 class _DeathMatchPlayers(dict):
-
     """Dictionary class used to store Player instances."""
 
     def __missing__(self, userid):

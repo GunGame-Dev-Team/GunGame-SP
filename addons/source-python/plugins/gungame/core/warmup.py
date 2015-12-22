@@ -6,8 +6,6 @@
 # >> IMPORTS
 # =============================================================================
 # Python Imports
-#   Contextlib
-from contextlib import suppress
 #   Itertools
 from itertools import cycle
 #    Random
@@ -68,7 +66,6 @@ _human_nospec = PlayerIter('human', ['spec', 'un'])
 # >> CLASSES
 # =============================================================================
 class _WarmupManager(object):
-
     """Class used to provide warmup functionality."""
 
     def __init__(self):
@@ -155,13 +152,13 @@ class _WarmupManager(object):
             return
 
         # Get the configuration to call on warmup start
-        start_config = start_config.get_string()
+        current = start_config.get_string()
 
         # Is a configuration file supposed to be called?
-        if start_config:
+        if current:
 
             # Call the start configuration
-            engine_server.server_command('exec {0};'.format(start_config))
+            engine_server.server_command('exec {0};'.format(current))
 
         # Get the warmup weapon
         self._find_warmup_weapon()
@@ -174,17 +171,18 @@ class _WarmupManager(object):
         # Start the warmup repeat
         self.repeat.start(1, self._warmup_time)
 
-    def end_warmup(self):
+    @staticmethod
+    def end_warmup():
         """End warmup and start the match."""
         # TODO: Call start match
         # Get the configuration to call on warmup end
-        end_config = end_config.get_string()
+        current = end_config.get_string()
 
         # Is a configuration file supposed to be called?
-        if end_config:
+        if current:
 
             # Call the end configuration
-            engine_server.server_command('exec {0};'.format(end_config))
+            engine_server.server_command('exec {0};'.format(current))
 
     def _find_warmup_weapon(self):
         """Return the next weapon in the warmup cycle."""
@@ -206,11 +204,11 @@ class _WarmupManager(object):
         if len(list(_human_nospec)) > min_players.get_int():
 
             # Get what to do when the player limit is reached
-            players_reached = players_reached.get_int()
+            current = players_reached.get_int()
 
             # Should warmup end?
-            if players_reached == 2 or (
-                    self.extensions and players_reached == 1):
+            if current == 2 or (
+                    self.extensions and current == 1):
 
                 # Cause warmup to end in 1 second
                 self.repeat.reduce(self.repeat.remaining - 1)
@@ -233,7 +231,7 @@ class _WarmupManager(object):
 
         if remaining <= 5:
             # TODO: play a beeping sound to indicate warmup ending soon
-            ...
+            pass
 
 # Get the _WarmupManager instance
 warmup_manager = _WarmupManager()

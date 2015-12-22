@@ -19,7 +19,6 @@ from gungame.core.events.resource import GGResourceFile
 # >> CLASSES
 # =============================================================================
 class GG_Plugin_Loaded(CustomEvent):
-
     """Called when a GunGame sub-plugin is loaded."""
 
     plugin = StringVariable('The name of the plugin that was loaded')
@@ -27,7 +26,6 @@ class GG_Plugin_Loaded(CustomEvent):
 
 
 class GG_Plugin_Unloaded(CustomEvent):
-
     """Called when a GunGame sub-plugin is unloaded."""
 
     plugin = StringVariable('The name of the plugin that was unloaded')

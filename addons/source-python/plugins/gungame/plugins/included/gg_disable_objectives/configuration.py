@@ -13,7 +13,7 @@ from cvars.flags import ConVarFlags
 #   Config
 from gungame.core.config.manager import GunGameConfigManager
 
-# Script Imports
+# Plugin Imports
 from .info import info
 
 

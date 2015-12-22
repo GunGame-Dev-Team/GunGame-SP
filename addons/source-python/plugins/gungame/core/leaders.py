@@ -27,11 +27,11 @@ from gungame.core.players.dictionary import player_dictionary
 __all__ = ('leader_manager',
            )
 
+
 # =============================================================================
 # >> CLASSES
 # =============================================================================
 class _LeaderManager(dict):
-
     """Class used to track leaders."""
 
     def __init__(self):

@@ -1,6 +1,6 @@
 # ../gungame/plugins/included/gg_elimination/configuration.py
 
-""""""
+"""Creates the gg_elimination configuration."""
 
 # =============================================================================
 # >> IMPORTS
@@ -13,9 +13,8 @@ from cvars.flags import ConVarFlags
 #   Config
 from gungame.core.config.manager import GunGameConfigManager
 
-# Script Imports
+# Plugin Imports
 from .info import info
-
 
 
 # =============================================================================
@@ -25,4 +24,4 @@ with GunGameConfigManager(info.name) as config:
     with config.cvar(
             'spawn_joiners', 0, ConVarFlags.NONE,
             'Enable/Disable spawning late joining players.') as spawn_joiners:
-        ...
+        pass

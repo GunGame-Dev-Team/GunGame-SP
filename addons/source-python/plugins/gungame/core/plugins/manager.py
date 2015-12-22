@@ -24,7 +24,6 @@ gg_plugins_manager_logger = gg_plugins_logger.manager
 # >> CLASSES
 # =============================================================================
 class _GGPluginManager(PluginManager):
-
     """The GunGame plugin manager class."""
 
     logger = gg_plugins_manager_logger

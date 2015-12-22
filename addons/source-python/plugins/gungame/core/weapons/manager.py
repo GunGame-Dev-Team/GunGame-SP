@@ -10,8 +10,6 @@
 from cvars import ConVar
 #   Engines
 from engines.server import engine_server
-#   Events
-from events import Event
 #   Listeners
 from listeners.tick import tick_delays
 
@@ -43,7 +41,6 @@ gg_weapons_manager_logger = gg_weapons_logger.manager
 # >> CLASSES
 # =============================================================================
 class _WeaponOrderManager(dict):
-
     """Class used to store weapon orders."""
 
     def __init__(self):
@@ -130,7 +127,7 @@ class _WeaponOrderManager(dict):
         weapon_length = max([
             len(weapon) for weapon in weapons] + [len('Weapon')]) + 4
         joint = '{0} +{1}+{2}+{3}+'.format(
-            prefix,'-' * level_length,
+            prefix, '-' * level_length,
             '-' * multikill_length, '-' * weapon_length)
         gg_weapons_manager_logger.log_message(joint)
         gg_weapons_manager_logger.log_message('{0} |{1}|{2}|{3}|'.format(
@@ -148,12 +145,12 @@ class _WeaponOrderManager(dict):
 
     def restart_game(self):
         """Restart the match."""
-        if self.delay is not None:
-            self.delay.cancel()
-        self.delay = tick_delays.delay(1, self._restart_game)
+        if self._delay is not None:
+            self._delay.cancel()
+        self._delay = tick_delays.delay(1, self._restart_game)
 
     def _restart_game(self):
-        """"""
+        """Restart the match."""
         self._delay = None
 
         GunGameStatus.MATCH = GunGameMatchStatus.INACTIVE

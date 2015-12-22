@@ -8,8 +8,6 @@
 # Python Imports
 #   Collections
 from collections import defaultdict
-#   Contextlib
-from contextlib import suppress
 #   Warnings
 from warnings import warn
 
@@ -17,8 +15,8 @@ from warnings import warn
 #   Colors
 from colors import WHITE
 #   Messages
-with suppress(ImportError):
-    from messages import HudMsg
+from messages import DialogMsg
+from messages import HudMsg
 from messages import HintText
 from messages import KeyHintText
 from messages import SayText2
@@ -46,7 +44,6 @@ __all__ = ('message_manager',
 # >> CLASSES
 # =============================================================================
 class _MessageManager(dict):
-
     """Class used to send messages to players."""
 
     def __init__(self):
@@ -79,7 +76,7 @@ class _MessageManager(dict):
                     if key in self:
                         warn(
                             'Translation key "{0}" already registered.'.format(
-                            key))
+                                key))
                         continue
 
                     # Add the translations to the dictionary

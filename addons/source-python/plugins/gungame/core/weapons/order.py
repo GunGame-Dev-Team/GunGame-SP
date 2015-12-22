@@ -40,7 +40,6 @@ _multikill_weapons = _primary_weapons + _secondary_weapons
 # >> CLASSES
 # =============================================================================
 class WeaponOrder(dict):
-
     """Dictionary used to store a weapon order."""
 
     def __init__(self, filepath):
@@ -114,7 +113,6 @@ class WeaponOrder(dict):
 
 
 class _LevelWeapon(object):
-
     """Class used to store level specific values."""
 
     def __init__(self, weapon, multikill):

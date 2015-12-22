@@ -1,4 +1,4 @@
-# ../gungame/listeners.py
+# ../gungame/core/listeners.py
 
 """Event and level listeners and other helper functions."""
 
@@ -24,6 +24,8 @@ from listeners import OnLevelShutdown
 from listeners.tick import tick_delays
 
 # GunGame Imports
+#   Config
+from gungame.core.config.core.warmup import enabled as warmup_enabled
 #   Events
 from gungame.core.events.included.match import GG_Start
 #   Leaders
@@ -304,7 +306,7 @@ def gg_leveldown(game_event):
 # >> LEVEL LISTENERS
 # =============================================================================
 @OnLevelInit
-def level_init(mapname):
+def level_init(map_name):
     """Set match status to INACTIVE when a new map is started."""
     # Is GunGame still loading?
     if GunGameStatus.MATCH is GunGameMatchStatus.LOADING:
@@ -349,7 +351,7 @@ def post_multikill(player, attribute, new_value, old_value):
 def start_match():
     """Start the match if not already started or on hold."""
     # Is warmup supposed to happen?
-    if ConVar('gg_warmup_round').get_int():
+    if warmup_enabled.get_int():
 
         # Start warmup
         warmup_manager.start_warmup()

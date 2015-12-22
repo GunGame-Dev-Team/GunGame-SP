@@ -23,7 +23,6 @@ from gungame.core.plugins.valid import valid_plugins
 # >> CLASSES
 # =============================================================================
 class GunGameConfigManager(ConfigManager):
-
     """Class used to create GunGame configuration files."""
 
     def __init__(self, name):
@@ -47,7 +46,6 @@ class GunGameConfigManager(ConfigManager):
 
 
 class _ConfigManager(object):
-
     """Config management class used to interact with GunGame config files."""
 
     def __init__(self):

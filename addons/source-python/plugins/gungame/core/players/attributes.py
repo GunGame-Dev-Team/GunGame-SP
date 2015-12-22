@@ -7,7 +7,6 @@
 # >> CLASSES
 # =============================================================================
 class _Attribute(object):
-
     """Class used to store an attribute with its default value."""
 
     def __init__(self, default):
@@ -21,7 +20,6 @@ class _Attribute(object):
 
 
 class _PlayerAttributes(dict):
-
     """Dictionary class used to store player attributes for GunGame."""
 
     def __setitem__(self, item, value):
@@ -64,7 +62,6 @@ player_attributes.register_attribute('wins', 0)
 
 
 class _AttributeHook(list):
-
     """Class that stores a list of callbacks for the attribute hook."""
 
     def __init__(self, attribute):
@@ -116,7 +113,6 @@ class _AttributeHook(list):
 
 
 class _AttributeHooks(dict):
-
     """Dictionary used to store attribute hooks by name."""
 
     def __missing__(self, attribute):
@@ -150,7 +146,6 @@ attribute_post_hooks = _AttributeHooks()
 
 
 class _AttributeDecorator(object):
-
     """Decorator class used to register callbacks to an attribute."""
 
     def __init__(self, attribute):
@@ -176,14 +171,12 @@ class _AttributeDecorator(object):
 
 
 class AttributePostHook(_AttributeDecorator):
-
     """Decorator class to register post callbacks to an attribute."""
 
     hook_instance = attribute_post_hooks
 
 
 class AttributePreHook(_AttributeDecorator):
-
     """Decorator class to register pre callbacks to an attribute."""
 
     hook_instance = attribute_pre_hooks

@@ -13,9 +13,8 @@ from cvars.flags import ConVarFlags
 #   Config
 from gungame.core.config.manager import GunGameConfigManager
 
-# Script Imports
+# Plugin Imports
 from .info import info
-
 
 
 # =============================================================================
@@ -26,4 +25,4 @@ with GunGameConfigManager(info.name) as config:
             'gg_turbo_quick_switch', 0, ConVarFlags.NONE,
             'Enable/disable allowing players to immediately use ' +
             'their new weapon upon receiving it.') as cvar:
-        ...
+        pass

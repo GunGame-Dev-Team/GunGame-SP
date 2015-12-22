@@ -24,7 +24,6 @@ gg_plugins_queue_logger = gg_plugins_logger.queue
 # >> CLASSES
 # =============================================================================
 class _PluginQueue(dict):
-
     """Plugin queue class used to load/unload plugins."""
 
     manager = gg_plugin_manager

@@ -1,6 +1,6 @@
 # ../gungame/plugins/included/gg_hostage_objective/gg_hostage_objective.py
 
-""""""
+"""Plugin that adds leveling based on hostage objectives."""
 
 # =============================================================================
 # >> IMPORTS
@@ -23,7 +23,7 @@ from gungame.core.players.dictionary import player_dictionary
 #   Weapons
 from gungame.core.weapons.manager import weapon_order_manager
 
-# Script Imports
+# Plugin Imports
 from .configuration import rescued_levels
 from .configuration import rescued_count
 from .configuration import rescued_skip_knife
@@ -51,14 +51,14 @@ with suppress(KeyError):
 # >> LOAD & UNLOAD
 # =============================================================================
 def load():
-    """"""
+    """Add the player hostage attributes."""
     player_attributes.register_attribute('hostage_rescues', 0)
     player_attributes.register_attribute('hostage_stops', 0)
     player_attributes.register_attribute('hostage_kills', 0)
 
 
 def unload():
-    """"""
+    """Remove the player hostage attributes."""
     player_attributes.unregister_attribute('hostage_rescues')
     player_attributes.unregister_attribute('hostage_stops')
     player_attributes.unregister_attribute('hostage_kills')
@@ -69,20 +69,20 @@ def unload():
 # =============================================================================
 @Event('hostage_rescued')
 def hostage_rescued(game_event):
-    """"""
+    """Level the rescuer up."""
     player = player_dictionary[game_event.get_int('userid')]
     player.hostage_rescues += 1
     if player.hostage_rescues < rescued_count.get_int():
         return
     player.hostage_rescues = 0
-    levels = get_levels_to_increase(player, 'rescued')
+    levels = _get_levels_to_increase(player, 'rescued')
     if levels:
         player.increase_level(levels, reason='hostage_rescued')
 
 
 @Event('player_death')
 def player_death(game_event):
-    """"""
+    """Level the stopper up."""
     victim = player_dictionary[game_event.get_int('userid')]
     hostages = len(filter(
         lambda entity: entity.leader == victim.inthandle,
@@ -100,14 +100,14 @@ def player_death(game_event):
     if player.hostage_stops < required:
         return
     player.hostage_stops -= required
-    levels = get_levels_to_increase(player, 'stopped')
+    levels = _get_levels_to_increase(player, 'stopped')
     if levels:
         player.increase_level(levels, reason='hostage_stopped')
 
 
 @Event('hostage_killed')
 def hostage_killed(game_event):
-    """"""
+    """Level the killer down."""
     attacker = game_event.get_int('attacker')
     if not attacker:
         return
@@ -123,8 +123,8 @@ def hostage_killed(game_event):
 # =============================================================================
 # >> HELPER FUNCTIONS
 # =============================================================================
-def get_levels_to_increase(player, reason):
-    """"""
+def _get_levels_to_increase(player, reason):
+    """Return the number of levels to increase the player."""
     if reason == 'rescued':
         base_levels = rescued_levels.get_int()
         skip_nade = rescued_skip_nade.get_int()
@@ -134,7 +134,7 @@ def get_levels_to_increase(player, reason):
         skip_nade = stopped_skip_nade.get_int()
         skip_knife = stopped_skip_knife.get_int()
     else:
-        raise ValueError('Invalid reason given "{0}".'format(reason))
+        raise ValueError('Invalid reason given "{0}".'.format(reason))
 
     if base_levels <= 0:
         return 0

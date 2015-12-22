@@ -16,7 +16,6 @@ from gungame.core.paths import GUNGAME_PLUGINS_PATH
 # >> CLASSES
 # =============================================================================
 class ValidPlugin(object):
-
     """Stores a valid plugin with its information."""
 
     def __init__(self, info, description):
@@ -36,7 +35,6 @@ class ValidPlugin(object):
 
 
 class _ValidPlugins(object):
-
     """Class used to store valid included and custom plugins."""
 
     def __init__(self):

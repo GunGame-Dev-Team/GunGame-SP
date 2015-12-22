@@ -1,4 +1,4 @@
-# ../gungame/core/status/__init__.py
+# ../gungame/core/status.py
 
 """GunGame status values."""
 
@@ -23,7 +23,6 @@ __all__ = ('GunGameMatchStatus',
 # >> CLASSES
 # =============================================================================
 class GunGameMatchStatus(IntEnum):
-
     """Match based status."""
 
     # GunGame is loading
@@ -46,7 +45,6 @@ class GunGameMatchStatus(IntEnum):
 
 
 class GunGameRoundStatus(IntEnum):
-
     """Round based status."""
 
     # Round is over, awaiting start of next round
@@ -57,7 +55,6 @@ class GunGameRoundStatus(IntEnum):
 
 
 class GunGameStatus(object):
-
     """Stores statuses for GunGame."""
 
     # Set the base attributes to their start values

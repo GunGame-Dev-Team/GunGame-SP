@@ -21,7 +21,6 @@ from gungame.core.events.resource import GGResourceFile
 # >> CLASSES
 # =============================================================================
 class GG_LevelUp(CustomEvent):
-
     """Called when a player levels up."""
 
     attacker = leveler = ShortVariable(
@@ -34,7 +33,6 @@ class GG_LevelUp(CustomEvent):
 
 
 class GG_LevelDown(CustomEvent):
-
     """Called when a player loses a level."""
 
     userid = leveler = ShortVariable(

@@ -1,6 +1,6 @@
 # ../gungame/plugins/included/gg_elimination/gg_elimination.py
 
-""""""
+"""Plugin that respawns players when their killer is killed."""
 
 # =============================================================================
 # >> IMPORTS

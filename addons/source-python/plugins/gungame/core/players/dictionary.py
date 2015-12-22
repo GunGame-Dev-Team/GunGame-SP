@@ -21,7 +21,6 @@ from gungame.core.players.instance import GunGamePlayer
 # >> CLASSES
 # =============================================================================
 class _PlayerDictionary(dict):
-
     """Dictionary used to store players for GunGame."""
 
     _removed_players = defaultdict(dict)

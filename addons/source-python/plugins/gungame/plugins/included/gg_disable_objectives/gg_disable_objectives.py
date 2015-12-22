@@ -10,15 +10,13 @@
 from enum import IntEnum
 
 # Source.Python Imports
-#   Cvars
-from cvars import ConVar
 #   Events
 from events import Event
 #   Filters
 from filters.entities import EntityIter
 from filters.weapons import WeaponIter
 
-# Script Imports
+# Plugin Imports
 from .configuration import disable_type
 
 
@@ -26,7 +24,6 @@ from .configuration import disable_type
 # >> CONSTANTS
 # =============================================================================
 class ObjectiveType(IntEnum):
-
     """Class used for objective comparison."""
 
     BOMBING = 1

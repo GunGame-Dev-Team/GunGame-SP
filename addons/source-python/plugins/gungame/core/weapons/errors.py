@@ -7,5 +7,4 @@
 # >> CLASSES
 # =============================================================================
 class WeaponOrderError(Exception):
-
     """Weapon order not valid."""

@@ -2,10 +2,21 @@
 
 """GunGame warmup configuration."""
 
+# =============================================================================
+# >> IMPORTS
+# =============================================================================
+# Source.Python Imports
+#   Cvars
 from cvars.flags import ConVarFlags
 
+# GunGame Imports
+#   Config
 from gungame.core.config.manager import GunGameConfigManager
 
+
+# =============================================================================
+# >> CONFIGURATION
+# =============================================================================
 with GunGameConfigManager('warmup') as config:
     with config.cvar(
             'enabled', 0, ConVarFlags.NONE,
