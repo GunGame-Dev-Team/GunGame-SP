@@ -23,6 +23,6 @@ from .info import info
 # =============================================================================
 with GunGameConfigManager(info.name) as config:
     with config.cvar(
-            'gg_elimination_spawn_joiners', 0, ConVarFlags.NONE,
-            'Enable/Disable spawning late joining players.') as cvar:
+            'spawn_joiners', 0, ConVarFlags.NONE,
+            'Enable/Disable spawning late joining players.') as spawn_joiners:
         ...
