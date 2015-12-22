@@ -9,6 +9,7 @@
 #   Entities
 from entities import TakeDamageInfo
 from entities.entity import Entity
+from entities.hooks import EntityCondition
 from entities.hooks import EntityPostHook
 from entities.hooks import EntityPreHook
 #   Memory
@@ -25,7 +26,8 @@ _revert_team = False
 # =============================================================================
 # >> HOOKED FUNCTIONS
 # =============================================================================
-@EntityPreHook('CCSPlayer', 'on_take_damage')
+@EntityPreHook(EntityCondition.is_bot_player, 'on_take_damage')
+@EntityPreHook(EntityCondition.is_human_player, 'on_take_damage')
 def pre_take_damage(args):
     """Change the victim's team if they are on the attacker's team."""
     global _revert_team
@@ -54,7 +56,8 @@ def pre_take_damage(args):
     victim.team = 5 - victim.team
 
 
-@EntityPostHook(['cs_bot', 'player'], 'on_take_damage')
+@EntityPostHook(EntityCondition.is_bot_player, 'on_take_damage')
+@EntityPostHook(EntityCondition.is_human_player, 'on_take_damage')
 def post_take_damage(args, return_value):
     """Revert the victim's team if necessary."""
     global _revert_team
