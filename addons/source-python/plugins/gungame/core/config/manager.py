@@ -26,7 +26,7 @@ class GunGameConfigManager(ConfigManager):
 
     """Class used to create GunGame configuration files."""
 
-    def __init__(self, name, cvar_prefix=''):
+    def __init__(self, name):
         """Add 'gungame' to the path before initializing the instance."""
         # Start with 'gungame' path
         filepath = Path('gungame')
@@ -35,10 +35,12 @@ class GunGameConfigManager(ConfigManager):
         try:
             folder = valid_plugins.get_plugin_type(name)
             filepath = filepath.joinpath(folder + '_plugins', name)
+            cvar_prefix = name + '_'
 
         # Get the path for a base config
         except ValueError:
             filepath = filepath.joinpath(name)
+            cvar_prefix = ''
 
         # Initialize the config
         super(GunGameConfigManager, self).__init__(filepath, cvar_prefix)
