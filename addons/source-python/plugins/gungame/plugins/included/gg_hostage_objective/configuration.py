@@ -20,62 +20,63 @@ from .info import info
 # =============================================================================
 # >> CONFIGURATION
 # =============================================================================
-with GunGameConfigManager(info.name) as config:
+with GunGameConfigManager(info.name, 'gg_hostage_objective_') as config:
     with config.cvar(
-            'gg_hostage_objective_rescued_levels', 1, ConVarFlags.NONE,
+            'rescued_levels', 1, ConVarFlags.NONE,
             'The number of levels to increase for ' +
-            'successfully rescuing hostages.') as cvar:
+            'successfully rescuing hostages.') as rescued_levels:
         ...
 
     with config.cvar(
-            'gg_hostage_objective_rescued_count', 2, ConVarFlags.NONE,
+            'rescued_count', 2, ConVarFlags.NONE,
             'The number of rescued hostages required ' +
-            'for a level increase.') as cvar:
+            'for a level increase.') as rescued_count:
         ...
 
     with config.cvar(
-            'gg_hostage_objective_rescued_skip_knife', 0, ConVarFlags.NONE,
+            'rescued_skip_knife', 0, ConVarFlags.NONE,
             'Enable/disable skipping knife level ' +
-            'by rescuing hostages.') as cvar:
+            'by rescuing hostages.') as rescued_skip_knife:
         ...
 
     with config.cvar(
-            'gg_hostage_objective_rescued_skip_nade', 0, ConVarFlags.NONE,
+            'rescued_skip_nade', 0, ConVarFlags.NONE,
             'Enable/disable skipping nade level ' +
-            'by rescuing hostages.') as cvar:
+            'by rescuing hostages.') as rescued_skip_nade:
         ...
 
     with config.cvar(
-            'gg_hostage_objective_stopped_levels', 1, ConVarFlags.NONE,
+            'stopped_levels', 1, ConVarFlags.NONE,
             'The number of levels to increase for ' +
-            'stopping (killing) rescuers.') as cvar:
+            'stopping (killing) rescuers.') as stopped_levels:
         ...
 
     with config.cvar(
-            'gg_hostage_objective_rescued_count', 2, ConVarFlags.NONE,
+            'stopped_count', 2, ConVarFlags.NONE,
             'The number of stopped (killed) rescuers required ' +
-            'for a level increase.') as cvar:
+            'for a level increase.') as stopped_count:
         ...
 
     with config.cvar(
-            'gg_hostage_objective_stopped_skip_knife', 0, ConVarFlags.NONE,
+            'stopped_skip_knife', 0, ConVarFlags.NONE,
             'Enable/disable skipping knife level by ' +
-            'stopping (killing) rescuers.') as cvar:
+            'stopping (killing) rescuers.') as stopped_skip_knife:
         ...
 
     with config.cvar(
-            'gg_hostage_objective_stopped_skip_nade', 0, ConVarFlags.NONE,
+            'stopped_skip_nade', 0, ConVarFlags.NONE,
             'Enable/disable skipping nade level by ' +
-            'stopping (killing) rescuers.') as cvar:
+            'stopping (killing) rescuers.') as stopped_skip_nade:
         ...
 
     with config.cvar(
-            'gg_hostage_objective_killed_levels', 1, ConVarFlags.NONE,
-            'The number of levels to descrease for killing hostages.') as cvar:
+            'killed_levels', 1, ConVarFlags.NONE,
+            'The number of levels to descrease for killing ' +
+            'hostages.') as killed_levels:
         ...
 
     with config.cvar(
-            'gg_hostage_objective_killed_count', 2, ConVarFlags.NONE,
+            'killed_count', 2, ConVarFlags.NONE,
             'The number of hostage kills required ' +
-            'for a level decrease.') as cvar:
+            'for a level decrease.') as killed_count:
         ...

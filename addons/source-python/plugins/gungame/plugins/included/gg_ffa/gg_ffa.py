@@ -25,7 +25,7 @@ _revert_team = False
 # =============================================================================
 # >> HOOKED FUNCTIONS
 # =============================================================================
-@EntityPreHook(['cs_bot', 'player'], 'on_take_damage')
+@EntityPreHook('CCSPlayer', 'on_take_damage')
 def pre_take_damage(args):
     """Change the victim's team if they are on the attacker's team."""
     global _revert_team

@@ -22,6 +22,7 @@ from gungame.core.paths import GUNGAME_WEAPON_ORDER_PATH
 from gungame.core.status import GunGameMatchStatus
 from gungame.core.status import GunGameStatus
 #   Weapons
+from gungame.core.weapons import gg_weapons_logger
 from gungame.core.weapons.order import WeaponOrder
 
 
@@ -30,6 +31,12 @@ from gungame.core.weapons.order import WeaponOrder
 # =============================================================================
 __all__ = ('weapon_order_manager',
            )
+
+
+# =============================================================================
+# >> GLOBAL VARIABLES
+# =============================================================================
+gg_weapons_manager_logger = gg_weapons_logger.manager
 
 
 # =============================================================================
@@ -102,6 +109,42 @@ class _WeaponOrderManager(dict):
         if value:
             self[self._active].randomize_order()
         self.restart_game()
+
+    def print_order(self):
+        """Print the current weapon order."""
+        # Set the prefix
+        prefix = '[GunGame]'
+
+        # Log the weapon order name
+        gg_weapons_manager_logger.log_message(
+            '{0} Weapon order: {1}\n'.format(prefix, self.active.title))
+        levels = list()
+        multikills = list()
+        weapons = list()
+        for level in self.active:
+            levels.append(level)
+            multikills.append(self.active[level].multikill)
+            weapons.append(self.active[level].weapon)
+        level_length = max(len(str(max(levels))), len('Level')) + 2
+        multikill_length = max(len(str(max(multikills))), len('Multikill')) + 2
+        weapon_length = max([
+            len(weapon) for weapon in weapons] + [len('Weapon')]) + 4
+        joint = '{0} +{1}+{2}+{3}+'.format(
+            prefix,'-' * level_length,
+            '-' * multikill_length, '-' * weapon_length)
+        gg_weapons_manager_logger.log_message(joint)
+        gg_weapons_manager_logger.log_message('{0} |{1}|{2}|{3}|'.format(
+            prefix, 'Level'.center(level_length),
+            'Multikill'.center(multikill_length),
+            'Weapon'.center(weapon_length)))
+        gg_weapons_manager_logger.log_message(joint)
+        for level in self.active:
+            current = self.active[level]
+            gg_weapons_manager_logger.log_message('{0} |{1}|{2}|{3} |'.format(
+                prefix, str(level).center(level_length),
+                str(current.multikill).center(multikill_length),
+                current.weapon.rjust(weapon_length - 1)))
+        gg_weapons_manager_logger.log_message(joint)
 
     def restart_game(self):
         """Restart the match."""

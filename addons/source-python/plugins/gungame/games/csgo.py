@@ -5,6 +5,14 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Python Imports
+#   Warnings
+from warnings import warn
+
+#Source.Python Imports
+#   Core
+from core import GAME_NAME
+
 # GunGame Imports
 #   Messages
 from gungame.core.messages import message_manager
@@ -23,12 +31,18 @@ def _give_named_item(player, weapon):
 _PlayerWeapons._give_named_item = _give_named_item
 
 
-def _no_message(*args, **kwargs):
-    """Override for messages that do not work."""
-    ...
+class _NoMessage(object):
+    """Class used to hook non-supported message types."""
+
+    def __init__(self, message_type):
+        """Store the message type."""
+        self.message_type = message_type
+
+    def _hook_message(*args, **kwargs):
+        """Override for messages that do not work."""
+        warn('Message type "{0}" not supported for game "{1}".'.format(
+            self.message_type, GAME_NAME))
 
 # Set the overrides
-# TODO: Remove center/echo when TextMsg gets fixed
-message_manager.center_message = _no_message
-message_manager.echo_message = _no_message
-message_manager.hud_message = _no_message
+message_manager.hud_message = _NoMessage('HudMsg')._hook_message
+message_manager.top_message = _NoMessage('DialogMsg')._hook_message

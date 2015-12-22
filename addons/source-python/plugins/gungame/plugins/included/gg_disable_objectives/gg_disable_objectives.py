@@ -16,8 +16,10 @@ from cvars import ConVar
 from events import Event
 #   Filters
 from filters.entities import EntityIter
-#   Weapons
-from weapons.entity import WeaponEntity
+from filters.weapons import WeaponIter
+
+# Script Imports
+from .configuration import disable_types
 
 
 # =============================================================================
@@ -42,13 +44,13 @@ def load():
 def unload():
     """Re-enable all objectives."""
     # Loop through all bomb targets
-    for entity in EntityIter('func_bomb_target', return_types='entity'):
+    for entity in EntityIter('func_bomb_target'):
 
         # Enable the bomb target
         entity.enable()
 
     # Loop through all rescue zones
-    for entity in EntityIter('func_hostage_rescue', return_types='entity'):
+    for entity in EntityIter('func_hostage_rescue'):
 
         # Enable the rescue zone
         entity.enable()
@@ -57,58 +59,47 @@ def unload():
 # =============================================================================
 # >> GAME EVENTS
 # =============================================================================
-@Event
-def round_start(game_event):
+@Event('round_start')
+def disable_objectives(game_event=None):
     """Disable objectives each round."""
-    disable_objectives()
-
-
-# =============================================================================
-# >> HELPER FUNCTIONS
-# =============================================================================
-def disable_objectives():
-    """Find out which objectives to disable and disable them."""
     # Get the objectives to disable
-    objectives = ConVar('gg_disable_objectives').get_int()
+    objectives = disable_types.get_int()
 
     # Do bombing objectives need removed?
-    if objectives and ObjectiveType.BOMBING:
+    if objectives & ObjectiveType.BOMBING:
 
         # Loop through all bomb targets
-        for entity in EntityIter('func_bomb_target', return_types='entity'):
+        for entity in EntityIter('func_bomb_target'):
 
             # Disable the bomb target
             entity.disable()
 
         # Loop through all c4 entities
-        for index in EntityIter('weapon_c4'):
-
-            # Get the entity's instance
-            entity = WeaponEntity(index)
+        for weapon in WeaponIter('objective'):
 
             # Get the entity's owner
-            owner = entity.current_owner
+            owner = weapon.current_owner
 
             # Does the entity have an owner?
             if owner is not None:
 
                 # Force the owner to drop the entity
-                owner.drop_weapon(entity, None, None)
+                owner.drop_weapon(weapon, None, None)
 
             # Remove the entity from the server
-            entity.remove()
+            weapon.remove()
 
     # Do hostage objectives need removed?
-    if objectives and ObjectiveType.HOSTAGE:
+    if objectives & ObjectiveType.HOSTAGE:
 
         # Loop through all rescue zones
-        for entity in EntityIter('func_hostage_rescue', return_types='entity'):
+        for entity in EntityIter('func_hostage_rescue'):
 
             # Disable the rescue zone
             entity.disable()
 
         # Loop through all hostage entities
-        for entity in EntityIter('hostage_entity', return_types='entity'):
+        for entity in EntityIter('hostage_entity'):
 
             # Remove the entity from the server
             entity.remove()

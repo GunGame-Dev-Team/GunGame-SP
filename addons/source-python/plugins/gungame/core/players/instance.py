@@ -5,7 +5,7 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-from players.entity import PlayerEntity
+from players.entity import Player
 
 # GunGame Imports
 #   Players
@@ -23,7 +23,7 @@ from gungame.core.players.weapons import _PlayerWeapons
 # >> CLASSES
 # =============================================================================
 class GunGamePlayer(
-        PlayerEntity, _PlayerLevels, _PlayerMessages,
+        Player, _PlayerLevels, _PlayerMessages,
         _PlayerSounds, _PlayerWeapons):
 
     """Class used to interact directly with a specific player."""

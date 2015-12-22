@@ -7,7 +7,7 @@
 # =============================================================================
 # Source.Python Imports
 #   Weapons
-from weapons.entity import WeaponEntity
+from weapons.entity import Weapon
 from weapons.manager import weapon_manager
 
 # GunGame Imports
@@ -36,11 +36,11 @@ class _PlayerWeapons(object):
         """Give the player the weapon of their current level."""
         weapon = weapon_manager[self.level_weapon]
         for index in self.weapon_indexes():
-            entity = WeaponEntity(index)
+            entity = Weapon(index)
             if entity.classname == weapon.name:
                 return
         for index in self.weapon_indexes():
-            entity = WeaponEntity(index)
+            entity = Weapon(index)
             if weapon_manager[entity.classname].slot == weapon.slot:
                 self.drop_weapon(entity, None, None)
                 entity.remove()

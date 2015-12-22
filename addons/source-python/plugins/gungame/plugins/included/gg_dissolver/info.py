@@ -1,14 +1,19 @@
-# ../gungame/core/weapons/__init__.py
+# ../gungame/plugins/included/gg_dissolver/info.py
 
-"""Weapon based functionality."""
+"""Contains plugin information."""
 
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-from gungame.core import gg_core_logger
+# Source.Python Imports
+#   Plugins
+from plugins.info import PluginInfo
 
 
 # =============================================================================
-# >> GLOBAL VARIABLES
+# >> PLUGIN INFO
 # =============================================================================
-gg_weapons_logger = gg_core_logger.weapons
+info = PluginInfo()
+info.name = 'gg_dissolver'
+info.title = 'GG Dissolver'
+info.author = 'GG Dev Team'

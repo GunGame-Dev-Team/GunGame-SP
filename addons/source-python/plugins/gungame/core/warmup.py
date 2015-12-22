@@ -21,7 +21,6 @@ from cvars import ConVar
 #   Engines
 from engines.server import engine_server
 #   Filters
-from filters.errors import FilterError
 from filters.players import PlayerIter
 from filters.weapons import WeaponClassIter
 #   Listeners
@@ -45,14 +44,15 @@ __all__ = ('warmup_manager',
 # >> GLOBAL VARIABLES
 # =============================================================================
 # Get all possible warmup weapons
-_possible_weapons = set(WeaponClassIter('primary', return_types='basename'))
-_possible_weapons.update(set(
-    WeaponClassIter('secondary', return_types='basename')))
-_possible_weapons.update(set(
-    WeaponClassIter('explosive', return_types='basename')))
-with suppress(FilterError):
-    _possible_weapons.update(set(
-        WeaponClassIter('incendiary', return_types='basename')))
+_possible_weapons = set(
+    [weapon.basename for weapon in WeaponClassIter('primary')])
+_possible_weapons.update(
+    [weapon.basename for weapon in WeaponClassIter('secondary')])
+_possible_weapons.update(
+    [weapon.basename for weapon in WeaponClassIter('explosive')])
+if 'incendiary' in WeaponClassIter.filters:
+    _possible_weapons.update(
+        [weapon.basename for weapon in WeaponClassIter('incendiary')])
 
 # Get a generator for human players
 _human_nospec = PlayerIter('human', ['spec', 'un'])

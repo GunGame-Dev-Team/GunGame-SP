@@ -10,13 +10,10 @@
 from contextlib import suppress
 
 # Source.Python Imports
-#   Cvars
-from cvars import ConVar
 #   Events
 from events import Event
 #   Filters
 from filters.entities import EntityIter
-from filters.errors import FilterError
 from filters.weapons import WeaponClassIter
 
 # GunGame Imports
@@ -27,19 +24,27 @@ from gungame.core.players.dictionary import player_dictionary
 from gungame.core.weapons.manager import weapon_order_manager
 
 # Script Imports
-from .info import info
+from .configuration import rescued_levels
+from .configuration import rescued_count
+from .configuration import rescued_skip_knife
+from .configuration import rescued_skip_nade
+from .configuration import stopped_levels
+from .configuration import stopped_count
+from .configuration import stopped_skip_knife
+from .configuration import stopped_skip_nade
+from .configuration import killed_levels
+from .configuration import killed_count
 
 
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
-_knife_weapons = set(WeaponClassIter('knife', return_types='basename'))
-_nade_weapons = set(WeaponClassIter('explosive', return_types='basename'))
-with suppress(FilterError):
-    _nade_weapons.update(set(
-        WeaponClassIter('incendiary', return_types='basename')))
-
-_hostage_entities = EntityIter('hostage_entity', return_types='entity')
+_knife_weapons = set([weapon.basename for weapon in WeaponClassIter('knife')])
+_nade_weapons = set([
+    weapon.basename for weapon in WeaponClassIter('explosive')])
+with suppress(KeyError):
+    _nade_weapons.update(set([
+        weapon.basename for weapon in WeaponClassIter('incendiary')]))
 
 
 # =============================================================================
@@ -62,13 +67,12 @@ def unload():
 # =============================================================================
 # >> GAME EVENTS
 # =============================================================================
-@Event
+@Event('hostage_rescued')
 def hostage_rescued(game_event):
     """"""
     player = player_dictionary[game_event.get_int('userid')]
     player.hostage_rescues += 1
-    if player.hostage_rescues < ConVar(
-            'gg_hostage_objective_rescued_count').get_int():
+    if player.hostage_rescues < rescued_count.get_int():
         return
     player.hostage_rescues = 0
     levels = get_levels_to_increase(player, 'rescued')
@@ -76,12 +80,13 @@ def hostage_rescued(game_event):
         player.increase_level(levels, reason='hostage_rescued')
 
 
-@Event
+@Event('player_death')
 def player_death(game_event):
     """"""
     victim = player_dictionary[game_event.get_int('userid')]
     hostages = len(filter(
-        lambda entity: entity.leader == victim.inthandle, _hostage_entities))
+        lambda entity: entity.leader == victim.inthandle,
+        EntityIter('hostage_entity')))
     if not hostages:
         return
     attacker = game_event.get_int('attacker')
@@ -91,7 +96,7 @@ def player_death(game_event):
     if player.team == victim.team:
         return
     player.hostage_stops += hostages
-    required = ConVar('gg_hostage_objective_stopped_count').get_int()
+    required = stopped_count.get_int()
     if player.hostage_stops < required:
         return
     player.hostage_stops -= required
@@ -100,7 +105,7 @@ def player_death(game_event):
         player.increase_level(levels, reason='hostage_stopped')
 
 
-@Event
+@Event('hostage_killed')
 def hostage_killed(game_event):
     """"""
     attacker = game_event.get_int('attacker')
@@ -108,15 +113,11 @@ def hostage_killed(game_event):
         return
     player = player_dictionary[attacker]
     player.hostage_kills += 1
-    if player.hostage_kills < ConVar(
-            'gg_hostage_objective_killed_count').get_int():
+    if player.hostage_kills < killed_count.get_int():
         return
     player.hostage_kills = 0
-    player.decrease_level(ConVar(
-        'gg_hostage_objective_killed_levels').get_int(),
-        reason='hostage_killed')
-    player.chat_message(
-        message='HostageObjective_LevelDown_Killed', newlevel=player.level)
+    player.decrease_level(killed_levels.get_int(), reason='hostage_killed')
+    player.chat_message('HostageObjective_LevelDown_Killed', player=player)
 
 
 # =============================================================================
@@ -124,14 +125,19 @@ def hostage_killed(game_event):
 # =============================================================================
 def get_levels_to_increase(player, reason):
     """"""
-    base_levels = ConVar(
-        'gg_hostage_objective_{0}_levels'.format(reason)).get_int()
+    if reason == 'rescued':
+        base_levels = rescued_levels.get_int()
+        skip_nade = rescued_skip_nade.get_int()
+        skip_knife = rescued_skip_knife.get_int()
+    elif reason == 'stopped':
+        base_levels = stopped_levels.get_int()
+        skip_nade = stopped_skip_nade.get_int()
+        skip_knife = stopped_skip_knife.get_int()
+    else:
+        raise ValueError('Invalid reason given "{0}".'format(reason))
+
     if base_levels <= 0:
         return 0
-    skip_nade = ConVar(
-        'gg_hostage_objective_{0}_skip_nade'.format(reason)).get_int()
-    skip_knife = ConVar(
-        'gg_hostage_objective_{0}_skip_knife'.format(reason)).get_int()
 
     for level_increase in range(base_levels + 1):
         level = player.level + level_increase
@@ -140,7 +146,7 @@ def get_levels_to_increase(player, reason):
         weapon = weapon_order_manager.active[level].weapon
         if (weapon in _nade_weapons and not skip_nade) or (
                 weapon in _knife_weapons and not skip_knife):
-            player.chat_message(message='HostageObjective_NoSkip_{0}'.format(
-                reason.title()), level=weapon)
+            player.chat_message('HostageObjective_NoSkip_{0}'.format(
+                reason.title()), weapon=weapon)
             return level_increase
     return level_increase

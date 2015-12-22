@@ -31,7 +31,7 @@ with suppress(FilterError):
 # =============================================================================
 # GAME EVENTS
 # =============================================================================
-@Event
+@Event('bomb_defused')
 def bomb_defused(game_event):
     """"""
     player = player_dictionary[game_event.get_int('userid')]
@@ -40,7 +40,7 @@ def bomb_defused(game_event):
         player.increase_level(levels, 'bomb_defused')
 
 
-@Event
+@Event('bomb_exploded')
 def bomb_exploded(game_event):
     """"""
     player = player_dictionary[game_event.get_int('userid')]
@@ -70,8 +70,7 @@ def get_levels_to_increase(player, reason):
         weapon = weapon_order_manager.active[level].weapon
         if (weapon in _nade_weapons and not skip_nade) or (
                 weapon in _knife_weapons and not skip_knife):
-            player.chat_message(
-                message='BombingObjective_NoSkip_{0}'.format(
-                    reason.title()), level=weapon))
+            player.chat_message('BombingObjective_NoSkip_{0}'.format(
+                    reason.title()), weapon=weapon)
             return level_increase
     return level_increase

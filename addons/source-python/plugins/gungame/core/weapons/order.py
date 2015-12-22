@@ -30,9 +30,9 @@ __all__ = ('WeaponOrder',
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
-_primary_weapons = list(WeaponClassIter('primary', return_types='basename'))
-_secondary_weapons = list(
-    WeaponClassIter('secondary', return_types='basename'))
+_primary_weapons = [weapon.basename for weapon in WeaponClassIter('primary')]
+_secondary_weapons = [
+    weapon.basename for weapon in WeaponClassIter('secondary')]
 _multikill_weapons = _primary_weapons + _secondary_weapons
 
 

@@ -5,9 +5,13 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Source.Python Imports
+#   Config
 from config.manager import ConfigManager
+#   Cvars
 from cvars import ConVar
 from cvars.flags import ConVarFlags
+#   Loggers
 from loggers import LogManager
 
 

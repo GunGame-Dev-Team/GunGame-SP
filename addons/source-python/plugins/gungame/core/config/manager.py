@@ -26,7 +26,7 @@ class GunGameConfigManager(ConfigManager):
 
     """Class used to create GunGame configuration files."""
 
-    def __init__(self, name):
+    def __init__(self, name, cvar_prefix=''):
         """Add 'gungame' to the path before initializing the instance."""
         # Start with 'gungame' path
         filepath = Path('gungame')
@@ -41,7 +41,7 @@ class GunGameConfigManager(ConfigManager):
             filepath = filepath.joinpath(name)
 
         # Initialize the config
-        super(GunGameConfigManager, self).__init__(filepath)
+        super(GunGameConfigManager, self).__init__(filepath, cvar_prefix)
 
 
 class _ConfigManager(object):

@@ -45,6 +45,7 @@ from gungame.core.weapons.manager import weapon_order_manager
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
+# Get the initialization strings
 _base_strings = LangStrings('gungame/initialization')
 
 
@@ -56,31 +57,36 @@ def load():
     # Initialize GunGame logging
     # TODO: Make sure to enable logging prior to the start message
     gg_logger.log_message(
-        _base_strings['GunGame_Init_Start'].get_string(version='1.0'))
+        _base_strings['Initialize:Start'].get_string(version=info.version))
 
     # Initialize GunGame weapon orders
     gg_logger.log_message(
-        _base_strings['GunGame_Init_Weapons'].get_string())
+        _base_strings['Initialize:Weapons'].get_string())
     weapon_order_manager.get_weapon_orders()
 
     # Initialize GunGame events
     gg_logger.log_message(
-        _base_strings['GunGame_Init_Events'].get_string())
+        _base_strings['Initialize:Events'].get_string())
     gg_resource_list.load_events()
 
     # Initialize GunGame commands/menus
+    # TODO: Initialize commands/menus
     gg_logger.log_message(
-        _base_strings['GunGame_Init_Commands'].get_string())
+        _base_strings['Initialize:Commands'].get_string())
 
     # Initialize GunGame sounds
+    # TODO: Initialize sounds
     gg_logger.log_message(
-        _base_strings['GunGame_Init_Sounds'].get_string())
+        _base_strings['Initialize:Sounds'].get_string())
 
     # Initialize GunGame database
+    # TODO: Initialize database
+    gg_logger.log_message(
+        _base_strings['Initialize:Database'].get_string())
 
     # Initialize GunGame configs
     gg_logger.log_message(
-        _base_strings['GunGame_Init_Configs'].get_string())
+        _base_strings['Initialize:Configs'].get_string())
     config_manager.load_configs()
 
     # Set the starting weapon convars
@@ -100,13 +106,13 @@ def load():
 
     # Import the game specific functionality
     gg_logger.log_message(
-        _base_strings['GunGame_Init_Game'].get_string())
+        _base_strings['Initialize:Game'].get_string())
     with suppress(ImportError):
         import_module('gungame.games.{0}'.format(GAME_NAME))
 
     # Wait 1 tick to see if gg_start should be called
     gg_logger.log_message(
-        _base_strings['GunGame_Init_End'].get_string())
+        _base_strings['Initialize:End'].get_string())
     tick_delays.delay(0, start_match)
 
 
@@ -135,5 +141,5 @@ def unload():
     # Clean GunGame logging
 
     # Re-enable buyzones
-    for entity in EntityIter('func_buyzone', return_types='entity'):
+    for entity in EntityIter('func_buyzone'):
         entity.enable()

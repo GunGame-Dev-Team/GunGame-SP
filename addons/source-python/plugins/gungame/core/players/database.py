@@ -58,3 +58,7 @@ class _PlayerDatabase(
         """"""
         if self.wins:
             _wins_database.update_timestamp(player)
+
+    @property
+    def rank(self):
+        """Return the player's rank on the server."""

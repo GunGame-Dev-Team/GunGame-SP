@@ -66,15 +66,14 @@ class Player(PlayerEntity):
 
             # Message the player with the countdown
             player_dictionary[self.userid].hint_message(
-                message='DeathMatch_Respawn_CountDown',
-                seconds=self.repeat.remaining)
+                'DeathMatch_Respawn_CountDown', seconds=self.repeat.remaining)
 
         # Are there no more loops remaining for the player?
         else:
 
             # Message the player that they are respawning
             player_dictionary[self.userid].hint_message(
-                message='DeathMatch_Respawning')
+                'DeathMatch_Respawning')
 
             # Respawn the player
             self.respawn()
@@ -167,7 +166,7 @@ def joinclass(playerinfo, command):
 # =============================================================================
 # >> EVENTS
 # =============================================================================
-@Event
+@Event('player_spawn')
 def player_spawn(game_event):
     """Start bot repeats in case they join mid round."""
     # Get the player's userid
@@ -183,7 +182,7 @@ def player_spawn(game_event):
         player.start_repeat()
 
 
-@Event
+@Event('player_death')
 def player_death(game_event):
     """Start the player's repeat when they are killed."""
     # Get the player's userid
@@ -193,7 +192,7 @@ def player_death(game_event):
     deathmatch_players[userid].start_repeat()
 
 
-@Event
+@Event('player_disconnect')
 def player_disconnect(game_event):
     """Remove the player from the dictionary."""
     del deathmatch_players[game_event.get_int('userid')]

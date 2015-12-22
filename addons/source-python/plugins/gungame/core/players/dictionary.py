@@ -29,12 +29,7 @@ class _PlayerDictionary(dict):
     def __missing__(self, userid):
         """Called when a userid is not in the dictionary."""
         # Get the player's index
-        index = index_from_userid(userid, False)
-
-        # Is the player no longer on the server?
-        if index is None:
-            raise ValueError(
-                'Invalid userid "{0}"'.format(userid))
+        index = index_from_userid(userid)
 
         # Get the GunGamePlayer instance for the userid
         player = self[userid] = GunGamePlayer(index)

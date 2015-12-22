@@ -51,135 +51,198 @@ class _MessageManager(dict):
 
     def __init__(self):
         """Retrieve all core translations and store them in the dictionary."""
+        # Initialize the dictionary
         super(_MessageManager, self).__init__()
+
+        # Create base dictionaries to store message hooks
         self._hooked_messages = defaultdict()
         self._hooked_prefixes = defaultdict()
+
+        # Loop through all directories in the GunGame translations directory
         for folder in GUNGAME_TRANSLATION_PATH.dirs():
+
+            # Loop through all translation files in the current directory
             for file in folder.walkfiles('*.ini'):
+
+                # Skip all server-specific files
                 if file.namebase.endswith('_server'):
                     continue
+
+                # Get the current translations
                 instance = LangStrings(
                     file.replace(TRANSLATION_PATH, '')[1:~3])
+
+                # Loop through all translations in the current file
                 for key, value in instance.items():
+
+                    # Verify that the name is unique
                     if key in self:
                         warn(
                             'Translation key "{0}" already registered.'.format(
                             key))
                         continue
+
+                    # Add the translations to the dictionary
                     self[key] = value
 
     def hook_message(self, message_name):
-        """"""
+        """Add a hook to the given message's refcount."""
         self._hooked_messages[message_name] += 1
 
     def unhook_message(self, message_name):
+        """Decrement the given message's refcount."""
         self._hooked_messages[message_name] -= 1
         if not self._hooked_messages[message_name]:
             del self._hooked_messages[message_name]
 
     def hook_prefix(self, message_prefix):
-        """"""
+        """Add a hook to the given prefix's refcount."""
         self._hooked_prefixes[message_prefix] += 1
 
     def unhook_prefix(self, message_prefix):
+        """Decrement the given prefix's refcount."""
         self._hooked_prefixes[message_prefix] -= 1
         if not self._hooked_prefixes[message_prefix]:
             del self._hooked_prefixes[message_prefix]
 
-    def center_message(self, users=None, message='', **tokens):
+    def center_message(self, message='', *users, **tokens):
         """Send a center message to the given players."""
+        # Get the message to send
         message = self._get_message(message)
+
+        # Is there no message?
         if message is None:
             return
+
+        # Convert user index to a tuple
         if isinstance(users, int):
             users = (users, )
-        instance = TextMsg(
-            destination=TextMsg.HUD_PRINTCENTER, message=message, **tokens)
-        instance.send(*(users or ()))
 
-    def chat_message(self, users=None, index=0, message='', **tokens):
+        # Get a new instance for the message
+        TextMsg(message).send(*users, **tokens)
+
+    def chat_message(self, message='', index=0, *users, **tokens):
         """Send a chat message to the given players."""
+        # Get the message to send
         message = self._get_message(message)
+
+        # Is there no message?
         if message is None:
             return
+
+        # Convert user index to a tuple
         if isinstance(users, int):
             users = (users, )
-        instance = SayText2(index=index, message=message, **tokens)
-        instance.send(*(users or ()))
 
-    def echo_message(self, users=None, message='', **tokens):
+        # Send the message to the users
+        SayText2(message, index).send(*users, **tokens)
+
+    def echo_message(self, message='', *users, **tokens):
         """Send an echo message to the given players."""
+        # Get the message to send
         message = self._get_message(message)
-        if message is None:
-            return
-        if isinstance(users, int):
-            users = (users, )
-        instance = TextMsg(
-            destination=TextMsg.HUD_PRINTCONSOLE, message=message, **tokens)
-        instance.send(*(users or ()))
 
-    def hint_message(self, users=None, message='', **tokens):
-        """Send a hint message to the given players."""
-        message = self._get_message(message)
+        # Is there no message?
         if message is None:
             return
+
+        # Convert user index to a tuple
         if isinstance(users, int):
             users = (users, )
-        instance = HintText(message=message, **tokens)
-        instance.send(*(users or ()))
+
+        # Send the message to the users
+        TextMsg(message, TextMsg.CONSOLE).send(*users, **tokens)
+
+    def hint_message(self, message='', *users, **tokens):
+        """Send a hint message to the given players."""
+        # Get the message to send
+        message = self._get_message(message)
+
+        # Is there no message?
+        if message is None:
+            return
+
+        # Convert user index to a tuple
+        if isinstance(users, int):
+            users = (users, )
+
+        # Send the message to the users
+        HintText(message).send(*users, **tokens)
 
     def hud_message(
-            self, users=None, x=-1.0, y=-1.0, color1=WHITE,
-            color2=WHITE, effect=0, fadein=0.0, fadeout=0.0,
-            hold=4.0, fxtime=0.0, message='', **tokens):
+            self, message='', x=-1.0, y=-1.0, color1=WHITE,
+            color2=WHITE, effect=0, fade_in=0.0, fade_out=0.0,
+            hold=4.0, fx_time=0.0, channel=0, *users, **tokens):
         """Send a hud message to the given players."""
+        # Get the message to send
         message = self._get_message(message)
-        if message is None:
-            return
-        if isinstance(users, int):
-            users = (users, )
-        instance = HudMsg(
-            x=x, y=y, r1=color1.r, g1=color1.g, b1=color1.b, a1=color1.a,
-            r2=color2.r, g2=color2.g, b2=color2.b, a2=color2.a,
-            effect=effect, fadein=fadein, fadeout=fadeout,
-            hold=hold, fxtime=fxtime, message=message, **tokens)
-        instance.send(*(users or ()))
 
-    def keyhint_message(self, users=None, message='', **tokens):
-        """Send a keyhint message to the given players."""
-        message = self._get_message(message)
+        # Is there no message?
         if message is None:
             return
+
+        # Convert user index to a tuple
         if isinstance(users, int):
             users = (users, )
-        instance = KeyHintText(message=message, **tokens)
-        instance.send(*(users or ()))
+
+        # Send the message to the users
+        HudMsg(
+            message, x, y, color1, color2, effect, fade_in, fade_out,
+            hold, fx_time, channel).send(*users, **tokens)
+
+    def keyhint_message(self, message='', *users, **tokens):
+        """Send a keyhint message to the given players."""
+        # Get the message to send
+        message = self._get_message(message)
+
+        # Is there no message?
+        if message is None:
+            return
+
+        # Convert user index to a tuple
+        if isinstance(users, int):
+            users = (users, )
+
+        # Send the message to the users
+        KeyHintText(message).send(*users, **tokens)
 
     def motd_message(
-            self, users=None, panel_type=2, title='',
-            message='', visible=True, **tokens):
+            self, panel_type=2, title='',
+            message='', visible=True, *users, **tokens):
         """Send a motd message to the given players."""
+        # Get the message to send
         message = self._get_message(message)
+
+        # Is there no message?
         if message is None:
             return
+
+        # Convert user index to a tuple
         if isinstance(users, int):
             users = (users, )
+
+        # Set the subkeys values
         subkeys = {'title': title, 'type': panel_type, 'msg': message}
-        instance = VGUIMenu(
-            name='info', show=visible, subkeys=subkeys, **tokens)
-        instance.send(*(users or ()))
+
+        # Send the message to the users
+        VGUIMenu('info', subkeys, visible).send(*users, **tokens)
 
     def top_message(
-            self, users=None, message='', color=WHITE, time=4.0, **tokens):
+            self, message='', color=WHITE, time=4.0, *users, **tokens):
         """Send a toptext message to the given players."""
+        # Get the message to send
         message = self._get_message(message)
+
+        # Is there no message?
         if message is None:
             return
+
+        # Convert user index to a tuple
         if isinstance(users, int):
             users = (users, )
-        # message = self._get_message(message)
-        raise NotImplementedError(
-            'This feature is not yet implemented as an OOP class in SP')
+
+        # Send the message to the users
+        DialogMsg(message, color, time).send(*users, **tokens)
 
     def _get_message(self, message):
         """Get the message to send."""
