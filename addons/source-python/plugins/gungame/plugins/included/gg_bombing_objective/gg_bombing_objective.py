@@ -9,7 +9,6 @@ from contextlib import suppress
 
 from cvars import ConVar
 from events import Event
-from filters.errors import FilterError
 from filters.weapons import WeaponClassIter
 
 from gungame.core.players.dictionary import player_dictionary
@@ -21,11 +20,12 @@ from.info import info
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
-_knife_weapons = set(WeaponClassIter('knife', return_types='basename'))
-_nade_weapons = set(WeaponClassIter('explosive', return_types='basename'))
-with suppress(FilterError):
-    _nade_weapons.update(set(
-        WeaponClassIter('incendiary', return_types='basename')))
+_knife_weapons = set([weapon.basename for weapon in WeaponClassIter('knife')])
+_nade_weapons = set([
+    weapon.basename for weapon in WeaponClassIter('explosive')])
+with suppress(KeyError):
+    _nade_weapons.update(set([
+        weapon.basename for weapon in WeaponClassIter('incendiary')]))
 
 
 # =============================================================================
@@ -54,14 +54,19 @@ def bomb_exploded(game_event):
 # =============================================================================
 def get_levels_to_increase(player, reason):
     """"""
-    base_levels = ConVar(
-        'gg_bombing_objective_{0}_levels'.format(reason)).get_int()
+    if reason == 'defused':
+        base_levels = defused_levels.get_int()
+        skip_nade = defused_skip_nade.get_int()
+        skip_knife = defused_skip_knife.get_int()
+    elif reason == 'detonated':
+        base_levels = detonated_levels.get_int()
+        skip_nade = detonated_skip_nade.get_int()
+        skip_knife = detonated_skip_knife.get_int()
+    else:
+        raise ValueError('Invalid reason given "{0}".'format(reason))
+
     if base_levels <= 0:
         return 0
-    skip_nade = ConVar(
-        'gg_bombing_objective_{0}_skip_nade'.format(reason)).get_int()
-    skip_knife = ConVar(
-        'gg_bombing_objective_{0}_skip_knife'.format(reason)).get_int()
 
     for level_increase in range(base_levels + 1):
         level = player.level + level_increase

@@ -22,35 +22,37 @@ from .info import info
 # =============================================================================
 with GunGameConfigManager(info.name) as config:
     with config.cvar(
-            'gg_bombing_objective_defused_levels', 1, ConVarFlags.NONE,
+            'defused_levels', 1, ConVarFlags.NONE,
             'The number of levels to increase for ' +
-            'successfully defusing the bomb.') as cvar:
+            'successfully defusing the bomb.') as defused_levels:
         ...
 
     with config.cvar(
-            'gg_bombing_objective_defused_skip_knife', 0, ConVarFlags.NONE,
-            'Enable/disable skipping knife level by defusing.') as cvar:
-        ...
-
-    with config.cvar(
-            'gg_bombing_objective_defused_skip_nade', 0, ConVarFlags.NONE,
-            'Enable/disable skipping nade level by defusing.') as cvar:
-        ...
-
-    with config.cvar(
-            'gg_bombing_objective_detonated_levels', 1, ConVarFlags.NONE,
-            'The number of levels to increase for ' +
-            'successfully detonating the bomb.') as cvar:
-        ...
-
-    with config.cvar(
-            'gg_bombing_objective_detonated_skip_knife', 0, ConVarFlags.NONE,
+            'defused_skip_knife', 0, ConVarFlags.NONE,
             'Enable/disable skipping knife level by ' +
-            'successfully detonating the bomb.') as cvar:
+            'defusing.') as defused_skip_knife:
         ...
 
     with config.cvar(
-            'gg_bombing_objective_detonated_skip_nade', 0, ConVarFlags.NONE,
+            'defused_skip_nade', 0, ConVarFlags.NONE,
             'Enable/disable skipping nade level by ' +
-            'successfully detonating the bomb.') as cvar:
+            'defusing.') as defused_skip_nade:
+        ...
+
+    with config.cvar(
+            'detonated_levels', 1, ConVarFlags.NONE,
+            'The number of levels to increase for ' +
+            'successfully detonating the bomb.') as detonated_levels:
+        ...
+
+    with config.cvar(
+            'detonated_skip_knife', 0, ConVarFlags.NONE,
+            'Enable/disable skipping knife level by ' +
+            'successfully detonating the bomb.') as detonated_skip_knife:
+        ...
+
+    with config.cvar(
+            'detonated_skip_nade', 0, ConVarFlags.NONE,
+            'Enable/disable skipping nade level by ' +
+            'successfully detonating the bomb.') as detonated_skip_nade:
         ...
