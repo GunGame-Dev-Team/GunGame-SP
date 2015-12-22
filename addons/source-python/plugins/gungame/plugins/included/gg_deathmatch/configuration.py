@@ -23,7 +23,7 @@ from .info import info
 # =============================================================================
 with GunGameConfigManager(info.name) as config:
     with config.cvar(
-            'gg_deathmatch_delay', 2, ConVarFlags.NONE,
+            'delay', 2, ConVarFlags.NONE,
             'Set to the number of seconds to respawn ' +
-            'players after the die.') as cvar:
+            'players after the die.') as delay:
         ...

@@ -29,7 +29,7 @@ from players.helpers import userid_from_playerinfo
 from gungame.core.plugins.strings import PluginStrings
 
 # Script Imports
-from .info import info
+from .configuration import delay
 
 
 # =============================================================================
@@ -51,7 +51,7 @@ class Player(PlayerEntity):
 
     def start_repeat(self):
         """Start the player's respawn countdown."""
-        self.repeat.start(1, ConVar('gg_deathmatch_respawn_delay').get_int())
+        self.repeat.start(1, delay.get_int())
 
     def _countdown(self):
         """Send messages about impending respawn and respawns the player."""
