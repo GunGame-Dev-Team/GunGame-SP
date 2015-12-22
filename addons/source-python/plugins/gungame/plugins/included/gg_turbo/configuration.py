@@ -22,7 +22,7 @@ from .info import info
 # =============================================================================
 with GunGameConfigManager(info.name) as config:
     with config.cvar(
-            'gg_turbo_quick_switch', 0, ConVarFlags.NONE,
+            'quick_switch', 0, ConVarFlags.NONE,
             'Enable/disable allowing players to immediately use ' +
-            'their new weapon upon receiving it.') as cvar:
+            'their new weapon upon receiving it.') as quick_switch:
         pass
