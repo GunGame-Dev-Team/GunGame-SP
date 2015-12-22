@@ -16,8 +16,6 @@ from random import shuffle
 from warnings import warn
 
 # Source.Python Imports
-#   Cvars
-from cvars import ConVar
 #   Engines
 from engines.server import engine_server
 #   Filters
@@ -27,6 +25,14 @@ from filters.weapons import WeaponClassIter
 from listeners.tick import TickRepeat
 
 # GunGame Imports
+#   Config
+from gungame.core.config.core.warmup import weapon as warmup_weapon
+from gungame.core.config.core.warmup import time as warmup_time
+from gungame.core.config.core.warmup import min_players
+from gungame.core.config.core.warmup import max_extensions
+from gungame.core.config.core.warmup import players_reached
+from gungame.core.config.core.warmup import start_config
+from gungame.core.config.core.warmup import end_config
 #   Status
 from gungame.core.status import GunGameMatchStatus
 from gungame.core.status import GunGameStatus
@@ -101,17 +107,17 @@ class _WarmupManager(object):
     def set_warmup_weapon(self):
         """Set the warmup weapon(s)."""
         # Get the warmup weapon(s)
-        warmup_weapon = ConVar('gg_warmup_weapon').get_string()
+        current = warmup_weapon.get_string()
 
         # Is the value a specific weapon?
-        if warmup_weapon in _possible_weapons:
+        if current in _possible_weapons:
 
             # Set the weapon cycle to include just the weapon
-            self._weapon_cycle = cycle([warmup_weapon])
+            self._weapon_cycle = cycle([current])
             return
 
         # Are all weapons supposed to be used at random?
-        if warmup_weapon == 'random':
+        if current == 'random':
 
             # Set the weapon cycle to a randomized list of all weapons
             weapons = list(_possible_weapons)
@@ -120,10 +126,10 @@ class _WarmupManager(object):
             return
 
         # Is the value a list of weapons?
-        if ',' in warmup_weapon:
+        if ',' in current:
 
             # Store the weapons from the given list to the weapon cycle
-            weapons = [weapon for weapon in warmup_weapon.split(
+            weapons = [weapon for weapon in current.split(
                 ',') if weapon in _possible_weapons]
             if len(weapons):
                 self._weapon_cycle = cycle(weapons)
@@ -138,7 +144,7 @@ class _WarmupManager(object):
         self._extensions = 0
 
         # Get the amount of time for warmup
-        self._warmup_time = ConVar('gg_warmup_time').get_int()
+        self._warmup_time = warmup_time.get_int()
 
         # Was an invalid value given?
         if self._warmup_time <= 0:
@@ -149,7 +155,7 @@ class _WarmupManager(object):
             return
 
         # Get the configuration to call on warmup start
-        start_config = ConVar('gg_warmup_start_config').get_string()
+        start_config = start_config.get_string()
 
         # Is a configuration file supposed to be called?
         if start_config:
@@ -172,7 +178,7 @@ class _WarmupManager(object):
         """End warmup and start the match."""
         # TODO: Call start match
         # Get the configuration to call on warmup end
-        end_config = ConVar('gg_warmup_end_config').get_string()
+        end_config = end_config.get_string()
 
         # Is a configuration file supposed to be called?
         if end_config:
@@ -197,10 +203,10 @@ class _WarmupManager(object):
             return
 
         # Has the player limit been reached?
-        if len(list(_human_nospec)) > ConVar('gg_warmup_min_players').get_int():
+        if len(list(_human_nospec)) > min_players.get_int():
 
             # Get what to do when the player limit is reached
-            players_reached = ConVar('gg_warmup_players_reached').get_int()
+            players_reached = players_reached.get_int()
 
             # Should warmup end?
             if players_reached == 2 or (
@@ -214,7 +220,7 @@ class _WarmupManager(object):
         if remaining == 1:
 
             # Should warmup be extended?
-            if self.extensions < ConVar('gg_warmup_max_extensions').get_int():
+            if self.extensions < max_extensions.get_int():
 
                 # TODO: send message about the extension
 
