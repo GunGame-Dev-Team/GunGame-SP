@@ -39,8 +39,8 @@ class GunGameConfigManager(ConfigManager):
 
         # Get the path for a base config
         except ValueError:
-            filepath = filepath.joinpath(name)
-            cvar_prefix = ''
+            filepath = filepath.joinpath(name + '_settings')
+            cvar_prefix = 'gg_{0}_'.format(name)
 
         # Initialize the config
         super(GunGameConfigManager, self).__init__(filepath, cvar_prefix)

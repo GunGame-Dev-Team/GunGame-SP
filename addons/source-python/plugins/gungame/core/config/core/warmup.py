@@ -6,48 +6,48 @@ from cvars.flags import ConVarFlags
 
 from gungame.core.config.manager import GunGameConfigManager
 
-with GunGameConfigManager('warmup_settings') as config:
+with GunGameConfigManager('warmup') as config:
     with config.cvar(
-            'gg_warmup_round', 0, ConVarFlags.NONE,
-            'Enables/disables GunGame warmup round.') as cvar:
+            'enabled', 0, ConVarFlags.NONE,
+            'Enables/disables GunGame warmup round.') as enabled:
         ...
 
     with config.cvar(
-            'gg_warmup_weapon', 'hegrenade', ConVarFlags.NOTIFY,
-            'The weapon to be used in GunGame warmup round.') as cvar:
+            'weapon', 'hegrenade', ConVarFlags.NOTIFY,
+            'The weapon to be used in GunGame warmup round.') as weapon:
         ...
 
     with config.cvar(
-            'gg_warmup_time', 30, ConVarFlags.NONE,
-            'The number of seconds GunGame warmup round should last.') as cvar:
+            'time', 30, ConVarFlags.NONE,
+            'The number of seconds GunGame warmup round should last.') as time:
         ...
 
     with config.cvar(
-            'gg_warmup_min_players', 4, ConVarFlags.NONE,
+            'min_players', 4, ConVarFlags.NONE,
             'The number of human players required to ' +
-            'end warmup round without extending.') as cvar:
+            'end warmup round without extending.') as min_players:
         ...
 
     with config.cvar(
-            'gg_warmup_max_extensions', 1, ConVarFlags.NONE,
+            'max_extensions', 1, ConVarFlags.NONE,
             'The maximum number of GunGame warmup extensions ' +
-            'before starting the match.') as cvar:
+            'before starting the match.') as max_extensions:
         ...
 
     with config.cvar(
-            'gg_warmup_players_reached', 0, ConVarFlags.NONE,
+            'players_reached', 0, ConVarFlags.NONE,
             'Determines when GunGame warmup round should end when the ' +
-            'minumum number of players is reached.') as cvar:
+            'minumum number of players is reached.') as players_reached:
         ...
 
     with config.cvar(
-            'gg_warmup_start_config', '', ConVarFlags.NONE,
+            'start_config', '', ConVarFlags.NONE,
             'The configuration file that controls the gameplay ' +
-            'within GunGame warmup round.') as cvar:
+            'within GunGame warmup round.') as start_config:
         ...
 
     with config.cvar(
-            'gg_warmup_end_config', '', ConVarFlags.NONE,
+            'end_config', '', ConVarFlags.NONE,
             'The configuration file that controls the GunGame '
-            "match's settings once warmup round is over.") as cvar:
+            "match's settings once warmup round is over.") as end_config:
         ...
