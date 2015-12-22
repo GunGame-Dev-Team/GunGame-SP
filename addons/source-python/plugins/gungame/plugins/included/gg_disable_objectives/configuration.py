@@ -22,9 +22,9 @@ from .info import info
 # =============================================================================
 with GunGameConfigManager(info.name) as config:
     with config.cvar(
-            'gg_disable_objectives_type', 0, ConVarFlags.NONE,
-            'Set to the types of objectives to disable.') as disable_types:
-        disable_types.Options.append('1 = Disable Bombing Objectives.')
-        disable_types.Options.append('2 = Disable Hostage Objectives.')
-        disable_types.Options.append(
+            'type', 0, ConVarFlags.NONE,
+            'Set to the types of objectives to disable.') as disable_type:
+        disable_type.Options.append('1 = Disable Bombing Objectives.')
+        disable_type.Options.append('2 = Disable Hostage Objectives.')
+        disable_type.Options.append(
             '3 = Disable Bombing AND Hostage Objectives.')

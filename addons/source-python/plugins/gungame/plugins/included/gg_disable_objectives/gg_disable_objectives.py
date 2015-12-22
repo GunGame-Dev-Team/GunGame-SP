@@ -19,7 +19,7 @@ from filters.entities import EntityIter
 from filters.weapons import WeaponIter
 
 # Script Imports
-from .configuration import disable_types
+from .configuration import disable_type
 
 
 # =============================================================================
@@ -63,7 +63,7 @@ def unload():
 def disable_objectives(game_event=None):
     """Disable objectives each round."""
     # Get the objectives to disable
-    objectives = disable_types.get_int()
+    objectives = disable_type.get_int()
 
     # Do bombing objectives need removed?
     if objectives & ObjectiveType.BOMBING:
