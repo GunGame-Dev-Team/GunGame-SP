@@ -41,9 +41,9 @@ def player_death(game_event):
     """Respawn any players the victim killed."""
     if GunGameStatus.ROUND is GunGameRoundStatus.INACTIVE:
         return
-    victim = player_dictionary[game_event.get_int('userid')]
+    victim = player_dictionary[game_event['userid']]
     tick_delays.delay(0, _respawn_victims, victim.userid)
-    attacker = game_event.get_int('attacker')
+    attacker = game_event['attacker']
     if attacker in (victim.userid, 0):
         tick_delays.delay(5, _respawn_player, victim.userid)
         victim.chat_message('Elimination_Respawn_Suicide')

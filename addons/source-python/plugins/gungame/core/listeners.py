@@ -63,7 +63,7 @@ def player_spawn(game_event):
         return
 
     # Get the userid of the player
-    userid = game_event.get_int('userid')
+    userid = game_event['userid']
 
     # Use try/except to get the player's instance
     try:
@@ -99,10 +99,10 @@ def player_death(game_event):
         return
 
     # Get the victim
-    victim = game_event.get_int('userid')
+    victim = game_event['userid']
 
     # Get the attacker
-    attacker = game_event.get_int('attacker')
+    attacker = game_event['attacker']
 
     # Was this a suicide?
     if attacker in (victim, 0):
@@ -119,7 +119,7 @@ def player_death(game_event):
         return
 
     # Did the killer kill using their level's weapon?
-    if game_event.get_string('weapon') != aplayer.level_weapon:
+    if game_event['weapon'] != aplayer.level_weapon:
         return
 
     # Increase the killer's multikill
@@ -139,7 +139,7 @@ def player_death(game_event):
 def player_activate(game_event):
     """Add player to leaders and send join message."""
     # Get the player's userid
-    userid = game_event.get_int('userid')
+    userid = game_event['userid']
 
     # Add the player to the leader dictionary
     leader_manager.add_player(userid)
@@ -177,8 +177,9 @@ def player_activate(game_event):
 @Event('player_disconnect')
 def player_disconnect(game_event):
     """Store the disconnecting player's values and remove from dictionary."""
-    player_dictionary.safe_remove(game_event.get_int('userid'))
-    leader_manager.check_disconnect(game_event.get_int('userid'))
+    userid = game_event['userid']
+    player_dictionary.safe_remove(userid)
+    leader_manager.check_disconnect(userid)
 
 
 # =============================================================================
@@ -205,8 +206,8 @@ def round_end(game_event):
 def server_cvar(game_event):
     """Set the weapon order value if the ConVar is for the weapon order."""
     # Get the ConVar name and its new value
-    cvarname = game_event.get_string('cvarname')
-    cvarvalue = game_event.get_string('cvarvalue')
+    cvarname = game_event['cvarname']
+    cvarvalue = game_event['cvarvalue']
 
     # Did the weapon order change?
     if cvarname == 'gg_weapon_order_file':
@@ -244,7 +245,7 @@ def gg_win(game_event):
     GunGameStatus.MATCH = GunGameMatchStatus.POST
 
     # Get the winner
-    winner = player_dictionary[game_event.get_int('winner')]
+    winner = player_dictionary[game_event['winner']]
 
     # Increase the winner's win total if they are not a bot
     if not winner.is_fake_client():
@@ -287,7 +288,7 @@ def gg_start(game_event):
 def gg_levelup(game_event):
     """Increase the player leader level and send level info."""
     # Get the player's userid
-    userid = game_event.get_int('leveler')
+    userid = game_event['leveler']
 
     # Set the player's level in the leader dictionary
     leader_manager.player_levelup(userid)
@@ -299,7 +300,7 @@ def gg_levelup(game_event):
 @Event('gg_leveldown')
 def gg_leveldown(game_event):
     """Set the player's level in the leader dictionary."""
-    leader_manager.player_leveldown(game_event.get_int('leveler'))
+    leader_manager.player_leveldown(game_event['leveler'])
 
 
 # =============================================================================

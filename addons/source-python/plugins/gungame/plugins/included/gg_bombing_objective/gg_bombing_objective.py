@@ -47,7 +47,7 @@ with suppress(KeyError):
 @Event('bomb_defused')
 def bomb_defused(game_event):
     """Level the defuser up."""
-    player = player_dictionary[game_event.get_int('userid')]
+    player = player_dictionary[game_event['userid']]
     levels = _get_levels_to_increase(player, 'defused')
     if levels:
         player.increase_level(levels, 'bomb_defused')
@@ -56,7 +56,7 @@ def bomb_defused(game_event):
 @Event('bomb_exploded')
 def bomb_exploded(game_event):
     """Level the detonator up."""
-    player = player_dictionary[game_event.get_int('userid')]
+    player = player_dictionary[game_event['userid']]
     levels = _get_levels_to_increase(player, 'detonated')
     if levels:
         player.increase_level(levels, reason='bomb_detonated')

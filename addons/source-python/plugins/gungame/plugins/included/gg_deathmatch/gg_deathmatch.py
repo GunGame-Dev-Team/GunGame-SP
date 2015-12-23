@@ -164,7 +164,7 @@ def joinclass(playerinfo, command):
 def player_spawn(game_event):
     """Start bot repeats in case they join mid round."""
     # Get the player's userid
-    userid = game_event.get_int('userid')
+    userid = game_event['userid']
 
     # Get the player's Player instance
     player = deathmatch_players[userid]
@@ -180,7 +180,7 @@ def player_spawn(game_event):
 def player_death(game_event):
     """Start the player's repeat when they are killed."""
     # Get the player's userid
-    userid = game_event.get_int('userid')
+    userid = game_event['userid']
 
     # Start the player's repeat
     deathmatch_players[userid].start_repeat()
@@ -189,7 +189,7 @@ def player_death(game_event):
 @Event('player_disconnect')
 def player_disconnect(game_event):
     """Remove the player from the dictionary."""
-    del deathmatch_players[game_event.get_int('userid')]
+    del deathmatch_players[game_event['userid']]
 
 
 # =============================================================================

@@ -70,7 +70,7 @@ def unload():
 @Event('hostage_rescued')
 def hostage_rescued(game_event):
     """Level the rescuer up."""
-    player = player_dictionary[game_event.get_int('userid')]
+    player = player_dictionary[game_event['userid']]
     player.hostage_rescues += 1
     if player.hostage_rescues < rescued_count.get_int():
         return
@@ -83,13 +83,13 @@ def hostage_rescued(game_event):
 @Event('player_death')
 def player_death(game_event):
     """Level the stopper up."""
-    victim = player_dictionary[game_event.get_int('userid')]
+    victim = player_dictionary[game_event['userid']]
     hostages = len(filter(
         lambda entity: entity.leader == victim.inthandle,
         EntityIter('hostage_entity')))
     if not hostages:
         return
-    attacker = game_event.get_int('attacker')
+    attacker = game_event['attacker']
     if not attacker:
         return
     player = player_dictionary[attacker]
@@ -108,7 +108,7 @@ def player_death(game_event):
 @Event('hostage_killed')
 def hostage_killed(game_event):
     """Level the killer down."""
-    attacker = game_event.get_int('attacker')
+    attacker = game_event['attacker']
     if not attacker:
         return
     player = player_dictionary[attacker]
