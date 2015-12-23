@@ -36,7 +36,8 @@ from gungame.core.paths import GUNGAME_TRANSLATION_PATH
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('message_manager',
+__all__ = ('_MessageManager',
+           'message_manager',
            )
 
 
@@ -49,7 +50,7 @@ class _MessageManager(dict):
     def __init__(self):
         """Retrieve all core translations and store them in the dictionary."""
         # Initialize the dictionary
-        super(_MessageManager, self).__init__()
+        super().__init__()
 
         # Create base dictionaries to store message hooks
         self._hooked_messages = defaultdict()

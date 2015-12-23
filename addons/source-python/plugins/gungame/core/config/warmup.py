@@ -15,6 +15,20 @@ from gungame.core.config.manager import GunGameConfigManager
 
 
 # =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = ('enabled',
+           'end_config',
+           'max_extensions',
+           'min_players',
+           'players_reached',
+           'start_config',
+           'time',
+           'weapon',
+           )
+
+
+# =============================================================================
 # >> CONFIGURATION
 # =============================================================================
 with GunGameConfigManager('warmup') as config:

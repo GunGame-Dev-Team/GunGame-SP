@@ -61,6 +61,13 @@ _joined_players = set()
 
 
 # =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = ('start_match',
+           )
+
+
+# =============================================================================
 # >> PLAYER GAME EVENTS
 # =============================================================================
 @Event('player_spawn')
@@ -91,7 +98,7 @@ def player_spawn(game_event):
         return
 
     # Send the player their level information
-    send_level_info(player)
+    _send_level_info(player)
 
 
 @Event('player_death')
@@ -302,7 +309,7 @@ def gg_levelup(game_event):
     leader_manager.player_levelup(userid)
 
     # Send the player their new level info
-    send_level_info(player_dictionary[userid])
+    _send_level_info(player_dictionary[userid])
 
 
 @Event('gg_leveldown')
@@ -373,7 +380,7 @@ def start_match():
         GG_Start().fire()
 
 
-def send_level_info(player):
+def _send_level_info(player):
     """Send level information to the given player."""
     # Get the player's language
     language = player.language

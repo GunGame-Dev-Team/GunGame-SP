@@ -27,7 +27,8 @@ from gungame.core.weapons.order import WeaponOrder
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('weapon_order_manager',
+__all__ = ('_WeaponOrderManager',
+           'weapon_order_manager',
            )
 
 
@@ -45,7 +46,7 @@ class _WeaponOrderManager(dict):
 
     def __init__(self):
         """Set the base attributes."""
-        super(_WeaponOrderManager, self).__init__()
+        super().__init__()
         self._active = None
         self._order = None
         self._randomize = False

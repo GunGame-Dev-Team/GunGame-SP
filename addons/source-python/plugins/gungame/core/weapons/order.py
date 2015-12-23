@@ -44,7 +44,7 @@ class WeaponOrder(dict):
 
     def __init__(self, filepath):
         """Store the values from the given path."""
-        super(WeaponOrder, self).__init__()
+        super().__init__()
         with filepath.open() as open_file:
             level = 0
             for line in open_file:

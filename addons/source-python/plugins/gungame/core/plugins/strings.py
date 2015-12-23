@@ -15,6 +15,13 @@ from gungame.core.plugins.valid import valid_plugins
 
 
 # =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = ('PluginStrings',
+           )
+
+
+# =============================================================================
 # >> CLASSES
 # =============================================================================
 class PluginStrings(LangStrings):
@@ -22,5 +29,5 @@ class PluginStrings(LangStrings):
 
     def __init__(self, name):
         """Add 'gungame' and the plugin type to the path."""
-        super(PluginStrings, self).__init__('gungame/{0}_plugins/{1}'.format(
+        super().__init__('gungame/{0}_plugins/{1}'.format(
             valid_plugins.get_plugin_type(name), name))

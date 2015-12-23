@@ -4,6 +4,20 @@
 
 
 # =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = ('AttributePostHook',
+           'AttributePreHook',
+           '_AttributeBase',
+           '_AttributeHooks',
+           '_PlayerAttributes',
+           'attribute_post_hooks',
+           'attribute_pre_hooks',
+           'player_attributes',
+           )
+
+
+# =============================================================================
 # >> CLASSES
 # =============================================================================
 class _Attribute(object):
@@ -40,7 +54,7 @@ class _PlayerAttributes(dict):
                 '_Attribute instance'.format(value))
 
         # Add the item to the dictionary
-        super(_PlayerAttributes, self).__setitem__(item, value)
+        super().__setitem__(item, value)
 
     def register_attribute(self, attribute, default):
         """Store the attribute in the dictionary with its default value."""
@@ -50,7 +64,7 @@ class _PlayerAttributes(dict):
         """Remove the attribute from the dictionary."""
         del self[attribute]
 
-# Get the _PlayerAttributes instance
+# The singleton object of the _PlayerAttributes class.
 player_attributes = _PlayerAttributes()
 
 # Register the core attributes
@@ -66,7 +80,7 @@ class _AttributeHook(list):
 
     def __init__(self, attribute):
         """Store the attribute's name."""
-        super(_AttributeHook, self).__init__()
+        super().__init__()
         self.attribute = attribute
 
     def append(self, callback):
@@ -80,7 +94,7 @@ class _AttributeHook(list):
             raise ValueError('Callback is not callable.')
 
         # Add the callback to the list
-        super(_AttributeHook, self).append(callback)
+        super().append(callback)
 
     def remove(self, callback):
         """Verify the given values before removing the callback."""
@@ -89,7 +103,7 @@ class _AttributeHook(list):
             raise ValueError('Callback is not registered.')
 
         # Remove the callback from the list
-        super(_AttributeHook, self).remove(callback)
+        super().remove(callback)
 
     def call_callbacks(self, player, *args):
         """Call all callbacks for the hook."""
@@ -140,12 +154,14 @@ class _AttributeHooks(dict):
             # If no more callbacks, remove the attribute from the dictionary
             del self[attribute]
 
-# Get the pre and post attribute hook instances
+# The singleton object for pre hooks using the _AttributeHooks class.
 attribute_pre_hooks = _AttributeHooks()
+
+# The singleton object for post hooks using the _AttributeHooks class.
 attribute_post_hooks = _AttributeHooks()
 
 
-class _AttributeDecorator(object):
+class _AttributeBase(object):
     """Decorator class used to register callbacks to an attribute."""
 
     def __init__(self, attribute):
@@ -170,13 +186,13 @@ class _AttributeDecorator(object):
         self.hook_instance.unregister_callback(self.attribute, self.callback)
 
 
-class AttributePostHook(_AttributeDecorator):
+class AttributePostHook(_AttributeBase):
     """Decorator class to register post callbacks to an attribute."""
 
     hook_instance = attribute_post_hooks
 
 
-class AttributePreHook(_AttributeDecorator):
+class AttributePreHook(_AttributeBase):
     """Decorator class to register pre callbacks to an attribute."""
 
     hook_instance = attribute_pre_hooks

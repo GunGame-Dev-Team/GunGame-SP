@@ -20,6 +20,15 @@ from gungame.core.plugins.valid import valid_plugins
 
 
 # =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = ('GunGameConfigManager',
+           '_ConfigManager',
+           'config_manager',
+           )
+
+
+# =============================================================================
 # >> CLASSES
 # =============================================================================
 class GunGameConfigManager(ConfigManager):
@@ -42,7 +51,7 @@ class GunGameConfigManager(ConfigManager):
             cvar_prefix = 'gg_{0}_'.format(name)
 
         # Initialize the config
-        super(GunGameConfigManager, self).__init__(filepath, cvar_prefix)
+        super().__init__(filepath, cvar_prefix)
 
 
 class _ConfigManager(object):
@@ -66,4 +75,5 @@ class _ConfigManager(object):
                     plugin_type, plugin_name))
         self._executed = True
 
+# The singleton object of the _ConfigManager class.
 config_manager = _ConfigManager()

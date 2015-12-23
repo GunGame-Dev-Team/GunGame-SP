@@ -24,7 +24,8 @@ from gungame.core.players.dictionary import player_dictionary
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('leader_manager',
+__all__ = ('_LeaderManager',
+           'leader_manager',
            )
 
 
@@ -37,7 +38,7 @@ class _LeaderManager(dict):
     def __init__(self):
         """Add all current players to the dictionary."""
         # Initialize the dictionary
-        super(_LeaderManager, self).__init__()
+        super().__init__()
 
         # Loop through all current players
         for userid in [player.userid for player in PlayerIter()]:

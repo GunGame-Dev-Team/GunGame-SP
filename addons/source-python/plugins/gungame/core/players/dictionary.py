@@ -18,6 +18,13 @@ from gungame.core.players.instance import GunGamePlayer
 
 
 # =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = ('player_dictionary',
+           )
+
+
+# =============================================================================
 # >> CLASSES
 # =============================================================================
 class _PlayerDictionary(dict):
@@ -83,7 +90,7 @@ class _PlayerDictionary(dict):
     def clear(self):
         """Clear the removed players dictionary and the player dictionary."""
         self._removed_players.clear()
-        super(_PlayerDictionary, self).clear()
+        super().clear()
 
 # Get the _PlayerDictionary instance
 player_dictionary = _PlayerDictionary()

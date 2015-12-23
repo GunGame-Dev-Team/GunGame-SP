@@ -15,6 +15,13 @@ from gungame.core.paths import GUNGAME_DATA_PATH
 
 
 # =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = ('winners_database',
+           )
+
+
+# =============================================================================
 # >> CLASSES
 # =============================================================================
 class _WinsDatabase(object):
@@ -42,6 +49,7 @@ class _WinsDatabase(object):
             """UPDATE WINNERS SET name=?, timestamp=? WHERE uniqueid=?""",
             (player.name, 'strftime("%s", "now")', player.uniqueid))
 
+# The singleton object for the _WinsDatabase class.
 winners_database = _WinsDatabase()
 
 

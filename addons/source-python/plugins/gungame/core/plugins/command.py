@@ -29,6 +29,14 @@ gg_plugins_command_logger = gg_plugins_logger.command
 
 
 # =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = ('_GGSubCommandManager',
+           'gg_command_manager',
+           )
+
+
+# =============================================================================
 # >> CLASSES
 # =============================================================================
 class _GGSubCommandManager(SubCommandManager):
@@ -41,7 +49,7 @@ class _GGSubCommandManager(SubCommandManager):
     def __init__(self, *args, **kwargs):
         """Initialize the instance and set the queue prefix."""
         # Call the super class' __init__
-        super(_GGSubCommandManager, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # Set the queue's prefix
         plugin_queue.prefix = self.prefix

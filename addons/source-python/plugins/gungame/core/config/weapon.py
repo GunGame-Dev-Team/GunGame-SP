@@ -15,6 +15,18 @@ from gungame.core.config.manager import GunGameConfigManager
 
 
 # =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = ('multikill_override',
+           'order_choose_random',
+           'order_file',
+           'order_randomize',
+           'random_weapon_each_time',
+           'randomize_per_player',
+           )
+
+
+# =============================================================================
 # >> CONFIGURATION
 # =============================================================================
 with GunGameConfigManager('weapon') as config:

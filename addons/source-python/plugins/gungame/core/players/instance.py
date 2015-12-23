@@ -20,6 +20,13 @@ from gungame.core.players.weapons import _PlayerWeapons
 
 
 # =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = ('GunGamePlayer',
+           )
+
+
+# =============================================================================
 # >> CLASSES
 # =============================================================================
 class GunGamePlayer(
@@ -44,14 +51,14 @@ class GunGamePlayer(
                 attr in attribute_post_hooks):
 
             # If not, simply set the attribute's value
-            super(GunGamePlayer, self).__setattr__(attr, value)
+            super().__setattr__(attr, value)
             return
 
         # Get the value prior to setting
         old_value = getattr(self, attr)
 
         # Set the attribute's value
-        super(GunGamePlayer, self).__setattr__(attr, value)
+        super().__setattr__(attr, value)
 
         # Call all of the attribute's post-hooks
         attribute_post_hooks[attr].call_callbacks(self, value, old_value)

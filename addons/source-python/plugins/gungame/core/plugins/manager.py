@@ -21,6 +21,14 @@ gg_plugins_manager_logger = gg_plugins_logger.manager
 
 
 # =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = ('_GGPluginManager',
+           'gg_plugin_manager',
+           )
+
+
+# =============================================================================
 # >> CLASSES
 # =============================================================================
 class _GGPluginManager(PluginManager):
@@ -35,7 +43,7 @@ class _GGPluginManager(PluginManager):
             raise
         self._base_import = self._base_import_prefix
         self._base_import += valid_plugins.get_plugin_type(plugin_name) + '.'
-        return super(_GGPluginManager, self).__missing__(plugin_name)
+        return super().__missing__(plugin_name)
 
     def _remove_modules(self, plugin_name):
         """Remove a plugin and all its modules."""
@@ -46,7 +54,7 @@ class _GGPluginManager(PluginManager):
         self.base_import = self._base_import
         self.base_import += valid_plugins.get_plugin_type(plugin_name) + '.'
         self._current_plugin = plugin_name
-        super(_GGPluginManager, self)._remove_modules(plugin_name)
+        super()._remove_modules(plugin_name)
 
     def _remove_module(self, module):
         """Remove a module."""
@@ -55,6 +63,6 @@ class _GGPluginManager(PluginManager):
             self._current_plugin, '__init__.py')
         if plugin_path == sys.modules[module].__file__:
             return
-        super(_GGPluginManager, self)._remove_module(module)
+        super()._remove_module(module)
 
 gg_plugin_manager = _GGPluginManager('gungame')

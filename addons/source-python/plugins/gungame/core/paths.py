@@ -34,12 +34,29 @@ __all__ = ('GUNGAME_BASE_PATH',
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
+# ../addons/source-python/plugins/gungame
 GUNGAME_BASE_PATH = PLUGIN_PATH.joinpath('gungame')
+
+# ../cfg/source-python/gungame
 GUNGAME_CFG_PATH = CFG_PATH.joinpath('gungame')
+
+# ../addons/source-python/data/plugins/gungame
 GUNGAME_DATA_PATH = PLUGIN_DATA_PATH.joinpath('gungame')
+
+# ../resource/source-python/events/gungame
 GUNGAME_EVENT_PATH = EVENT_PATH.joinpath('gungame')
+
+# ../logs/source-python/gungame
 GUNGAME_LOG_PATH = LOG_PATH.joinpath('gungame')
+
+# ../addons/source-python/plugins/gungame/plugins
 GUNGAME_PLUGINS_PATH = GUNGAME_BASE_PATH.joinpath('plugins')
+
+# ../sound/source-python/gungame
 GUNGAME_SOUND_PATH = SOUND_PATH.joinpath('gungame')
+
+# ../resource/source-python/translations/gungame
 GUNGAME_TRANSLATION_PATH = TRANSLATION_PATH.joinpath('gungame')
+
+# ../cfg/source-python/gungame/weapon_orders
 GUNGAME_WEAPON_ORDER_PATH = GUNGAME_CFG_PATH.joinpath('weapon_orders')
