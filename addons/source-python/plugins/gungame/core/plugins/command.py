@@ -14,6 +14,9 @@ from plugins.command import SubCommandManager
 from translations.strings import LangStrings
 
 # GunGame Imports
+#   Credits
+from gungame.core.credits import gungame_credits
+#   Plugins
 from gungame.core.plugins import _plugin_strings
 from gungame.core.plugins import gg_plugins_logger
 from gungame.core.plugins.instance import GGLoadedPlugin
@@ -190,6 +193,28 @@ class _GGSubCommandManager(SubCommandManager):
 
     def print_credits(self):
         """Print the GunGame credits."""
+        # Get header messages
+        message = '\n' + self.prefix + _plugin_strings[
+            'Credits'].get_string() + '\n' + '=' * 61 + '\n\n'
+
+        # Loop through all groups in the credits
+        for group in gungame_credits:
+
+            # Add the current group's name
+            message += '\t' + group + ':\n'
+
+            # Loop through all names in the current group
+            for name, values in gungame_credits[group].items():
+
+                # Add the current name
+                message += '\t\t' + name + ' ' * (
+                    20 - len(name)) + values['username'] + '\n'
+
+            # Add 1 blank line between groups
+            message += '\n'
+
+        # Print the message
+        self.logger.log_message(message + '=' * 61 + '\n\n')
 
     def restart_match(self):
         """Restart the match."""

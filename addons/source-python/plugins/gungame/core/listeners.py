@@ -34,6 +34,8 @@ from gungame.core.config.warmup import weapon as warmup_weapon
 from gungame.core.config.weapon import order_file
 from gungame.core.config.weapon import order_randomize
 from gungame.core.config.weapon import multikill_override
+#   Credits
+from gungame.core.credits import gungame_credits
 #   Events
 from gungame.core.events.included.match import GG_Start
 #   Leaders
@@ -179,14 +181,15 @@ def player_activate(game_event):
     # Send the joining message
     message_manager.chat_message(message, player=player)
 
-    # TODO: add credits.db to get the following values from
-    '''
-    # Is the player in the credits?
-    if player.steamid in <credits>:
-        message_manager.chat_message(
-            'JoinPlayer_Credits', name=player.name,
-            credit_type=<credits>[player.steamid])
-    '''
+    # Print a message if the joining player is in the credits
+    for credit_type in gungame_credits:
+        for name in gungame_credits[credit_type]:
+            steamid = gungame_credits[credit_type][name].get('steamid', None)
+            if steamid == player.steamid:
+                message_manager.chat_message(
+                    'JoinPlayer_Credits', player=player,
+                    credit_type=credit_type)
+                return
 
 
 @Event('player_disconnect')
