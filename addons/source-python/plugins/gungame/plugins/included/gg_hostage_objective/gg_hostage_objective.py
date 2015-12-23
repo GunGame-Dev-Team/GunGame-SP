@@ -139,6 +139,8 @@ def _get_levels_to_increase(player, reason):
     if base_levels <= 0:
         return 0
 
+    level_increase = 0
+
     for level_increase in range(base_levels + 1):
         level = player.level + level_increase
         if level > weapon_order_manager.max_levels:

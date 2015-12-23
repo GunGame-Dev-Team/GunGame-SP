@@ -21,44 +21,44 @@ with GunGameConfigManager('warmup') as config:
     with config.cvar(
             'enabled', 0, ConVarFlags.NONE,
             'Enables/disables GunGame warmup round.') as enabled:
-        ...
+        pass
 
     with config.cvar(
             'weapon', 'hegrenade', ConVarFlags.NOTIFY,
             'The weapon to be used in GunGame warmup round.') as weapon:
-        ...
+        pass
 
     with config.cvar(
             'time', 30, ConVarFlags.NONE,
             'The number of seconds GunGame warmup round should last.') as time:
-        ...
+        pass
 
     with config.cvar(
             'min_players', 4, ConVarFlags.NONE,
             'The number of human players required to ' +
             'end warmup round without extending.') as min_players:
-        ...
+        pass
 
     with config.cvar(
             'max_extensions', 1, ConVarFlags.NONE,
             'The maximum number of GunGame warmup extensions ' +
             'before starting the match.') as max_extensions:
-        ...
+        pass
 
     with config.cvar(
             'players_reached', 0, ConVarFlags.NONE,
             'Determines when GunGame warmup round should end when the ' +
             'minumum number of players is reached.') as players_reached:
-        ...
+        pass
 
     with config.cvar(
             'start_config', '', ConVarFlags.NONE,
             'The configuration file that controls the gameplay ' +
             'within GunGame warmup round.') as start_config:
-        ...
+        pass
 
     with config.cvar(
             'end_config', '', ConVarFlags.NONE,
             'The configuration file that controls the GunGame '
             "match's settings once warmup round is over.") as end_config:
-        ...
+        pass

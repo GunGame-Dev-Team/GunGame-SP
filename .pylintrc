@@ -35,4 +35,4 @@ ignore-docstrings=yes
 
 
 [VARIABLES]
-dummy-variables-rgx=game_event|map_name|args|return_value|new_value|old_value
+dummy-variables-rgx=game_event|map_name|args|return_value|attribute|new_value|old_value|command

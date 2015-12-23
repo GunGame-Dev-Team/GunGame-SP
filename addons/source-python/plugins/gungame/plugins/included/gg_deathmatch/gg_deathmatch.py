@@ -16,9 +16,9 @@ from listeners import LevelShutdown
 from listeners.tick import TickRepeat
 from listeners.tick import TickRepeatStatus
 #   Players
-from players.entity import PlayerEntity
+from players.entity import Player
 from players.helpers import index_from_userid
-from players.helpers import userid_from_playerinfo
+from players.helpers import userid_from_index
 
 # GunGame Imports
 #   Players
@@ -31,12 +31,12 @@ from .configuration import delay
 # =============================================================================
 # >> CLASSES
 # =============================================================================
-class Player(PlayerEntity):
+class DMPlayer(Player):
     """Class used to interact with a specific player."""
 
     def __init__(self, index):
         """Store the TickRepeat instance for the player."""
-        super(Player, self).__init__(index)
+        super().__init__(index)
         self._repeat = TickRepeat(self._countdown)
 
     @property
@@ -83,14 +83,14 @@ class Player(PlayerEntity):
 
 
 class _DeathMatchPlayers(dict):
-    """Dictionary class used to store Player instances."""
+    """Dictionary class used to store DMPlayer instances."""
 
     def __missing__(self, userid):
-        """Return a Player instance for the given userid."""
-        # Store the userid's value as a Player instance
-        value = self[userid] = Player(index_from_userid(userid))
+        """Return a DMPlayer instance for the given userid."""
+        # Store the userid's value as a DMPlayer instance
+        value = self[userid] = DMPlayer(index_from_userid(userid))
 
-        # Return the Player instance
+        # Return the DMPlayer instance
         return value
 
     def __delitem__(self, userid):
@@ -102,7 +102,7 @@ class _DeathMatchPlayers(dict):
             self[userid].stop_repeat()
 
         # Remove the player from the dictionary
-        super(_DeathMatchPlayers, self).__delitem__(userid)
+        super().__delitem__(userid)
 
     def clear(self):
         """Loop through all userids to call __delitem__ on them."""
@@ -117,7 +117,7 @@ deathmatch_players = _DeathMatchPlayers()
 # >> REGISTERED CALLBACK
 # =============================================================================
 @ClientCommand('jointeam')
-def jointeam(playerinfo, command):
+def jointeam(command, index):
     """Cancel a player's repeat if they join spectators."""
     # Is the player joining spectators?
     if command[1] != 1:
@@ -126,9 +126,9 @@ def jointeam(playerinfo, command):
         return CommandReturn.CONTINUE
 
     # Get the player's userid
-    userid = userid_from_playerinfo(playerinfo)
+    userid = userid_from_index(index)
 
-    # Get the player's Player instance
+    # Get the player's DMPlayer instance
     player = deathmatch_players[userid]
 
     # Is the player's repeat active?
@@ -145,10 +145,10 @@ def jointeam(playerinfo, command):
 
 
 @ClientCommand('joinclass')
-def joinclass(playerinfo, command):
+def joinclass(command, index):
     """Hook joinclass to start a player's repeat."""
     # Get the player's userid
-    userid = userid_from_playerinfo(playerinfo)
+    userid = userid_from_index(index)
 
     # Start the player's repeat
     deathmatch_players[userid].start_repeat()
@@ -166,7 +166,7 @@ def player_spawn(game_event):
     # Get the player's userid
     userid = game_event['userid']
 
-    # Get the player's Player instance
+    # Get the player's DMPlayer instance
     player = deathmatch_players[userid]
 
     # Is the player a bot?
