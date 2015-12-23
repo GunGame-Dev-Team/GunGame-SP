@@ -29,11 +29,11 @@ from listeners.tick import tick_delays
 
 # GunGame Imports
 #   Config
-from gungame.core.config.core.warmup import enabled as warmup_enabled
-from gungame.core.config.core.warmup import weapon as warmup_weapon
-from gungame.core.config.core.weapons import order_file
-from gungame.core.config.core.weapons import order_randomize
-from gungame.core.config.core.weapons import multikill_override
+from gungame.core.config.warmup import enabled as warmup_enabled
+from gungame.core.config.warmup import weapon as warmup_weapon
+from gungame.core.config.weapon import order_file
+from gungame.core.config.weapon import order_randomize
+from gungame.core.config.weapon import multikill_override
 #   Events
 from gungame.core.events.included.match import GG_Start
 #   Leaders

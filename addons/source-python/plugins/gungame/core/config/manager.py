@@ -54,11 +54,11 @@ class _ConfigManager(object):
 
     def load_configs(self):
         """Load all GunGame configs."""
-        for file in Path(__file__).parent.joinpath('core').files('*.py'):
-            if file.namebase == '__init__':
+        for file in Path(__file__).parent.files('*.py'):
+            if file.namebase in ('__init__', Path(__file__).namebase):
                 continue
             import_module(
-                'gungame.core.config.core.{0}'.format(file.namebase))
+                'gungame.core.config.{0}'.format(file.namebase))
         for plugin_name in valid_plugins.all:
             plugin_type = valid_plugins.get_plugin_type(plugin_name)
             with suppress(ImportError):
