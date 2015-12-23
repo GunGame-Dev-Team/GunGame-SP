@@ -10,6 +10,10 @@
 from contextlib import suppress
 
 # Source.Python Imports
+#   Colors
+from colors import BLUE
+from colors import RED
+from colors import WHITE
 #   Cvars
 from cvars import ConVar
 #   Entities
@@ -26,6 +30,10 @@ from listeners.tick import tick_delays
 # GunGame Imports
 #   Config
 from gungame.core.config.core.warmup import enabled as warmup_enabled
+from gungame.core.config.core.warmup import weapon as warmup_weapon
+from gungame.core.config.core.weapons import order_file
+from gungame.core.config.core.weapons import order_randomize
+from gungame.core.config.core.weapons import multikill_override
 #   Events
 from gungame.core.events.included.match import GG_Start
 #   Leaders
@@ -210,26 +218,26 @@ def server_cvar(game_event):
     cvarvalue = game_event['cvarvalue']
 
     # Did the weapon order change?
-    if cvarname == 'gg_weapon_order_file':
+    if cvarname == order_file.get_name():
 
         # Set the new weapon order
         weapon_order_manager.set_active_weapon_order(cvarvalue)
 
     # Did the randomize value change?
-    elif cvarname == 'gg_weapon_order_randomize':
+    elif cvarname == order_randomize.get_name():
 
         # Set the randomize value
         weapon_order_manager.set_randomize(cvarvalue)
 
     # Did the multikill override value change?
-    elif cvarname == 'gg_multikill_override':
+    elif cvarname == multikill_override.get_name():
 
         # Set the new multikill override value
         with suppress(ValueError):
             weapon_order_manager.multikill = int(cvarvalue)
 
     # Did the warmup weapon change?
-    elif cvarname == 'gg_warmup_weapon':
+    elif cvarname == warmup_weapon.get_name():
 
         # Set the new warmup weapon
         warmup_manager.set_warmup_weapon()
@@ -264,8 +272,8 @@ def gg_win(game_event):
         tick_delays.delay(
             second, message_manager.center_message,
             message='Winner_Player_Center', name=winner.name)
-    # message_manager.top_message(
-    #     message='Player_Won', color=<team_color>, time=4.0, name=winner.name)
+    color = {2: RED, 3: BLUE}.get(winner.team, WHITE)
+    message_manager.top_message('Player_Won', color, 4.0, name=winner.name)
 
 
 @Event('gg_map_end')
