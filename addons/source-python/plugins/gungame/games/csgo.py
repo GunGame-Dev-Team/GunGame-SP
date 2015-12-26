@@ -17,7 +17,7 @@ from core import GAME_NAME
 #   Messages
 from gungame.core.messages import message_manager
 #   Players
-from gungame.core.players.weapons import _PlayerWeapons
+from gungame.core.players.instance import GunGamePlayer
 
 
 # =============================================================================
@@ -28,7 +28,7 @@ def _give_named_item(player, weapon):
     player.give_named_item(weapon, 0, None, True)
 
 # Set the override
-_PlayerWeapons._give_named_item = _give_named_item
+GunGamePlayer._give_named_item = _give_named_item
 
 
 class _NoMessage(object):
