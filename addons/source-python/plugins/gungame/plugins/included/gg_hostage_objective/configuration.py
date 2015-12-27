@@ -22,61 +22,61 @@ from .info import info
 # =============================================================================
 with GunGameConfigManager(info.name) as config:
     with config.cvar(
-            'rescued_levels', 1, ConVarFlags.NONE,
+            'rescued_levels', 1,
             'The number of levels to increase for ' +
             'successfully rescuing hostages.') as rescued_levels:
         pass
 
     with config.cvar(
-            'rescued_count', 2, ConVarFlags.NONE,
+            'rescued_count', 2,
             'The number of rescued hostages required ' +
             'for a level increase.') as rescued_count:
         pass
 
     with config.cvar(
-            'rescued_skip_knife', 0, ConVarFlags.NONE,
+            'rescued_skip_knife', 0,
             'Enable/disable skipping knife level ' +
             'by rescuing hostages.') as rescued_skip_knife:
         pass
 
     with config.cvar(
-            'rescued_skip_nade', 0, ConVarFlags.NONE,
+            'rescued_skip_nade', 0,
             'Enable/disable skipping nade level ' +
             'by rescuing hostages.') as rescued_skip_nade:
         pass
 
     with config.cvar(
-            'stopped_levels', 1, ConVarFlags.NONE,
+            'stopped_levels', 1,
             'The number of levels to increase for ' +
             'stopping (killing) rescuers.') as stopped_levels:
         pass
 
     with config.cvar(
-            'stopped_count', 2, ConVarFlags.NONE,
+            'stopped_count', 2,
             'The number of stopped (killed) rescuers required ' +
             'for a level increase.') as stopped_count:
         pass
 
     with config.cvar(
-            'stopped_skip_knife', 0, ConVarFlags.NONE,
+            'stopped_skip_knife', 0,
             'Enable/disable skipping knife level by ' +
             'stopping (killing) rescuers.') as stopped_skip_knife:
         pass
 
     with config.cvar(
-            'stopped_skip_nade', 0, ConVarFlags.NONE,
+            'stopped_skip_nade', 0,
             'Enable/disable skipping nade level by ' +
             'stopping (killing) rescuers.') as stopped_skip_nade:
         pass
 
     with config.cvar(
-            'killed_levels', 1, ConVarFlags.NONE,
+            'killed_levels', 1,
             'The number of levels to descrease for killing ' +
             'hostages.') as killed_levels:
         pass
 
     with config.cvar(
-            'killed_count', 2, ConVarFlags.NONE,
+            'killed_count', 2,
             'The number of hostage kills required ' +
             'for a level decrease.') as killed_count:
         pass

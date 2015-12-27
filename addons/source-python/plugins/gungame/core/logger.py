@@ -8,8 +8,6 @@
 # Source.Python Imports
 #   Config
 from config.manager import ConfigManager
-#   Cvars
-from cvars.flags import ConVarFlags
 #   Loggers
 from loggers import LogManager
 
@@ -19,14 +17,12 @@ from loggers import LogManager
 # =============================================================================
 # Create the logging config
 # This cannot be done with GunGameConfigManager as it causes circular imports.
-with ConfigManager('gungame/logging_settings') as _config:
+with ConfigManager('gungame/logging_settings', 'gg_logging_') as _config:
     with _config.cvar(
-            'gg_logging_level', '0', ConVarFlags.NONE,
-            'GunGame logging level') as _level:
+            'level', '0', 'GunGame logging level') as _level:
         pass
     with _config.cvar(
-            'gg_logging_areas', '1', ConVarFlags.NONE,
-            'GunGame logging areas') as _areas:
+            'areas', '1', 'GunGame logging areas') as _areas:
         pass
 
 # Get the GunGame logger

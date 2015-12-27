@@ -23,4 +23,4 @@ info.basename = 'gungame'
 info.variable = info.basename + '_version'
 info.url = ''
 info.convar = PublicConVar(
-    info.variable, info.version, 0, info.name + ' Version')
+    info.variable, info.version, info.name + ' Version')

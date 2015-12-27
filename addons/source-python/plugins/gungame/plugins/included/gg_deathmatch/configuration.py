@@ -22,7 +22,7 @@ from .info import info
 # =============================================================================
 with GunGameConfigManager(info.name) as config:
     with config.cvar(
-            'delay', 2, ConVarFlags.NONE,
+            'delay', 2,
             'Set to the number of seconds to respawn ' +
             'players after the die.') as delay:
         pass
