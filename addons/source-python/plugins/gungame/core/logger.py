@@ -17,7 +17,7 @@ from translations.strings import LangStrings
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
-_config_strings = LangStrings('gungame/core-configs/logger')
+_config_strings = LangStrings('gungame/core/config/logger')
 
 # Create the logging config
 # This cannot be done with GunGameConfigManager as it causes circular imports.

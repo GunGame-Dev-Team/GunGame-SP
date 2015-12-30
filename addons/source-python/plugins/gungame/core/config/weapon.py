@@ -31,7 +31,7 @@ __all__ = ('multikill_override',
 # =============================================================================
 # >> GLOBAL VARIABLBES
 # =============================================================================
-_config_strings = LangStrings('gungame/core-configs/weapon')
+_config_strings = LangStrings('gungame/core/config/weapon')
 
 
 # =============================================================================
