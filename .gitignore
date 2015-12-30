@@ -2,6 +2,7 @@ __pycache__/
 *.cfg
 *.res
 *_server.ini
+*.db
 addons/source-python/data/plugins/gungame/*.ini
 addons/source-python/plugins/gungame/plugins/custom/*
 resource/source-python/translations/gungame/custom_plugins/*.ini
