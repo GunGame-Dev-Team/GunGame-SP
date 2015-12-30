@@ -65,7 +65,6 @@ class _MessageManager(dict):
                 # Skip all server-specific files
                 if file.namebase.endswith('_server'):
                     continue
-                print(file.replace(GUNGAME_TRANSLATION_PATH, ''))
 
                 # Get the current translations
                 instance = LangStrings(
