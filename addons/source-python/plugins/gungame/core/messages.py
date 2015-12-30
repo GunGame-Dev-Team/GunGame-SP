@@ -59,11 +59,19 @@ class _MessageManager(dict):
         # Loop through all directories in the GunGame translations directory
         for folder in GUNGAME_TRANSLATION_PATH.dirs():
 
+            # Skip the core config translations
+            if folder.namebase == 'core-configs':
+                continue
+
             # Loop through all translation files in the current directory
             for file in folder.walkfiles('*.ini'):
 
                 # Skip all server-specific files
                 if file.namebase.endswith('_server'):
+                    continue
+
+                # Skip all config translations
+                if file.namebase.endswith('_config'):
                     continue
 
                 # Get the current translations

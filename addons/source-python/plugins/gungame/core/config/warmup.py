@@ -8,6 +8,8 @@
 # Source.Python Imports
 #   Cvars
 from cvars.flags import ConVarFlags
+#   Translations
+from translations.strings import LangStrings
 
 # GunGame Imports
 #   Config
@@ -29,46 +31,45 @@ __all__ = ('enabled',
 
 
 # =============================================================================
+# >> GLOBAL VARIABLBES
+# =============================================================================
+_config_strings = LangStrings('gungame/core-configs/warmup')
+
+
+# =============================================================================
 # >> CONFIGURATION
 # =============================================================================
 with GunGameConfigManager('warmup') as _config:
-    with _config.cvar(
-            'enabled', 0, 'Enables/disables GunGame warmup round.') as enabled:
+    with _config.cvar('enabled', 0, _config_strings['Enabled']) as enabled:
         pass
 
     with _config.cvar(
-            'weapon', 'hegrenade', 'The weapon to be used in GunGame ' +
-            'warmup round.', ConVarFlags.NOTIFY) as weapon:
+            'weapon', 'hegrenade', _config_strings['Weapon'],
+            ConVarFlags.NOTIFY) as weapon:
+        pass
+
+    with _config.cvar('time', 30, _config_strings['Time']) as time:
         pass
 
     with _config.cvar(
-            'time', 30, 'The number of seconds GunGame warmup ' +
-            'round should last.') as time:
+            'min_players', 4, _config_strings['Min-Players']) as min_players:
         pass
 
     with _config.cvar(
-            'min_players', 4, 'The number of human players required to ' +
-            'end warmup round without extending.') as min_players:
+            'max_extensions', 1,
+            _config_strings['Max-Extensions']) as max_extensions:
         pass
 
     with _config.cvar(
-            'max_extensions', 1, 'The maximum number of GunGame warmup ' +
-            'extensions before starting the match.') as max_extensions:
+            'players_reached', 0,
+            _config_strings['Players-Reached']) as players_reached:
         pass
 
     with _config.cvar(
-            'players_reached', 0, 'Determines when GunGame warmup round ' +
-            'should end when the minumum number of players is ' +
-            'reached.') as players_reached:
+            'start_config', '',
+            _config_strings['Start-Config']) as start_config:
         pass
 
     with _config.cvar(
-            'start_config', '', 'The configuration file that controls the ' +
-            'gameplay within GunGame warmup round.') as start_config:
-        pass
-
-    with _config.cvar(
-            'end_config', '', 'The configuration file that controls the ' +
-            "GunGame match's settings once warmup round is " +
-            'over.') as end_config:
+            'end_config', '', _config_strings['End-Config']) as end_config:
         pass

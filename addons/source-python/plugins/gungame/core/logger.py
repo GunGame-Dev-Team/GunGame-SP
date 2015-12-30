@@ -10,19 +10,25 @@
 from config.manager import ConfigManager
 #   Loggers
 from loggers import LogManager
+#   Translations
+from translations.strings import LangStrings
 
 
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
+_config_strings = LangStrings('gungame/core-configs/logger')
+
 # Create the logging config
 # This cannot be done with GunGameConfigManager as it causes circular imports.
 with ConfigManager('gungame/logging_settings', 'gg_logging_') as _config:
+
     with _config.cvar(
-            'level', '0', 'GunGame logging level') as _level:
+            'level', '0', _config_strings['Level']) as _level:
         pass
+
     with _config.cvar(
-            'areas', '1', 'GunGame logging areas') as _areas:
+            'areas', '1', _config_strings['Areas']) as _areas:
         pass
 
 # Get the GunGame logger
