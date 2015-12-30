@@ -31,43 +31,43 @@ __all__ = ('enabled',
 # =============================================================================
 # >> CONFIGURATION
 # =============================================================================
-with GunGameConfigManager('warmup') as config:
-    with config.cvar(
+with GunGameConfigManager('warmup') as _config:
+    with _config.cvar(
             'enabled', 0, 'Enables/disables GunGame warmup round.') as enabled:
         pass
 
-    with config.cvar(
+    with _config.cvar(
             'weapon', 'hegrenade', 'The weapon to be used in GunGame ' +
             'warmup round.', ConVarFlags.NOTIFY) as weapon:
         pass
 
-    with config.cvar(
+    with _config.cvar(
             'time', 30, 'The number of seconds GunGame warmup ' +
             'round should last.') as time:
         pass
 
-    with config.cvar(
+    with _config.cvar(
             'min_players', 4, 'The number of human players required to ' +
             'end warmup round without extending.') as min_players:
         pass
 
-    with config.cvar(
+    with _config.cvar(
             'max_extensions', 1, 'The maximum number of GunGame warmup ' +
             'extensions before starting the match.') as max_extensions:
         pass
 
-    with config.cvar(
+    with _config.cvar(
             'players_reached', 0, 'Determines when GunGame warmup round ' +
             'should end when the minumum number of players is ' +
             'reached.') as players_reached:
         pass
 
-    with config.cvar(
+    with _config.cvar(
             'start_config', '', 'The configuration file that controls the ' +
             'gameplay within GunGame warmup round.') as start_config:
         pass
 
-    with config.cvar(
+    with _config.cvar(
             'end_config', '', 'The configuration file that controls the ' +
             "GunGame match's settings once warmup round is " +
             'over.') as end_config:
