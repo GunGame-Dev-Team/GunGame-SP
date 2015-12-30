@@ -8,6 +8,8 @@
 # Source.Python Imports
 #   Cvars
 from cvars.flags import ConVarFlags
+#   Translations
+from translations.strings import LangStrings
 
 # GunGame Imports
 #   Config
@@ -25,11 +27,17 @@ __all__ = ('quick_switch',
 
 
 # =============================================================================
+# >> GLOBAL VARIABLES
+# =============================================================================
+_config_strings = LangStrings('gungame/included_plugins/config/gg_turbo')
+
+
+# =============================================================================
 # >> CONFIGURATION
 # =============================================================================
 with GunGameConfigManager(info.name) as _config:
+
     with _config.cvar(
             'quick_switch', 0,
-            'Enable/disable allowing players to immediately use ' +
-            'their new weapon upon receiving it.') as quick_switch:
+            _config_strings['Quick-Switch']) as quick_switch:
         pass

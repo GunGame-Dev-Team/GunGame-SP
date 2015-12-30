@@ -8,6 +8,8 @@
 # Source.Python Imports
 #   Cvars
 from cvars.flags import ConVarFlags
+#   Translations
+from translations.strings import LangStrings
 
 # GunGame Imports
 #   Config
@@ -34,65 +36,62 @@ __all__ = ('killed_count',
 
 
 # =============================================================================
+# >> GLOBAL VARIABLES
+# =============================================================================
+_config_strings = LangStrings(
+    'gungame/included_plugins/config/gg_hostage_objective')
+
+
+# =============================================================================
 # >> CONFIGURATION
 # =============================================================================
 with GunGameConfigManager(info.name) as _config:
     with _config.cvar(
             'rescued_levels', 1,
-            'The number of levels to increase for ' +
-            'successfully rescuing hostages.') as rescued_levels:
+            _config_strings['Rescued-Levels']) as rescued_levels:
         pass
 
     with _config.cvar(
             'rescued_count', 2,
-            'The number of rescued hostages required ' +
-            'for a level increase.') as rescued_count:
+            _config_strings['Rescued-Count']) as rescued_count:
         pass
 
     with _config.cvar(
             'rescued_skip_knife', 0,
-            'Enable/disable skipping knife level ' +
-            'by rescuing hostages.') as rescued_skip_knife:
+            _config_strings['Rescued-Skip-Knife']) as rescued_skip_knife:
         pass
 
     with _config.cvar(
             'rescued_skip_nade', 0,
-            'Enable/disable skipping nade level ' +
-            'by rescuing hostages.') as rescued_skip_nade:
+            _config_strings['Rescued-Skip-Nade']) as rescued_skip_nade:
         pass
 
     with _config.cvar(
             'stopped_levels', 1,
-            'The number of levels to increase for ' +
-            'stopping (killing) rescuers.') as stopped_levels:
+            _config_strings['Stopped-Levels']) as stopped_levels:
         pass
 
     with _config.cvar(
             'stopped_count', 2,
-            'The number of stopped (killed) rescuers required ' +
-            'for a level increase.') as stopped_count:
+            _config_strings['Stopped-Count']) as stopped_count:
         pass
 
     with _config.cvar(
             'stopped_skip_knife', 0,
-            'Enable/disable skipping knife level by ' +
-            'stopping (killing) rescuers.') as stopped_skip_knife:
+            _config_strings['Stopped-Skip-Knife']) as stopped_skip_knife:
         pass
 
     with _config.cvar(
             'stopped_skip_nade', 0,
-            'Enable/disable skipping nade level by ' +
-            'stopping (killing) rescuers.') as stopped_skip_nade:
+            _config_strings['Stopped-Skip-Nade']) as stopped_skip_nade:
         pass
 
     with _config.cvar(
             'killed_levels', 1,
-            'The number of levels to descrease for killing ' +
-            'hostages.') as killed_levels:
+            _config_strings['Killed-Levels']) as killed_levels:
         pass
 
     with _config.cvar(
             'killed_count', 2,
-            'The number of hostage kills required ' +
-            'for a level decrease.') as killed_count:
+            _config_strings['Killed-Count']) as killed_count:
         pass

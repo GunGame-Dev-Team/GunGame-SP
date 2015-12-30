@@ -10,6 +10,8 @@
 from cvars.flags import ConVarFlags
 #   Entities
 from entities.constants import DissolveType
+#   Translations
+from translations.strings import LangStrings
 
 # GunGame Imports
 #   Config
@@ -28,22 +30,31 @@ __all__ = ('dissolver_type',
 
 
 # =============================================================================
+# >> GLOBAL VARIABLES
+# =============================================================================
+_config_strings = LangStrings('gungame/included_plugins/config/gg_dissolver')
+
+
+# =============================================================================
 # >> CONFIGURATION
 # =============================================================================
 with GunGameConfigManager(info.name) as _config:
-    with _config.cvar(
-            'type', 0,
-            'Set to the type of dissolver to use.') as dissolver_type:
+
+    with _config.cvar('type', 0, _config_strings['Type']) as dissolver_type:
+
         for _name in DissolveType.__members__:
+
             dissolver_type.Options.append('{0} = {1}'.format(
                 getattr(DissolveType, _name).real, _name))
+
         _num_dissolve_types = len(DissolveType)
-        dissolver_type.Options.append(
-            '{0} = RANDOM'.format(_num_dissolve_types))
-        dissolver_type.Options.append(
-            '{0} = REMOVE'.format(_num_dissolve_types + 1))
+
+        dissolver_type.Options.append('{0} = {1}'.format(
+            _num_dissolve_types, _config_strings['Random'].get_string()))
+
+        dissolver_type.Options.append('{0} = {1}'.format(
+            _num_dissolve_types + 1, _config_strings['Remove'].get_string()))
 
     with _config.cvar(
-            'magnitude', 2,
-            'Set to the magnitude to use when dissolving') as magnitude:
+            'magnitude', 2, _config_strings['Magnitude']) as magnitude:
         pass
