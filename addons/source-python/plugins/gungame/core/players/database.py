@@ -6,8 +6,12 @@
 # >> IMPORTS
 # =============================================================================
 # Python Imports
+#   Collections
+from collections import defaultdict
 #   SQLite3
 from sqlite3 import connect
+#   Time
+from time import time
 
 # GunGame Imports
 #   Paths
@@ -24,60 +28,120 @@ __all__ = ('winners_database',
 # =============================================================================
 # >> CLASSES
 # =============================================================================
-class _WinsDatabase(object):
-    """Database to store player wins."""
+class _PlayerDatabase(object):
+    """Class used to hold values for a player in the winners database."""
 
     def __init__(self):
-        self.connection = connect(GUNGAME_DATA_PATH / 'winners.db')
+        """Store the base values on creation."""
+        self.time_stamp = time()
+        self.last_win = None
+        self.wins = 0
+
+
+class _WinsDatabase(defaultdict):
+    """Database to store player wins."""
+
+    def __init__(self, default_factory):
+        """Create the dictionary and gather any stored values."""
+        # Create the defaultdict instance
+        super().__init__(default_factory)
+
+        # Establish the SQL connection
+        self._connection = connect(GUNGAME_DATA_PATH / 'winners.db')
         self.connection.text_factory = str
-        self.cursor = self.connection.cursor()
+
+        # Get the cursor
+        self._cursor = self.connection.cursor()
+
+        # Create the gungame_winners table if it does not already exist
         self.cursor.execute(
-            """CREATE TABLE IF NOT EXISTS WINNERS (name varchar(31), """
-            """uniqueid TEXT UNIQUE, wins INT DEFAULT 0, """
-            """timestamp varchar(31), PRIMARY KEY (uniqueid DESC))""")
-        self.cursor.execute('PRAGMA auto_vacuum FULL')
-        self.commit()
+            'CREATE TABLE IF NOT EXISTS gungame_winners(uniqueid varchar(20), '
+            'name varchar(31), wins varchar(10) DEFAULT 0, time_stamp '
+            'varchar(31), last_win varchar(31), PRIMARY KEY(uniqueid DESC))')
+        self.cursor.execute('PRAGMA auto_vacuum = 1')
 
-    def commit(self):
-        """Commit the changes."""
-        if self.connection.total_changes:
-            self.connection.commit()
+        # Gather all data from the table
+        data = self.cursor.execute(
+            'SELECT uniqueid, wins, time_stamp, last_win FROM gungame_winners')
+        data = data.fetchall()
 
-    def update_timestamp(self, player):
-        """Update the player's timestamp."""
-        self.cursor.execute(
-            """UPDATE WINNERS SET name=?, timestamp=? WHERE uniqueid=?""",
-            (player.name, 'strftime("%s", "now")', player.uniqueid))
-
-# The singleton object for the _WinsDatabase class.
-winners_database = _WinsDatabase()
-
-
-class _PlayerDatabase(object):
-    """Player wins/ranks functionality."""
-
-    def _get_wins(self):
-        """Return the number of wins the player has."""
-        return int(winners_database.select(
-            'WINNERS', 'wins', 'where uniqueid = "{0}"'.format(
-                self.uniqueid)) or 0)
-
-    def _set_wins(self, value):
-        """Set the number of wins for the player."""
-        if self.is_fake_client():
+        # Are there no winners to add?
+        if not data:
             return
-        if self.wins:
-            pass
-        else:
-            pass
 
-    wins = property(_get_wins, _set_wins, '')
+        # Loop through all the past winners and their data
+        for uniqueid, wins, time_stamp, last_win in data:
 
-    def update_timestamp(self):
-        """Update the player's timestamp."""
-        if self.wins:
-            winners_database.update_timestamp(self)
+            # Add the current winner to the database
+            instance = self[uniqueid]
+            instance.wins = int(wins)
+            instance.time_stamp = float(time_stamp)
+            instance.last_win = float(last_win)
 
     @property
-    def rank(self):
-        """Return the player's rank on the server."""
+    def connection(self):
+        """Return the SQL connection."""
+        return self._connection
+
+    @property
+    def cursor(self):
+        """Return the SQL cursor."""
+        return self._cursor
+
+    def increment_player_wins(self, player):
+        """Update the player's database values."""
+        # Is this a new winner?
+        if player.uniqueid not in self:
+
+            # Add the new winner to the database
+            self.cursor.execute(
+                'INSERT INTO gungame_winners (name, uniqueid, wins, '
+                'time_stamp, last_win) VALUES(?, ?, ?, ?, ?)',
+                (player.name, player.uniqueid, 0, time_stamp, time_stamp))
+
+        # Get the current time stamp
+        time_stamp = time()
+
+        # Get the winner's instance
+        instance = self[player.uniqueid]
+
+        # Set the values for the instance
+        instance.wins += 1
+        instance.time_stamp = time_stamp
+        instance.last_win = time_stamp
+
+        # Update the winner's values in the database
+        self.cursor.execute(
+            'UPDATE gungame_winners SET name=?, time_stamp=?, '
+            'wins=?, last_win=? WHERE uniqueid=?',
+            (player.name, instance.time_stamp, instance.wins,
+            instance.last_win, player.uniqueid))
+
+        # Commit the changes to the database
+        self.connection.commit()
+
+    def update_player_time_stamp(self, player):
+        """Update the player's time stamp.
+
+        This occurs on player_activate and is stored for pruning purposes.
+        """
+        # Is the player not in the database?
+        if player.uniqueid not in self:
+            raise KeyError('Player not in database.')
+
+        # Get the player's instance
+        instance = self[player.uniqueid]
+
+        # Store the player's new time stamp
+        instance.time_stamp = time()
+
+        # Update the player's name and time stamp in the database
+        self.cursor.execute(
+            'UPDATE gungame_winners SET name=?, time_stamp=? WHERE uniqueid=?',
+            (player.name, instance.time_stamp, player.uniqueid))
+
+        # Commit the changes to the database
+        self.connection.commit()
+
+# The singleton object for the _WinsDatabase class.
+winners_database = _WinsDatabase(_PlayerDatabase)

@@ -25,6 +25,7 @@ from gungame.core.messages import message_manager
 from gungame.core.players.attributes import attribute_post_hooks
 from gungame.core.players.attributes import attribute_pre_hooks
 from gungame.core.players.attributes import player_attributes
+from gungame.core.players.database import winners_database
 #   Sounds
 from gungame.core.sounds import sound_manager
 #   Status
@@ -210,3 +211,67 @@ class GunGamePlayer(Player):
     def stop_sound(self, sound):
         """Stop the sound from emitting from the player."""
         sound_manager.stop_sound(sound, self.index)
+
+    # =========================================================================
+    # >> DATABASE FUNCTIONALITY
+    # =========================================================================
+    def update_time_stamp(self):
+        """Update the player's time stamp."""
+        if self.uniqueid in winners_database:
+            winners_database.update_player_time_stamp(self)
+
+    @property
+    def wins(self):
+        """Return the number of wins for the player."""
+        if self.uniqueid in winners_database:
+            return winners_database[self.uniqueid].wins
+        return 0
+
+    def increment_wins(self):
+        """Add a win for the player."""
+        if not (self.is_fake_client() or 'BOT' in self.steamid):
+            winners_database.increment_player_wins(self)
+
+    @property
+    def rank(self):
+        """Return the player's rank on the server."""
+        # If the player is not in the database, they have no wins
+        if self.uniqueid not in winners_database:
+            return 0
+
+        # Start with the base rank
+        rank = 1
+
+        # Get the number of wins for the player
+        wins = self.wins
+
+        # Create a list to store players tied with this player
+        tied_players = list()
+
+        # Loop through all players in the database
+        for uniqueid in winners_database:
+
+            # Get the current players wins
+            current_wins = winners_database[uniqueid].wins
+
+            # Does the current player have more wins than this player?
+            if current_wins > wins:
+                rank += 1
+
+            # Is the current player tied with this player?
+            if current_wins == wins:
+                tied_players.append(uniqueid)
+
+        # Are there any tied players?
+        if len(tied_players) > 1:
+
+            # Sort the tied players by their last win
+            sorted_ties = sorted(
+                tied_players,
+                key=lambda uniqueid: winners_database[uniqueid].last_win)
+
+            # Get the final rank of the player
+            rank += sorted_ties.index(self.uniqueid)
+
+        # Return the player's rank
+        return rank
