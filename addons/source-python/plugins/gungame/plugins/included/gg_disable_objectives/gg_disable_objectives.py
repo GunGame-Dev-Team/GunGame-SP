@@ -57,7 +57,7 @@ def unload():
 # >> GAME EVENTS
 # =============================================================================
 @Event('round_start')
-def disable_objectives(game_event=None):
+def _disable_objectives(game_event=None):
     """Disable objectives each round."""
     # Get the objectives to disable
     objectives = disable_type.get_int()

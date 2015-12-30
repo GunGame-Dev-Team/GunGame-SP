@@ -28,7 +28,7 @@ _revert_team = set()
 # =============================================================================
 @EntityPreHook(EntityCondition.is_bot_player, 'on_take_damage')
 @EntityPreHook(EntityCondition.is_human_player, 'on_take_damage')
-def pre_take_damage(args):
+def _pre_take_damage(args):
     """Change the victim's team if they are on the attacker's team."""
     # Get the TakeDamageInfo object
     take_damage_info = make_object(TakeDamageInfo, args[1])
@@ -56,7 +56,7 @@ def pre_take_damage(args):
 
 @EntityPostHook(EntityCondition.is_bot_player, 'on_take_damage')
 @EntityPostHook(EntityCondition.is_human_player, 'on_take_damage')
-def post_take_damage(args, return_value):
+def _post_take_damage(args, return_value):
     """Revert the victim's team if necessary."""
     # If the victim's team doesn't need reverted, return
     if not _revert_team:

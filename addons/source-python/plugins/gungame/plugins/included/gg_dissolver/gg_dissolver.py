@@ -24,7 +24,7 @@ from .configuration import magnitude
 # >> EVENTS
 # =============================================================================
 @Event('player_death')
-def player_death(game_event):
+def _player_death(game_event):
     """Dissolve the player's ragdoll on death."""
     entity = Entity.find_or_create('env_entity_dissolver')
     current = dissolver_type.get_int()

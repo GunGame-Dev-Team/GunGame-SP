@@ -18,10 +18,17 @@ from .info import info
 
 
 # =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = ('delay',
+           )
+
+
+# =============================================================================
 # >> CONFIGURATION
 # =============================================================================
-with GunGameConfigManager(info.name) as config:
-    with config.cvar(
+with GunGameConfigManager(info.name) as _config:
+    with _config.cvar(
             'delay', 2,
             'Set to the number of seconds to respawn ' +
             'players after the die.') as delay:

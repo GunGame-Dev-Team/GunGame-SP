@@ -68,7 +68,7 @@ def unload():
 # >> GAME EVENTS
 # =============================================================================
 @Event('hostage_rescued')
-def hostage_rescued(game_event):
+def _hostage_rescued(game_event):
     """Level the rescuer up."""
     player = player_dictionary[game_event['userid']]
     player.hostage_rescues += 1
@@ -81,7 +81,7 @@ def hostage_rescued(game_event):
 
 
 @Event('player_death')
-def player_death(game_event):
+def _player_death(game_event):
     """Level the stopper up."""
     victim = player_dictionary[game_event['userid']]
     hostages = len(filter(
@@ -106,7 +106,7 @@ def player_death(game_event):
 
 
 @Event('hostage_killed')
-def hostage_killed(game_event):
+def _hostage_killed(game_event):
     """Level the killer down."""
     attacker = game_event['attacker']
     if not attacker:

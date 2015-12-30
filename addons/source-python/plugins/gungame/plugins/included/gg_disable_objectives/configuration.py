@@ -18,10 +18,17 @@ from .info import info
 
 
 # =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = ('disable_type',
+           )
+
+
+# =============================================================================
 # >> CONFIGURATION
 # =============================================================================
-with GunGameConfigManager(info.name) as config:
-    with config.cvar(
+with GunGameConfigManager(info.name) as _config:
+    with _config.cvar(
             'type', 0,
             'Set to the types of objectives to disable.') as disable_type:
         disable_type.Options.append('1 = Disable Bombing Objectives.')

@@ -37,7 +37,7 @@ _eliminated_players = defaultdict(set)
 # >> GAME EVENTS
 # =============================================================================
 @Event('player_death')
-def player_death(game_event):
+def _player_death(game_event):
     """Respawn any players the victim killed."""
     if GunGameStatus.ROUND is GunGameRoundStatus.INACTIVE:
         return
@@ -60,7 +60,7 @@ def player_death(game_event):
 
 
 @Event('round_start')
-def round_start(game_event):
+def _round_start(game_event):
     """Send the elimination info message."""
     message_manager.chat_message('Elimination_RoundInfo')
 

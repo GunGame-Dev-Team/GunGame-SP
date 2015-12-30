@@ -20,10 +20,18 @@ from .info import info
 
 
 # =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = ('dissolver_type',
+           'magnitude',
+           )
+
+
+# =============================================================================
 # >> CONFIGURATION
 # =============================================================================
-with GunGameConfigManager(info.name) as config:
-    with config.cvar(
+with GunGameConfigManager(info.name) as _config:
+    with _config.cvar(
             'type', 0,
             'Set to the type of dissolver to use.') as dissolver_type:
         for _name in DissolveType.__members__:
@@ -35,7 +43,7 @@ with GunGameConfigManager(info.name) as config:
         dissolver_type.Options.append(
             '{0} = REMOVE'.format(_num_dissolve_types + 1))
 
-    with config.cvar(
+    with _config.cvar(
             'magnitude', 2,
             'Set to the magnitude to use when dissolving') as magnitude:
         pass

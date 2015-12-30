@@ -18,10 +18,17 @@ from .info import info
 
 
 # =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = ('quick_switch',
+           )
+
+
+# =============================================================================
 # >> CONFIGURATION
 # =============================================================================
-with GunGameConfigManager(info.name) as config:
-    with config.cvar(
+with GunGameConfigManager(info.name) as _config:
+    with _config.cvar(
             'quick_switch', 0,
             'Enable/disable allowing players to immediately use ' +
             'their new weapon upon receiving it.') as quick_switch:

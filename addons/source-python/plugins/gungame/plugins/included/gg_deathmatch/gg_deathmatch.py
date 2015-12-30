@@ -117,7 +117,7 @@ deathmatch_players = _DeathMatchPlayers()
 # >> REGISTERED CALLBACK
 # =============================================================================
 @ClientCommand('jointeam')
-def jointeam(command, index):
+def _jointeam(command, index):
     """Cancel a player's repeat if they join spectators."""
     # Is the player joining spectators?
     if command[1] != 1:
@@ -145,7 +145,7 @@ def jointeam(command, index):
 
 
 @ClientCommand('joinclass')
-def joinclass(command, index):
+def _joinclass(command, index):
     """Hook joinclass to start a player's repeat."""
     # Get the player's userid
     userid = userid_from_index(index)
@@ -161,7 +161,7 @@ def joinclass(command, index):
 # >> EVENTS
 # =============================================================================
 @Event('player_spawn')
-def player_spawn(game_event):
+def _player_spawn(game_event):
     """Start bot repeats in case they join mid round."""
     # Get the player's userid
     userid = game_event['userid']
@@ -177,7 +177,7 @@ def player_spawn(game_event):
 
 
 @Event('player_death')
-def player_death(game_event):
+def _player_death(game_event):
     """Start the player's repeat when they are killed."""
     # Get the player's userid
     userid = game_event['userid']
@@ -187,7 +187,7 @@ def player_death(game_event):
 
 
 @Event('player_disconnect')
-def player_disconnect(game_event):
+def _player_disconnect(game_event):
     """Remove the player from the dictionary."""
     del deathmatch_players[game_event['userid']]
 
@@ -196,6 +196,6 @@ def player_disconnect(game_event):
 # >> LISTENERS
 # =============================================================================
 @LevelShutdown
-def level_shutdown():
+def _level_shutdown():
     """Clear the deathmatch_players dictionary on map change."""
     deathmatch_players.clear()

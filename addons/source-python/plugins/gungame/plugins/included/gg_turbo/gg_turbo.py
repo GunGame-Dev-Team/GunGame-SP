@@ -12,6 +12,6 @@ from gungame.core.players.attributes import AttributePostHook
 # >> ATTRIBUTE CALLBACKS
 # =============================================================================
 @AttributePostHook('level')
-def post_level_change(player, attribute, new_value, old_value):
+def _post_level_change(player, attribute, new_value, old_value):
     """Give the player their new weapon."""
     player.give_level_weapon()
