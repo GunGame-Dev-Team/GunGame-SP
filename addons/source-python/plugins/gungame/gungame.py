@@ -25,6 +25,8 @@ from translations.strings import LangStrings
 
 # GunGame Imports
 from gungame.info import info
+#   Commands
+from gungame.core.commands import command_manager
 #   Config
 from gungame.core.config.manager import config_manager
 #   Events
@@ -73,6 +75,7 @@ def load():
     # TODO: Initialize commands/menus
     gg_logger.log_message(
         _base_strings['Initialize:Commands'].get_string())
+    command_manager.register_commands()
 
     # Initialize GunGame sounds
     # TODO: Initialize sounds
@@ -138,6 +141,7 @@ def unload():
     # Clean GunGame weapon orders
 
     # Clean GunGame commands/menus
+    command_manager.unregister_commands()
 
     # Clean GunGame logging
 
