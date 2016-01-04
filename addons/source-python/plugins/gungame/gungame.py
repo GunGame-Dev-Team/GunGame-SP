@@ -48,7 +48,7 @@ from gungame.core.weapons.manager import weapon_order_manager
 # >> GLOBAL VARIABLES
 # =============================================================================
 # Get the initialization strings
-_base_strings = LangStrings('gungame/initialization')
+_base_strings = LangStrings('gungame/load_and_unload')
 
 
 # =============================================================================
