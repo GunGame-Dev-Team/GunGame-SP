@@ -16,6 +16,8 @@ from importlib import import_module
 from core import GAME_NAME
 #   Cvars
 from cvars.tags import sv_tags
+#   Engines
+from engines.server import engine_server
 #   Filters
 from filters.entities import EntityIter
 #   Listeners
@@ -58,58 +60,70 @@ def load():
     """Initialize GunGame."""
     # Initialize GunGame logging
     # TODO: Make sure to enable logging prior to the start message
+    current = 1
+    total = len([x for x in _base_strings if x.startswith('Initialize:')])
     gg_logger.log_message(
-        _base_strings['Initialize:Start'].get_string(version=info.version))
+        _base_strings['Start:Initialize'].get_string(version=info.version))
 
     # Initialize GunGame weapon orders
-    gg_logger.log_message(
-        _base_strings['Initialize:Weapons'].get_string())
+    gg_logger.log_message(_base_strings[
+        'Initialize:Weapons'].get_string(current=current, total=total))
+    current += 1
     weapon_order_manager.get_weapon_orders()
 
     # Initialize GunGame events
-    gg_logger.log_message(
-        _base_strings['Initialize:Events'].get_string())
+    gg_logger.log_message(_base_strings[
+        'Initialize:Events'].get_string(current=current, total=total))
+    current += 1
     gg_resource_list.load_events()
 
     # Initialize GunGame commands/menus
     # TODO: Initialize commands/menus
-    gg_logger.log_message(
-        _base_strings['Initialize:Commands'].get_string())
+    gg_logger.log_message(_base_strings[
+        'Initialize:Commands'].get_string(current=current, total=total))
+    current += 1
     command_manager.register_commands()
 
     # Initialize GunGame sounds
     # TODO: Initialize sounds
-    gg_logger.log_message(
-        _base_strings['Initialize:Sounds'].get_string())
+    gg_logger.log_message(_base_strings[
+        'Initialize:Sounds'].get_string(current=current, total=total))
+    current += 1
 
     # Initialize GunGame database
     # TODO: Initialize database
-    gg_logger.log_message(
-        _base_strings['Initialize:Database'].get_string())
+    gg_logger.log_message(_base_strings[
+        'Initialize:Database'].get_string(current=current, total=total))
+    current += 1
 
     # Initialize GunGame configs
-    gg_logger.log_message(
-        _base_strings['Initialize:Configs'].get_string())
+    gg_logger.log_message(_base_strings[
+        'Initialize:Configs'].get_string(current=current, total=total))
+    current += 1
     config_manager.load_configs()
 
     # Import the game specific functionality
-    gg_logger.log_message(
-        _base_strings['Initialize:Game'].get_string())
+    gg_logger.log_message(_base_strings[
+        'Initialize:Game'].get_string(current=current, total=total))
+    current += 1
     with suppress(ImportError):
         import_module('gungame.games.{0}'.format(GAME_NAME))
 
+    # Add gungame to sv_tags
+    gg_logger.log_message(_base_strings[
+        'Initialize:Tag'].get_string(current=current, total=total))
+    current += 1
+    sv_tags.add(info.basename)
+
     # Wait 1 tick to see if gg_start should be called
     gg_logger.log_message(
-        _base_strings['Initialize:End'].get_string())
+        _base_strings['End:Initialize'].get_string())
 
     # Set the starting weapon convars
     weapon_order_manager.set_start_convars()
 
     # Set the warmup weapon
     warmup_manager.set_warmup_weapon()
-
-    # Add gungame to sv_tags
-    sv_tags.add(info.basename)
 
     # Set the match status to inactive now that the loading process is complete
     GunGameStatus.MATCH = GunGameMatchStatus.INACTIVE
@@ -122,29 +136,38 @@ def load():
 
 def unload():
     """Clean up GunGame."""
+    # Start the cleanup process
+    current = 1
+    total = len([x for x in _base_strings if x.startswith('Clean:')])
+    gg_logger.log_message(
+        _base_strings['Start:Clean'].get_string())
+
     # Remove gungame from sv_tags
+    gg_logger.log_message(_base_strings[
+        'Clean:Tag'].get_string(current=current, total=total))
+    current += 1
     sv_tags.remove(info.basename)
 
     # Clean GunGame plugins
+    gg_logger.log_message(_base_strings[
+        'Clean:Plugins'].get_string(current=current, total=total))
+    current += 1
     gg_command_manager.unload_all_plugins()
 
-    # Clean GunGame configs
-
-    # Clean GunGame players
-
-    # Clean GunGame database
-
-    # Clean GunGame sounds
-
-    # Clean GunGame events
-
-    # Clean GunGame weapon orders
-
     # Clean GunGame commands/menus
+    gg_logger.log_message(_base_strings[
+        'Clean:Commands'].get_string(current=current, total=total))
+    current += 1
     command_manager.unregister_commands()
 
-    # Clean GunGame logging
-
     # Re-enable buyzones
+    gg_logger.log_message(_base_strings[
+        'Clean:BuyZones'].get_string(current=current, total=total))
+    current += 1
     for entity in EntityIter('func_buyzone'):
         entity.enable()
+
+    # Restart the match
+    gg_logger.log_message(
+        _base_strings['End:Clean'].get_string())
+    engine_server.server_command('mp_restartgame 1')

@@ -161,6 +161,6 @@ class _WeaponOrderManager(dict):
         player_dictionary.clear()
 
         # Restart the match
-        engine_server.server_command('mp_restartgame 1;')
+        engine_server.server_command('mp_restartgame 1')
 
 weapon_order_manager = _WeaponOrderManager()
