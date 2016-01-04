@@ -25,7 +25,7 @@ from filters.entities import EntityIter
 #   Listeners
 from listeners import OnLevelInit
 from listeners import OnLevelShutdown
-from listeners.tick import tick_delays
+from listeners.tick import Delay
 
 # GunGame Imports
 #   Config
@@ -73,7 +73,7 @@ __all__ = ('start_match',
 # >> PLAYER GAME EVENTS
 # =============================================================================
 @Event('player_spawn')
-def player_spawn(game_event):
+def _player_spawn(game_event):
     """Give the player their level weapon."""
     # Is GunGame active?
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
@@ -104,7 +104,7 @@ def player_spawn(game_event):
 
 
 @Event('player_death')
-def player_death(game_event):
+def _player_death(game_event):
     """Award the killer with a multi-kill increase or level increase."""
     # Is GunGame active?
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
@@ -153,7 +153,7 @@ def player_death(game_event):
 
 
 @Event('player_activate')
-def player_activate(game_event):
+def _player_activate(game_event):
     """Add player to leaders and send join message."""
     # Get the player's userid
     userid = game_event['userid']
@@ -193,7 +193,7 @@ def player_activate(game_event):
 
 
 @Event('player_disconnect')
-def player_disconnect(game_event):
+def _player_disconnect(game_event):
     """Store the disconnecting player's values and remove from dictionary."""
     userid = game_event['userid']
     player_dictionary.safe_remove(userid)
@@ -204,7 +204,7 @@ def player_disconnect(game_event):
 # >> ROUND GAME EVENTS
 # =============================================================================
 @Event('round_start')
-def round_start(game_event):
+def _round_start(game_event):
     """Disable buyzones and set the round status to ACTIVE."""
     GunGameStatus.ROUND = GunGameRoundStatus.ACTIVE
     for entity in EntityIter('func_buyzone'):
@@ -212,7 +212,7 @@ def round_start(game_event):
 
 
 @Event('round_end')
-def round_end(game_event):
+def _round_end(game_event):
     """Set the round status to INACTIVE since the round ended."""
     GunGameStatus.ROUND = GunGameRoundStatus.INACTIVE
 
@@ -221,7 +221,7 @@ def round_end(game_event):
 # >> OTHER GAME EVENTS
 # =============================================================================
 @Event('server_cvar')
-def server_cvar(game_event):
+def _server_cvar(game_event):
     """Set the weapon order value if the ConVar is for the weapon order."""
     # Get the ConVar name and its new value
     cvarname = game_event['cvarname']
@@ -257,7 +257,7 @@ def server_cvar(game_event):
 # >> GUNGAME EVENTS
 # =============================================================================
 @Event('gg_win')
-def gg_win(game_event):
+def _gg_win(game_event):
     """Increase the win total for the winner and end the map."""
     # Set the match status
     GunGameStatus.MATCH = GunGameMatchStatus.POST
@@ -279,7 +279,7 @@ def gg_win(game_event):
     message_manager.chat_message(
         index=winner.index, message='Winner_Player', name=winner.name)
     for second in range(4):
-        tick_delays.delay(
+        Delay(
             second, message_manager.center_message,
             message='Winner_Player_Center', name=winner.name)
     color = {2: RED, 3: BLUE}.get(winner.team, WHITE)
@@ -287,13 +287,13 @@ def gg_win(game_event):
 
 
 @Event('gg_map_end')
-def gg_map_end(game_event):
+def _gg_map_end(game_event):
     """Set the match status to POST after the map has ended."""
     GunGameStatus.MATCH = GunGameMatchStatus.POST
 
 
 @Event('gg_start')
-def gg_start(game_event):
+def _gg_start(game_event):
     """Set the match status to ACTIVE and post the weapon order."""
     # Set the match status
     GunGameStatus.MATCH = GunGameMatchStatus.ACTIVE
@@ -303,7 +303,7 @@ def gg_start(game_event):
 
 
 @Event('gg_levelup')
-def gg_levelup(game_event):
+def _gg_levelup(game_event):
     """Increase the player leader level and send level info."""
     # Get the player's userid
     userid = game_event['leveler']
@@ -316,7 +316,7 @@ def gg_levelup(game_event):
 
 
 @Event('gg_leveldown')
-def gg_leveldown(game_event):
+def _gg_leveldown(game_event):
     """Set the player's level in the leader dictionary."""
     leader_manager.player_leveldown(game_event['leveler'])
 
@@ -325,7 +325,7 @@ def gg_leveldown(game_event):
 # >> LEVEL LISTENERS
 # =============================================================================
 @OnLevelInit
-def level_init(map_name):
+def _level_init(map_name):
     """Set match status to INACTIVE when a new map is started."""
     # Is GunGame still loading?
     if GunGameStatus.MATCH is GunGameMatchStatus.LOADING:
@@ -339,7 +339,7 @@ def level_init(map_name):
 
 
 @OnLevelShutdown
-def level_shutdown():
+def _level_shutdown():
     """Clear the player dictionary on map change."""
     player_dictionary.clear()
 
@@ -348,7 +348,7 @@ def level_shutdown():
 # >> ATTRIBUTE LISTENERS
 # =============================================================================
 @AttributePostHook('multikill')
-def post_multikill(player, attribute, new_value, old_value):
+def _post_multikill(player, attribute, new_value, old_value):
     """Send multikill info message."""
     # Is the multikill being reset to 0?
     if not new_value:

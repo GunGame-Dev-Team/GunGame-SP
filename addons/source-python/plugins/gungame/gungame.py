@@ -19,7 +19,7 @@ from cvars.tags import sv_tags
 #   Filters
 from filters.entities import EntityIter
 #   Listeners
-from listeners.tick import tick_delays
+from listeners.tick import Delay
 #   Translations
 from translations.strings import LangStrings
 
@@ -89,21 +89,6 @@ def load():
         _base_strings['Initialize:Configs'].get_string())
     config_manager.load_configs()
 
-    # Set the starting weapon convars
-    weapon_order_manager.set_start_convars()
-
-    # Set the warmup weapon
-    warmup_manager.set_warmup_weapon()
-
-    # Add gungame to sv_tags
-    sv_tags.add(info.basename)
-
-    # Import the listeners/events/commands/menus
-    from gungame.core.listeners import start_match
-
-    # Set the match status to inactive now that the loading process is complete
-    GunGameStatus.MATCH = GunGameMatchStatus.INACTIVE
-
     # Import the game specific functionality
     gg_logger.log_message(
         _base_strings['Initialize:Game'].get_string())
@@ -113,7 +98,23 @@ def load():
     # Wait 1 tick to see if gg_start should be called
     gg_logger.log_message(
         _base_strings['Initialize:End'].get_string())
-    tick_delays.delay(0, start_match)
+
+    # Set the starting weapon convars
+    weapon_order_manager.set_start_convars()
+
+    # Set the warmup weapon
+    warmup_manager.set_warmup_weapon()
+
+    # Add gungame to sv_tags
+    sv_tags.add(info.basename)
+
+    # Set the match status to inactive now that the loading process is complete
+    GunGameStatus.MATCH = GunGameMatchStatus.INACTIVE
+
+    # Import the listeners/events/commands/menus
+    from gungame.core.listeners import start_match
+
+    Delay(0, start_match)
 
 
 def unload():

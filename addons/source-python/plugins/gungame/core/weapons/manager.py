@@ -11,7 +11,7 @@ from cvars import ConVar
 #   Engines
 from engines.server import engine_server
 #   Listeners
-from listeners.tick import tick_delays
+from listeners.tick import Delay
 
 # GunGame Imports
 #   Paths
@@ -148,7 +148,7 @@ class _WeaponOrderManager(dict):
         """Restart the match."""
         if self._delay is not None:
             self._delay.cancel()
-        self._delay = tick_delays.delay(1, self._restart_game)
+        self._delay = Delay(1, self._restart_game)
 
     def _restart_game(self):
         """Restart the match."""

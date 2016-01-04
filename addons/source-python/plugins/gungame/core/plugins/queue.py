@@ -5,7 +5,7 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-from listeners.tick import tick_delays
+from listeners.tick import Delay
 
 from gungame.core.events.included.plugins import GG_Plugin_Loaded
 from gungame.core.events.included.plugins import GG_Plugin_Unloaded
@@ -43,7 +43,7 @@ class _PluginQueue(dict):
         if item not in ('load', 'unload', 'reload'):
             raise ValueError('Invalid plugin type "{0}"'.format(item))
         if not self:
-            tick_delays.delay(0, self._loop_through_queues)
+            Delay(0, self._loop_through_queues)
         value = self[item] = set()
         return value
 

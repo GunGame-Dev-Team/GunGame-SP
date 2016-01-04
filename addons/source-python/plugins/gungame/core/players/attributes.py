@@ -71,9 +71,6 @@ player_attributes = _PlayerAttributes()
 player_attributes.register_attribute('level', 1)
 player_attributes.register_attribute('multikill', 0)
 
-# TODO: remove this when database changes are implemented
-player_attributes.register_attribute('wins', 0)
-
 
 class _AttributeHook(list):
     """Class that stores a list of callbacks for the attribute hook."""
