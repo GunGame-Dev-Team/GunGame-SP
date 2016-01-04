@@ -104,7 +104,7 @@ class WeaponOrder(dict):
                 break
             keep_at_end.append(weapon)
         if keep_at_end:
-            keep_at_end = reversed(keep_at_end)
+            keep_at_end.reverse()
             randomize_weapons = randomize_weapons[:-len(keep_at_end)]
         shuffle(randomize_weapons)
         randomize_weapons.extend(keep_at_end)

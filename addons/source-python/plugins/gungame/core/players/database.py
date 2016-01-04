@@ -90,6 +90,9 @@ class _WinsDatabase(defaultdict):
 
     def increment_player_wins(self, player):
         """Update the player's database values."""
+        # Get the current time stamp
+        time_stamp = time()
+
         # Is this a new winner?
         if player.uniqueid not in self:
 
@@ -98,9 +101,6 @@ class _WinsDatabase(defaultdict):
                 'INSERT INTO gungame_winners (name, uniqueid, wins, '
                 'time_stamp, last_win) VALUES(?, ?, ?, ?, ?)',
                 (player.name, player.uniqueid, 0, time_stamp, time_stamp))
-
-        # Get the current time stamp
-        time_stamp = time()
 
         # Get the winner's instance
         instance = self[player.uniqueid]
@@ -113,9 +113,9 @@ class _WinsDatabase(defaultdict):
         # Update the winner's values in the database
         self.cursor.execute(
             'UPDATE gungame_winners SET name=?, time_stamp=?, '
-            'wins=?, last_win=? WHERE uniqueid=?',
-            (player.name, instance.time_stamp, instance.wins,
-            instance.last_win, player.uniqueid))
+            'wins=?, last_win=? WHERE uniqueid=?', (
+                player.name, instance.time_stamp, instance.wins,
+                instance.last_win, player.uniqueid))
 
         # Commit the changes to the database
         self.connection.commit()

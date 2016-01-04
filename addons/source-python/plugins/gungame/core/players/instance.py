@@ -124,6 +124,7 @@ class GunGamePlayer(Player):
             event.old_level = old_level
             event.new_level = new_level
             event.reason = reason
+
     # =========================================================================
     # >> WEAPON FUNCTIONALITY
     # =========================================================================

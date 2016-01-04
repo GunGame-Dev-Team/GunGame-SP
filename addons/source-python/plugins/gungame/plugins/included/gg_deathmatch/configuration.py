@@ -6,8 +6,6 @@
 # >> IMPORTS
 # =============================================================================
 # Source.Python Imports
-#   Cvars
-from cvars.flags import ConVarFlags
 #   Translations
 from translations.strings import LangStrings
 

@@ -40,7 +40,7 @@ class _GGPluginManager(PluginManager):
     def __missing__(self, plugin_name):
         """Set the base import path and add the plugin."""
         if plugin_name not in valid_plugins.all:
-            raise
+            raise ValueError('Invalid plugin_name "{0}".'.format(plugin_name))
         self._base_import = self._base_import_prefix
         self._base_import += valid_plugins.get_plugin_type(plugin_name) + '.'
         return super().__missing__(plugin_name)
@@ -48,7 +48,7 @@ class _GGPluginManager(PluginManager):
     def _remove_modules(self, plugin_name):
         """Remove a plugin and all its modules."""
         if plugin_name not in valid_plugins.all:
-            raise
+            raise ValueError('Invalid plugin_name "{0}".'.format(plugin_name))
         if plugin_name not in self:
             return
         self.base_import = self._base_import

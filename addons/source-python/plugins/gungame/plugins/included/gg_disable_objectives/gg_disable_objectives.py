@@ -35,7 +35,7 @@ class ObjectiveType(IntEnum):
 # =============================================================================
 def load():
     """Disable objectives on load."""
-    disable_objectives()
+    _disable_objectives()
 
 
 def unload():

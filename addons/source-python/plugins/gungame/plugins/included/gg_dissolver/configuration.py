@@ -6,8 +6,6 @@
 # >> IMPORTS
 # =============================================================================
 # Source.Python Imports
-#   Cvars
-from cvars.flags import ConVarFlags
 #   Entities
 from entities.constants import DissolveType
 #   Translations

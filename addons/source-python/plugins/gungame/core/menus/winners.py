@@ -7,4 +7,4 @@
 # >> FUNCTIONS
 # =============================================================================
 def send_base_menu(index):
-    """"""
+    """Send the winners menu to the player."""
