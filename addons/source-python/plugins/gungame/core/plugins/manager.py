@@ -9,6 +9,7 @@ import sys
 
 from plugins.manager import PluginManager
 
+from gungame.core.events.included.plugins import GG_Plugin_Unloaded
 from gungame.core.paths import GUNGAME_PLUGINS_PATH
 from gungame.core.plugins import gg_plugins_logger
 from gungame.core.plugins.valid import valid_plugins
@@ -41,9 +42,23 @@ class _GGPluginManager(PluginManager):
         """Set the base import path and add the plugin."""
         if plugin_name not in valid_plugins.all:
             raise ValueError('Invalid plugin_name "{0}".'.format(plugin_name))
-        self._base_import = self._base_import_prefix
-        self._base_import += valid_plugins.get_plugin_type(plugin_name) + '.'
+        plugin_type = valid_plugins.get_plugin_type(plugin_name)
+        self._base_import = self._base_import_prefix + plugin_type + '.'
         return super().__missing__(plugin_name)
+
+    def __delitem__(self, plugin_name):
+        """Unload the plugin and remove it from the dictionary."""
+        # Unload the plugin
+        super().__delitem__(plugin_name)
+
+        # Send a message that the plugin was unloaded
+        self.logger.log_message(self.prefix + self.translations[
+            'Successful Unload'].get_string(plugin=plugin_name))
+
+        # Fire the gg_plugin_unloaded event
+        with GG_Plugin_Unloaded() as event:
+            event.plugin = plugin_name
+            event.plugin_type = valid_plugins.get_plugin_type(plugin_name)
 
     def _remove_modules(self, plugin_name):
         """Remove a plugin and all its modules."""
@@ -51,8 +66,8 @@ class _GGPluginManager(PluginManager):
             raise ValueError('Invalid plugin_name "{0}".'.format(plugin_name))
         if plugin_name not in self:
             return
-        self.base_import = self._base_import
-        self.base_import += valid_plugins.get_plugin_type(plugin_name) + '.'
+        plugin_type = valid_plugins.get_plugin_type(plugin_name)
+        self._base_import = self._base_import_prefix + plugin_type + '.'
         self._current_plugin = plugin_name
         super()._remove_modules(plugin_name)
 

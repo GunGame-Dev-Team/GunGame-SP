@@ -218,6 +218,7 @@ class _GGSubCommandManager(SubCommandManager):
 
     def restart_match(self):
         """Restart the match."""
+        # TODO: Add restart capability
         pass
 
     def unload_all_plugins(self):
