@@ -34,7 +34,6 @@ from gungame.core.weapons.manager import weapon_order_manager
 def send_leaders_menu(index):
     """Send the leaders menu to the player."""
     menu = PagedMenu(title=_menu_strings['Leader:Current'])
-    language = Player(index).language
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         menu.append(_menu_strings['Inactive'])
     elif 'gg_teamplay' in gg_plugin_manager:
@@ -45,7 +44,7 @@ def send_leaders_menu(index):
     else:
         level = leader_manager.leader_level
         menu.description = _menu_strings['Leader:Level'].get_string(
-            language, level=level,
+            Player(index).language, level=level,
             weapon=weapon_order_manager.active[level].weapon)
         for userid in leader_manager.current_leaders:
             menu.append(StarOption(player_dictionary[userid].name))
