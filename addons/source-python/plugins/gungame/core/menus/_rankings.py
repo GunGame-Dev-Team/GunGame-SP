@@ -8,11 +8,11 @@
 # Source.Python Imports
 #   Menus
 from menus import PagedMenu
-from menus import PagedOption
 
 # GunGame Imports
 #   Menus
 from gungame.core.menus import _menu_strings
+from gungame.core.menus._options import ListOption
 #   Players
 from gungame.core.players.database import winners_database
 
@@ -33,7 +33,7 @@ def get_winners_menu(player):
             -winners_database[uniqueid].time_stamp), reverse=True)
     for rank, uniqueid in enumerate(winners, 1):
         instance = winners_database[uniqueid]
-        menu.append(PagedOption(
-            '{0} - {1} [{2}]'.format(rank, instance.name, instance.wins),
+        menu.append(ListOption(
+            rank, '{0} [{1}]'.format(instance.name, instance.wins),
             uniqueid, player.uniqueid == uniqueid, False))
     return menu
