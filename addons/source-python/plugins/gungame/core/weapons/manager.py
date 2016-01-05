@@ -6,14 +6,16 @@
 # >> IMPORTS
 # =============================================================================
 # Source.Python Imports
-#   Cvar
-from cvars import ConVar
 #   Engines
 from engines.server import engine_server
 #   Listeners
 from listeners.tick import Delay
 
 # GunGame Imports
+#   Config
+from gungame.core.config.weapon import order_file
+from gungame.core.config.weapon import order_randomize
+from gungame.core.config.weapon import multikill_override
 #   Paths
 from gungame.core.paths import GUNGAME_WEAPON_ORDER_PATH
 #   Status
@@ -50,8 +52,8 @@ class _WeaponOrderManager(dict):
         self._active = None
         self._order = None
         self._randomize = False
-        self.multikill = None
         self._delay = None
+        self._print_delay = None
 
     @property
     def active(self):
@@ -77,10 +79,8 @@ class _WeaponOrderManager(dict):
 
     def set_start_convars(self):
         """Set all base ConVars on load."""
-        self.set_active_weapon_order(
-            ConVar('gg_weapon_order_file').get_string())
-        self.set_randomize(ConVar('gg_randomize_weapon_order').get_string())
-        self.multikill = ConVar('gg_multikill_override').get_int()
+        self.set_active_weapon_order(order_file.get_string())
+        self.set_randomize(order_randomize.get_bool())
 
     def set_active_weapon_order(self, value):
         """Set the weapon order to the given value."""
@@ -96,11 +96,6 @@ class _WeaponOrderManager(dict):
 
     def set_randomize(self, value):
         """Set the randomize value and randomize the weapon order."""
-        try:
-            value = bool(int(value))
-        except ValueError:
-            raise ValueError(
-                'Invalid value for randomize "{0}".'.format(value))
         if self.randomize == value:
             return
         self._randomize = value
@@ -109,7 +104,19 @@ class _WeaponOrderManager(dict):
         self.restart_game()
 
     def print_order(self):
+        """Delay 1 tick to print the current weapon order."""
+        # Cancel the delay if it is active
+        if self._print_delay is not None:
+            self._print_delay.cancel()
+
+        # Print the order in 1 tick
+        self._print_delay = Delay(0, self._print_order)
+
+    def _print_order(self):
         """Print the current weapon order."""
+        # Reset the delay
+        self._print_delay = None
+
         # Set the prefix
         prefix = '[GunGame]'
 

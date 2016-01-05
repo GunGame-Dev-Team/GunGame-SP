@@ -10,12 +10,12 @@
 from random import shuffle
 
 # Source.Python Imports
-#   Cvars
-from cvars import ConVar
 #   Filters
 from filters.weapons import WeaponClassIter
 
 # GunGame Imports
+#   Config
+from gungame.core.config.weapon import multikill_override
 #   Weapons
 from gungame.core.weapons.errors import WeaponOrderError
 
@@ -128,7 +128,7 @@ class _LevelWeapon(object):
     @property
     def multikill(self):
         """Return the multikill value for the level."""
-        override = ConVar('gg_multikill_override').get_int()
+        override = multikill_override.get_int()
         if self.weapon in _multikill_weapons and override:
             return override
         return self._multikill

@@ -184,8 +184,9 @@ def _player_activate(game_event):
     # Print a message if the joining player is in the credits
     for credit_type in gungame_credits:
         for name in gungame_credits[credit_type]:
-            steamid = gungame_credits[credit_type][name].get('steamid', None)
-            if steamid == player.steamid:
+            steamid = gungame_credits[credit_type][name]['steamid']
+            steamid_old = gungame_credits[credit_type][name]['steamid_old']
+            if player.steamid in (steamid, steamid_old):
                 message_manager.chat_message(
                     'JoinPlayer_Credits', player=player,
                     credit_type=credit_type)
@@ -242,9 +243,8 @@ def _server_cvar(game_event):
     # Did the multikill override value change?
     elif cvarname == multikill_override.get_name():
 
-        # Set the new multikill override value
-        with suppress(ValueError):
-            weapon_order_manager.multikill = int(cvarvalue)
+        # Print out the new weapon order
+        weapon_order_manager.print_order()
 
     # Did the warmup weapon change?
     elif cvarname == warmup_weapon.get_name():
