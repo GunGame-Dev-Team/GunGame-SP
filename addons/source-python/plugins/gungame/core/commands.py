@@ -36,7 +36,7 @@ class _MenuCommand(object):
         """Store the base name and send_menu callback."""
         self._name = name
         module = import_module('gungame.core.menus.{0}'.format(self.name))
-        self.send_menu = module.send_base_menu
+        self.send_menu = getattr(module, 'send_{0}_menu'.format(self.name))
 
     @property
     def name(self):
