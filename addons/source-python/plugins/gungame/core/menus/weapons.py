@@ -2,9 +2,39 @@
 
 """Weapon menu functionality."""
 
+# =============================================================================
+# >> IMPORTS
+# =============================================================================
+# Source.Python Imports
+#   Menus
+from menus import PagedMenu
+#   Players
+from players.helpers import userid_from_index
+
+# GunGame Imports
+#   Menus
+from gungame.core.menus import _menu_strings
+from gungame.core.menus._options import ListOption
+#   Players
+from gungame.core.players.dictionary import player_dictionary
+#   Status
+from gungame.core.status import GunGameMatchStatus
+from gungame.core.status import GunGameStatus
+#   Weapons
+from gungame.core.weapons.manager import weapon_order_manager
 
 # =============================================================================
 # >> FUNCTIONS
 # =============================================================================
-def send_base_menu(index):
+def send_weapons_menu(index):
     """Send the weapon menu to the player."""
+    menu = PagedMenu(title=_menu_strings['Weapons:Title'])
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+        menu.append(_menu_strings['Inactive'])
+    else:
+        player = player_dictionary[userid_from_index(index)]
+        for level, instance in weapon_order_manager.active.items():
+            menu.append(ListOption(
+                level, '{0} [{1}]'.format(instance.weapon, instance.multikill),
+                level, level == player.level, False))
+    menu.send(index)
