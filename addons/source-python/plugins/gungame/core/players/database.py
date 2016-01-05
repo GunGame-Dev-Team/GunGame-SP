@@ -33,6 +33,7 @@ class _PlayerDatabase(object):
 
     def __init__(self):
         """Store the base values on creation."""
+        self.name = None
         self.time_stamp = time()
         self.last_win = None
         self.wins = 0
@@ -62,7 +63,8 @@ class _WinsDatabase(defaultdict):
 
         # Gather all data from the table
         data = self.cursor.execute(
-            'SELECT uniqueid, wins, time_stamp, last_win FROM gungame_winners')
+            'SELECT uniqueid, name, wins, time_stamp, '
+            'last_win FROM gungame_winners')
         data = data.fetchall()
 
         # Are there no winners to add?
@@ -70,10 +72,11 @@ class _WinsDatabase(defaultdict):
             return
 
         # Loop through all the past winners and their data
-        for uniqueid, wins, time_stamp, last_win in data:
+        for uniqueid, name, wins, time_stamp, last_win in data:
 
             # Add the current winner to the database
             instance = self[uniqueid]
+            instance.name = name
             instance.wins = int(wins)
             instance.time_stamp = float(time_stamp)
             instance.last_win = float(last_win)
@@ -106,6 +109,7 @@ class _WinsDatabase(defaultdict):
         instance = self[player.uniqueid]
 
         # Set the values for the instance
+        instance.name = player.name
         instance.wins += 1
         instance.time_stamp = time_stamp
         instance.last_win = time_stamp
@@ -131,6 +135,9 @@ class _WinsDatabase(defaultdict):
 
         # Get the player's instance
         instance = self[player.uniqueid]
+
+        # Store the player's current name
+        instance.name = player.name
 
         # Store the player's new time stamp
         instance.time_stamp = time()
