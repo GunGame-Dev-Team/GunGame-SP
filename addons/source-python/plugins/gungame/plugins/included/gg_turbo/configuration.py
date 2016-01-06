@@ -25,17 +25,9 @@ __all__ = ('quick_switch',
 
 
 # =============================================================================
-# >> GLOBAL VARIABLES
-# =============================================================================
-_config_strings = LangStrings('gungame/included_plugins/config/gg_turbo')
-
-
-# =============================================================================
 # >> CONFIGURATION
 # =============================================================================
 with GunGameConfigManager(info.name) as _config:
 
-    with _config.cvar(
-            'quick_switch', 0,
-            _config_strings['Quick-Switch']) as quick_switch:
-        pass
+    with _config.cvar('quick_switch') as quick_switch:
+        quick_switch.add_text()

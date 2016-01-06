@@ -30,42 +30,23 @@ __all__ = ('defused_levels',
 
 
 # =============================================================================
-# >> GLOBAL VARIABLES
-# =============================================================================
-_config_strings = LangStrings(
-    'gungame/included_plugins/config/gg_bombing_objective')
-
-
-# =============================================================================
 # >> CONFIGURATION
 # =============================================================================
 with GunGameConfigManager(info.name) as _config:
-    with _config.cvar(
-            'defused_levels', 1,
-            _config_strings['Defused-Levels']) as defused_levels:
-        pass
+    with _config.cvar('defused_levels', 1) as defused_levels:
+        defused_levels.add_text()
 
-    with _config.cvar(
-            'defused_skip_knife', 0,
-            _config_strings['Defused-Skip-Knife']) as defused_skip_knife:
-        pass
+    with _config.cvar('defused_skip_knife') as defused_skip_knife:
+        defused_skip_knife.add_text()
 
-    with _config.cvar(
-            'defused_skip_nade', 0,
-            _config_strings['Defused-Skip-Nade']) as defused_skip_nade:
-        pass
+    with _config.cvar('defused_skip_nade') as defused_skip_nade:
+        defused_skip_nade.add_text()
 
-    with _config.cvar(
-            'detonated_levels', 1,
-            _config_strings['Detonated-Levels']) as detonated_levels:
-        pass
+    with _config.cvar('detonated_levels', 1) as detonated_levels:
+        detonated_levels.add_text()
 
-    with _config.cvar(
-            'detonated_skip_knife', 0,
-            _config_strings['Detonated-Skip-Knife']) as detonated_skip_knife:
-        pass
+    with _config.cvar('detonated_skip_knife') as detonated_skip_knife:
+        detonated_skip_knife.add_text()
 
-    with _config.cvar(
-            'detonated_skip_nade', 0,
-            _config_strings['Detonated-Skip-Nade']) as detonated_skip_nade:
-        pass
+    with _config.cvar('detonated_skip_nade') as detonated_skip_nade:
+        detonated_skip_nade.add_text()

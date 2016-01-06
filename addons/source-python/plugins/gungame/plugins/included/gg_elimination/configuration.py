@@ -25,16 +25,8 @@ __all__ = ('spawn_joiners',
 
 
 # =============================================================================
-# >> GLOBAL VARIABLES
-# =============================================================================
-_config_strings = LangStrings('gungame/included_plugins/config/gg_elimination')
-
-
-# =============================================================================
 # >> CONFIGURATION
 # =============================================================================
 with GunGameConfigManager(info.name) as _config:
-    with _config.cvar(
-            'spawn_joiners', 0,
-            _config_strings['Spawn-Joiners']) as spawn_joiners:
-        pass
+    with _config.cvar('spawn_joiners') as spawn_joiners:
+        spawn_joiners.add_text()

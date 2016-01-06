@@ -29,44 +29,35 @@ __all__ = ('multikill_override',
 
 
 # =============================================================================
-# >> GLOBAL VARIABLBES
-# =============================================================================
-_config_strings = LangStrings('gungame/core/config/weapon')
-
-
-# =============================================================================
 # >> CONFIGURATION
 # =============================================================================
 with GunGameConfigManager('weapon') as _config:
     with _config.cvar(
             'order_file', 'default_weapon_order',
-            _config_strings['Order-File'], ConVarFlags.NOTIFY) as order_file:
-        pass
+            flags=ConVarFlags.NOTIFY) as order_file:
+        order_file.add_text()
+
+    # TODO: add in functionality
+    with _config.cvar('order_choose_random') as order_choose_random:
+        order_choose_random.add_text()
+
+    with _config.cvar(
+            'order_randomize', flags=ConVarFlags.NOTIFY) as order_randomize:
+        order_randomize.add_text()
 
     # TODO: add in functionality
     with _config.cvar(
-            'order_choose_random', 0,
-            _config_strings['Order-Choose-Random']) as order_choose_random:
-        pass
-
-    with _config.cvar(
-            'order_randomize', 0, _config_strings['Order-Randomize'],
-            ConVarFlags.NOTIFY) as order_randomize:
-        pass
+            'randomize_per_player',
+            flags=ConVarFlags.NOTIFY) as randomize_per_player:
+        randomize_per_player.add_text()
 
     # TODO: add in functionality
     with _config.cvar(
-            'randomize_per_player', 0, _config_strings['Randomize-Per-Player'],
-            ConVarFlags.NOTIFY) as randomize_per_player:
-        pass
-
-    # TODO: add in functionality
-    with _config.cvar(
-            'random_weapon_each_time', 0, _config_strings['Random-Weapon'],
-            ConVarFlags.NOTIFY) as random_weapon_each_time:
-        pass
+            'random_weapon_each_time',
+            flags=ConVarFlags.NOTIFY) as random_weapon_each_time:
+        random_weapon_each_time.add_text()
 
     with _config.cvar(
-            'multikill_override', 0, _config_strings['Multikill-Override'],
-            ConVarFlags.NOTIFY) as multikill_override:
-        pass
+            'multikill_override',
+            flags=ConVarFlags.NOTIFY) as multikill_override:
+        multikill_override.add_text()

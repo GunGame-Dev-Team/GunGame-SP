@@ -22,10 +22,14 @@ from gungame.core.paths import GUNGAME_BASE_PATH
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('command_manager',
+__all__ = ('register_all_commands',
+           'unregister_all_commands',
            )
 
 
+# =============================================================================
+# >> GLOBAL VARIABLES
+# =============================================================================
 # =============================================================================
 # >> CLASSES
 # =============================================================================
@@ -72,42 +76,39 @@ class _MenuCommand(object):
             self.name, _send_command_menu)
 
 
-class _CommandManager(dict):
-    """Dictionary class used to store commands."""
-
-    def __init__(self):
-        """Add all commands to the dictionary."""
-        # Initialize the dictionary
-        super().__init__()
-
-        # Loop through all menus modules
-        for file in GUNGAME_BASE_PATH.joinpath('core', 'menus').files():
-
-            # Skip private/builtin modules
-            if file.namebase.startswith('_'):
-                continue
-
-            # Add the command to the dictionary
-            self[file.namebase] = _MenuCommand(file.namebase)
-
-    def register_commands(self):
-        """Register all commands in the dictionary."""
-        # Loop through all commands in the dictionary
-        for name in self:
-
-            # Register the current command
-            self[name].register_commands()
-
-    def unregister_commands(self):
-        """Unregister all commands in the dictionary."""
-        # Loop through all commands in the dictionary
-        for name in self:
-
-            # Unregister the current command
-            self[name].unregister_commands()
-
 # Get the _CommandManager instance
-command_manager = _CommandManager()
+_command_dictionary = dict()
+
+# Loop through all menus modules
+for file in GUNGAME_BASE_PATH.joinpath('core', 'menus').files():
+
+    # Skip private/builtin modules
+    if file.namebase.startswith('_'):
+        continue
+
+    # Add the command to the dictionary
+    _command_dictionary[file.namebase] = _MenuCommand(file.namebase)
+
+
+# =============================================================================
+# >> FUNCTIONS
+# =============================================================================
+def register_all_commands():
+    """Register all commands in the dictionary."""
+    # Loop through all commands in the dictionary
+    for name in _command_dictionary:
+
+        # Register the current command
+        _command_dictionary[name].register_commands()
+
+
+def unregister_all_commands():
+    """Unregister all commands in the dictionary."""
+    # Loop through all commands in the dictionary
+    for name in _command_dictionary:
+
+        # Unregister the current command
+        _command_dictionary[name].unregister_commands()
 
 
 # =============================================================================
@@ -127,6 +128,9 @@ def _send_command_menu_private(command, index, team_only):
     return False
 
 
+# =============================================================================
+# >> HELPER FUNCTIONS
+# =============================================================================
 def _get_command(command):
     """Return the command used."""
     # Get the command used

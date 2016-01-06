@@ -25,14 +25,8 @@ __all__ = ('delay',
 
 
 # =============================================================================
-# >> GLOBAL VARIABLES
-# =============================================================================
-_config_strings = LangStrings('gungame/included_plugins/config/gg_deathmatch')
-
-
-# =============================================================================
 # >> CONFIGURATION
 # =============================================================================
 with GunGameConfigManager(info.name) as _config:
-    with _config.cvar('delay', 2, _config_strings['Delay']) as delay:
-        pass
+    with _config.cvar('delay', 2) as delay:
+        delay.add_text()

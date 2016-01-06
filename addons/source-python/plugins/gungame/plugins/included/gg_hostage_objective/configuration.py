@@ -34,62 +34,35 @@ __all__ = ('killed_count',
 
 
 # =============================================================================
-# >> GLOBAL VARIABLES
-# =============================================================================
-_config_strings = LangStrings(
-    'gungame/included_plugins/config/gg_hostage_objective')
-
-
-# =============================================================================
 # >> CONFIGURATION
 # =============================================================================
 with GunGameConfigManager(info.name) as _config:
-    with _config.cvar(
-            'rescued_levels', 1,
-            _config_strings['Rescued-Levels']) as rescued_levels:
-        pass
+    with _config.cvar('rescued_levels', 1) as rescued_levels:
+        rescued_levels.add_text()
 
-    with _config.cvar(
-            'rescued_count', 2,
-            _config_strings['Rescued-Count']) as rescued_count:
-        pass
+    with _config.cvar('rescued_count', 2) as rescued_count:
+        rescued_count.add_text()
 
-    with _config.cvar(
-            'rescued_skip_knife', 0,
-            _config_strings['Rescued-Skip-Knife']) as rescued_skip_knife:
-        pass
+    with _config.cvar('rescued_skip_knife') as rescued_skip_knife:
+        rescued_skip_knife.add_text()
 
-    with _config.cvar(
-            'rescued_skip_nade', 0,
-            _config_strings['Rescued-Skip-Nade']) as rescued_skip_nade:
-        pass
+    with _config.cvar('rescued_skip_nade') as rescued_skip_nade:
+        rescued_skip_nade.add_text()
 
-    with _config.cvar(
-            'stopped_levels', 1,
-            _config_strings['Stopped-Levels']) as stopped_levels:
-        pass
+    with _config.cvar('stopped_levels', 1) as stopped_levels:
+        stopped_levels.add_text()
 
-    with _config.cvar(
-            'stopped_count', 2,
-            _config_strings['Stopped-Count']) as stopped_count:
-        pass
+    with _config.cvar('stopped_count', 2) as stopped_count:
+        stopped_count.add_text()
 
-    with _config.cvar(
-            'stopped_skip_knife', 0,
-            _config_strings['Stopped-Skip-Knife']) as stopped_skip_knife:
-        pass
+    with _config.cvar('stopped_skip_knife') as stopped_skip_knife:
+        stopped_skip_knife.add_text()
 
-    with _config.cvar(
-            'stopped_skip_nade', 0,
-            _config_strings['Stopped-Skip-Nade']) as stopped_skip_nade:
-        pass
+    with _config.cvar('stopped_skip_nade') as stopped_skip_nade:
+        stopped_skip_nade.add_text()
 
-    with _config.cvar(
-            'killed_levels', 1,
-            _config_strings['Killed-Levels']) as killed_levels:
-        pass
+    with _config.cvar('killed_levels', 1) as killed_levels:
+        killed_levels.add_text()
 
-    with _config.cvar(
-            'killed_count', 2,
-            _config_strings['Killed-Count']) as killed_count:
-        pass
+    with _config.cvar('killed_count', 2) as killed_count:
+        killed_count.add_text()

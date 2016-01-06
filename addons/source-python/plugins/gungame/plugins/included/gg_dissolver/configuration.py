@@ -28,17 +28,11 @@ __all__ = ('dissolver_type',
 
 
 # =============================================================================
-# >> GLOBAL VARIABLES
-# =============================================================================
-_config_strings = LangStrings('gungame/included_plugins/config/gg_dissolver')
-
-
-# =============================================================================
 # >> CONFIGURATION
 # =============================================================================
 with GunGameConfigManager(info.name) as _config:
 
-    with _config.cvar('type', 0, _config_strings['Type']) as dissolver_type:
+    with _config.cvar('type') as dissolver_type:
 
         for _name in DissolveType.__members__:
 
@@ -47,12 +41,8 @@ with GunGameConfigManager(info.name) as _config:
 
         _num_dissolve_types = len(DissolveType)
 
-        dissolver_type.Options.append('{0} = {1}'.format(
-            _num_dissolve_types, _config_strings['Random'].get_string()))
+        dissolver_type.add_text(
+            random=_num_dissolve_types, remove=_num_dissolve_types + 1)
 
-        dissolver_type.Options.append('{0} = {1}'.format(
-            _num_dissolve_types + 1, _config_strings['Remove'].get_string()))
-
-    with _config.cvar(
-            'magnitude', 2, _config_strings['Magnitude']) as magnitude:
-        pass
+    with _config.cvar('magnitude', 2) as magnitude:
+        magnitude.add_text()

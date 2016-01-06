@@ -28,9 +28,10 @@ from translations.strings import LangStrings
 # GunGame Imports
 from gungame.info import info
 #   Commands
-from gungame.core.commands import command_manager
+from gungame.core.commands import register_all_commands
+from gungame.core.commands import unregister_all_commands
 #   Config
-from gungame.core.config.manager import config_manager
+from gungame.core.config.manager import load_all_configs
 #   Events
 from gungame.core.events.storage import gg_resource_list
 #   Logger
@@ -82,7 +83,7 @@ def load():
     gg_logger.log_message(_base_strings[
         'Initialize:Commands'].get_string(current=current, total=total))
     current += 1
-    command_manager.register_commands()
+    register_all_commands()
 
     # Initialize GunGame sounds
     # TODO: Initialize sounds
@@ -100,7 +101,7 @@ def load():
     gg_logger.log_message(_base_strings[
         'Initialize:Configs'].get_string(current=current, total=total))
     current += 1
-    config_manager.load_configs()
+    load_all_configs()
 
     # Import the game specific functionality
     gg_logger.log_message(_base_strings[
@@ -158,7 +159,7 @@ def unload():
     gg_logger.log_message(_base_strings[
         'Clean:Commands'].get_string(current=current, total=total))
     current += 1
-    command_manager.unregister_commands()
+    unregister_all_commands()
 
     # Re-enable buyzones
     gg_logger.log_message(_base_strings[
