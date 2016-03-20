@@ -1,8 +1,20 @@
-__pycache__/
+# Python precached files
+__pycache__
+
+# Plugin created files
 *.cfg
 *.res
 *_server.ini
 *.db
+
+# Custom plugin files
 addons/source-python/data/plugins/gungame/*.ini
 addons/source-python/plugins/gungame/plugins/custom/*
 resource/source-python/translations/gungame/custom_plugins/*.ini
+
+# Server-specific configuration files
+cfg/source-python/gungame/weapon_orders/*.txt
+cfg/source-python/sound_packs/*.ini
+
+# PyCharm files
+.idea/
