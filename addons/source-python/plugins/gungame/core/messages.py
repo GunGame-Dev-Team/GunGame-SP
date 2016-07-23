@@ -30,7 +30,7 @@ from translations.strings import TranslationStrings
 
 # GunGame Imports
 #   Paths
-from gungame.core.paths import GUNGAME_TRANSLATION_PATH
+from .paths import GUNGAME_TRANSLATION_PATH
 
 
 # =============================================================================

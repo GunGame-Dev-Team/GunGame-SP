@@ -8,18 +8,16 @@
 # Source.Python Imports
 #   Cvars
 from cvars.flags import ConVarFlags
-#   Translations
-from translations.strings import LangStrings
 
 # GunGame Imports
 #   Config
-from gungame.core.config.manager import GunGameConfigManager
+from ..config.manager import GunGameConfigManager
 
 
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('multikill_override',
+__all__ = ('multi_kill_override',
            'order_choose_random',
            'order_file',
            'order_randomize',
@@ -33,7 +31,7 @@ __all__ = ('multikill_override',
 # =============================================================================
 with GunGameConfigManager('weapon') as _config:
     with _config.cvar(
-            'order_file', 'default_weapon_order',
+            'order_file', 'default',
             flags=ConVarFlags.NOTIFY) as order_file:
         order_file.add_text()
 
@@ -58,6 +56,6 @@ with GunGameConfigManager('weapon') as _config:
         random_weapon_each_time.add_text()
 
     with _config.cvar(
-            'multikill_override',
-            flags=ConVarFlags.NOTIFY) as multikill_override:
-        multikill_override.add_text()
+            'multi_kill_override',
+            flags=ConVarFlags.NOTIFY) as multi_kill_override:
+        multi_kill_override.add_text()

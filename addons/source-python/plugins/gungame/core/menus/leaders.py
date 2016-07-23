@@ -13,19 +13,19 @@ from players.entity import Player
 
 # GunGame Imports
 #   Leaders
-from gungame.core.leaders import leader_manager
+from ..leaders import leader_manager
 #   Menus
-from gungame.core.menus import _menu_strings
-from gungame.core.menus._options import StarOption
+from . import _menu_strings
+from ._options import StarOption
 #   Players
-from gungame.core.players.dictionary import player_dictionary
+from ..players.dictionary import player_dictionary
 #   Plugins
-from gungame.core.plugins.manager import gg_plugin_manager
+from ..plugins.manager import gg_plugin_manager
 #   Status
-from gungame.core.status import GunGameMatchStatus
-from gungame.core.status import GunGameStatus
+from ..status import GunGameMatchStatus
+from ..status import GunGameStatus
 #   Weapons
-from gungame.core.weapons.manager import weapon_order_manager
+from ..weapons.manager import weapon_order_manager
 
 
 # =============================================================================

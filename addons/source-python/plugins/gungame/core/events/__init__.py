@@ -15,9 +15,9 @@ from path import Path
 
 # GunGame Imports
 #   Paths
-from gungame.core.paths import GUNGAME_PLUGINS_PATH
+from ..paths import GUNGAME_PLUGINS_PATH
 #   Plugins
-from gungame.core.plugins.valid import valid_plugins
+from ..plugins.valid import valid_plugins
 
 
 # =============================================================================

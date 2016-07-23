@@ -13,15 +13,16 @@ from players.helpers import userid_from_index
 
 # GunGame Imports
 #   Menus
-from gungame.core.menus import _menu_strings
-from gungame.core.menus._options import ListOption
+from . import _menu_strings
+from ._options import ListOption
 #   Players
-from gungame.core.players.dictionary import player_dictionary
+from ..players.dictionary import player_dictionary
 #   Status
-from gungame.core.status import GunGameMatchStatus
-from gungame.core.status import GunGameStatus
+from ..status import GunGameMatchStatus
+from ..status import GunGameStatus
 #   Weapons
-from gungame.core.weapons.manager import weapon_order_manager
+from ..weapons.manager import weapon_order_manager
+
 
 # =============================================================================
 # >> FUNCTIONS
@@ -35,6 +36,6 @@ def send_weapons_menu(index):
         player = player_dictionary[userid_from_index(index)]
         for level, instance in weapon_order_manager.active.items():
             menu.append(ListOption(
-                level, '{0} [{1}]'.format(instance.weapon, instance.multikill),
+                level, '{0} [{1}]'.format(instance.weapon, instance.multi_kill),
                 level, level == player.level, False))
     menu.send(index)

@@ -8,22 +8,23 @@
 # Source.Python Imports
 #   Engines
 from engines.server import engine_server
+#   Filters
+from filters.weapons import WeaponClassIter
 #   Listeners
 from listeners.tick import Delay
 
 # GunGame Imports
 #   Config
-from gungame.core.config.weapon import order_file
-from gungame.core.config.weapon import order_randomize
-from gungame.core.config.weapon import multikill_override
+from ..config.weapon import order_file
+from ..config.weapon import order_randomize
 #   Paths
-from gungame.core.paths import GUNGAME_WEAPON_ORDER_PATH
+from ..paths import GUNGAME_WEAPON_ORDER_PATH
 #   Status
-from gungame.core.status import GunGameMatchStatus
-from gungame.core.status import GunGameStatus
+from ..status import GunGameMatchStatus
+from ..status import GunGameStatus
 #   Weapons
-from gungame.core.weapons import gg_weapons_logger
-from gungame.core.weapons.order import WeaponOrder
+from . import gg_weapons_logger
+from .order import WeaponOrder
 
 
 # =============================================================================
@@ -39,6 +40,20 @@ __all__ = ('_WeaponOrderManager',
 # =============================================================================
 gg_weapons_manager_logger = gg_weapons_logger.manager
 
+# Store the weapons by type
+_primary_weapons = sorted([
+    weapon.basename for weapon in WeaponClassIter('primary')])
+
+_secondary_weapons = sorted([
+    weapon.basename for weapon in WeaponClassIter('secondary')])
+
+_explosive_weapons = sorted([
+    weapon.basename for weapon in WeaponClassIter('explosive')
+    if weapon.basename not in _primary_weapons + _secondary_weapons])
+
+_melee_weapons = sorted([
+    weapon.basename for weapon in WeaponClassIter('melee')])
+
 
 # =============================================================================
 # >> CLASSES
@@ -47,13 +62,19 @@ class _WeaponOrderManager(dict):
     """Class used to store weapon orders."""
 
     def __init__(self):
-        """Set the base attributes."""
+        """Initialize the object."""
         super().__init__()
+
+        # Set the default attributes
         self._active = None
         self._order = None
         self._randomize = False
         self._delay = None
         self._print_delay = None
+
+        # Create the default files
+        self._create_default_order()
+        self._create_short_order()
 
     @property
     def active(self):
@@ -124,30 +145,30 @@ class _WeaponOrderManager(dict):
         gg_weapons_manager_logger.log_message(
             '{0} Weapon order: {1}\n'.format(prefix, self.active.title))
         levels = list()
-        multikills = list()
+        multi_kills = list()
         weapons = list()
         for level in self.active:
             levels.append(level)
-            multikills.append(self.active[level].multikill)
+            multi_kills.append(self.active[level].multi_kill)
             weapons.append(self.active[level].weapon)
         level_length = max(len(str(max(levels))), len('Level')) + 2
-        multikill_length = max(len(str(max(multikills))), len('Multikill')) + 2
+        multi_kill_length = max(len(str(max(multi_kills))), len('multi_kill')) + 2
         weapon_length = max([
             len(weapon) for weapon in weapons] + [len('Weapon')]) + 4
         joint = '{0} +{1}+{2}+{3}+'.format(
             prefix, '-' * level_length,
-            '-' * multikill_length, '-' * weapon_length)
+            '-' * multi_kill_length, '-' * weapon_length)
         gg_weapons_manager_logger.log_message(joint)
         gg_weapons_manager_logger.log_message('{0} |{1}|{2}|{3}|'.format(
             prefix, 'Level'.center(level_length),
-            'Multikill'.center(multikill_length),
+            'multi_kill'.center(multi_kill_length),
             'Weapon'.center(weapon_length)))
         gg_weapons_manager_logger.log_message(joint)
         for level in self.active:
             current = self.active[level]
             gg_weapons_manager_logger.log_message('{0} |{1}|{2}|{3} |'.format(
                 prefix, str(level).center(level_length),
-                str(current.multikill).center(multikill_length),
+                str(current.multi_kill).center(multi_kill_length),
                 current.weapon.rjust(weapon_length - 1)))
         gg_weapons_manager_logger.log_message(joint)
 
@@ -164,10 +185,34 @@ class _WeaponOrderManager(dict):
         GunGameStatus.MATCH = GunGameMatchStatus.INACTIVE
 
         # Clear the player dictionary
-        from gungame.core.players.dictionary import player_dictionary
+        from ..players.dictionary import player_dictionary
         player_dictionary.clear()
 
         # Restart the match
         engine_server.server_command('mp_restartgame 1')
+
+    @staticmethod
+    def _create_default_order():
+        """Create the default weapon order file, if necessary."""
+        default = GUNGAME_WEAPON_ORDER_PATH / 'default.txt'
+        if default.isfile():
+            return
+        with default.open('w') as open_file:
+            # TODO: print header
+            for weapon in (
+                    _primary_weapons + _secondary_weapons +
+                    _explosive_weapons + _melee_weapons):
+                open_file.write('{0}\n'.format(weapon))
+
+    @staticmethod
+    def _create_short_order():
+        """Create the short weapon order file, if necessary."""
+        short = GUNGAME_WEAPON_ORDER_PATH / 'short.txt'
+        if short.isfile():
+            return
+        with short.open('w') as open_file:
+            # TODO: print header
+            for weapon in _secondary_weapons:
+                open_file.write('{0}\n'.format(weapon))
 
 weapon_order_manager = _WeaponOrderManager()

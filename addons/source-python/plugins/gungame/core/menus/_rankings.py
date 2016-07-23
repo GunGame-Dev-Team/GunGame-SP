@@ -11,17 +11,17 @@ from menus import PagedMenu
 
 # GunGame Imports
 #   Menus
-from gungame.core.menus import _menu_strings
-from gungame.core.menus._options import ListOption
+from . import _menu_strings
+from ._options import ListOption
 #   Players
-from gungame.core.players.database import winners_database
+from ..players.database import winners_database
 
 
 # =============================================================================
 # >> FUNCTIONS
 # =============================================================================
 def get_winners_menu(player):
-    """"""
+    """Return a sorted menu of all winners."""
     menu = PagedMenu(title=_menu_strings['Winners:Title'])
     if not winners_database:
         menu.description = _menu_strings['Winners:None']

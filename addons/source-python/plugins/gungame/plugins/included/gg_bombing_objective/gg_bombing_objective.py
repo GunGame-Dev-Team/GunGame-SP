@@ -90,7 +90,7 @@ def _get_levels_to_increase(player, reason):
         weapon = weapon_order_manager.active[level].weapon
         if (weapon in _nade_weapons and not skip_nade) or (
                 weapon in _knife_weapons and not skip_knife):
-            player.chat_message('BombingObjective_NoSkip_{0}'.format(
+            player.chat_message('BombingObjective:NoSkip:{0}'.format(
                     reason.title()), weapon=weapon)
             return level_increase
     return level_increase

@@ -16,23 +16,23 @@ from weapons.manager import weapon_manager
 
 # GunGame Imports
 #   Events
-from gungame.core.events.included.leveling import GG_LevelDown
-from gungame.core.events.included.leveling import GG_LevelUp
-from gungame.core.events.included.match import GG_Win
+from ..events.included.leveling import GG_LevelDown
+from ..events.included.leveling import GG_LevelUp
+from ..events.included.match import GG_Win
 #   Messages
-from gungame.core.messages import message_manager
+from ..messages import message_manager
 #   Players
-from gungame.core.players.attributes import attribute_post_hooks
-from gungame.core.players.attributes import attribute_pre_hooks
-from gungame.core.players.attributes import player_attributes
-from gungame.core.players.database import winners_database
+from .attributes import attribute_post_hooks
+from .attributes import attribute_pre_hooks
+from .attributes import player_attributes
+from .database import winners_database
 #   Sounds
-from gungame.core.sounds import sound_manager
+from ..sounds import sound_manager
 #   Status
-from gungame.core.status import GunGameStatus
-from gungame.core.status import GunGameMatchStatus
+from ..status import GunGameStatus
+from ..status import GunGameMatchStatus
 #   Weapons
-from gungame.core.weapons.manager import weapon_order_manager
+from ..weapons.manager import weapon_order_manager
 
 
 # =============================================================================
@@ -47,6 +47,9 @@ __all__ = ('GunGamePlayer',
 # =============================================================================
 class GunGamePlayer(Player):
     """Class used to interact directly with a specific player."""
+
+    level = 0
+    multi_kill = 0
 
     def __setattr__(self, attr, value):
         """Verify that the attribute's value should be set."""
@@ -84,8 +87,9 @@ class GunGamePlayer(Player):
         """Increase the player's level by the given amount."""
         if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
             return
-        if levels < 1:
-            raise ValueError()
+        if not isinstance(levels, int) or levels < 1:
+            raise ValueError(
+                'Invalid value given for levels "{0}".'.format(levels))
         old_level = self.level
         new_level = old_level + levels
         if new_level > weapon_order_manager.max_levels:
@@ -96,7 +100,7 @@ class GunGamePlayer(Player):
         self.level = new_level
         if self.level != new_level:
             return
-        self.multikill = 0
+        self.multi_kill = 0
         with GG_LevelUp() as event:
             event.attacker = event.leveler = self.userid
             event.userid = event.victim = victim
@@ -108,8 +112,9 @@ class GunGamePlayer(Player):
         """Decrease the player's level by the given amount."""
         if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
             return
-        if levels < 1:
-            raise ValueError()
+        if not isinstance(levels, int) or levels < 1:
+            raise ValueError(
+                'Invalid value given for levels "{0}".'.format(levels))
         old_level = self.level
         new_level = max(old_level - levels, 1)
         if self.level == new_level:
@@ -117,7 +122,7 @@ class GunGamePlayer(Player):
         self.level = new_level
         if self.level != new_level:
             return
-        self.multikill = 0
+        self.multi_kill = 0
         with GG_LevelDown() as event:
             event.attacker = attacker
             event.leveler = event.userid = self.userid
@@ -129,24 +134,36 @@ class GunGamePlayer(Player):
     # >> WEAPON FUNCTIONALITY
     # =========================================================================
     @property
-    def level_multikill(self):
-        """Return the multikill value for the player's current level."""
-        return weapon_order_manager.active[self.level].multikill
+    def level_multi_kill(self):
+        """Return the multi_kill value for the player's current level."""
+        return weapon_order_manager.active[self.level].multi_kill
 
     @property
     def level_weapon(self):
         """Return the player's current level weapon."""
         return weapon_order_manager.active[self.level].weapon
 
+    def remove_all_weapons(self, exclude=None):
+        if exclude is None:
+            exclude = []
+        elif isinstance(exclude, str):
+            exclude = [exclude]
+
+        exclude = [weapon_manager[weapon].name for weapon in exclude]
+
+        for weapon in self.weapons():
+            if weapon.classname in exclude:
+                continue
+            self.drop_weapon(weapon, None, None)
+            weapon.remove()
+
     def give_level_weapon(self):
         """Give the player the weapon of their current level."""
         weapon = weapon_manager[self.level_weapon]
-        for index in self.weapon_indexes():
-            entity = Weapon(index)
+        for entity in self.weapons():
             if entity.classname == weapon.name:
                 return
-        for index in self.weapon_indexes():
-            entity = Weapon(index)
+        for entity in self.weapons():
             if weapon_manager[entity.classname].slot == weapon.slot:
                 self.drop_weapon(entity, None, None)
                 entity.remove()

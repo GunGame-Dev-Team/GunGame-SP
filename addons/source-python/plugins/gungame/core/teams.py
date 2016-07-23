@@ -1,28 +1,31 @@
-# ../gungame/plugins/included/gg_deathmatch/configuration.py
+# ../gungame/core/teams.py
 
-"""Creates the gg_deathmatch configuration."""
+"""Provides team data."""
 
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# GunGame Imports
-#   Config
-from gungame.core.config.manager import GunGameConfigManager
-
-# Plugin Imports
-from .info import info
+# Source.Python Imports
+#   Filters
+from filters.entities import EntityIter
+#   Players
+from players.teams import team_managers
+from players.teams import teams_by_number
 
 
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('delay',
+__all__ = ('team_names',
            )
 
 
 # =============================================================================
-# >> CONFIGURATION
+# >> GLOBAL VARIABLES
 # =============================================================================
-with GunGameConfigManager(info.name) as _config:
-    with _config.cvar('delay', 2) as delay:
-        delay.add_text()
+team_names = dict()
+
+for _class_name in team_managers:
+    for _entity in EntityIter(_class_name):
+        if teams_by_number.get(_entity.team, 'un') not in ('un', 'spec'):
+            team_names[_entity.team] = _entity.team_name

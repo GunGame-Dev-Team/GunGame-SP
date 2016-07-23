@@ -5,10 +5,6 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Source.Python Imports
-#   Translations
-from translations.strings import LangStrings
-
 # GunGame Imports
 #   Config
 from gungame.core.config.manager import GunGameConfigManager

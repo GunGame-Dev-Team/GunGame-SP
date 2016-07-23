@@ -6,7 +6,7 @@
 # >> IMPORTS
 # =============================================================================
 from plugins.instance import LoadedPlugin
-from gungame.core.plugins import gg_plugins_logger
+from . import gg_plugins_logger
 
 
 # =============================================================================

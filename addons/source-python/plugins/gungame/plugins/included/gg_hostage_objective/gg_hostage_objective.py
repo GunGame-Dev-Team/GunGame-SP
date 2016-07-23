@@ -117,7 +117,7 @@ def _hostage_killed(game_event):
         return
     player.hostage_kills = 0
     player.decrease_level(killed_levels.get_int(), reason='hostage_killed')
-    player.chat_message('HostageObjective_LevelDown_Killed', player=player)
+    player.chat_message('HostageObjective:Killed', player=player)
 
 
 # =============================================================================
@@ -148,7 +148,7 @@ def _get_levels_to_increase(player, reason):
         weapon = weapon_order_manager.active[level].weapon
         if (weapon in _nade_weapons and not skip_nade) or (
                 weapon in _knife_weapons and not skip_knife):
-            player.chat_message('HostageObjective_NoSkip_{0}'.format(
+            player.chat_message('HostageObjective:NoSkip:{0}'.format(
                 reason.title()), weapon=weapon)
             return level_increase
     return level_increase

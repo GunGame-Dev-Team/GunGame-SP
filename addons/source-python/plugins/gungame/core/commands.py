@@ -16,7 +16,7 @@ from commands.say import say_command_manager
 
 # GunGame Imports
 #   Paths
-from gungame.core.paths import GUNGAME_BASE_PATH
+from .paths import GUNGAME_BASE_PATH
 
 
 # =============================================================================
@@ -55,7 +55,7 @@ class _MenuCommand(object):
 
         # Register the private command
         say_command_manager.register_commands(
-            '/' + self.name, _send_command_menu_private)
+            '/' + self.name, _send_command_menu)
 
         # Register the client command
         client_command_manager.register_commands(
@@ -69,7 +69,7 @@ class _MenuCommand(object):
 
         # Register the private command
         say_command_manager.unregister_commands(
-            '/' + self.name, _send_command_menu_private)
+            '/' + self.name, _send_command_menu)
 
         # Register the client command
         client_command_manager.unregister_commands(
@@ -116,31 +116,23 @@ def unregister_all_commands():
 # =============================================================================
 def _send_command_menu(command, index, team_only=None):
     """Send the menu to the player."""
-    command_manager[_get_command(command)].send_menu(index)
+    # Store the block value
+    block = False
 
-
-def _send_command_menu_private(command, index, team_only):
-    """Send the command to the player and suppress the chat message."""
-    # Send the menu
-    _send_command_menu(command, index)
-
-    # Stop the command from showing in chat
-    return False
-
-
-# =============================================================================
-# >> HELPER FUNCTIONS
-# =============================================================================
-def _get_command(command):
-    """Return the command used."""
     # Get the command used
-    command = command[0]
+    name = command[0]
 
     # Does the command have a prefix?
-    if command.startswith(('!', '/')):
+    if name.startswith(('!', '/')):
 
-        # Return the command without the prefix
-        return command[1:]
+        # Get the block value
+        block = name.startswith('/')
 
-    # Return the command
-    return command
+        # Get the actual command name
+        name = name[1:]
+
+    # Send the menu
+    _command_dictionary[name].send_menu(index)
+
+    # Return the block value
+    return block

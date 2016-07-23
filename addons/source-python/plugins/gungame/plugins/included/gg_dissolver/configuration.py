@@ -8,8 +8,6 @@
 # Source.Python Imports
 #   Entities
 from entities.constants import DissolveType
-#   Translations
-from translations.strings import LangStrings
 
 # GunGame Imports
 #   Config

@@ -15,9 +15,9 @@ from filters.weapons import WeaponClassIter
 
 # GunGame Imports
 #   Config
-from gungame.core.config.weapon import multikill_override
+from ..config.weapon import multi_kill_override
 #   Weapons
-from gungame.core.weapons.errors import WeaponOrderError
+from .errors import WeaponOrderError
 
 
 # =============================================================================
@@ -33,7 +33,7 @@ __all__ = ('WeaponOrder',
 _primary_weapons = [weapon.basename for weapon in WeaponClassIter('primary')]
 _secondary_weapons = [
     weapon.basename for weapon in WeaponClassIter('secondary')]
-_multikill_weapons = _primary_weapons + _secondary_weapons
+_multi_kill_weapons = _primary_weapons + _secondary_weapons
 
 
 # =============================================================================
@@ -54,16 +54,16 @@ class WeaponOrder(dict):
                 if line.startswith('//'):
                     continue
                 try:
-                    weapon, multikill = line.split()
+                    weapon, multi_kill = line.split()
                 except ValueError:
                     weapon = line
-                    multikill = 1
+                    multi_kill = 1
                 try:
-                    multikill = int(multikill)
+                    multi_kill = int(multi_kill)
                 except ValueError:
                     raise WeaponOrderError()
                 level += 1
-                self[level] = _LevelWeapon(weapon, multikill)
+                self[level] = _LevelWeapon(weapon, multi_kill)
         self._filepath = filepath
         self._name = self.filepath.namebase
         self._title = self.name.replace('_', ' ').title()
@@ -100,7 +100,7 @@ class WeaponOrder(dict):
         randomize_weapons = self.values()
         keep_at_end = list()
         for weapon in reversed(randomize_weapons):
-            if weapon.weapon in _multikill_weapons:
+            if weapon.weapon in _multi_kill_weapons:
                 break
             keep_at_end.append(weapon)
         if keep_at_end:
@@ -115,10 +115,10 @@ class WeaponOrder(dict):
 class _LevelWeapon(object):
     """Class used to store level specific values."""
 
-    def __init__(self, weapon, multikill):
+    def __init__(self, weapon, multi_kill):
         """Store the base values."""
         self._weapon = weapon
-        self._multikill = multikill
+        self._multi_kill = multi_kill
 
     @property
     def weapon(self):
@@ -126,9 +126,9 @@ class _LevelWeapon(object):
         return self._weapon
 
     @property
-    def multikill(self):
-        """Return the multikill value for the level."""
-        override = multikill_override.get_int()
-        if self.weapon in _multikill_weapons and override:
+    def multi_kill(self):
+        """Return the multi_kill value for the level."""
+        override = multi_kill_override.get_int()
+        if self.weapon in _multi_kill_weapons and override:
             return override
-        return self._multikill
+        return self._multi_kill

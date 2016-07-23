@@ -13,15 +13,15 @@ from players.entity import Player
 
 # GunGame Imports
 #   Menus
-from gungame.core.menus import _menu_strings
-from gungame.core.menus._options import ListOption
+from . import _menu_strings
+from ._options import ListOption
 #   Players
-from gungame.core.players.dictionary import player_dictionary
+from ..players.dictionary import player_dictionary
 #   Plugins
-from gungame.core.plugins.manager import gg_plugin_manager
+from ..plugins.manager import gg_plugin_manager
 #   Status
-from gungame.core.status import GunGameMatchStatus
-from gungame.core.status import GunGameStatus
+from ..status import GunGameMatchStatus
+from ..status import GunGameStatus
 
 
 # =============================================================================

@@ -15,16 +15,16 @@ from players.helpers import userid_from_index
 
 # GunGame Imports
 #   Leaders
-from gungame.core.leaders import leader_manager
+from ..leaders import leader_manager
 #   Menus
-from gungame.core.menus import _menu_strings
+from . import _menu_strings
 #   Players
-from gungame.core.players.dictionary import player_dictionary
+from ..players.dictionary import player_dictionary
 #   Plugins
-from gungame.core.plugins.manager import gg_plugin_manager
+from ..plugins.manager import gg_plugin_manager
 #   Status
-from gungame.core.status import GunGameMatchStatus
-from gungame.core.status import GunGameStatus
+from ..status import GunGameMatchStatus
+from ..status import GunGameStatus
 
 
 # =============================================================================
@@ -49,7 +49,7 @@ def send_level_menu(index):
             player.language, level=player.level)))
         menu.append(Text(_menu_strings['Level:Weapon'].get_string(
             player.language,
-            kills=player.level_multikill - player.multikill,
+            kills=player.level_multi_kill - player.multi_kill,
             weapon=player.level_weapon)))
         leaders = leader_manager.current_leaders
         if leaders is None:

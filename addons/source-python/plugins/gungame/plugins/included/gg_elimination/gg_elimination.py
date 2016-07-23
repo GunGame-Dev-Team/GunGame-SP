@@ -46,23 +46,23 @@ def _player_death(game_event):
     attacker = game_event['attacker']
     if attacker in (victim.userid, 0):
         tick_delays.delay(5, _respawn_player, victim.userid)
-        victim.chat_message('Elimination_Respawn_Suicide')
+        victim.chat_message('Elimination:Suicide')
         return
     killer = player_dictionary[attacker]
     if victim.team == killer.team:
         tick_delays.delay(5, _respawn_player, victim.userid)
-        victim.chat_message('Elimination_Respawn_TeamKill')
+        victim.chat_message('Elimination:TeamKill')
         return
     # TODO: Test reconnecting to see if players are not respawned
     _eliminated_players[killer.userid].add(victim.userid)
     victim.chat_message(
-        'Elimination_Respawn_Attacker', killer.index, attacker=killer)
+        'Elimination:Attacker', killer.index, attacker=killer)
 
 
 @Event('round_start')
 def _round_start(game_event):
     """Send the elimination info message."""
-    message_manager.chat_message('Elimination_RoundInfo')
+    message_manager.chat_message('Elimination:RoundInfo')
 
 
 # =============================================================================
@@ -85,7 +85,7 @@ def _respawn_victims(userid):
             player.respawn()
     if players:
         message_manager.chat_message(
-            'Elimination_Respawning', player.index,
+            'Elimination:Respawning', player.index,
             player='\x01, \x03'.join(sorted(players)))
 
 

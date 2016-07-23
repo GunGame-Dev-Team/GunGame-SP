@@ -61,14 +61,14 @@ class DMPlayer(Player):
 
             # Message the player with the countdown
             player_dictionary[self.userid].hint_message(
-                'DeathMatch_Respawn_CountDown', seconds=self.repeat.remaining)
+                'DeathMatch:CountDown', seconds=self.repeat.remaining)
 
         # Are there no more loops remaining for the player?
         else:
 
             # Message the player that they are respawning
             player_dictionary[self.userid].hint_message(
-                'DeathMatch_Respawning')
+                'DeathMatch:Respawning')
 
             # Respawn the player
             self.respawn()
@@ -135,7 +135,7 @@ def _jointeam(command, index):
     if player.is_repeat_active():
 
         # Message the player about cancelling their respawn
-        player_dictionary[userid].hint_message('DeathMatch_CancelTeam')
+        player_dictionary[userid].hint_message('DeathMatch:CancelTeam')
 
         # Stop the player's repeat
         player.stop_repeat()

@@ -12,7 +12,7 @@ from players.entity import Player
 
 # GunGame Imports
 #   Menus
-from gungame.core.menus._rankings import get_winners_menu
+from ._rankings import get_winners_menu
 
 
 # =============================================================================

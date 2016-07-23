@@ -7,14 +7,10 @@
 # =============================================================================
 from collections import defaultdict
 
-# Source.Python Imports
-#   Players
-from players.helpers import index_from_userid
-
 # GunGame Imports
 #   Players
-from gungame.core.players.attributes import player_attributes
-from gungame.core.players.instance import GunGamePlayer
+from .attributes import player_attributes
+from .instance import GunGamePlayer
 
 
 # =============================================================================
@@ -34,11 +30,8 @@ class _PlayerDictionary(dict):
 
     def __missing__(self, userid):
         """Called when a userid is not in the dictionary."""
-        # Get the player's index
-        index = index_from_userid(userid)
-
         # Get the GunGamePlayer instance for the userid
-        player = self[userid] = GunGamePlayer(index)
+        player = self[userid] = GunGamePlayer.from_userid(userid)
 
         # Loop through all items in the dictionary
         for uniqueid in self._removed_players:

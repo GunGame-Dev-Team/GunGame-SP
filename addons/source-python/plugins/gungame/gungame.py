@@ -1,4 +1,4 @@
-# ../gungame/gungame.py
+# ../gungame/.py
 
 """Weapon leveling game modification."""
 
@@ -26,25 +26,29 @@ from listeners.tick import Delay
 from translations.strings import LangStrings
 
 # GunGame Imports
-from gungame.info import info
+from .info import info
 #   Commands
-from gungame.core.commands import register_all_commands
-from gungame.core.commands import unregister_all_commands
+from .core.commands import register_all_commands
+from .core.commands import unregister_all_commands
 #   Config
-from gungame.core.config.manager import load_all_configs
+from .core.config import load_all_configs
 #   Events
-from gungame.core.events.storage import gg_resource_list
+from .core.events.storage import gg_resource_list
 #   Logger
-from gungame.core.logger import gg_logger
+from .core.logger import gg_logger
+#   Players
+from .core.players.database import winners_database
 #   Plugins
-from gungame.core.plugins.command import gg_command_manager
+from .core.plugins.command import gg_command_manager
+#   Sounds
+from .core.sounds import sound_manager
 #   Status
-from gungame.core.status import GunGameMatchStatus
-from gungame.core.status import GunGameStatus
+from .core.status import GunGameMatchStatus
+from .core.status import GunGameStatus
 #   Warmup
-from gungame.core.warmup import warmup_manager
+from .core.warmup import warmup_manager
 #   Weapons
-from gungame.core.weapons.manager import weapon_order_manager
+from .core.weapons.manager import weapon_order_manager
 
 
 # =============================================================================
@@ -58,7 +62,7 @@ _base_strings = LangStrings('gungame/load_and_unload')
 # >> LOAD & UNLOAD FUNCTIONS
 # =============================================================================
 def load():
-    """Initialize GunGame."""
+    """Initialize ."""
     # Initialize GunGame logging
     # TODO: Make sure to enable logging prior to the start message
     current = 1
@@ -76,10 +80,9 @@ def load():
     gg_logger.log_message(_base_strings[
         'Initialize:Events'].get_string(current=current, total=total))
     current += 1
-    gg_resource_list.load_events()
+    gg_resource_list.load_all_events()
 
     # Initialize GunGame commands/menus
-    # TODO: Initialize commands/menus
     gg_logger.log_message(_base_strings[
         'Initialize:Commands'].get_string(current=current, total=total))
     current += 1
@@ -90,12 +93,13 @@ def load():
     gg_logger.log_message(_base_strings[
         'Initialize:Sounds'].get_string(current=current, total=total))
     current += 1
+    sound_manager.load_sounds()
 
     # Initialize GunGame database
-    # TODO: Initialize database
     gg_logger.log_message(_base_strings[
         'Initialize:Database'].get_string(current=current, total=total))
     current += 1
+    winners_database.load_database()
 
     # Initialize GunGame configs
     gg_logger.log_message(_base_strings[
@@ -130,13 +134,13 @@ def load():
     GunGameStatus.MATCH = GunGameMatchStatus.INACTIVE
 
     # Import the listeners/events/commands/menus
-    from gungame.core.listeners import start_match
+    from .core.listeners import start_match
 
     Delay(0, start_match)
 
 
 def unload():
-    """Clean up GunGame."""
+    """Clean up ."""
     # Start the cleanup process
     current = 1
     total = len([x for x in _base_strings if x.startswith('Clean:')])

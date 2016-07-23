@@ -24,18 +24,18 @@ from listeners.tick import TickRepeat
 
 # GunGame Imports
 #   Config
-from gungame.core.config.warmup import weapon as warmup_weapon
-from gungame.core.config.warmup import time as warmup_time
-from gungame.core.config.warmup import min_players
-from gungame.core.config.warmup import max_extensions
-from gungame.core.config.warmup import players_reached
-from gungame.core.config.warmup import start_config
-from gungame.core.config.warmup import end_config
+from .config.warmup import weapon as warmup_weapon
+from .config.warmup import time as warmup_time
+from .config.warmup import min_players
+from .config.warmup import max_extensions
+from .config.warmup import players_reached
+from .config.warmup import start_config
+from .config.warmup import end_config
 #   Status
-from gungame.core.status import GunGameMatchStatus
-from gungame.core.status import GunGameStatus
+from .status import GunGameMatchStatus
+from .status import GunGameStatus
 #   Weapons
-from gungame.core.weapons.manager import weapon_order_manager
+from .weapons.manager import weapon_order_manager
 
 
 # =============================================================================

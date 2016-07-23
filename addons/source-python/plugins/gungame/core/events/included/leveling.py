@@ -14,7 +14,7 @@ from events.variable import StringVariable
 
 # GunGame Imports
 #   Events
-from gungame.core.events.resource import GGResourceFile
+from ..resource import GGResourceFile
 
 
 # =============================================================================

@@ -15,7 +15,7 @@ from time import time
 
 # GunGame Imports
 #   Paths
-from gungame.core.paths import GUNGAME_DATA_PATH
+from ..paths import GUNGAME_DATA_PATH
 
 
 # =============================================================================
@@ -60,6 +60,12 @@ class _WinsDatabase(defaultdict):
             'name varchar(31), wins varchar(10) DEFAULT 0, time_stamp '
             'varchar(31), last_win varchar(31), PRIMARY KEY(uniqueid DESC))')
         self.cursor.execute('PRAGMA auto_vacuum = 1')
+
+    def load_database(self):
+        """Fill the dictionary with the data from the stored database."""
+        # If there is already data, do not load
+        if self:
+            raise 'Data already loaded!'
 
         # Gather all data from the table
         data = self.cursor.execute(

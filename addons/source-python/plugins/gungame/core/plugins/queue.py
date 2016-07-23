@@ -7,10 +7,10 @@
 # =============================================================================
 from listeners.tick import Delay
 
-from gungame.core.events.included.plugins import GG_Plugin_Loaded
-from gungame.core.plugins import gg_plugins_logger
-from gungame.core.plugins.manager import gg_plugin_manager
-from gungame.core.plugins.valid import valid_plugins
+from ..events.included.plugins import GG_Plugin_Loaded
+from ..plugins import gg_plugins_logger
+from ..plugins.manager import gg_plugin_manager
+from ..plugins.valid import valid_plugins
 
 
 # =============================================================================

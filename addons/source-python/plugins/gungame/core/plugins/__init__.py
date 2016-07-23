@@ -6,7 +6,7 @@
 # >> IMPORTS
 # =============================================================================
 from translations.strings import LangStrings
-from gungame.core import gg_core_logger
+from .. import gg_core_logger
 
 
 # =============================================================================

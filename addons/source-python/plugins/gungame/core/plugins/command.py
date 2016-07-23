@@ -15,14 +15,14 @@ from translations.strings import LangStrings
 
 # GunGame Imports
 #   Credits
-from gungame.core.credits import gungame_credits
+from ..credits import gungame_credits
 #   Plugins
-from gungame.core.plugins import _plugin_strings
-from gungame.core.plugins import gg_plugins_logger
-from gungame.core.plugins.instance import GGLoadedPlugin
-from gungame.core.plugins.manager import gg_plugin_manager
-from gungame.core.plugins.queue import plugin_queue
-from gungame.core.plugins.valid import valid_plugins
+from . import _plugin_strings
+from . import gg_plugins_logger
+from .instance import GGLoadedPlugin
+from .manager import gg_plugin_manager
+from .queue import plugin_queue
+from .valid import valid_plugins
 
 
 # =============================================================================

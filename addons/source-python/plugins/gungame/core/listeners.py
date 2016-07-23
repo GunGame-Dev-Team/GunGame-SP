@@ -1,21 +1,15 @@
 # ../gungame/core/listeners.py
 
-"""Event and level listeners and other helper functions."""
+"""Event and level listeners and misc helper functions."""
 
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Python Imports
-#   Contextlib
-from contextlib import suppress
-
 # Source.Python Imports
 #   Colors
 from colors import BLUE
 from colors import RED
 from colors import WHITE
-#   Cvars
-from cvars import ConVar
 #   Entities
 from entities.entity import Entity
 #   Events
@@ -29,30 +23,31 @@ from listeners.tick import Delay
 
 # GunGame Imports
 #   Config
-from gungame.core.config.warmup import enabled as warmup_enabled
-from gungame.core.config.warmup import weapon as warmup_weapon
-from gungame.core.config.weapon import order_file
-from gungame.core.config.weapon import order_randomize
-from gungame.core.config.weapon import multikill_override
+from .config.misc import allow_kills_after_round
+from .config.warmup import enabled as warmup_enabled
+from .config.warmup import weapon as warmup_weapon
+from .config.weapon import order_file
+from .config.weapon import order_randomize
+from .config.weapon import multi_kill_override
 #   Credits
-from gungame.core.credits import gungame_credits
+from .credits import gungame_credits
 #   Events
-from gungame.core.events.included.match import GG_Start
+from .events.included.match import GG_Start
 #   Leaders
-from gungame.core.leaders import leader_manager
+from .leaders import leader_manager
 #   Messages
-from gungame.core.messages import message_manager
+from .messages import message_manager
 #   Players
-from gungame.core.players.attributes import AttributePostHook
-from gungame.core.players.dictionary import player_dictionary
+from .players.attributes import AttributePostHook
+from .players.dictionary import player_dictionary
 #   Status
-from gungame.core.status import GunGameMatchStatus
-from gungame.core.status import GunGameStatus
-from gungame.core.status import GunGameRoundStatus
+from .status import GunGameMatchStatus
+from .status import GunGameStatus
+from .status import GunGameRoundStatus
 #   Warmup
-from gungame.core.warmup import warmup_manager
+from .warmup import warmup_manager
 #   Weapons
-from gungame.core.weapons.manager import weapon_order_manager
+from .weapons.manager import weapon_order_manager
 
 
 # =============================================================================
@@ -79,18 +74,18 @@ def _player_spawn(game_event):
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         return
 
-    # Get the userid of the player
-    userid = game_event['userid']
-
     # Use try/except to get the player's instance
     try:
-        player = player_dictionary[userid]
+        player = player_dictionary[game_event['userid']]
     except ValueError:
         return
 
     # Verify that the player is on a team
     if player.team < 2:
         return
+
+    # Remove all weapons except for knife
+    player.remove_all_weapons(exclude='knife')
 
     # Give player their current weapon
     player.give_level_weapon()
@@ -112,7 +107,7 @@ def _player_death(game_event):
 
     # Is the round active or should kills after the round count?
     if (GunGameStatus.ROUND is GunGameRoundStatus.INACTIVE and
-            not ConVar('gg_count_after_round').get_int()):
+            not allow_kills_after_round.get_int()):
         return
 
     # Get the victim
@@ -139,11 +134,11 @@ def _player_death(game_event):
     if game_event['weapon'] != aplayer.level_weapon:
         return
 
-    # Increase the killer's multikill
-    aplayer.multikill += 1
+    # Increase the killer's multi_kill
+    aplayer.multi_kill += 1
 
     # Does the player need leveled up?
-    if aplayer.multikill < aplayer.level_multikill:
+    if aplayer.multi_kill < aplayer.level_multi_kill:
 
         # If not, no need to go further
         return
@@ -184,9 +179,9 @@ def _player_activate(game_event):
     # Print a message if the joining player is in the credits
     for credit_type in gungame_credits:
         for name in gungame_credits[credit_type]:
-            steamid = gungame_credits[credit_type][name]['steamid']
-            steamid_old = gungame_credits[credit_type][name]['steamid_old']
-            if player.steamid in (steamid, steamid_old):
+            steam_id2 = gungame_credits[credit_type][name]['steam_id2']
+            steam_id3 = gungame_credits[credit_type][name]['steam_id3']
+            if player.steamid in (steam_id2, steam_id3):
                 message_manager.chat_message(
                     'JoinPlayer_Credits', player=player,
                     credit_type=credit_type)
@@ -219,7 +214,7 @@ def _round_end(game_event):
 
 
 # =============================================================================
-# >> OTHER GAME EVENTS
+# >> misc GAME EVENTS
 # =============================================================================
 @Event('server_cvar')
 def _server_cvar(game_event):
@@ -240,8 +235,8 @@ def _server_cvar(game_event):
         # Set the randomize value
         weapon_order_manager.set_randomize(cvarvalue)
 
-    # Did the multikill override value change?
-    elif cvarname == multikill_override.get_name():
+    # Did the multi_kill override value change?
+    elif cvarname == multi_kill_override.get_name():
 
         # Print out the new weapon order
         weapon_order_manager.print_order()
@@ -347,21 +342,21 @@ def _level_shutdown():
 # =============================================================================
 # >> ATTRIBUTE LISTENERS
 # =============================================================================
-@AttributePostHook('multikill')
-def _post_multikill(player, attribute, new_value, old_value):
-    """Send multikill info message."""
-    # Is the multikill being reset to 0?
+@AttributePostHook('multi_kill')
+def _post_multi_kill(player, attribute, new_value, old_value):
+    """Send multi_kill info message."""
+    # Is the multi_kill being reset to 0?
     if not new_value:
         return
 
     # Is the player going to level up?
-    multikill = player.level_multikill
-    if multikill == new_value:
+    multi_kill = player.level_multi_kill
+    if multi_kill == new_value:
         return
 
-    # Send the multikill message
+    # Send the multi_kill message
     player.hint_message(
-        message='Multikill_Notification', kills=new_value, total=multikill)
+        message='multi_kill_Notification', kills=new_value, total=multi_kill)
 
 
 # =============================================================================
@@ -396,11 +391,11 @@ def _send_level_info(player):
     text += message_manager['LevelInfo_Current_Weapon'].get_string(
         language, player=player)
 
-    # Get the player's current level's multikill value
-    multikill = player.level_multikill
+    # Get the player's current level's multi_kill value
+    multi_kill = player.level_multi_kill
 
-    # If the multikill value is not 1, add the multikill to the message
-    if multikill > 1:
+    # If the multi_kill value is not 1, add the multi_kill to the message
+    if multi_kill > 1:
         text += message_manager['LevelInfo_Required_Kills'].get_string(
             language, player=player)
 

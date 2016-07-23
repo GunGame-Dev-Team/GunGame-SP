@@ -11,7 +11,7 @@ from configobj import ConfigObj
 
 # GunGame Imports
 #   Paths
-from gungame.core.paths import GUNGAME_DATA_PATH
+from .paths import GUNGAME_DATA_PATH
 
 
 # =============================================================================

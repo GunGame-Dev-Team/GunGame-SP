@@ -14,7 +14,7 @@ from path import Path
 from events.resource import ResourceFile
 
 # GunGame Imports
-from gungame.core.events.storage import gg_resource_list
+from .storage import gg_resource_list
 
 
 # =============================================================================
@@ -32,5 +32,5 @@ class GGResourceFile(ResourceFile):
 
     def __init__(self, filepath, *events):
         """Add 'gungame' to the path before initialization."""
-        super().__init__(Path('gungame').joinpath(filepath), *events)
+        super().__init__(Path('gungame') / filepath, *events)
         gg_resource_list.append(self)

@@ -9,10 +9,10 @@ import sys
 
 from plugins.manager import PluginManager
 
-from gungame.core.events.included.plugins import GG_Plugin_Unloaded
-from gungame.core.paths import GUNGAME_PLUGINS_PATH
-from gungame.core.plugins import gg_plugins_logger
-from gungame.core.plugins.valid import valid_plugins
+from ..events.included.plugins import GG_Plugin_Unloaded
+from ..paths import GUNGAME_PLUGINS_PATH
+from . import gg_plugins_logger
+from .valid import valid_plugins
 
 
 # =============================================================================

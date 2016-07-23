@@ -5,9 +5,8 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-from contextlib import suppress
-from importlib import import_module
-
+# Site-Package Imports
+#   Path
 from path import Path
 
 # Source.Python Imports
@@ -19,14 +18,13 @@ from translations.strings import LangStrings
 
 # GunGame Imports
 #   Plugins
-from gungame.core.plugins.valid import valid_plugins
+from ..plugins.valid import valid_plugins
 
 
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = ('GunGameConfigManager',
-           'load_all_configs',
            )
 
 
@@ -43,14 +41,14 @@ class GunGameConfigManager(ConfigManager):
 
         # Get the path if file is a valid plugin
         try:
-            folder = valid_plugins.get_plugin_type(name)+ '_plugins'
-            filepath = filepath.joinpath(folder, name)
+            folder = valid_plugins.get_plugin_type(name) + '_plugins'
+            filepath = filepath / folder / name
             cvar_prefix = name + '_'
 
         # Get the path for a base config
         except ValueError:
             folder = 'core'
-            filepath = filepath.joinpath(name + '_settings')
+            filepath = filepath / name + '_settings'
             cvar_prefix = 'gg_{0}_'.format(name)
 
         try:
@@ -67,6 +65,7 @@ class GunGameConfigManager(ConfigManager):
     def cvar(
             self, name, default=0, description=None,
             flags=0, min_value=None, max_value=None):
+        """Override cvar method to add cvar as _GunGameCvarManager object."""
         section = _GunGameCvarManager(
             name, default, description, flags, min_value,
             max_value, self.cvar_prefix, self.translations)
@@ -76,12 +75,12 @@ class GunGameConfigManager(ConfigManager):
 
 
 class _GunGameCvarManager(_CvarManager):
-    """"""
+    """Class used to more easily add translations for cvars in config files."""
 
     def __init__(
             self, name, default, description, flags,
             min_value, max_value, cvar_prefix, translations):
-        """"""
+        """Get the true description and store the translations."""
         self._base_item = None
         if description is None:
             description = name
@@ -94,31 +93,14 @@ class _GunGameCvarManager(_CvarManager):
         self.translations = translations
 
     def add_text(self, **tokens):
-        """"""
+        """Add all other text for the ConVar."""
         if self._base_item is None:
             raise ValueError('No translations set for instance.')
         for item in sorted(self.translations):
             if not item.startswith(self._base_item):
                 continue
-            if not item.count(':') >= 2:
+            if item.count(':') < 2:
                 raise ValueError('Invalid item.')
             attribute = item.replace(self._base_item, '', 1).split(':')[0]
             getattr(self, attribute).append(
                 self.translations[item].get_string(**tokens))
-
-
-# =============================================================================
-# >> FUNCTIONS
-# =============================================================================
-def load_all_configs():
-    """Load all GunGame configs."""
-    for file in Path(__file__).parent.files('*.py'):
-        if file.namebase in ('__init__', Path(__file__).namebase):
-            continue
-        import_module(
-            'gungame.core.config.{0}'.format(file.namebase))
-    for plugin_name in valid_plugins.all:
-        plugin_type = valid_plugins.get_plugin_type(plugin_name)
-        with suppress(ImportError):
-            import_module('gungame.plugins.{0}.{1}.configuration'.format(
-                plugin_type, plugin_name))

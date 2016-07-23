@@ -11,7 +11,7 @@ from cvars.flags import ConVarFlags
 
 # GunGame Imports
 #   Config
-from gungame.core.config.manager import GunGameConfigManager
+from .manager import GunGameConfigManager
 
 
 # =============================================================================

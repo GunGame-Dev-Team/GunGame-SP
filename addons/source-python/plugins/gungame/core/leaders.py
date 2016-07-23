@@ -11,14 +11,14 @@ from filters.players import PlayerIter
 
 # GUnGame Imports
 #   Events
-from gungame.core.events.included.leaders import GG_Leader_Disconnect
-from gungame.core.events.included.leaders import GG_Leader_LostLevel
-from gungame.core.events.included.leaders import GG_New_Leader
-from gungame.core.events.included.leaders import GG_Tied_Leader
+from .events.included.leaders import GG_Leader_Disconnect
+from .events.included.leaders import GG_Leader_LostLevel
+from .events.included.leaders import GG_New_Leader
+from .events.included.leaders import GG_Tied_Leader
 #   Messages
-from gungame.core.messages import message_manager
+from .messages import message_manager
 #   Players
-from gungame.core.players.dictionary import player_dictionary
+from .players.dictionary import player_dictionary
 
 
 # =============================================================================

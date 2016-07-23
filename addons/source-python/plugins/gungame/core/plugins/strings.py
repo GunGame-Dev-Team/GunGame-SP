@@ -11,7 +11,7 @@ from translations.strings import LangStrings
 
 # GunGame Imports
 #   Plugins
-from gungame.core.plugins.valid import valid_plugins
+from .valid import valid_plugins
 
 
 # =============================================================================

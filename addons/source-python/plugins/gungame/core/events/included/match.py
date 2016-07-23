@@ -12,7 +12,7 @@ from events.variable import ShortVariable
 
 # GunGame Imports
 #   Events
-from gungame.core.events.resource import GGResourceFile
+from ..resource import GGResourceFile
 
 
 # =============================================================================

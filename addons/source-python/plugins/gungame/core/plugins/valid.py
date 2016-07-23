@@ -9,7 +9,7 @@ from importlib import import_module
 from warnings import warn
 
 # GunGame Imports
-from gungame.core.paths import GUNGAME_PLUGINS_PATH
+from ..paths import GUNGAME_PLUGINS_PATH
 
 
 # =============================================================================

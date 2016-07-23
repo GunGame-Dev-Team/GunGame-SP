@@ -22,12 +22,12 @@ class _GGResourceList(list):
         super().append(resource)
         resource.write()
 
-    def write(self):
+    def write_all_events(self):
         """Write all files in the list."""
         for resource in self:
             resource.write()
 
-    def load_events(self):
+    def load_all_events(self):
         """Load all events from all res files."""
         for resource in self:
             resource.load_events()
