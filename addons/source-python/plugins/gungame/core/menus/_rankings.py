@@ -28,12 +28,15 @@ def get_winners_menu(player):
         return menu
 
     winners = sorted(
-        winners_database, key=lambda uniqueid: (
-            winners_database[uniqueid].wins,
-            -winners_database[uniqueid].time_stamp), reverse=True)
-    for rank, uniqueid in enumerate(winners, 1):
-        instance = winners_database[uniqueid]
+        winners_database,
+        key=lambda unique_id: (
+            winners_database[unique_id].wins,
+            -winners_database[unique_id].time_stamp),
+        reverse=True
+    )
+    for rank, unique_id in enumerate(winners, 1):
+        instance = winners_database[unique_id]
         menu.append(ListOption(
             rank, '{0} [{1}]'.format(instance.name, instance.wins),
-            uniqueid, player.uniqueid == uniqueid, False))
+            unique_id, player.unique_id == unique_id, False))
     return menu

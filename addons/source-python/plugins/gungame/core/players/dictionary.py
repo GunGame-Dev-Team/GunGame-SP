@@ -34,10 +34,10 @@ class _PlayerDictionary(dict):
         player = self[userid] = GunGamePlayer.from_userid(userid)
 
         # Loop through all items in the dictionary
-        for uniqueid in self._removed_players:
+        for unique_id in self._removed_players:
 
-            # Does the current uniqueid equal the given player's uniqueid?
-            if uniqueid == player.uniqueid:
+            # Does the current unique_id equal the given player's unique_id?
+            if unique_id == player.unique_id:
 
                 # Break the loop
                 break
@@ -46,19 +46,19 @@ class _PlayerDictionary(dict):
         else:
 
             # Set instance to None
-            uniqueid = None
+            unique_id = None
 
         # Loop through all registered attributes
         for attribute in player_attributes:
 
             # Does the previous instance have the given attribute?
-            if (uniqueid is not None and
-                    attribute in self._removed_players[uniqueid]):
+            if (unique_id is not None and
+                    attribute in self._removed_players[unique_id]):
 
                 # Set the player's attribute to the previous instance's
                 setattr(
                     player, attribute,
-                    self._removed_players[uniqueid][attribute])
+                    self._removed_players[unique_id][attribute])
 
             # Does the previous instance not have the given attribute?
             else:
@@ -74,9 +74,9 @@ class _PlayerDictionary(dict):
         """Store the player's values in case they rejoin."""
         if userid not in self:
             return
-        uniqueid = self[userid].uniqueid
+        unique_id = self[userid].unique_id
         for attribute in player_attributes:
-            self._removed_players[uniqueid][attribute] = getattr(
+            self._removed_players[unique_id][attribute] = getattr(
                 self[userid], attribute)
         del self[userid]
 

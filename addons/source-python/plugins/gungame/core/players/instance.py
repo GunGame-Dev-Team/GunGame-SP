@@ -235,14 +235,14 @@ class GunGamePlayer(Player):
     # =========================================================================
     def update_time_stamp(self):
         """Update the player's time stamp."""
-        if self.uniqueid in winners_database:
+        if self.unique_id in winners_database:
             winners_database.update_player_time_stamp(self)
 
     @property
     def wins(self):
         """Return the number of wins for the player."""
-        if self.uniqueid in winners_database:
-            return winners_database[self.uniqueid].wins
+        if self.unique_id in winners_database:
+            return winners_database[self.unique_id].wins
         return 0
 
     def increment_wins(self):
@@ -254,7 +254,7 @@ class GunGamePlayer(Player):
     def rank(self):
         """Return the player's rank on the server."""
         # If the player is not in the database, they have no wins
-        if self.uniqueid not in winners_database:
+        if self.unique_id not in winners_database:
             return 0
 
         # Start with the base rank
@@ -267,10 +267,10 @@ class GunGamePlayer(Player):
         tied_players = list()
 
         # Loop through all players in the database
-        for uniqueid in winners_database:
+        for unique_id in winners_database:
 
             # Get the current players wins
-            current_wins = winners_database[uniqueid].wins
+            current_wins = winners_database[unique_id].wins
 
             # Does the current player have more wins than this player?
             if current_wins > wins:
@@ -278,7 +278,7 @@ class GunGamePlayer(Player):
 
             # Is the current player tied with this player?
             if current_wins == wins:
-                tied_players.append(uniqueid)
+                tied_players.append(unique_id)
 
         # Are there any tied players?
         if len(tied_players) > 1:
@@ -286,10 +286,10 @@ class GunGamePlayer(Player):
             # Sort the tied players by their last win
             sorted_ties = sorted(
                 tied_players,
-                key=lambda uniqueid: winners_database[uniqueid].last_win)
+                key=lambda unique_id: winners_database[unique_id].last_win)
 
             # Get the final rank of the player
-            rank += sorted_ties.index(self.uniqueid)
+            rank += sorted_ties.index(self.unique_id)
 
         # Return the player's rank
         return rank

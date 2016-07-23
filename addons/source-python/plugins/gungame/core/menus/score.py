@@ -44,6 +44,6 @@ def send_score_menu(index):
             current_player = player_dictionary[userid]
             menu.append(ListOption(
                 current_player.level, current_player.name,
-                current_player.uniqueid,
-                current_player.uniqueid == player.uniqueid, False))
+                current_player.unique_id,
+                current_player.unique_id == player.unique_id, False))
     menu.send(index)
