@@ -5,16 +5,15 @@ __pycache__
 *.cfg
 *.res
 *_server.ini
-*.db
 
 # Custom plugin files
-addons/source-python/data/plugins/gungame/*.ini
-addons/source-python/plugins/gungame/plugins/custom/*
-resource/source-python/translations/gungame/custom_plugins/*.ini
+addons/source-python/data/plugins/gungame/
+addons/source-python/plugins/gungame/plugins/custom/
+resource/source-python/translations/gungame/custom_plugins/
 
 # Server-specific configuration files
-cfg/source-python/gungame/weapon_orders/*.txt
-cfg/source-python/sound_packs/*.ini
+cfg/source-python/gungame/weapon_orders/
+cfg/source-python/gungame/sound_packs/
 
 # PyCharm files
 .idea/
