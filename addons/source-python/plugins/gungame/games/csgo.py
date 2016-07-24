@@ -5,19 +5,15 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Python Imports
-#   Warnings
+# Python
 from warnings import warn
 
-# Source.Python Imports
-#   Core
+# Source.Python
 from core import GAME_NAME
 
-# GunGame Imports
-#   Messages
-from gungame.core.messages import message_manager
-#   Players
-from gungame.core.players.instance import GunGamePlayer
+# GunGame
+from ..core.messages import message_manager
+from ..core.players.instance import GunGamePlayer
 
 
 # =============================================================================
@@ -40,8 +36,12 @@ class _NoMessage(object):
 
     def _message_hook(self, *args, **kwargs):
         """Override for messages that do not work."""
-        warn('Message type "{0}" not supported for game "{1}".'.format(
-            self.message_type, GAME_NAME))
+        warn(
+            'Message type "{0}" not supported for game "{1}".'.format(
+                self.message_type,
+                GAME_NAME,
+            )
+        )
 
 # Set the overrides
 message_manager.hud_message = _NoMessage('HudMsg')._message_hook

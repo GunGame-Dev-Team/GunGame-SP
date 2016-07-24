@@ -5,48 +5,26 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Source.Python Imports
-#   Colors
-from colors import BLUE
-from colors import RED
-from colors import WHITE
-#   Entities
+# Source.Python
+from colors import BLUE, RED, WHITE
 from entities.entity import Entity
-#   Events
 from events import Event
-#   Filters
 from filters.entities import EntityIter
-#   Listeners
-from listeners import OnLevelInit
-from listeners import OnLevelShutdown
+from listeners import OnLevelInit, OnLevelShutdown
 from listeners.tick import Delay
 
-# GunGame Imports
-#   Config
+# GunGame
 from .config.misc import allow_kills_after_round
-from .config.warmup import enabled as warmup_enabled
-from .config.warmup import weapon as warmup_weapon
-from .config.weapon import order_file
-from .config.weapon import order_randomize
-from .config.weapon import multi_kill_override
-#   Credits
+from .config.warmup import enabled as warmup_enabled, weapon as warmup_weapon
+from .config.weapon import order_file, order_randomize, multi_kill_override
 from .credits import gungame_credits
-#   Events
 from .events.included.match import GG_Start
-#   Leaders
 from .leaders import leader_manager
-#   Messages
 from .messages import message_manager
-#   Players
 from .players.attributes import AttributePostHook
 from .players.dictionary import player_dictionary
-#   Status
-from .status import GunGameMatchStatus
-from .status import GunGameStatus
-from .status import GunGameRoundStatus
-#   Warmup
+from .status import GunGameMatchStatus, GunGameRoundStatus, GunGameStatus
 from .warmup import warmup_manager
-#   Weapons
 from .weapons.manager import weapon_order_manager
 
 
@@ -60,8 +38,9 @@ _joined_players = set()
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('start_match',
-           )
+__all__ = (
+    'start_match',
+)
 
 
 # =============================================================================
@@ -106,45 +85,47 @@ def _player_death(game_event):
         return
 
     # Is the round active or should kills after the round count?
-    if (GunGameStatus.ROUND is GunGameRoundStatus.INACTIVE and
-            not allow_kills_after_round.get_int()):
+    if (
+        GunGameStatus.ROUND is GunGameRoundStatus.INACTIVE and
+        not allow_kills_after_round.get_int()
+    ):
         return
 
     # Get the victim
-    victim = game_event['userid']
+    userid = game_event['userid']
 
     # Get the attacker
     attacker = game_event['attacker']
 
     # Was this a suicide?
-    if attacker in (victim, 0):
+    if attacker in (userid, 0):
         return
 
     # Get the victim's instance
-    vplayer = player_dictionary[victim]
+    victim = player_dictionary[userid]
 
     # Get the attacker's instance
-    aplayer = player_dictionary[attacker]
+    killer = player_dictionary[attacker]
 
     # Was this a team-kill?
-    if vplayer.team == aplayer.team:
+    if victim.team == killer.team:
         return
 
     # Did the killer kill using their level's weapon?
-    if game_event['weapon'] != aplayer.level_weapon:
+    if game_event['weapon'] != killer.level_weapon:
         return
 
     # Increase the killer's multi_kill
-    aplayer.multi_kill += 1
+    killer.multi_kill += 1
 
     # Does the player need leveled up?
-    if aplayer.multi_kill < aplayer.level_multi_kill:
+    if killer.multi_kill < killer.level_multi_kill:
 
         # If not, no need to go further
         return
 
     # Level the player up
-    aplayer.increase_level(1, victim, 'kill')
+    killer.increase_level(1, userid, 'kill')
 
 
 @Event('player_activate')
@@ -183,8 +164,10 @@ def _player_activate(game_event):
             steam_id3 = gungame_credits[credit_type][name]['steam_id3']
             if player.steamid in (steam_id2, steam_id3):
                 message_manager.chat_message(
-                    'JoinPlayer_Credits', player=player,
-                    credit_type=credit_type)
+                    'JoinPlayer_Credits',
+                    player=player,
+                    credit_type=credit_type,
+                )
                 return
 
 
@@ -272,11 +255,17 @@ def _gg_win(game_event):
 
     # Send the winner messages
     message_manager.chat_message(
-        index=winner.index, message='Winner_Player', name=winner.name)
+        index=winner.index,
+        message='Winner_Player',
+        name=winner.name,
+    )
     for second in range(4):
         Delay(
-            second, message_manager.center_message,
-            message='Winner_Player_Center', name=winner.name)
+            second,
+            message_manager.center_message,
+            message='Winner_Player_Center',
+            name=winner.name,
+        )
     color = {2: RED, 3: BLUE}.get(winner.team, WHITE)
     message_manager.top_message('Player_Won', color, 4.0, name=winner.name)
 
@@ -356,7 +345,10 @@ def _post_multi_kill(player, attribute, new_value, old_value):
 
     # Send the multi_kill message
     player.hint_message(
-        message='multi_kill_Notification', kills=new_value, total=multi_kill)
+        message='multi_kill_Notification',
+        kills=new_value,
+        total=multi_kill,
+    )
 
 
 # =============================================================================
@@ -385,11 +377,16 @@ def _send_level_info(player):
 
     # Get the player's current level information
     text = message_manager['LevelInfo_Current_Level'].get_string(
-        language, player=player, total=weapon_order_manager.max_levels)
+        language,
+        player=player,
+        total=weapon_order_manager.max_levels,
+    )
 
     # Add the player's weapon information to the message
     text += message_manager['LevelInfo_Current_Weapon'].get_string(
-        language, player=player)
+        language,
+        player=player,
+    )
 
     # Get the player's current level's multi_kill value
     multi_kill = player.level_multi_kill
@@ -397,7 +394,9 @@ def _send_level_info(player):
     # If the multi_kill value is not 1, add the multi_kill to the message
     if multi_kill > 1:
         text += message_manager['LevelInfo_Required_Kills'].get_string(
-            language, player=player)
+            language,
+            player=player,
+        )
 
     # Get the current leaders
     leaders = leader_manager.current_leaders
@@ -416,23 +415,27 @@ def _send_level_info(player):
 
         # Add the current leader text to the message
         text += message_manager[
-            'LevelInfo_Current_Leader'].get_string(language)
+            'LevelInfo_Current_Leader'
+        ].get_string(language)
 
     # Is the player one of multiple current leaders?
     elif len(leaders) > 1 and player.userid in leaders:
 
         # Add the amongst leaders text to the message
         text += message_manager[
-            'LevelInfo_Amongst_Leaders'].get_string(language)
+            'LevelInfo_Amongst_Leaders'
+        ].get_string(language)
 
     # Is the player not one of the current leaders?
     else:
 
         # Add the current leader text to the message
         text += message_manager['LevelInfo_Leader_Level'].get_string(
-            language, level=leader_level,
+            language,
+            level=leader_level,
             total=weapon_order_manager.max_levels,
-            weapon=weapon_order_manager.active[leader_level].weapon)
+            weapon=weapon_order_manager.active[leader_level].weapon,
+        )
 
     # Send the player's level information message
     player.hint_message(message=text)

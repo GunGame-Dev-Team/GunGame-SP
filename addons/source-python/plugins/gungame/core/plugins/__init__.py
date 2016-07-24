@@ -5,7 +5,10 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Source.Python
 from translations.strings import LangStrings
+
+# GunGame
 from .. import gg_core_logger
 
 

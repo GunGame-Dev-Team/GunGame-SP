@@ -5,10 +5,10 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Python
 from collections import defaultdict
 
-# GunGame Imports
-#   Players
+# GunGame
 from .attributes import player_attributes
 from .instance import GunGamePlayer
 
@@ -16,8 +16,9 @@ from .instance import GunGamePlayer
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('player_dictionary',
-           )
+__all__ = (
+    'player_dictionary',
+)
 
 
 # =============================================================================
@@ -52,20 +53,27 @@ class _PlayerDictionary(dict):
         for attribute in player_attributes:
 
             # Does the previous instance have the given attribute?
-            if (unique_id is not None and
-                    attribute in self._removed_players[unique_id]):
+            if (
+                unique_id in self._removed_players and
+                attribute in self._removed_players[unique_id]
+            ):
 
                 # Set the player's attribute to the previous instance's
                 setattr(
-                    player, attribute,
-                    self._removed_players[unique_id][attribute])
+                    player,
+                    attribute,
+                    self._removed_players[unique_id][attribute],
+                )
 
             # Does the previous instance not have the given attribute?
             else:
 
                 # Set the player's attribute to the default value
                 setattr(
-                    player, attribute, player_attributes[attribute].default)
+                    player,
+                    attribute,
+                    player_attributes[attribute].default,
+                )
 
         # Return the current instance
         return player
@@ -77,7 +85,9 @@ class _PlayerDictionary(dict):
         unique_id = self[userid].unique_id
         for attribute in player_attributes:
             self._removed_players[unique_id][attribute] = getattr(
-                self[userid], attribute)
+                self[userid],
+                attribute,
+            )
         del self[userid]
 
     def clear(self):

@@ -5,8 +5,7 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Source.Python Imports
-#   Menus
+# Source.Python
 from menus import PagedOption
 from menus.base import _translate_text
 from menus.radio import PagedRadioOption
@@ -23,23 +22,26 @@ class ListOption(PagedOption):
     """
 
     def __init__(
-            self, choice_index, text, value=None,
-            highlight=True, selectable=False):
+        self, choice_index, text, value=None,
+        highlight=True, selectable=False,
+    ):
         """Store the choice_index which is the number to use in the list."""
         super().__init__(text, value, highlight, selectable)
         self.choice_index = choice_index
 
     def _get_highlight_prefix(self):
-        """Return highlighted prefex if needed."""
-        return '->' if isinstance(
-            self, PagedRadioOption) and self.highlight else ''
+        """Return highlighted prefix if needed."""
+        if isinstance(self, PagedRadioOption) and self.highlight:
+            return '->'
+        return ''
 
     def _render(self, player_index, choice_index=None):
         """Return the rendered string for the option."""
         return '{0}{1}. {2}\n'.format(
             self._get_highlight_prefix(),
             self.choice_index,
-            _translate_text(self.text, player_index))
+            _translate_text(self.text, player_index)
+        )
 
 
 class StarOption(PagedOption):

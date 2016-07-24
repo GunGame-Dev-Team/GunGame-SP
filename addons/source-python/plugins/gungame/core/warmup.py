@@ -5,62 +5,62 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Python Imports
-#   Itertools
+# Python
 from itertools import cycle
-#    Random
 from random import shuffle
-#   Warnings
 from warnings import warn
 
-# Source.Python Imports
-#   Engines
+# Source.Python
 from engines.server import engine_server
-#   Filters
 from filters.players import PlayerIter
 from filters.weapons import WeaponClassIter
-#   Listeners
 from listeners.tick import TickRepeat
 
-# GunGame Imports
-#   Config
-from .config.warmup import weapon as warmup_weapon
-from .config.warmup import time as warmup_time
-from .config.warmup import min_players
-from .config.warmup import max_extensions
-from .config.warmup import players_reached
-from .config.warmup import start_config
-from .config.warmup import end_config
-#   Status
-from .status import GunGameMatchStatus
-from .status import GunGameStatus
-#   Weapons
+# GunGame
+from .config.warmup import (
+    weapon as warmup_weapon, time as warmup_time, min_players, max_extensions,
+    players_reached, start_config, end_config,
+)
+from .status import GunGameMatchStatus, GunGameStatus
 from .weapons.manager import weapon_order_manager
 
 
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('_WarmupManager',
-           'warmup_manager',
-           )
+__all__ = (
+    '_WarmupManager',
+    'warmup_manager',
+)
 
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
 # Get all possible warmup weapons
 _possible_weapons = set(
-    [weapon.basename for weapon in WeaponClassIter('primary')])
+    [
+        weapon.basename for weapon in WeaponClassIter('primary')
+    ]
+)
 _possible_weapons.update(
-    [weapon.basename for weapon in WeaponClassIter('secondary')])
+    [
+        weapon.basename for weapon in WeaponClassIter('secondary')
+    ]
+)
 _possible_weapons.update(
-    [weapon.basename for weapon in WeaponClassIter('explosive')])
+    [
+        weapon.basename for weapon in WeaponClassIter('explosive')
+    ]
+)
 if 'incendiary' in WeaponClassIter.filters:
     _possible_weapons.update(
-        [weapon.basename for weapon in WeaponClassIter('incendiary')])
+        [
+            weapon.basename for weapon in WeaponClassIter('incendiary')
+        ]
+    )
 
 # Get a generator for human players
-_human_nospec = PlayerIter('human', ['spec', 'un'])
+_human_no_spec = PlayerIter('human', ['spec', 'un'])
 
 
 # =============================================================================
@@ -127,8 +127,11 @@ class _WarmupManager(object):
         if ',' in current:
 
             # Store the weapons from the given list to the weapon cycle
-            weapons = [weapon for weapon in current.split(
-                ',') if weapon in _possible_weapons]
+            weapons = [
+                weapon for weapon in current.split(
+                    ','
+                ) if weapon in _possible_weapons
+            ]
             if len(weapons):
                 self._weapon_cycle = cycle(weapons)
                 return
@@ -148,7 +151,8 @@ class _WarmupManager(object):
         if self._warmup_time <= 0:
             warn(
                 '"gg_warmup_time" is set to an invalid number.' +
-                '  Skipping warmup round.')
+                '  Skipping warmup round.'
+            )
             self.end_warmup()
             return
 
@@ -202,7 +206,7 @@ class _WarmupManager(object):
             return
 
         # Has the player limit been reached?
-        if len(list(_human_nospec)) > min_players.get_int():
+        if len(list(_human_no_spec)) > min_players.get_int():
 
             # Get what to do when the player limit is reached
             current = players_reached.get_int()

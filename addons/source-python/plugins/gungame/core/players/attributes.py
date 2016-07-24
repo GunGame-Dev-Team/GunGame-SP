@@ -6,15 +6,16 @@
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('AttributePostHook',
-           'AttributePreHook',
-           '_AttributeBase',
-           '_AttributeHooks',
-           '_PlayerAttributes',
-           'attribute_post_hooks',
-           'attribute_pre_hooks',
-           'player_attributes',
-           )
+__all__ = (
+    'AttributePostHook',
+    'AttributePreHook',
+    '_AttributeBase',
+    '_AttributeHooks',
+    '_PlayerAttributes',
+    'attribute_post_hooks',
+    'attribute_pre_hooks',
+    'player_attributes',
+)
 
 
 # =============================================================================
@@ -43,7 +44,10 @@ class _PlayerAttributes(dict):
 
             # If not, raise an error
             raise ValueError(
-                'Given attribute "{0}" is already registered'.format(item))
+                'Given attribute "{0}" is already registered'.format(
+                    item,
+                )
+            )
 
         # Is the value given an _Attribute instance?
         if not isinstance(value, _Attribute):
@@ -51,7 +55,10 @@ class _PlayerAttributes(dict):
             # If not, raise an error
             raise TypeError(
                 'Given value "{0}" is not an '
-                '_Attribute instance'.format(value))
+                '_Attribute instance'.format(
+                    value,
+                )
+            )
 
         # Add the item to the dictionary
         super().__setitem__(item, value)
@@ -140,7 +147,10 @@ class _AttributeHooks(dict):
         # Is the attribute hooked?
         if attribute not in self:
             raise ValueError(
-                'Attribute "{0}" is not hooked.'.format(attribute))
+                'Attribute "{0}" is not hooked.'.format(
+                    attribute,
+                )
+            )
 
         # Remove the callback from the attribute's list
         self[attribute].remove(callback)

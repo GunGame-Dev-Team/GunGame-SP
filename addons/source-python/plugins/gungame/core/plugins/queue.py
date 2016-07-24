@@ -5,8 +5,10 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Source.Python
 from listeners.tick import Delay
 
+# GunGame
 from ..events.included.plugins import GG_Plugin_Loaded
 from ..plugins import gg_plugins_logger
 from ..plugins.manager import gg_plugin_manager
@@ -22,9 +24,10 @@ gg_plugins_queue_logger = gg_plugins_logger.queue
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('_PluginQueue',
-           'plugin_queue',
-           )
+__all__ = (
+    '_PluginQueue',
+    'plugin_queue',
+)
 
 
 # =============================================================================
@@ -40,7 +43,11 @@ class _PluginQueue(dict):
     def __missing__(self, item):
         """Add the item to its queue and loop through queues after 1 tick."""
         if item not in ('load', 'unload', 'reload'):
-            raise ValueError('Invalid plugin type "{0}"'.format(item))
+            raise ValueError(
+                'Invalid plugin type "{0}"'.format(
+                    item,
+                )
+            )
         if not self:
             Delay(0, self._loop_through_queues)
         value = self[item] = set()
@@ -79,15 +86,21 @@ class _PluginQueue(dict):
             if plugin is None:
 
                 # Send a message that the plugin was not loaded
-                self.logger.log_message(self.prefix + self.translations[
-                    'Unable to Load'].get_string(plugin=plugin_name))
+                self.logger.log_message(
+                    self.prefix + self.translations[
+                        'Unable to Load'
+                    ].get_string(plugin=plugin_name)
+                )
 
                 # No need to go further
                 return
 
             # Send a message that the plugin was loaded
-            self.logger.log_message(self.prefix + self.translations[
-                'Successful Load'].get_string(plugin=plugin_name))
+            self.logger.log_message(
+                self.prefix + self.translations[
+                    'Successful Load'
+                ].get_string(plugin=plugin_name)
+            )
 
             # Fire the gg_plugin_load event
             with GG_Plugin_Loaded() as event:

@@ -5,24 +5,21 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Python Imports
-#   Collections
+# Python
 from collections import defaultdict
-#   SQLite3
-from sqlite3 import connect
-#   Time
+from sqlite3 import connect, DatabaseError
 from time import time
 
-# GunGame Imports
-#   Paths
+# GunGame
 from ..paths import GUNGAME_DATA_PATH
 
 
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('winners_database',
-           )
+__all__ = (
+    'winners_database',
+)
 
 
 # =============================================================================
@@ -58,19 +55,21 @@ class _WinsDatabase(defaultdict):
         self.cursor.execute(
             'CREATE TABLE IF NOT EXISTS gungame_winners(unique_id varchar(20), '
             'name varchar(31), wins varchar(10) DEFAULT 0, time_stamp '
-            'varchar(31), last_win varchar(31), PRIMARY KEY(unique_id DESC))')
+            'varchar(31), last_win varchar(31), PRIMARY KEY(unique_id DESC))'
+        )
         self.cursor.execute('PRAGMA auto_vacuum = 1')
 
     def load_database(self):
         """Fill the dictionary with the data from the stored database."""
         # If there is already data, do not load
         if self:
-            raise 'Data already loaded!'
+            raise DatabaseError('Data already loaded!')
 
         # Gather all data from the table
         data = self.cursor.execute(
             'SELECT unique_id, name, wins, time_stamp, '
-            'last_win FROM gungame_winners')
+            'last_win FROM gungame_winners'
+        )
         data = data.fetchall()
 
         # Are there no winners to add?
@@ -109,7 +108,8 @@ class _WinsDatabase(defaultdict):
             self.cursor.execute(
                 'INSERT INTO gungame_winners (name, unique_id, wins, '
                 'time_stamp, last_win) VALUES(?, ?, ?, ?, ?)',
-                (player.name, player.unique_id, 0, time_stamp, time_stamp))
+                (player.name, player.unique_id, 0, time_stamp, time_stamp)
+            )
 
         # Get the winner's instance
         instance = self[player.unique_id]
@@ -125,7 +125,9 @@ class _WinsDatabase(defaultdict):
             'UPDATE gungame_winners SET name=?, time_stamp=?, '
             'wins=?, last_win=? WHERE unique_id=?', (
                 player.name, instance.time_stamp, instance.wins,
-                instance.last_win, player.unique_id))
+                instance.last_win, player.unique_id,
+            )
+        )
 
         # Commit the changes to the database
         self.connection.commit()
@@ -150,8 +152,10 @@ class _WinsDatabase(defaultdict):
 
         # Update the player's name and time stamp in the database
         self.cursor.execute(
-            'UPDATE gungame_winners SET name=?, time_stamp=? WHERE unique_id=?',
-            (player.name, instance.time_stamp, player.unique_id))
+            'UPDATE gungame_winners SET name=?, time_stamp=? WHERE '
+            'unique_id=?',
+            (player.name, instance.time_stamp, player.unique_id)
+        )
 
         # Commit the changes to the database
         self.connection.commit()

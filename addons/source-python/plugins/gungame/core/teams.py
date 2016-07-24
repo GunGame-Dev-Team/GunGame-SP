@@ -5,19 +5,17 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Source.Python Imports
-#   Filters
+# Source.Python
 from filters.entities import EntityIter
-#   Players
-from players.teams import team_managers
-from players.teams import teams_by_number
+from players.teams import team_managers, teams_by_number
 
 
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('team_names',
-           )
+__all__ = (
+    'team_names',
+)
 
 
 # =============================================================================

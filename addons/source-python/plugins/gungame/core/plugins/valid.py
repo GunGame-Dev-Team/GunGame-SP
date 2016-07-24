@@ -5,20 +5,22 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Python
 from importlib import import_module
 from warnings import warn
 
-# GunGame Imports
+# GunGame
 from ..paths import GUNGAME_PLUGINS_PATH
 
 
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('ValidPlugin',
-           '_ValidPlugins',
-           'valid_plugins',
-           )
+__all__ = (
+    'ValidPlugin',
+    '_ValidPlugins',
+    'valid_plugins',
+)
 
 
 # =============================================================================
@@ -61,7 +63,11 @@ class _ValidPlugins(object):
         for plugin_type in ('included', 'custom'):
             if plugin in getattr(self, plugin_type):
                 return plugin_type
-        raise ValueError('No such plugin "{0}".'.format(plugin))
+        raise ValueError(
+            'No such plugin "{0}".'.format(
+                plugin,
+            )
+        )
 
     @property
     def included(self):
@@ -93,29 +99,49 @@ class _ValidPlugins(object):
 
             # Does the primary file not exist?
             if not plugin.joinpath(plugin.namebase + '.py').isfile():
-                warn('{0} plugin "{1}" is missing its base file.'.format(
-                    plugin_type.title(), plugin.namebase))
+                warn(
+                    '{0} plugin "{1}" is missing its base file.'.format(
+                        plugin_type.title(),
+                        plugin.namebase,
+                    )
+                )
                 continue
 
             # Does the info file not exist?
             if not plugin.joinpath('info.py').isfile():
-                warn('{0} plugin "{1}" is missing info.py file.'.format(
-                    plugin_type.title(), plugin.namebase))
+                warn(
+                    '{0} plugin "{1}" is missing info.py file.'.format(
+                        plugin_type.title(),
+                        plugin.namebase,
+                    )
+                )
                 continue
 
             # Get the plugin's description
-            description = import_module('gungame.plugins.{0}.{1}'.format(
-                plugin_type, plugin.namebase)).__doc__
+            description = import_module(
+                'gungame.plugins.{0}.{1}'.format(
+                    plugin_type,
+                    plugin.namebase,
+                )
+            ).__doc__
 
             # Get the plugin's info
-            info = import_module('gungame.plugins.{0}.{1}.info'.format(
-                plugin_type, plugin.namebase))
+            info = import_module(
+                'gungame.plugins.{0}.{1}.info'.format(
+                    plugin_type,
+                    plugin.namebase,
+                )
+            )
 
             # Does the info have an info attribute?
             if not hasattr(info, 'info'):
                 warn(
-                    '{0} plugin "{1}" '.format(plugin_type.title(), plugin) +
-                    'info.py does not contain an info object.')
+                    '{0} plugin "{1}" info.py does not contain an '
+                    'info object.'.format(
+                        plugin_type.title(),
+                        plugin,
+                    )
+                )
                 continue
 
             # Add the plugin to the dictionary

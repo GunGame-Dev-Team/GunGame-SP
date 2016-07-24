@@ -5,25 +5,24 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Source.Python Imports
-#   Events
+# Source.Python
 from events.custom import CustomEvent
 from events.variable import ShortVariable
 
-# GunGame Imports
-#   Events
+# GunGame
 from ..resource import GGResourceFile
 
 
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('GG_Load',
-           'GG_Map_End',
-           'GG_Start',
-           'GG_Unload',
-           'GG_Win',
-           )
+__all__ = (
+    'GG_Load',
+    'GG_Map_End',
+    'GG_Start',
+    'GG_Unload',
+    'GG_Win',
+)
 
 
 # =============================================================================
@@ -33,9 +32,11 @@ class GG_Win(CustomEvent):
     """Called when a player wins the match."""
 
     attacker = winner = ShortVariable(
-        'The userid of the player that won the match')
+        'The userid of the player that won the match'
+    )
     userid = loser = ShortVariable(
-        'The userid of that player that caused the winner to win the match')
+        'The userid of that player that caused the winner to win the match'
+    )
 
 
 class GG_Start(CustomEvent):

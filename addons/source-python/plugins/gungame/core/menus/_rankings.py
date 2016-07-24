@@ -5,15 +5,12 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Source.Python Imports
-#   Menus
+# Source.Python
 from menus import PagedMenu
 
-# GunGame Imports
-#   Menus
+# GunGame
 from . import _menu_strings
 from ._options import ListOption
-#   Players
 from ..players.database import winners_database
 
 
@@ -31,12 +28,22 @@ def get_winners_menu(player):
         winners_database,
         key=lambda unique_id: (
             winners_database[unique_id].wins,
-            -winners_database[unique_id].time_stamp),
-        reverse=True
+            -winners_database[unique_id].time_stamp,
+        ),
+        reverse=True,
     )
     for rank, unique_id in enumerate(winners, 1):
         instance = winners_database[unique_id]
-        menu.append(ListOption(
-            rank, '{0} [{1}]'.format(instance.name, instance.wins),
-            unique_id, player.unique_id == unique_id, False))
+        menu.append(
+            ListOption(
+                rank,
+                '{0} [{1}]'.format(
+                    instance.name,
+                    instance.wins
+                ),
+                unique_id,
+                player.unique_id == unique_id,
+                False,
+            )
+        )
     return menu

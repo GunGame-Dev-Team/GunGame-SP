@@ -5,20 +5,14 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Source.Python Imports
-#   Cvars
+# Source.Python
 from cvars import ConVar
-#   Plugins
 from plugins.command import SubCommandManager
-#   Translations
 from translations.strings import LangStrings
 
-# GunGame Imports
-#   Credits
+# GunGame
 from ..credits import gungame_credits
-#   Plugins
-from . import _plugin_strings
-from . import gg_plugins_logger
+from . import _plugin_strings, gg_plugins_logger
 from .instance import GGLoadedPlugin
 from .manager import gg_plugin_manager
 from .queue import plugin_queue
@@ -34,9 +28,10 @@ gg_plugins_command_logger = gg_plugins_logger.command
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('_GGSubCommandManager',
-           'gg_command_manager',
-           )
+__all__ = (
+    '_GGSubCommandManager',
+    'gg_command_manager',
+)
 
 
 # =============================================================================
@@ -67,8 +62,10 @@ class _GGSubCommandManager(SubCommandManager):
         if plugin_name in self.manager:
 
             # Is the plugin in the "unload" queue?
-            if ('unload' in plugin_queue and
-                    plugin_name in plugin_queue['unload']):
+            if (
+                'unload' in plugin_queue and
+                plugin_name in plugin_queue['unload']
+            ):
 
                 # Remove the plugin from the "unload" queue
                 plugin_queue['unload'].discard(plugin_name)
@@ -78,7 +75,7 @@ class _GGSubCommandManager(SubCommandManager):
 
         # Was an invalid plugin name given?
         if plugin_name not in valid_plugins.all:
-            print('Not a valid plugin!!!')
+            # TODO: log message that it is not a valid plugin name
             return
 
         # Add the plugin to the current queue
@@ -102,6 +99,11 @@ class _GGSubCommandManager(SubCommandManager):
                 # Remove the plugin from the "load" queue
                 plugin_queue['load'].discard(plugin_name)
 
+            # Was an invalid plugin name given?
+            if plugin_name not in valid_plugins.all:
+                # TODO: log message that it is not a valid plugin name
+                return
+
             # No need to go further
             return
 
@@ -119,6 +121,11 @@ class _GGSubCommandManager(SubCommandManager):
 
         # Is the plugin not loaded?
         if plugin_name not in self.manager:
+
+            # Was an invalid plugin name given?
+            if plugin_name not in valid_plugins.all:
+                # TODO: log message that it is not a valid plugin name
+                return
 
             # Attempt to load the plugin
             self.load_plugin(plugin_name)
@@ -139,14 +146,17 @@ class _GGSubCommandManager(SubCommandManager):
         """List all currently loaded plugins."""
         # Get header messages
         message = self.prefix + _plugin_strings[
-            'Plugins'].get_string() + '\n' + '=' * 61 + '\n'
+            'Plugins'
+        ].get_string() + '\n' + '=' * 61 + '\n'
 
         # Loop through all loaded plugins
         for plugin_name in sorted(self.manager):
 
             # Add the plugin's name to the message
             message += '\n{0} ({1}):\n\n'.format(
-                plugin_name, valid_plugins.get_plugin_type(plugin_name))
+                plugin_name,
+                valid_plugins.get_plugin_type(plugin_name),
+            )
 
             # Get the plugin's information
             instance = valid_plugins.all[plugin_name]
@@ -174,7 +184,8 @@ class _GGSubCommandManager(SubCommandManager):
                     value = '{0}:\n\t\t\t{1}: {2}'.format(
                         value.get_name(),
                         value.get_help_text(),
-                        value.get_string())
+                        value.get_string(),
+                    )
 
                 # Add the current item to the message
                 message += '\t{0}:\n\t\t{1}\n'.format(item, value)
@@ -195,7 +206,8 @@ class _GGSubCommandManager(SubCommandManager):
         """Print the GunGame credits."""
         # Get header messages
         message = '\n' + self.prefix + _plugin_strings[
-            'Credits'].get_string() + '\n' + '=' * 61 + '\n\n'
+            'Credits'
+        ].get_string() + '\n' + '=' * 61 + '\n\n'
 
         # Loop through all groups in the credits
         for group in gungame_credits:
@@ -208,7 +220,8 @@ class _GGSubCommandManager(SubCommandManager):
 
                 # Add the current name
                 message += '\t\t' + name + ' ' * (
-                    20 - len(name)) + values['username'] + '\n'
+                    20 - len(name)
+                ) + values['username'] + '\n'
 
             # Add 1 blank line between groups
             message += '\n'
@@ -219,7 +232,6 @@ class _GGSubCommandManager(SubCommandManager):
     def restart_match(self):
         """Restart the match."""
         # TODO: Add restart capability
-        pass
 
     def unload_all_plugins(self):
         """Unload all plugins when GunGame is unloading."""

@@ -5,24 +5,15 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Source.Python Imports
-#   Engines
+# Source.Python
 from engines.server import engine_server
-#   Filters
 from filters.weapons import WeaponClassIter
-#   Listeners
 from listeners.tick import Delay
 
-# GunGame Imports
-#   Config
-from ..config.weapon import order_file
-from ..config.weapon import order_randomize
-#   Paths
+# GunGame
+from ..config.weapon import order_file, order_randomize
 from ..paths import GUNGAME_WEAPON_ORDER_PATH
-#   Status
-from ..status import GunGameMatchStatus
-from ..status import GunGameStatus
-#   Weapons
+from ..status import GunGameMatchStatus, GunGameStatus
 from . import gg_weapons_logger
 from .order import WeaponOrder
 
@@ -30,9 +21,10 @@ from .order import WeaponOrder
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('_WeaponOrderManager',
-           'weapon_order_manager',
-           )
+__all__ = (
+    '_WeaponOrderManager',
+    'weapon_order_manager',
+)
 
 
 # =============================================================================
@@ -41,18 +33,30 @@ __all__ = ('_WeaponOrderManager',
 gg_weapons_manager_logger = gg_weapons_logger.manager
 
 # Store the weapons by type
-_primary_weapons = sorted([
-    weapon.basename for weapon in WeaponClassIter('primary')])
+_primary_weapons = sorted(
+    [
+        weapon.basename for weapon in WeaponClassIter('primary')
+    ]
+)
 
-_secondary_weapons = sorted([
-    weapon.basename for weapon in WeaponClassIter('secondary')])
+_secondary_weapons = sorted(
+    [
+        weapon.basename for weapon in WeaponClassIter('secondary')
+    ]
+)
 
-_explosive_weapons = sorted([
-    weapon.basename for weapon in WeaponClassIter('explosive')
-    if weapon.basename not in _primary_weapons + _secondary_weapons])
+_explosive_weapons = sorted(
+    [
+        weapon.basename for weapon in WeaponClassIter('explosive')
+        if weapon.basename not in _primary_weapons + _secondary_weapons
+    ]
+)
 
-_melee_weapons = sorted([
-    weapon.basename for weapon in WeaponClassIter('melee')])
+_melee_weapons = sorted(
+    [
+        weapon.basename for weapon in WeaponClassIter('melee')
+    ]
+)
 
 
 # =============================================================================
@@ -108,7 +112,11 @@ class _WeaponOrderManager(dict):
         if value == '0':
             return
         if value not in self:
-            raise ValueError('Invalid weapon order "{0}".'.format(value))
+            raise ValueError(
+                'Invalid weapon order "{0}".'.format(
+                    value,
+                )
+            )
         if self._active == value:
             return
         self._active = value
@@ -143,7 +151,11 @@ class _WeaponOrderManager(dict):
 
         # Log the weapon order name
         gg_weapons_manager_logger.log_message(
-            '{0} Weapon order: {1}\n'.format(prefix, self.active.title))
+            '{0} Weapon order: {1}\n'.format(
+                prefix,
+                self.active.title,
+            )
+        )
         levels = list()
         multi_kills = list()
         weapons = list()
@@ -156,20 +168,31 @@ class _WeaponOrderManager(dict):
         weapon_length = max([
             len(weapon) for weapon in weapons] + [len('Weapon')]) + 4
         joint = '{0} +{1}+{2}+{3}+'.format(
-            prefix, '-' * level_length,
-            '-' * multi_kill_length, '-' * weapon_length)
+            prefix,
+            '-' * level_length,
+            '-' * multi_kill_length,
+            '-' * weapon_length,
+        )
         gg_weapons_manager_logger.log_message(joint)
-        gg_weapons_manager_logger.log_message('{0} |{1}|{2}|{3}|'.format(
-            prefix, 'Level'.center(level_length),
-            'multi_kill'.center(multi_kill_length),
-            'Weapon'.center(weapon_length)))
+        gg_weapons_manager_logger.log_message(
+            '{0} |{1}|{2}|{3}|'.format(
+                prefix,
+                'Level'.center(level_length),
+                'multi_kill'.center(multi_kill_length),
+                'Weapon'.center(weapon_length),
+            )
+        )
         gg_weapons_manager_logger.log_message(joint)
         for level in self.active:
             current = self.active[level]
-            gg_weapons_manager_logger.log_message('{0} |{1}|{2}|{3} |'.format(
-                prefix, str(level).center(level_length),
-                str(current.multi_kill).center(multi_kill_length),
-                current.weapon.rjust(weapon_length - 1)))
+            gg_weapons_manager_logger.log_message(
+                '{0} |{1}|{2}|{3} |'.format(
+                    prefix,
+                    str(level).center(level_length),
+                    str(current.multi_kill).center(multi_kill_length),
+                    current.weapon.rjust(weapon_length - 1),
+                )
+            )
         gg_weapons_manager_logger.log_message(joint)
 
     def restart_game(self):
@@ -200,9 +223,14 @@ class _WeaponOrderManager(dict):
         with default.open('w') as open_file:
             # TODO: print header
             for weapon in (
-                    _primary_weapons + _secondary_weapons +
-                    _explosive_weapons + _melee_weapons):
-                open_file.write('{0}\n'.format(weapon))
+                _primary_weapons + _secondary_weapons +
+                _explosive_weapons + _melee_weapons
+            ):
+                open_file.write(
+                    '{0}\n'.format(
+                        weapon,
+                    )
+                )
 
     @staticmethod
     def _create_short_order():
@@ -213,6 +241,10 @@ class _WeaponOrderManager(dict):
         with short.open('w') as open_file:
             # TODO: print header
             for weapon in _secondary_weapons:
-                open_file.write('{0}\n'.format(weapon))
+                open_file.write(
+                    '{0}\n'.format(
+                        weapon,
+                    )
+                )
 
 weapon_order_manager = _WeaponOrderManager()

@@ -5,12 +5,9 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Source.Python Imports
-#   Config
+# Source.Python
 from config.manager import ConfigManager
-#   Loggers
 from loggers import LogManager
-#   Translations
 from translations.strings import LangStrings
 
 
@@ -31,6 +28,10 @@ with ConfigManager('gungame/logging_settings', 'gg_logging_') as _config:
 
 # Get the GunGame logger
 gg_logger = LogManager(
-    'gg', _level, _areas, 'gungame',
+    'gg',
+    _level,
+    _areas,
+    'gungame',
     '%(asctime)s - %(name)s\t-\t%(levelname)s\n%(message)s',
-    '%m-%d-%Y %H:%M:%S')
+    '%m-%d-%Y %H:%M:%S',
+)

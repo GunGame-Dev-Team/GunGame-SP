@@ -5,28 +5,24 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Source.Python Imports
-#   Filters
+# Source.Python
 from filters.players import PlayerIter
 
-# GUnGame Imports
-#   Events
-from .events.included.leaders import GG_Leader_Disconnect
-from .events.included.leaders import GG_Leader_LostLevel
-from .events.included.leaders import GG_New_Leader
-from .events.included.leaders import GG_Tied_Leader
-#   Messages
+# GunGame
+from .events.included.leaders import (
+    GG_Leader_Disconnect, GG_Leader_LostLevel, GG_New_Leader, GG_Tied_Leader,
+)
 from .messages import message_manager
-#   Players
 from .players.dictionary import player_dictionary
 
 
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('_LeaderManager',
-           'leader_manager',
-           )
+__all__ = (
+    '_LeaderManager',
+    'leader_manager',
+)
 
 
 # =============================================================================
@@ -92,9 +88,14 @@ class _LeaderManager(dict):
                 event.leaders = new_leaders
                 event.leader_level = new_level
             message = 'Leader_Tied_{0}'.format(
-                'Singular' if count == 2 else 'Plural')
+                'Singular' if count == 2 else 'Plural'
+            )
             message_manager.chat_message(
-                message, player.index, count=count, player=player)
+                message,
+                player.index,
+                count=count,
+                player=player,
+            )
         else:
             with GG_New_Leader() as event:
                 event.userid = event.leveler = userid
@@ -103,7 +104,10 @@ class _LeaderManager(dict):
                 event.leaders = new_leaders
                 event.leader_level = new_level
             message_manager.chat_message(
-                'Leader_New', player.index, player=player)
+                'Leader_New',
+                player.index,
+                player=player,
+            )
 
     def player_leveldown(self, userid):
         """Set the player's level and see if the leaders changed."""
@@ -147,11 +151,17 @@ class _LeaderManager(dict):
         if len(current) == 1:
             player = player_dictionary[current[0]]
             message_manager.chat_message(
-                'Leader_New', player.index, player=player)
+                'Leader_New',
+                player.index,
+                player=player,
+            )
         else:
             names = [player_dictionary[player].name for player in current]
             message_manager.chat_message(
-                'Leader_New_Plural', names=names, level=level)
+                'Leader_New_Plural',
+                names=names,
+                level=level,
+            )
 
     def _get_leader_string(self):
         """Return a string of leader userids."""

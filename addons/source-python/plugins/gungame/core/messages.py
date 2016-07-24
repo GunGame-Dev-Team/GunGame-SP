@@ -5,40 +5,29 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Python Imports
-#   Collections
+# Python
 from collections import defaultdict
-#   Warnings
 from warnings import warn
 
-# Source.Python Imports
-#   Colors
+# Source.Python
 from colors import WHITE
-#   Messages
-from messages import DialogMsg
-from messages import HudMsg
-from messages import HintText
-from messages import KeyHintText
-from messages import SayText2
-from messages import TextMsg
-from messages import VGUIMenu
-#   Paths
+from messages import (
+    DialogMsg, HudMsg, HintText, KeyHintText, SayText2, TextMsg, VGUIMenu,
+)
 from paths import TRANSLATION_PATH
-#   Translations
-from translations.strings import LangStrings
-from translations.strings import TranslationStrings
+from translations.strings import LangStrings, TranslationStrings
 
-# GunGame Imports
-#   Paths
+# GunGame
 from .paths import GUNGAME_TRANSLATION_PATH
 
 
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('_MessageManager',
-           'message_manager',
-           )
+__all__ = (
+    '_MessageManager',
+    'message_manager',
+)
 
 
 # =============================================================================
@@ -77,7 +66,9 @@ class _MessageManager(dict):
                     if key in self:
                         warn(
                             'Translation key "{0}" already registered.'.format(
-                                key))
+                                key,
+                            )
+                        )
                         continue
 
                     # Add the translations to the dictionary
@@ -168,9 +159,10 @@ class _MessageManager(dict):
         HintText(message).send(*users, **tokens)
 
     def hud_message(
-            self, message='', x=-1.0, y=-1.0, color1=WHITE,
-            color2=WHITE, effect=0, fade_in=0.0, fade_out=0.0,
-            hold=4.0, fx_time=0.0, channel=0, *users, **tokens):
+        self, message='', x=-1.0, y=-1.0, color1=WHITE,
+        color2=WHITE, effect=0, fade_in=0.0, fade_out=0.0,
+        hold=4.0, fx_time=0.0, channel=0, *users, **tokens
+    ):
         """Send a hud message to the given players."""
         # Get the message to send
         message = self._get_message(message)
@@ -186,7 +178,8 @@ class _MessageManager(dict):
         # Send the message to the users
         HudMsg(
             message, x, y, color1, color2, effect, fade_in, fade_out,
-            hold, fx_time, channel).send(*users, **tokens)
+            hold, fx_time, channel,
+        ).send(*users, **tokens)
 
     def keyhint_message(self, message='', *users, **tokens):
         """Send a keyhint message to the given players."""
@@ -205,8 +198,9 @@ class _MessageManager(dict):
         KeyHintText(message).send(*users, **tokens)
 
     def motd_message(
-            self, panel_type=2, title='',
-            message='', visible=True, *users, **tokens):
+        self, panel_type=2, title='',
+        message='', visible=True, *users, **tokens
+    ):
         """Send a motd message to the given players."""
         # Get the message to send
         message = self._get_message(message)
@@ -226,7 +220,8 @@ class _MessageManager(dict):
         VGUIMenu('info', subkeys, visible).send(*users, **tokens)
 
     def top_message(
-            self, message='', color=WHITE, time=4.0, *users, **tokens):
+        self, message='', color=WHITE, time=4.0, *users, **tokens
+    ):
         """Send a toptext message to the given players."""
         # Get the message to send
         message = self._get_message(message)

@@ -5,22 +5,22 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# GunGame Imports
-#   Config
+# GunGame
 from .manager import GunGameConfigManager
 
 
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('allow_kills_after_round',
-           'dynamic_chattime',
-           'give_armor',
-           'give_defusers',
-           'map_strip_exceptions',
-           'prune_database',
-           'sound_pack',
-           )
+__all__ = (
+    'allow_kills_after_round',
+    'dynamic_chat_time',
+    'give_armor',
+    'give_defusers',
+    'map_strip_exceptions',
+    'prune_database',
+    'sound_pack',
+)
 
 
 # =============================================================================
@@ -32,8 +32,8 @@ with GunGameConfigManager('misc') as _config:
     with _config.cvar('allow_kills_after_round') as allow_kills_after_round:
         allow_kills_after_round.add_text()
 
-    with _config.cvar('dynamic_chattime') as dynamic_chattime:
-        dynamic_chattime.add_text()
+    with _config.cvar('dynamic_chat_time') as dynamic_chat_time:
+        dynamic_chat_time.add_text()
 
     with _config.cvar('give_armor') as give_armor:
         give_armor.add_text()

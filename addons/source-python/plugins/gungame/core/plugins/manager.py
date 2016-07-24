@@ -5,10 +5,13 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Python
 import sys
 
+# Source.Python
 from plugins.manager import PluginManager
 
+# GunGame
 from ..events.included.plugins import GG_Plugin_Unloaded
 from ..paths import GUNGAME_PLUGINS_PATH
 from . import gg_plugins_logger
@@ -24,9 +27,10 @@ gg_plugins_manager_logger = gg_plugins_logger.manager
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('_GGPluginManager',
-           'gg_plugin_manager',
-           )
+__all__ = (
+    '_GGPluginManager',
+    'gg_plugin_manager',
+)
 
 
 # =============================================================================
@@ -41,7 +45,11 @@ class _GGPluginManager(PluginManager):
     def __missing__(self, plugin_name):
         """Set the base import path and add the plugin."""
         if plugin_name not in valid_plugins.all:
-            raise ValueError('Invalid plugin_name "{0}".'.format(plugin_name))
+            raise ValueError(
+                'Invalid plugin_name "{0}".'.format(
+                    plugin_name,
+                )
+            )
         plugin_type = valid_plugins.get_plugin_type(plugin_name)
         self._base_import = self._base_import_prefix + plugin_type + '.'
         return super().__missing__(plugin_name)
@@ -52,8 +60,11 @@ class _GGPluginManager(PluginManager):
         super().__delitem__(plugin_name)
 
         # Send a message that the plugin was unloaded
-        self.logger.log_message(self.prefix + self.translations[
-            'Successful Unload'].get_string(plugin=plugin_name))
+        self.logger.log_message(
+            self.prefix + self.translations[
+                'Successful Unload'
+            ].get_string(plugin=plugin_name)
+        )
 
         # Fire the gg_plugin_unloaded event
         with GG_Plugin_Unloaded() as event:
@@ -63,7 +74,11 @@ class _GGPluginManager(PluginManager):
     def _remove_modules(self, plugin_name):
         """Remove a plugin and all its modules."""
         if plugin_name not in valid_plugins.all:
-            raise ValueError('Invalid plugin_name "{0}".'.format(plugin_name))
+            raise ValueError(
+                'Invalid plugin_name "{0}".'.format(
+                    plugin_name,
+                )
+            )
         if plugin_name not in self:
             return
         plugin_type = valid_plugins.get_plugin_type(plugin_name)
@@ -75,7 +90,9 @@ class _GGPluginManager(PluginManager):
         """Remove a module."""
         plugin_path = GUNGAME_PLUGINS_PATH.joinpath(
             valid_plugins.get_plugin_type(self._current_plugin),
-            self._current_plugin, '__init__.py')
+            self._current_plugin,
+            '__init__.py',
+        )
         if plugin_path == sys.modules[module].__file__:
             return
         super()._remove_module(module)

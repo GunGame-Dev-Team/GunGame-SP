@@ -5,27 +5,24 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Site-Package Imports
-#   Path
+# Site-Package
 from path import Path
 
-# Source.Python Imports
-#   Config
+# Source.Python
 from config.cvar import _CvarManager
 from config.manager import ConfigManager
-#   Translations
 from translations.strings import LangStrings
 
-# GunGame Imports
-#   Plugins
+# GunGame
 from ..plugins.valid import valid_plugins
 
 
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('GunGameConfigManager',
-           )
+__all__ = (
+    'GunGameConfigManager',
+)
 
 
 # =============================================================================
@@ -37,38 +34,41 @@ class GunGameConfigManager(ConfigManager):
     def __init__(self, name):
         """Add 'gungame' to the path before initializing the instance."""
         # Start with 'gungame' path
-        filepath = Path('gungame')
+        base_path = Path('gungame')
 
         # Get the path if file is a valid plugin
         try:
             folder = valid_plugins.get_plugin_type(name) + '_plugins'
-            filepath = filepath / folder / name
+            file_path = base_path / folder / name
             cvar_prefix = name + '_'
 
         # Get the path for a base config
         except ValueError:
             folder = 'core'
-            filepath = filepath / name + '_settings'
+            file_path = base_path / name + '_settings'
             cvar_prefix = 'gg_{0}_'.format(name)
 
         try:
             # Add the translations
             self.translations = LangStrings(
-                'gungame/{0}/config/{1}'.format(folder, name))
+                'gungame/{0}/config/{1}'.format(folder, name)
+            )
 
         except FileNotFoundError:
             self.translations = dict()
 
         # Initialize the config
-        super().__init__(filepath, cvar_prefix)
+        super().__init__(file_path, cvar_prefix)
 
     def cvar(
-            self, name, default=0, description=None,
-            flags=0, min_value=None, max_value=None):
+        self, name, default=0, description=None, flags=0, min_value=None,
+        max_value=None,
+    ):
         """Override cvar method to add cvar as _GunGameCvarManager object."""
         section = _GunGameCvarManager(
             name, default, description, flags, min_value,
-            max_value, self.cvar_prefix, self.translations)
+            max_value, self.cvar_prefix, self.translations,
+        )
         self._cvars.add(name)
         self._sections.append(section)
         return section
@@ -78,8 +78,9 @@ class _GunGameCvarManager(_CvarManager):
     """Class used to more easily add translations for cvars in config files."""
 
     def __init__(
-            self, name, default, description, flags,
-            min_value, max_value, cvar_prefix, translations):
+        self, name, default, description, flags, min_value, max_value,
+        cvar_prefix, translations,
+    ):
         """Get the true description and store the translations."""
         self._base_item = None
         if description is None:
@@ -89,7 +90,8 @@ class _GunGameCvarManager(_CvarManager):
             description = translations[description]
         super().__init__(
             cvar_prefix + name, default, description,
-            flags, min_value, max_value)
+            flags, min_value, max_value,
+        )
         self.translations = translations
 
     def add_text(self, **tokens):
@@ -103,4 +105,5 @@ class _GunGameCvarManager(_CvarManager):
                 raise ValueError('Invalid item.')
             attribute = item.replace(self._base_item, '', 1).split(':')[0]
             getattr(self, attribute).append(
-                self.translations[item].get_string(**tokens))
+                self.translations[item].get_string(**tokens)
+            )

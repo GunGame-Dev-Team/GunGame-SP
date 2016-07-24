@@ -5,27 +5,26 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Source.Python Imports
-#   Cvars
+# Source.Python
 from cvars.flags import ConVarFlags
 
-# GunGame Imports
-#   Config
+# GunGame
 from .manager import GunGameConfigManager
 
 
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('enabled',
-           'end_config',
-           'max_extensions',
-           'min_players',
-           'players_reached',
-           'start_config',
-           'time',
-           'weapon',
-           )
+__all__ = (
+    'enabled',
+    'end_config',
+    'max_extensions',
+    'min_players',
+    'players_reached',
+    'start_config',
+    'time',
+    'weapon',
+)
 
 
 # =============================================================================
@@ -36,7 +35,8 @@ with GunGameConfigManager('warmup') as _config:
         enabled.add_text()
 
     with _config.cvar(
-            'weapon', 'hegrenade', flags=ConVarFlags.NOTIFY) as weapon:
+        'weapon', 'hegrenade', flags=ConVarFlags.NOTIFY,
+    ) as weapon:
         weapon.add_text()
 
     with _config.cvar('time', 30) as time:

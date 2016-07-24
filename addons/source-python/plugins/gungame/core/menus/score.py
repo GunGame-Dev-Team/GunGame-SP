@@ -5,23 +5,16 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Source.Python Imports
-#   Menus
+# Source.Python
 from menus import PagedMenu
-#   Players
 from players.entity import Player
 
-# GunGame Imports
-#   Menus
+# GunGame
 from . import _menu_strings
 from ._options import ListOption
-#   Players
 from ..players.dictionary import player_dictionary
-#   Plugins
 from ..plugins.manager import gg_plugin_manager
-#   Status
-from ..status import GunGameMatchStatus
-from ..status import GunGameStatus
+from ..status import GunGameMatchStatus, GunGameStatus
 
 
 # =============================================================================
@@ -38,12 +31,18 @@ def send_score_menu(index):
     else:
         player = Player(index)
         for userid in sorted(
-                player_dictionary,
-                key=lambda userid: player_dictionary[userid].level,
-                reverse=True):
+            player_dictionary,
+            key=lambda userid: player_dictionary[userid].level,
+            reverse=True,
+        ):
             current_player = player_dictionary[userid]
-            menu.append(ListOption(
-                current_player.level, current_player.name,
-                current_player.unique_id,
-                current_player.unique_id == player.unique_id, False))
+            menu.append(
+                ListOption(
+                    current_player.level,
+                    current_player.name,
+                    current_player.unique_id,
+                    current_player.unique_id == player.unique_id,
+                    False,
+                )
+            )
     menu.send(index)

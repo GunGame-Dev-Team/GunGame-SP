@@ -5,41 +5,30 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Source.Python Imports
-#   Colors
+# Source.Python
 from colors import WHITE
-#   Players
 from players.entity import Player
-#   Weapons
-from weapons.entity import Weapon
 from weapons.manager import weapon_manager
 
-# GunGame Imports
-#   Events
-from ..events.included.leveling import GG_LevelDown
-from ..events.included.leveling import GG_LevelUp
+# GunGame
+from ..events.included.leveling import GG_LevelDown, GG_LevelUp
 from ..events.included.match import GG_Win
-#   Messages
 from ..messages import message_manager
-#   Players
-from .attributes import attribute_post_hooks
-from .attributes import attribute_pre_hooks
-from .attributes import player_attributes
+from .attributes import (
+    attribute_post_hooks, attribute_pre_hooks, player_attributes,
+)
 from .database import winners_database
-#   Sounds
 from ..sounds import sound_manager
-#   Status
-from ..status import GunGameStatus
-from ..status import GunGameMatchStatus
-#   Weapons
+from ..status import GunGameMatchStatus, GunGameStatus
 from ..weapons.manager import weapon_order_manager
 
 
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('GunGamePlayer',
-           )
+__all__ = (
+    'GunGamePlayer',
+)
 
 
 # =============================================================================
@@ -54,8 +43,11 @@ class GunGamePlayer(Player):
     def __setattr__(self, attr, value):
         """Verify that the attribute's value should be set."""
         # Are there any pre-hooks for the attribute?
-        if (attr in player_attributes and
-                attr in attribute_pre_hooks and hasattr(self, attr)):
+        if (
+            attr in player_attributes and
+            attr in attribute_pre_hooks and
+            hasattr(self, attr)
+        ):
 
             # Do any of the pre-hooks block the setting of the attribute?
             if not attribute_pre_hooks[attr].call_callbacks(self, value):
@@ -64,8 +56,11 @@ class GunGamePlayer(Player):
                 return
 
         # Are there any post-hooks for the attribute?
-        if not (attr in player_attributes and hasattr(self, attr) and
-                attr in attribute_post_hooks):
+        if not (
+            attr in player_attributes and
+            hasattr(self, attr) and
+            attr in attribute_post_hooks
+        ):
 
             # If not, simply set the attribute's value
             super().__setattr__(attr, value)
@@ -80,6 +75,10 @@ class GunGamePlayer(Player):
         # Call all of the attribute's post-hooks
         attribute_post_hooks[attr].call_callbacks(self, value, old_value)
 
+    @property
+    def unique_id(self):
+        return self.uniqueid
+
     # =========================================================================
     # >> LEVEL FUNCTIONALITY
     # =========================================================================
@@ -89,7 +88,10 @@ class GunGamePlayer(Player):
             return
         if not isinstance(levels, int) or levels < 1:
             raise ValueError(
-                'Invalid value given for levels "{0}".'.format(levels))
+                'Invalid value given for levels "{0}".'.format(
+                    levels,
+                )
+            )
         old_level = self.level
         new_level = old_level + levels
         if new_level > weapon_order_manager.max_levels:
@@ -114,7 +116,10 @@ class GunGamePlayer(Player):
             return
         if not isinstance(levels, int) or levels < 1:
             raise ValueError(
-                'Invalid value given for levels "{0}".'.format(levels))
+                'Invalid value given for levels "{0}".'.format(
+                    levels,
+                )
+            )
         old_level = self.level
         new_level = max(old_level - levels, 1)
         if self.level == new_level:
@@ -193,23 +198,27 @@ class GunGamePlayer(Player):
         message_manager.hint_message(message, self.index, **tokens)
 
     def hud_message(
-            self, message='', x=-1.0, y=-1.0, color1=WHITE,
-            color2=WHITE, effect=0, fade_in=0.0, fade_out=0.0,
-            hold=4.0, fx_time=0.0, channel=0, **tokens):
+        self, message='', x=-1.0, y=-1.0, color1=WHITE,
+        color2=WHITE, effect=0, fade_in=0.0, fade_out=0.0,
+        hold=4.0, fx_time=0.0, channel=0, **tokens
+    ):
         """Send a hud message to the player."""
         message_manager.hud_message(
             message, x, y, color1, color2, effect, fade_in,
-            fade_out, hold, fx_time, channel, self.index, **tokens)
+            fade_out, hold, fx_time, channel, self.index, **tokens
+        )
 
     def keyhint_message(self, message='', **tokens):
         """Send a keyhint message to the player."""
         message_manager.keyhint_message(message, self.index, **tokens)
 
     def motd_message(
-            self, panel_type=2, title='', message='', visible=True, **tokens):
+        self, panel_type=2, title='', message='', visible=True, **tokens
+    ):
         """Send a motd message to the player."""
         message_manager.motd_message(
-                panel_type, title, message, visible, self.index, **tokens)
+            panel_type, title, message, visible, self.index, **tokens
+        )
 
     def top_message(self, message='', color=WHITE, time=4.0, **tokens):
         """Send a toptext message to the player."""
@@ -286,7 +295,8 @@ class GunGamePlayer(Player):
             # Sort the tied players by their last win
             sorted_ties = sorted(
                 tied_players,
-                key=lambda unique_id: winners_database[unique_id].last_win)
+                key=lambda unique_id: winners_database[unique_id].last_win
+            )
 
             # Get the final rank of the player
             rank += sorted_ties.index(self.unique_id)

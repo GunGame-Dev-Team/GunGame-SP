@@ -6,12 +6,10 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Source.Python Imports
-#   Players
+# Source.Python
 from players.entity import Player
 
-# GunGame Imports
-#   Menus
+# GunGame
 from ._rankings import get_winners_menu
 
 

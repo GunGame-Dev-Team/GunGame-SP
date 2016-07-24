@@ -5,25 +5,23 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Source.Python Imports
-#   Events
+# Source.Python
 from events.custom import CustomEvent
-from events.variable import ShortVariable
-from events.variable import StringVariable
+from events.variable import ShortVariable, StringVariable
 
-# GunGame Imports
-#   Events
+# GunGame
 from ..resource import GGResourceFile
 
 
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('GG_Vote_Canceled',
-           'GG_Vote_End',
-           'GG_Vote_Start',
-           'GG_Vote_Submit',
-           )
+__all__ = (
+    'GG_Vote_Canceled',
+    'GG_Vote_End',
+    'GG_Vote_Start',
+    'GG_Vote_Submit',
+)
 
 
 # =============================================================================
@@ -58,4 +56,5 @@ class GG_Vote_Canceled(CustomEvent):
 # >> RESOURCE FILE
 # =============================================================================
 GGResourceFile(
-    'voting', GG_Vote_Start, GG_Vote_End, GG_Vote_Submit, GG_Vote_Canceled)
+    'voting', GG_Vote_Start, GG_Vote_End, GG_Vote_Submit, GG_Vote_Canceled,
+)

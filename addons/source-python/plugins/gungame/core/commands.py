@@ -5,31 +5,26 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Python Imports
-#   Importlib
+# Python
 from importlib import import_module
 
-# Source.Python Imports
-#   Commands
+# Source.Python
 from commands.client import client_command_manager
 from commands.say import say_command_manager
 
-# GunGame Imports
-#   Paths
+# GunGame
 from .paths import GUNGAME_BASE_PATH
 
 
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('register_all_commands',
-           'unregister_all_commands',
-           )
+__all__ = (
+    'register_all_commands',
+    'unregister_all_commands',
+)
 
 
-# =============================================================================
-# >> GLOBAL VARIABLES
-# =============================================================================
 # =============================================================================
 # >> CLASSES
 # =============================================================================
@@ -51,29 +46,41 @@ class _MenuCommand(object):
         """Register the public, private, and client commands."""
         # Register the public commands
         say_command_manager.register_commands(
-            (self.name, '!' + self.name), _send_command_menu)
+            (self.name, '!' + self.name),
+            _send_command_menu,
+        )
 
         # Register the private command
         say_command_manager.register_commands(
-            '/' + self.name, _send_command_menu)
+            '/' + self.name,
+            _send_command_menu,
+        )
 
         # Register the client command
         client_command_manager.register_commands(
-            self.name, _send_command_menu)
+            self.name,
+            _send_command_menu,
+        )
 
     def unregister_commands(self):
         """Unregister the public, private, and client commands."""
         # Register the public commands
         say_command_manager.unregister_commands(
-            (self.name, '!' + self.name), _send_command_menu)
+            (self.name, '!' + self.name),
+            _send_command_menu,
+        )
 
         # Register the private command
         say_command_manager.unregister_commands(
-            '/' + self.name, _send_command_menu)
+            '/' + self.name,
+            _send_command_menu,
+        )
 
         # Register the client command
         client_command_manager.unregister_commands(
-            self.name, _send_command_menu)
+            self.name,
+            _send_command_menu,
+        )
 
 
 # Get the _CommandManager instance

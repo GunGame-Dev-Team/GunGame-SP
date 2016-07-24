@@ -5,24 +5,21 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Source.Python Imports
-#   Events
+# Source.Python
 from events.custom import CustomEvent
-from events.variable import ByteVariable
-from events.variable import ShortVariable
-from events.variable import StringVariable
+from events.variable import ByteVariable, ShortVariable, StringVariable
 
-# GunGame Imports
-#   Events
+# GunGame
 from ..resource import GGResourceFile
 
 
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('GG_LevelDown',
-           'GG_LevelUp',
-           )
+__all__ = (
+    'GG_LevelDown',
+    'GG_LevelUp',
+)
 
 
 # =============================================================================
@@ -32,9 +29,11 @@ class GG_LevelUp(CustomEvent):
     """Called when a player levels up."""
 
     attacker = leveler = ShortVariable(
-        'The userid of the player that leveled up')
+        'The userid of the player that leveled up'
+    )
     userid = victim = ShortVariable(
-        'The userid of the victim that caused the levelup')
+        'The userid of the victim that caused the levelup'
+    )
     old_level = ByteVariable('The old level of the player that leveled up')
     new_level = ByteVariable('The new level of the player that leveled up')
     reason = StringVariable('The reason for the levelup')
@@ -44,9 +43,11 @@ class GG_LevelDown(CustomEvent):
     """Called when a player loses a level."""
 
     userid = leveler = ShortVariable(
-        'The userid of the player that leveled down')
+        'The userid of the player that leveled down'
+    )
     attacker = ShortVariable(
-        'The userid of the player that caused the level down')
+        'The userid of the player that caused the level down'
+    )
     old_level = ByteVariable('The old level of the player that leveled down')
     new_level = ByteVariable('The new level of the player that leveled down')
     reason = StringVariable('The reason for the leveldown')

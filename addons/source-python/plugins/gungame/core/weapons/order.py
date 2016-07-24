@@ -5,34 +5,34 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Python Imports
-#   Random
+# Python
 from random import shuffle
 
-# Source.Python Imports
-#   Filters
+# Source.Python
 from filters.weapons import WeaponClassIter
 
-# GunGame Imports
-#   Config
+# GunGame
 from ..config.weapon import multi_kill_override
-#   Weapons
 from .errors import WeaponOrderError
 
 
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('WeaponOrder',
-           )
+__all__ = (
+    'WeaponOrder',
+)
 
 
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
-_primary_weapons = [weapon.basename for weapon in WeaponClassIter('primary')]
+_primary_weapons = [
+    weapon.basename for weapon in WeaponClassIter('primary')
+]
 _secondary_weapons = [
-    weapon.basename for weapon in WeaponClassIter('secondary')]
+    weapon.basename for weapon in WeaponClassIter('secondary')
+]
 _multi_kill_weapons = _primary_weapons + _secondary_weapons
 
 
@@ -42,10 +42,10 @@ _multi_kill_weapons = _primary_weapons + _secondary_weapons
 class WeaponOrder(dict):
     """Dictionary used to store a weapon order."""
 
-    def __init__(self, filepath):
+    def __init__(self, file_path):
         """Store the values from the given path."""
         super().__init__()
-        with filepath.open() as open_file:
+        with file_path.open() as open_file:
             level = 0
             for line in open_file:
                 line = line.strip()
@@ -64,8 +64,8 @@ class WeaponOrder(dict):
                     raise WeaponOrderError()
                 level += 1
                 self[level] = _LevelWeapon(weapon, multi_kill)
-        self._filepath = filepath
-        self._name = self.filepath.namebase
+        self._file_path = file_path
+        self._name = self.file_path.namebase
         self._title = self.name.replace('_', ' ').title()
         self._random_order = None
 
@@ -75,9 +75,9 @@ class WeaponOrder(dict):
         return self._name
 
     @property
-    def filepath(self):
+    def file_path(self):
         """Return the weapon order's file path."""
-        return self._filepath
+        return self._file_path
 
     @property
     def title(self):
@@ -97,7 +97,7 @@ class WeaponOrder(dict):
     def randomize_order(self):
         """Get a randomized weapon order based on the instance."""
         self._random_order = dict()
-        randomize_weapons = self.values()
+        randomize_weapons = list(self.values())
         keep_at_end = list()
         for weapon in reversed(randomize_weapons):
             if weapon.weapon in _multi_kill_weapons:
