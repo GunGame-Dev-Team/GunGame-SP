@@ -29,8 +29,8 @@ class PluginStrings(LangStrings):
     def __init__(self, name):
         """Add 'gungame' and the plugin type to the path."""
         super().__init__(
-            'gungame/{0}_plugins/{1}'.format(
-                valid_plugins.get_plugin_type(name),
-                name,
+            'gungame/{plugin_type}_plugins/{plugin_name}'.format(
+                plugin_type=valid_plugins.get_plugin_type(name),
+                plugin_name=name,
             )
         )

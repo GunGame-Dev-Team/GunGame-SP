@@ -153,9 +153,9 @@ class _GGSubCommandManager(SubCommandManager):
         for plugin_name in sorted(self.manager):
 
             # Add the plugin's name to the message
-            message += '\n{0} ({1}):\n\n'.format(
-                plugin_name,
-                valid_plugins.get_plugin_type(plugin_name),
+            message += '\n{plugin_name} ({plugin_type}):\n\n'.format(
+                plugin_name=plugin_name,
+                plugin_type=valid_plugins.get_plugin_type(plugin_name),
             )
 
             # Get the plugin's information
@@ -168,7 +168,9 @@ class _GGSubCommandManager(SubCommandManager):
                 description = instance.description
 
             # Add the description
-            message += '\tdescription:\n\t\t{0}\n'.format(description)
+            message += '\tdescription:\n\t\t{description}\n'.format(
+                description=description,
+            )
 
             # Loop through all items in the info
             for item, value in instance.info.items():
@@ -181,14 +183,17 @@ class _GGSubCommandManager(SubCommandManager):
                 if isinstance(value, ConVar):
 
                     # Get the ConVar's text
-                    value = '{0}:\n\t\t\t{1}: {2}'.format(
-                        value.get_name(),
-                        value.get_help_text(),
-                        value.get_string(),
+                    value = '{cvar_name}:\n\t\t\t{help_text}: {value}'.format(
+                        cvar_name=value.get_name(),
+                        help_text=value.get_help_text(),
+                        value=value.get_string(),
                     )
 
                 # Add the current item to the message
-                message += '\t{0}:\n\t\t{1}\n'.format(item, value)
+                message += '\t{item}:\n\t\t{value}\n'.format(
+                    item=item,
+                    value=value,
+                )
 
             # Add 1 blank line between plugins
             message += '\n'

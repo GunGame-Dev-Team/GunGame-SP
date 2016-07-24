@@ -37,9 +37,10 @@ class _NoMessage(object):
     def _message_hook(self, *args, **kwargs):
         """Override for messages that do not work."""
         warn(
-            'Message type "{0}" not supported for game "{1}".'.format(
-                self.message_type,
-                GAME_NAME,
+            'Message type "{message_type}" not supported for '
+            'game "{game_name}".'.format(
+                message_type=self.message_type,
+                game_name=GAME_NAME,
             )
         )
 

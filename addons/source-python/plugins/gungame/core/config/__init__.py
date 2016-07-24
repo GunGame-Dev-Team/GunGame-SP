@@ -33,14 +33,17 @@ def load_all_configs():
         if file.namebase in ('__init__', Path(__file__).namebase):
             continue
         import_module(
-            'gungame.core.config.{0}'.format(file.namebase)
+            'gungame.core.config.{file_name}'.format(
+                file_name=file.namebase,
+            )
         )
     for plugin_name in valid_plugins.all:
         plugin_type = valid_plugins.get_plugin_type(plugin_name)
         with suppress(ImportError):
             import_module(
-                'gungame.plugins.{0}.{1}.configuration'.format(
-                    plugin_type,
-                    plugin_name,
+                'gungame.plugins.{plugin_type}.{plugin_name}.'
+                'configuration'.format(
+                    plugin_type=plugin_type,
+                    plugin_name=plugin_name,
                 )
             )

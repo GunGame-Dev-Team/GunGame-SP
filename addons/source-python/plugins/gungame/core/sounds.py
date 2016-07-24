@@ -97,9 +97,9 @@ class _SoundManager(defaultdict):
             # Register all plugin based sounds
             with suppress(ImportError):
                 import_module(
-                    'gungame.plugins.{0}.{1}.sounds'.format(
-                        plugin_type,
-                        plugin_name,
+                    'gungame.plugins.{plugin_type}.{plugin_name}.sounds'.format(
+                        plugin_type=plugin_type,
+                        plugin_name=plugin_name,
                     )
                 )
 
@@ -136,14 +136,30 @@ class _SoundManager(defaultdict):
         with file.open('w') as open_file:
 
             # Add the header
-            open_file.write('// {0}\n'.format('-' * 76))
+            open_file.write(
+                '// {breaker}\n'.format(
+                    breaker='-' * 76,
+                )
+            )
             for line in _sound_strings['Random'].get_string().splitlines():
-                open_file.write('// {0}\n'.format(line))
-            open_file.write('// {0}\n\n\n'.format('-' * 76))
+                open_file.write(
+                    '// {line}\n'.format(
+                        line=line,
+                    )
+                )
+            open_file.write(
+                '// {breaker}\n\n\n'.format(
+                    breaker='-' * 76,
+                )
+            )
 
             # Add in the default winner sounds
             for name in ('14', '15', '23_SuitSong3', '31'):
-                open_file.write('music/HL2_song{0}.mp3\n'.format(name))
+                open_file.write(
+                    'music/HL2_song{name}.mp3\n'.format(
+                        name=name,
+                    )
+                )
 
     def load_sounds(self):
         """Load all sounds into the dictionary."""
@@ -159,9 +175,9 @@ class _SoundManager(defaultdict):
                 # Is the current sound a valid sound type?
                 if item not in self._defaults:
                     warn(
-                        'Sound "{0}" in file "{1}" is not registered.'.format(
-                            item,
-                            file.name,
+                        'Sound "{sound}" in file "{file_name}" is not registered.'.format(
+                            sound=item,
+                            file_name=file.name,
                         )
                     )
                     continue
@@ -176,11 +192,12 @@ class _SoundManager(defaultdict):
                     txt = GUNGAME_SOUND_PACK_PATH / 'random_sounds' / value
                     if not txt.isfile():
                         warn(
-                            'Invalid random sound text file given "{0}" '
-                            'for sound "{1}" in file "{2}".'.format(
-                                value,
-                                item,
-                                file.name,
+                            'Invalid random sound text file given '
+                            '"{text_file}" for sound "{sound}" in file '
+                            '"{file_name}".'.format(
+                                text_file=value,
+                                sound=item,
+                                file_name=file.name,
                             )
                         )
                         continue
@@ -203,10 +220,11 @@ class _SoundManager(defaultdict):
                             # Is this a valid extension for the game?
                             if not self.is_allowed_sound_extension(extension):
                                 warn(
-                                    'Invalid sound extension "{0}" found in '
-                                    'random sound file "{1}".'.format(
-                                        extension,
-                                        txt.name,
+                                    'Invalid sound extension "{extension}" '
+                                    'found in random sound file '
+                                    '"{sound_file}".'.format(
+                                        extension=extension,
+                                        sound_file=txt.name,
                                     )
                                 )
                                 continue
@@ -214,9 +232,9 @@ class _SoundManager(defaultdict):
                             # Does the sound exist?
                             if not SOUND_PATH.joinpath(line).isfile():
                                 warn(
-                                    'Invalid sound "{0}", sound '
+                                    'Invalid sound "{sound}", sound '
                                     'does not exist'.format(
-                                        line,
+                                        sound=line,
                                     )
                                 )
                                 continue
@@ -228,8 +246,8 @@ class _SoundManager(defaultdict):
                     if not sounds:
                         warn(
                             'No sounds found in random sound file '
-                            '"{0}".'.format(
-                                txt.name,
+                            '"{text_file}".'.format(
+                                text_file=txt.name,
                             )
                         )
                         continue
@@ -246,11 +264,11 @@ class _SoundManager(defaultdict):
                 # Was an invalid extension given?
                 else:
                     warn(
-                        'Invalid sound extension "{0}" for sound "{1}" '
-                        'in file "{2}".'.format(
-                            extension,
-                            item,
-                            file.name,
+                        'Invalid sound extension "{extension}" for sound '
+                        '"{sound}" in file "{file_name}".'.format(
+                            extension=extension,
+                            sound=item,
+                            file_name=file.name,
                         )
                     )
                     continue
@@ -259,9 +277,10 @@ class _SoundManager(defaultdict):
             #   not represented in the current sound pack
             for missing in set(self._defaults).difference(self[file.namebase]):
                 warn(
-                    'Sound "{0}" missing in "{1}" sound pack.'.format(
-                        missing,
-                        file.namebase,
+                    'Sound "{sound}" missing in "{sound_pack}" '
+                    'sound pack.'.format(
+                        sound=missing,
+                        sound_pack=file.namebase,
                     )
                 )
 
@@ -283,8 +302,8 @@ class _SoundManager(defaultdict):
         # Was the sound type already registered?
         if sound_name in self._defaults:
             warn(
-                'Sound "{0}" already registered!'.format(
-                    sound_name,
+                'Sound "{sound}" already registered!'.format(
+                    sound=sound_name,
                 )
             )
             return
@@ -294,9 +313,10 @@ class _SoundManager(defaultdict):
         if not self.is_allowed_sound_extension(
                 extension) and extension != 'txt':
             warn(
-                'Invalid extension "{0}".  Sound "{1}" not registered.'.format(
-                    extension,
-                    sound_name,
+                'Invalid extension "{extension}".  Sound "{sound}" '
+                'not registered.'.format(
+                    extension=extension,
+                    sound=sound_name,
                 )
             )
             return
@@ -313,8 +333,8 @@ class _SoundManager(defaultdict):
         # Was an invalid sound type given?
         if sound_name not in self._defaults:
             raise ValueError(
-                'Invalid sound name "{0}".  Sound not registered.'.format(
-                    sound_name,
+                'Invalid sound name "{sound}".  Sound not registered.'.format(
+                    sound=sound_name,
                 )
             )
 
@@ -322,10 +342,10 @@ class _SoundManager(defaultdict):
         pack = sound_pack.get_string()
         if pack not in self:
             raise ValueError(
-                'Invalid sound pack "{0}".  Change "{1}" to a valid sound '
-                'pack name.'.format(
-                    pack,
-                    sound_pack.get_name(),
+                'Invalid sound pack "{sound_pack}".  Change "{cvarname}" '
+                'to a valid sound pack name.'.format(
+                    sound_pack=pack,
+                    cvarname=sound_pack.get_name(),
                 )
             )
 
@@ -340,9 +360,10 @@ class _SoundManager(defaultdict):
         # If the sound is not in either the chosen sound
         #   pack or the default one, raise an error
         raise ValueError(
-            'Sound "{0}" cannot be found for sound pack "{1}".'.format(
-                sound_name,
-                pack,
+            'Sound "{sound}" cannot be found for sound pack '
+            '"{sound_pack}".'.format(
+                sound=sound_name,
+                sound_pack=pack,
             )
         )
 

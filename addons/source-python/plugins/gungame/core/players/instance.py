@@ -88,8 +88,8 @@ class GunGamePlayer(Player):
             return
         if not isinstance(levels, int) or levels < 1:
             raise ValueError(
-                'Invalid value given for levels "{0}".'.format(
-                    levels,
+                'Invalid value given for levels "{levels}".'.format(
+                    levels=levels,
                 )
             )
         old_level = self.level
@@ -116,8 +116,8 @@ class GunGamePlayer(Player):
             return
         if not isinstance(levels, int) or levels < 1:
             raise ValueError(
-                'Invalid value given for levels "{0}".'.format(
-                    levels,
+                'Invalid value given for levels "{levels}".'.format(
+                    levels=levels,
                 )
             )
         old_level = self.level
@@ -150,7 +150,7 @@ class GunGamePlayer(Player):
 
     def remove_all_weapons(self, exclude=None):
         if exclude is None:
-            exclude = []
+            exclude = list()
         elif isinstance(exclude, str):
             exclude = [exclude]
 

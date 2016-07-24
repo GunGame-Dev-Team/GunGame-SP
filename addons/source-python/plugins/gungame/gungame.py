@@ -124,8 +124,8 @@ def load():
     current += 1
     with suppress(ImportError):
         import_module(
-            'gungame.games.{0}'.format(
-                GAME_NAME,
+            'gungame.games.{game_name}'.format(
+                game_name=GAME_NAME,
             )
         )
 

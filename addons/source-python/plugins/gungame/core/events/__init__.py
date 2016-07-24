@@ -34,7 +34,8 @@ for plugin_name in valid_plugins.all:
         plugin_type, plugin_name, 'custom_events.py',
     ).isfile():
         import_module(
-            'gungame.plugins.{0}.{1}.custom_events'.format(
-                plugin_type, plugin_name,
+            'gungame.plugins.{plugin_type}.{plugin_name}.custom_events'.format(
+                plugin_type=plugin_type,
+                plugin_name=plugin_name,
             )
         )

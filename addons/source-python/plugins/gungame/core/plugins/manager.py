@@ -46,8 +46,8 @@ class _GGPluginManager(PluginManager):
         """Set the base import path and add the plugin."""
         if plugin_name not in valid_plugins.all:
             raise ValueError(
-                'Invalid plugin_name "{0}".'.format(
-                    plugin_name,
+                'Invalid plugin_name "{plugin_name}".'.format(
+                    plugin_name=plugin_name,
                 )
             )
         plugin_type = valid_plugins.get_plugin_type(plugin_name)
@@ -75,8 +75,8 @@ class _GGPluginManager(PluginManager):
         """Remove a plugin and all its modules."""
         if plugin_name not in valid_plugins.all:
             raise ValueError(
-                'Invalid plugin_name "{0}".'.format(
-                    plugin_name,
+                'Invalid plugin_name "{plugin_name}".'.format(
+                    plugin_name=plugin_name,
                 )
             )
         if plugin_name not in self:

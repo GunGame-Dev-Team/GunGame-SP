@@ -44,8 +44,8 @@ class _PluginQueue(dict):
         """Add the item to its queue and loop through queues after 1 tick."""
         if item not in ('load', 'unload', 'reload'):
             raise ValueError(
-                'Invalid plugin type "{0}"'.format(
-                    item,
+                'Invalid plugin type "{queue_name}"'.format(
+                    queue_name=item,
                 )
             )
         if not self:

@@ -46,12 +46,17 @@ class GunGameConfigManager(ConfigManager):
         except ValueError:
             folder = 'core'
             file_path = base_path / name + '_settings'
-            cvar_prefix = 'gg_{0}_'.format(name)
+            cvar_prefix = 'gg_{plugin_name}_'.format(
+                plugin_name=name,
+            )
 
         try:
             # Add the translations
             self.translations = LangStrings(
-                'gungame/{0}/config/{1}'.format(folder, name)
+                'gungame/{plugin_type}/config/{plugin_name}'.format(
+                    plugin_type=folder,
+                    plugin_name=name,
+                )
             )
 
         except FileNotFoundError:

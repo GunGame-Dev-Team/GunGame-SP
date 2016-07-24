@@ -163,7 +163,11 @@ class _WarmupManager(object):
         if current:
 
             # Call the start configuration
-            engine_server.server_command('exec {0};'.format(current))
+            engine_server.server_command(
+                'exec {config};'.format(
+                    config=current,
+                )
+            )
 
         # Get the warmup weapon
         self._find_warmup_weapon()
@@ -187,7 +191,11 @@ class _WarmupManager(object):
         if current:
 
             # Call the end configuration
-            engine_server.server_command('exec {0};'.format(current))
+            engine_server.server_command(
+                'exec {config};'.format(
+                    config=current,
+                )
+            )
 
     def _find_warmup_weapon(self):
         """Return the next weapon in the warmup cycle."""

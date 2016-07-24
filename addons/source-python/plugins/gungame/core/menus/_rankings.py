@@ -37,9 +37,9 @@ def get_winners_menu(player):
         menu.append(
             ListOption(
                 rank,
-                '{0} [{1}]'.format(
-                    instance.name,
-                    instance.wins
+                '{name} [{wins}]'.format(
+                    name=instance.name,
+                    wins=instance.wins
                 ),
                 unique_id,
                 player.unique_id == unique_id,

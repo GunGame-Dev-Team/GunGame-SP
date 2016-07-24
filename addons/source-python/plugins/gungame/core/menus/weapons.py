@@ -31,9 +31,9 @@ def send_weapons_menu(index):
             menu.append(
                 ListOption(
                     level,
-                    '{0} [{1}]'.format(
-                        instance.weapon,
-                        instance.multi_kill,
+                    '{weapon} [{multi_kill}]'.format(
+                        weapon=instance.weapon,
+                        multi_kill=instance.multi_kill,
                     ),
                     level,
                     level == player.level,

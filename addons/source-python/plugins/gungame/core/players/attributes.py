@@ -44,8 +44,8 @@ class _PlayerAttributes(dict):
 
             # If not, raise an error
             raise ValueError(
-                'Given attribute "{0}" is already registered'.format(
-                    item,
+                'Given attribute "{attribute}" is already registered'.format(
+                    attribute=item,
                 )
             )
 
@@ -54,9 +54,9 @@ class _PlayerAttributes(dict):
 
             # If not, raise an error
             raise TypeError(
-                'Given value "{0}" is not an '
+                'Given value "{value}" is not an '
                 '_Attribute instance'.format(
-                    value,
+                    value=value,
                 )
             )
 
@@ -147,8 +147,8 @@ class _AttributeHooks(dict):
         # Is the attribute hooked?
         if attribute not in self:
             raise ValueError(
-                'Attribute "{0}" is not hooked.'.format(
-                    attribute,
+                'Attribute "{attribute}" is not hooked.'.format(
+                    attribute=attribute,
                 )
             )
 

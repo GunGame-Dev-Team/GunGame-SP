@@ -65,8 +65,9 @@ class _MessageManager(dict):
                     # Verify that the name is unique
                     if key in self:
                         warn(
-                            'Translation key "{0}" already registered.'.format(
-                                key,
+                            'Translation key "{translation_key}" '
+                            'already registered.'.format(
+                                translation_key=key,
                             )
                         )
                         continue

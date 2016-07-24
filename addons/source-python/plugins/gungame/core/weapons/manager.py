@@ -113,8 +113,8 @@ class _WeaponOrderManager(dict):
             return
         if value not in self:
             raise ValueError(
-                'Invalid weapon order "{0}".'.format(
-                    value,
+                'Invalid weapon order "{weapon_order}".'.format(
+                    weapon_order=value,
                 )
             )
         if self._active == value:
@@ -151,9 +151,9 @@ class _WeaponOrderManager(dict):
 
         # Log the weapon order name
         gg_weapons_manager_logger.log_message(
-            '{0} Weapon order: {1}\n'.format(
-                prefix,
-                self.active.title,
+            '{prefix} Weapon order: {weapon_order}\n'.format(
+                prefix=prefix,
+                weapon_order=self.active.title,
             )
         )
         levels = list()
@@ -167,30 +167,36 @@ class _WeaponOrderManager(dict):
         multi_kill_length = max(len(str(max(multi_kills))), len('multi_kill')) + 2
         weapon_length = max([
             len(weapon) for weapon in weapons] + [len('Weapon')]) + 4
-        joint = '{0} +{1}+{2}+{3}+'.format(
-            prefix,
-            '-' * level_length,
-            '-' * multi_kill_length,
-            '-' * weapon_length,
+        joint = (
+            '{prefix} +{level_length}+{multi_kill_length}+'
+            '{weapon_length}+'.format(
+                prefix=prefix,
+                level_length='-' * level_length,
+                multi_kill_length='-' * multi_kill_length,
+                weapon_length='-' * weapon_length,
+            )
         )
         gg_weapons_manager_logger.log_message(joint)
         gg_weapons_manager_logger.log_message(
-            '{0} |{1}|{2}|{3}|'.format(
-                prefix,
-                'Level'.center(level_length),
-                'multi_kill'.center(multi_kill_length),
-                'Weapon'.center(weapon_length),
+            '{prefix} |{level_title}|{multi_kill_title}|'
+            '{weapon_title}|'.format(
+                prefix=prefix,
+                level_title='Level'.center(level_length),
+                multi_kill_title='multi_kill'.center(multi_kill_length),
+                weapon_title='Weapon'.center(weapon_length),
             )
         )
         gg_weapons_manager_logger.log_message(joint)
         for level in self.active:
             current = self.active[level]
             gg_weapons_manager_logger.log_message(
-                '{0} |{1}|{2}|{3} |'.format(
-                    prefix,
-                    str(level).center(level_length),
-                    str(current.multi_kill).center(multi_kill_length),
-                    current.weapon.rjust(weapon_length - 1),
+                '{prefix} |{level}|{multi_kill}|{weapon} |'.format(
+                    prefix=prefix,
+                    level=str(level).center(level_length),
+                    multi_kill=str(current.multi_kill).center(
+                        multi_kill_length
+                    ),
+                    weapon=current.weapon.rjust(weapon_length - 1),
                 )
             )
         gg_weapons_manager_logger.log_message(joint)
@@ -227,8 +233,8 @@ class _WeaponOrderManager(dict):
                 _explosive_weapons + _melee_weapons
             ):
                 open_file.write(
-                    '{0}\n'.format(
-                        weapon,
+                    '{weapon}\n'.format(
+                        weapon=weapon,
                     )
                 )
 
@@ -242,8 +248,8 @@ class _WeaponOrderManager(dict):
             # TODO: print header
             for weapon in _secondary_weapons:
                 open_file.write(
-                    '{0}\n'.format(
-                        weapon,
+                    '{weapon}\n'.format(
+                        weapon=weapon,
                     )
                 )
 

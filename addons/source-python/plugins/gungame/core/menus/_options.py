@@ -37,10 +37,10 @@ class ListOption(PagedOption):
 
     def _render(self, player_index, choice_index=None):
         """Return the rendered string for the option."""
-        return '{0}{1}. {2}\n'.format(
-            self._get_highlight_prefix(),
-            self.choice_index,
-            _translate_text(self.text, player_index)
+        return '{prefix}{choice}. {text}\n'.format(
+            prefix=self._get_highlight_prefix(),
+            choice=self.choice_index,
+            text=_translate_text(self.text, player_index),
         )
 
 
@@ -53,4 +53,6 @@ class StarOption(PagedOption):
 
     def _render(self, player_index, choice_index=None):
         """Return the rendered string for the option."""
-        return '* {0}\n'.format(_translate_text(self.text, player_index))
+        return '* {text}\n'.format(
+            text=_translate_text(self.text, player_index),
+        )
