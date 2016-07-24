@@ -25,6 +25,9 @@ __all__ = (
 class GunGameMatchStatus(IntEnum):
     """Match based status."""
 
+    # GunGame is unloading
+    UNLOADING = -2
+
     # GunGame is loading
     LOADING = -1
 

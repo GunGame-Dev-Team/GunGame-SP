@@ -162,6 +162,7 @@ def load():
 def unload():
     """Clean up ."""
     # Start the cleanup process
+    GunGameStatus.MATCH = GunGameMatchStatus.UNLOADING
     current = 1
     total = len([x for x in _base_strings if x.startswith('Clean:')])
     gg_logger.log_message(

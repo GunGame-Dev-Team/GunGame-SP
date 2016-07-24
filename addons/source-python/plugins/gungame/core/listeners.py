@@ -202,6 +202,9 @@ def _round_end(game_event):
 @Event('server_cvar')
 def _server_cvar(game_event):
     """Set the weapon order value if the ConVar is for the weapon order."""
+    if GunGameStatus.MATCH == GunGameMatchStatus.UNLOADING:
+        return
+
     # Get the ConVar name and its new value
     cvarname = game_event['cvarname']
     cvarvalue = game_event['cvarvalue']
