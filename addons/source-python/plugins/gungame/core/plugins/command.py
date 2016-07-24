@@ -17,6 +17,7 @@ from .instance import GGLoadedPlugin
 from .manager import gg_plugin_manager
 from .queue import plugin_queue
 from .valid import valid_plugins
+from ..weapons.manager import weapon_order_manager
 
 
 # =============================================================================
@@ -81,9 +82,6 @@ class _GGSubCommandManager(SubCommandManager):
         # Add the plugin to the current queue
         plugin_queue['load'].add(plugin_name)
 
-    # Set the method's required arguments
-    load_plugin.args = ['<plugin>']
-
     def unload_plugin(self, plugin_name):
         """Unload a plugin by name."""
         # Get the plugin name with the gg_ prefix
@@ -110,9 +108,6 @@ class _GGSubCommandManager(SubCommandManager):
         # Add the plugin to the current queue
         plugin_queue['unload'].add(plugin_name)
 
-    # Set the method's required arguments
-    unload_plugin.args = ['<plugin>']
-
     def reload_plugin(self, plugin_name):
         """Reload a plugin by name."""
         # Get the plugin name with the gg_ prefix
@@ -138,9 +133,6 @@ class _GGSubCommandManager(SubCommandManager):
 
         # Add the plugin to the reload queue
         plugin_queue['reload'].add(plugin_name)
-
-    # Set the method's required arguments
-    reload_plugin.args = ['<plugin>']
 
     def print_plugins(self):
         """List all currently loaded plugins."""
@@ -234,9 +226,10 @@ class _GGSubCommandManager(SubCommandManager):
         # Print the message
         self.logger.log_message(message + '=' * 61 + '\n\n')
 
-    def restart_match(self):
+    @staticmethod
+    def restart_match():
         """Restart the match."""
-        # TODO: Add restart capability
+        weapon_order_manager.restart_game()
 
     def unload_all_plugins(self):
         """Unload all plugins when GunGame is unloading."""
