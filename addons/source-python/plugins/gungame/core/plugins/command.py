@@ -240,49 +240,43 @@ class _GGSubCommandManager(SubCommandManager):
 gg_command_manager = _GGSubCommandManager('gg', 'GunGame base command.')
 
 
-@gg_command_manager.server_sub_command('plugin', 'load')
-@gg_command_manager.client_sub_command(
-    'plugin', 'load', permission='gungame.load'
-)
+@gg_command_manager.server_sub_command(['plugin', 'load'])
+@gg_command_manager.client_sub_command(['plugin', 'load'], 'gungame.load')
 def _gg_plugin_load(command_info, plugin):
     gg_command_manager.load_plugin(plugin)
 
 
-@gg_command_manager.server_sub_command('plugin', 'unload')
-@gg_command_manager.client_sub_command(
-    'plugin', 'unload', permission='gungame.unload'
-)
+@gg_command_manager.server_sub_command(['plugin', 'unload'])
+@gg_command_manager.client_sub_command(['plugin', 'unload'], 'gungame.unload')
 def _gg_plugin_unload(command_info, plugin):
     gg_command_manager.unload_plugin(plugin)
 
 
-@gg_command_manager.server_sub_command('plugin', 'reload')
-@gg_command_manager.client_sub_command(
-    'plugin', 'reload', permission='gungame.reload'
-)
+@gg_command_manager.server_sub_command(['plugin', 'reload'])
+@gg_command_manager.client_sub_command(['plugin', 'reload'], 'gungame.reload')
 def _gg_plugin_reload(command_info, plugin):
     gg_command_manager.reload_plugin(plugin)
 
 
-@gg_command_manager.server_sub_command('plugin', 'list')
-@gg_command_manager.client_sub_command('plugin', 'list')
+@gg_command_manager.server_sub_command(['plugin', 'list'])
+@gg_command_manager.client_sub_command(['plugin', 'list'])
 def _gg_plugin_list(command_info):
     gg_command_manager.print_plugins()
 
 
-@gg_command_manager.server_sub_command('version')
-@gg_command_manager.client_sub_command('version')
+@gg_command_manager.server_sub_command(['version'])
+@gg_command_manager.client_sub_command(['version'])
 def _gg_version(command_info):
     gg_command_manager.print_version()
 
 
-@gg_command_manager.server_sub_command('credits')
-@gg_command_manager.client_sub_command('credits')
+@gg_command_manager.server_sub_command(['credits'])
+@gg_command_manager.client_sub_command(['credits'])
 def _gg_credits(command_info):
     gg_command_manager.print_credits()
 
 
-@gg_command_manager.server_sub_command('restart')
-@gg_command_manager.client_sub_command('restart', permission='gungame.restart')
+@gg_command_manager.server_sub_command(['restart'])
+@gg_command_manager.client_sub_command(['restart'], 'gungame.restart')
 def _gg_restart(command_info):
     gg_command_manager.restart_match()
