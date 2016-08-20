@@ -12,8 +12,8 @@ from warnings import warn
 from core import GAME_NAME
 
 # GunGame
-from ..core.messages import message_manager
-from ..core.players.instance import GunGamePlayer
+from gungame.core.messages import message_manager
+from gungame.core.players.instance import GunGamePlayer
 
 
 # =============================================================================
