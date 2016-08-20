@@ -5,26 +5,21 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Source.Python Imports
-#   Commands
+# Source.Python
 from commands import CommandReturn
 from commands.client import ClientCommand
-#   Events
 from events import Event
-#   Listeners
-from listeners import LevelShutdown
+from listeners import OnLevelShutdown
 from listeners.tick import TickRepeat
 from listeners.tick import TickRepeatStatus
-#   Players
 from players.entity import Player
 from players.helpers import index_from_userid
 from players.helpers import userid_from_index
 
-# GunGame Imports
-#   Players
+# GunGame
 from gungame.core.players.dictionary import player_dictionary
 
-# Plugin Imports
+# Plugin
 from .configuration import delay
 
 
@@ -195,7 +190,7 @@ def _player_disconnect(game_event):
 # =============================================================================
 # >> LISTENERS
 # =============================================================================
-@LevelShutdown
+@OnLevelShutdown
 def _level_shutdown():
     """Clear the deathmatch_players dictionary on map change."""
     deathmatch_players.clear()

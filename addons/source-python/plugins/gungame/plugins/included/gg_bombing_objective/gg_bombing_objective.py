@@ -5,23 +5,18 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Python Imports
-#   Contextlib
+# Python
 from contextlib import suppress
 
-# Source.Python Imports
-#   Events
+# Source.Python
 from events import Event
-#   Filters
 from filters.weapons import WeaponClassIter
 
-# GunGame Imports
-#   Players
+# GunGame
 from gungame.core.players.dictionary import player_dictionary
-#   Weapons
 from gungame.core.weapons.manager import weapon_order_manager
 
-# Plugin Imports
+# Plugin
 from .configuration import defused_levels
 from .configuration import defused_skip_knife
 from .configuration import defused_skip_nade

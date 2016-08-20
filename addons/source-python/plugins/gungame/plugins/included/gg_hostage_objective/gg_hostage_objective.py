@@ -5,25 +5,20 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Python Imports
-#   Contextlib
+# Python
 from contextlib import suppress
 
-# Source.Python Imports
-#   Events
+# Source.Python
 from events import Event
-#   Filters
 from filters.entities import EntityIter
 from filters.weapons import WeaponClassIter
 
-# GunGame Imports
-#   Players
+# GunGame
 from gungame.core.players.attributes import player_attributes
 from gungame.core.players.dictionary import player_dictionary
-#   Weapons
 from gungame.core.weapons.manager import weapon_order_manager
 
-# Plugin Imports
+# Plugin
 from .configuration import rescued_levels
 from .configuration import rescued_count
 from .configuration import rescued_skip_knife

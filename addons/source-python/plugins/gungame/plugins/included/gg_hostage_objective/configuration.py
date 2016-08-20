@@ -5,28 +5,28 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# GunGame Imports
-#   Config
+# GunGame
 from gungame.core.config.manager import GunGameConfigManager
 
-# Plugin Imports
+# Plugin
 from .info import info
 
 
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('killed_count',
-           'killed_levels',
-           'rescued_count',
-           'rescued_levels',
-           'rescued_skip_knife',
-           'rescued_skip_nade',
-           'stopped_count',
-           'stopped_levels',
-           'stopped_skip_knife',
-           'stopped_skip_nade',
-           )
+__all__ = (
+    'killed_count',
+    'killed_levels',
+    'rescued_count',
+    'rescued_levels',
+    'rescued_skip_knife',
+    'rescued_skip_nade',
+    'stopped_count',
+    'stopped_levels',
+    'stopped_skip_knife',
+    'stopped_skip_nade',
+)
 
 
 # =============================================================================

@@ -5,24 +5,24 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# GunGame Imports
-#   Config
+# GunGame
 from gungame.core.config.manager import GunGameConfigManager
 
-# Plugin Imports
+# Plugin
 from .info import info
 
 
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('defused_levels',
-           'defused_skip_knife',
-           'defused_skip_nade',
-           'detonated_levels',
-           'detonated_skip_knife',
-           'detonated_skip_nade',
-           )
+__all__ = (
+    'defused_levels',
+    'defused_skip_knife',
+    'defused_skip_nade',
+    'detonated_levels',
+    'detonated_skip_knife',
+    'detonated_skip_nade',
+)
 
 
 # =============================================================================

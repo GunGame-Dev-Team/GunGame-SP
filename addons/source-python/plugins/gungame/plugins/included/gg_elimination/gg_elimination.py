@@ -5,25 +5,18 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Python Imports
-#   Collections
+# Python
 from collections import defaultdict
 
-# Source.Python Imports
-#   Events
+# Source.Python
 from events import Event
-#   Listeners
-from listeners.tick import tick_delays
-#   Players
+from listeners.tick import Delay
 from players.helpers import index_from_userid
 
-# GunGame Imports
-#   Status
+# GunGame
 from gungame.core.status import GunGameStatus
 from gungame.core.status import GunGameRoundStatus
-#   Messages
 from gungame.core.messages import message_manager
-#   Players
 from gungame.core.players.dictionary import player_dictionary
 
 
@@ -42,15 +35,15 @@ def _player_death(game_event):
     if GunGameStatus.ROUND is GunGameRoundStatus.INACTIVE:
         return
     victim = player_dictionary[game_event['userid']]
-    tick_delays.delay(0, _respawn_victims, victim.userid)
+    Delay(0, _respawn_victims, victim.userid)
     attacker = game_event['attacker']
     if attacker in (victim.userid, 0):
-        tick_delays.delay(5, _respawn_player, victim.userid)
+        Delay(5, _respawn_player, victim.userid)
         victim.chat_message('Elimination:Suicide')
         return
     killer = player_dictionary[attacker]
     if victim.team == killer.team:
-        tick_delays.delay(5, _respawn_player, victim.userid)
+        Delay(5, _respawn_player, victim.userid)
         victim.chat_message('Elimination:TeamKill')
         return
     # TODO: Test reconnecting to see if players are not respawned

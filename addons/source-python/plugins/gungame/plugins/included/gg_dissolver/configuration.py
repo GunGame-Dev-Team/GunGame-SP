@@ -5,24 +5,23 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Source.Python Imports
-#   Entities
+# Source.Python
 from entities.constants import DissolveType
 
-# GunGame Imports
-#   Config
+# GunGame
 from gungame.core.config.manager import GunGameConfigManager
 
-# Plugin Imports
+# Plugin
 from .info import info
 
 
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('dissolver_type',
-           'magnitude',
-           )
+__all__ = (
+    'dissolver_type',
+    'magnitude',
+)
 
 
 # =============================================================================

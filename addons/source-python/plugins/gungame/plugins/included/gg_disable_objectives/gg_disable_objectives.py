@@ -5,18 +5,15 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Python Imports
-#   Enum
+# Python
 from enum import IntEnum
 
-# Source.Python Imports
-#   Events
+# Source.Python
 from events import Event
-#   Filters
 from filters.entities import EntityIter
 from filters.weapons import WeaponIter
 
-# Plugin Imports
+# Plugin
 from .configuration import disable_type
 
 

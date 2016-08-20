@@ -5,17 +5,14 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Python Imports
-#   Random
+# Python
 from random import randint
 
-# Source.Python Imports
-#   Entities
+# Source.Python
 from entities.entity import Entity
-#   Events
 from events import Event
 
-# Plugin Imports
+# Plugin
 from .configuration import dissolver_type
 from .configuration import magnitude
 
