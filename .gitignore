@@ -9,6 +9,7 @@ __pycache__
 # Custom plugin files
 addons/source-python/data/plugins/gungame/
 addons/source-python/plugins/gungame/plugins/custom/
+!addons/source-python/plugins/gungame/plugins/custom/__init__.py
 resource/source-python/translations/gungame/custom_plugins/
 
 # Server-specific configuration files
@@ -20,3 +21,6 @@ cfg/source-python/gungame/sound_packs/
 
 # Mac files
 .DS_Store
+
+# Do not ignore any readme files
+!readme.md
