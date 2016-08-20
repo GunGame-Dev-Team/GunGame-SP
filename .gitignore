@@ -17,3 +17,6 @@ cfg/source-python/gungame/sound_packs/
 
 # PyCharm files
 .idea/
+
+# Mac files
+.DS_Store
