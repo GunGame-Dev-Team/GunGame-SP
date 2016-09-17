@@ -56,7 +56,6 @@ class _MessageManager(dict):
                     continue
 
                 # Get the current translations
-                print(file.replace(TRANSLATION_PATH, ''))
                 instance = LangStrings(
                     file.replace(TRANSLATION_PATH, '')[1:~3]
                 )
