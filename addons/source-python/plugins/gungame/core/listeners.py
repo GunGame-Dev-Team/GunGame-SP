@@ -260,17 +260,17 @@ def _gg_win(game_event):
     message_manager.chat_message(
         index=winner.index,
         message='Winner_Player',
-        name=winner.name,
+        winner=winner.name,
     )
     for second in range(4):
         Delay(
             second,
             message_manager.center_message,
             message='Winner_Player_Center',
-            name=winner.name,
+            winner=winner.name,
         )
     color = {2: RED, 3: BLUE}.get(winner.team, WHITE)
-    message_manager.top_message('Player_Won', color, 4.0, name=winner.name)
+    message_manager.top_message('Player_Won', color, 4.0, winner=winner.name)
 
 
 @Event('gg_map_end')
