@@ -17,6 +17,7 @@ from configobj import ConfigObj
 
 # Source.Python
 from engines.sound import Sound
+from filesystem import is_vpk_file
 from paths import SOUND_PATH
 from translations.strings import LangStrings
 
@@ -230,7 +231,10 @@ class _SoundManager(defaultdict):
                                 continue
 
                             # Does the sound exist?
-                            if not SOUND_PATH.joinpath(line).isfile():
+                            if not (
+                                SOUND_PATH.joinpath(line).isfile() or
+                                is_vpk_file('sound/{path}'.format(path=line))
+                            ):
                                 warn(
                                     'Invalid sound "{sound}", sound '
                                     'does not exist'.format(

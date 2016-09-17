@@ -212,5 +212,6 @@ def unload():
 
     # Restart the match
     gg_logger.log_message(
-        _base_strings['End:Clean'].get_string())
+        _base_strings['End:Clean'].get_string()
+    )
     engine_server.server_command('mp_restartgame 1')
