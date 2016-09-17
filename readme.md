@@ -11,7 +11,7 @@ To install, simply download the current release (not currently available) and ex
 
 Once you have installed GunGame on your server, simply add the following to your autoexec.cfg file:
 ```
-sp load gungame
+sp plugin load gungame
 ```
 
 <br>
