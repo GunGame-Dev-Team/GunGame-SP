@@ -122,6 +122,7 @@ class _WeaponOrderManager(dict):
         self._active = value
         if self.randomize:
             self[self._active].randomize_order()
+        self.print_order()
 
     def set_randomize(self, value):
         """Set the randomize value and randomize the weapon order."""
@@ -139,7 +140,7 @@ class _WeaponOrderManager(dict):
             self._print_delay.cancel()
 
         # Print the order in 1 tick
-        self._print_delay = Delay(0, self._print_order)
+        self._print_delay = Delay(0.2, self._print_order)
 
     def _print_order(self):
         """Print the current weapon order."""
