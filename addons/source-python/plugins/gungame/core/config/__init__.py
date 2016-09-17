@@ -6,8 +6,9 @@
 # >> IMPORTS
 # =============================================================================
 # Python
-from contextlib import suppress
 from importlib import import_module
+import sys
+from warnings import warn
 
 # Site-Package
 from path import Path
@@ -39,11 +40,24 @@ def load_all_configs():
         )
     for plugin_name in valid_plugins.all:
         plugin_type = valid_plugins.get_plugin_type(plugin_name)
-        with suppress(ImportError):
-            import_module(
-                'gungame.plugins.{plugin_type}.{plugin_name}.'
-                'configuration'.format(
-                    plugin_type=plugin_type,
-                    plugin_name=plugin_name,
+        module_import = (
+            'gungame.plugins.{plugin_type}.{plugin_name}.configuration'.format(
+                plugin_type=plugin_type,
+                plugin_name=plugin_name,
+            )
+        )
+        try:
+            import_module(module_import)
+        except ImportError:
+            message = sys.exc_info()[1].msg
+            if message == "No module named '{module_import}'".format(
+                module_import=module_import,
+            ):
+                continue
+            warn(
+                'Unable to import configuration for {plugin} due to error:'
+                '\n\t{error}'.format(
+                    plugin=plugin_name,
+                    error=sys.exc_info()[1].msg
                 )
             )
