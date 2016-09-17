@@ -210,25 +210,25 @@ def _server_cvar(game_event):
     cvarvalue = game_event['cvarvalue']
 
     # Did the weapon order change?
-    if cvarname == order_file.get_name():
+    if cvarname == order_file.name:
 
         # Set the new weapon order
         weapon_order_manager.set_active_weapon_order(cvarvalue)
 
     # Did the randomize value change?
-    elif cvarname == order_randomize.get_name():
+    elif cvarname == order_randomize.name:
 
         # Set the randomize value
         weapon_order_manager.set_randomize(cvarvalue)
 
     # Did the multi_kill override value change?
-    elif cvarname == multi_kill_override.get_name():
+    elif cvarname == multi_kill_override.name:
 
         # Print out the new weapon order
         weapon_order_manager.print_order()
 
     # Did the warmup weapon change?
-    elif cvarname == warmup_weapon.get_name():
+    elif cvarname == warmup_weapon.name:
 
         # Set the new warmup weapon
         warmup_manager.set_warmup_weapon()

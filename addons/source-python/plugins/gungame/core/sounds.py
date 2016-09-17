@@ -349,7 +349,7 @@ class _SoundManager(defaultdict):
                 'Invalid sound pack "{sound_pack}".  Change "{cvarname}" '
                 'to a valid sound pack name.'.format(
                     sound_pack=pack,
-                    cvarname=sound_pack.get_name(),
+                    cvarname=sound_pack.name,
                 )
             )
 

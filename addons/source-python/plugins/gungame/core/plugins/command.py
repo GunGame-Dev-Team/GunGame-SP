@@ -176,8 +176,8 @@ class _GGSubCommandManager(SubCommandManager):
 
                     # Get the ConVar's text
                     value = '{cvar_name}:\n\t\t\t{help_text}: {value}'.format(
-                        cvar_name=value.get_name(),
-                        help_text=value.get_help_text(),
+                        cvar_name=value.name,
+                        help_text=value.help_text,
                         value=value.get_string(),
                     )
 
