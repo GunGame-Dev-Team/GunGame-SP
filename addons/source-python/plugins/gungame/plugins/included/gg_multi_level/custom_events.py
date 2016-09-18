@@ -5,24 +5,23 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Source.Python Imports
-#   Events
+# Source.Python
 from events.custom import CustomEvent
 from events.variable import ShortVariable
 
-# GunGame Imports
-#   Events
+# GunGame
 from gungame.core.events.resource import GGResourceFile
 
-# Plugin Imports
+# Plugin
 from .info import info
 
 
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
-__all__ = ('GG_Multi_Level',
-           )
+__all__ = (
+    'GG_Multi_Level',
+)
 
 
 # =============================================================================

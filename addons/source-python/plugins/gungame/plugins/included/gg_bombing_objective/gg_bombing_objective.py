@@ -17,12 +17,10 @@ from gungame.core.players.dictionary import player_dictionary
 from gungame.core.weapons.manager import weapon_order_manager
 
 # Plugin
-from .configuration import defused_levels
-from .configuration import defused_skip_knife
-from .configuration import defused_skip_nade
-from .configuration import detonated_levels
-from .configuration import detonated_skip_knife
-from .configuration import detonated_skip_nade
+from .configuration import (
+    defused_levels, defused_skip_knife, defused_skip_nade, detonated_levels,
+    detonated_skip_knife, detonated_skip_nade,
+)
 
 
 # =============================================================================

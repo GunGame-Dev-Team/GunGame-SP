@@ -8,9 +8,7 @@
 # Source.Python
 from entities import TakeDamageInfo
 from entities.entity import Entity
-from entities.hooks import EntityCondition
-from entities.hooks import EntityPostHook
-from entities.hooks import EntityPreHook
+from entities.hooks import EntityCondition, EntityPostHook, EntityPreHook
 from memory import make_object
 
 

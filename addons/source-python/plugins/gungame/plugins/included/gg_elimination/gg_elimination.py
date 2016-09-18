@@ -14,8 +14,7 @@ from listeners.tick import Delay
 from players.helpers import index_from_userid
 
 # GunGame
-from gungame.core.status import GunGameStatus
-from gungame.core.status import GunGameRoundStatus
+from gungame.core.status import GunGameRoundStatus, GunGameStatus
 from gungame.core.messages import message_manager
 from gungame.core.players.dictionary import player_dictionary
 

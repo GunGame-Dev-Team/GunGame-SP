@@ -13,8 +13,7 @@ from entities.entity import Entity
 from events import Event
 
 # Plugin
-from .configuration import dissolver_type
-from .configuration import magnitude
+from .configuration import dissolver_type, magnitude
 
 
 # =============================================================================
