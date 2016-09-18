@@ -42,7 +42,7 @@ def get_winners_menu(player):
                     wins=instance.wins
                 ),
                 unique_id,
-                player.unique_id == unique_id,
+                player.uniqueid == unique_id,
                 False,
             )
         )

@@ -10,10 +10,8 @@ from commands import CommandReturn
 from commands.client import ClientCommand
 from events import Event
 from listeners import OnLevelShutdown
-from listeners.tick import TickRepeat
-from listeners.tick import TickRepeatStatus
+from listeners.tick import TickRepeat, TickRepeatStatus
 from players.entity import Player
-from players.helpers import index_from_userid
 from players.helpers import userid_from_index
 
 # GunGame
@@ -83,7 +81,7 @@ class _DeathMatchPlayers(dict):
     def __missing__(self, userid):
         """Return a DMPlayer instance for the given userid."""
         # Store the userid's value as a DMPlayer instance
-        value = self[userid] = DMPlayer(index_from_userid(userid))
+        value = self[userid] = DMPlayer.from_userid(userid)
 
         # Return the DMPlayer instance
         return value

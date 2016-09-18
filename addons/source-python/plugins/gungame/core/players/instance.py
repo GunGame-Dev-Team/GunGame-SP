@@ -18,7 +18,7 @@ from .attributes import (
     attribute_post_hooks, attribute_pre_hooks, player_attributes,
 )
 from .database import winners_database
-from ..sounds import sound_manager
+from ..sounds.manager import sound_manager
 from ..status import GunGameMatchStatus, GunGameStatus
 from ..weapons.manager import weapon_order_manager
 
@@ -254,10 +254,11 @@ class GunGamePlayer(Player):
             return winners_database[self.unique_id].wins
         return 0
 
-    def increment_wins(self):
+    @wins.setter
+    def wins(self, wins):
         """Add a win for the player."""
         if not (self.is_fake_client() or 'BOT' in self.steamid):
-            winners_database.increment_player_wins(self)
+            winners_database.increment_player_wins(self, wins)
 
     @property
     def rank(self):

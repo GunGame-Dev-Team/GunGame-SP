@@ -57,7 +57,8 @@ class _MessageManager(dict):
 
                 # Get the current translations
                 instance = LangStrings(
-                    file.replace(TRANSLATION_PATH, '')[1:~3])
+                    file.replace(TRANSLATION_PATH, '')[1:~3]
+                )
 
                 # Loop through all translations in the current file
                 for key, value in instance.items():

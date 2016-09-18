@@ -25,7 +25,7 @@ from .core.events.storage import gg_resource_list
 from .core.logger import gg_logger
 from .core.players.database import winners_database
 from .core.plugins.command import gg_command_manager
-from .core.sounds import sound_manager
+from .core.sounds import register_all_sounds
 from .core.status import GunGameMatchStatus, GunGameStatus
 from .core.warmup import warmup_manager
 from .core.weapons.manager import weapon_order_manager
@@ -84,7 +84,6 @@ def load():
     register_all_commands()
 
     # Initialize GunGame sounds
-    # TODO: Initialize sounds
     gg_logger.log_message(
         _base_strings['Initialize:Sounds'].get_string(
             current=current,
@@ -92,7 +91,7 @@ def load():
         )
     )
     current += 1
-    sound_manager.load_sounds()
+    register_all_sounds()
 
     # Initialize GunGame database
     gg_logger.log_message(
@@ -212,5 +211,6 @@ def unload():
 
     # Restart the match
     gg_logger.log_message(
-        _base_strings['End:Clean'].get_string())
+        _base_strings['End:Clean'].get_string()
+    )
     engine_server.server_command('mp_restartgame 1')

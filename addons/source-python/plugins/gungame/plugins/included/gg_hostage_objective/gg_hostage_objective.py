@@ -19,16 +19,11 @@ from gungame.core.players.dictionary import player_dictionary
 from gungame.core.weapons.manager import weapon_order_manager
 
 # Plugin
-from .configuration import rescued_levels
-from .configuration import rescued_count
-from .configuration import rescued_skip_knife
-from .configuration import rescued_skip_nade
-from .configuration import stopped_levels
-from .configuration import stopped_count
-from .configuration import stopped_skip_knife
-from .configuration import stopped_skip_nade
-from .configuration import killed_levels
-from .configuration import killed_count
+from .configuration import (
+    killed_count, killed_levels, rescued_count, rescued_levels,
+    rescued_skip_knife, rescued_skip_nade, stopped_count, stopped_levels,
+    stopped_skip_knife, stopped_skip_nade,
+)
 
 
 # =============================================================================

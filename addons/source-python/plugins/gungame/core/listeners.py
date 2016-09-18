@@ -7,6 +7,7 @@
 # =============================================================================
 # Source.Python
 from colors import BLUE, RED, WHITE
+from cvars import ConVar
 from entities.entity import Entity
 from events import Event
 from filters.entities import EntityIter
@@ -14,7 +15,9 @@ from listeners import OnLevelInit, OnLevelShutdown
 from listeners.tick import Delay
 
 # GunGame
-from .config.misc import allow_kills_after_round
+from .config.misc import (
+    allow_kills_after_round, dynamic_chat_time, give_armor, give_defusers,
+)
 from .config.warmup import enabled as warmup_enabled, weapon as warmup_weapon
 from .config.weapon import order_file, order_randomize, multi_kill_override
 from .credits import gungame_credits
@@ -23,6 +26,7 @@ from .leaders import leader_manager
 from .messages import message_manager
 from .players.attributes import AttributePostHook
 from .players.dictionary import player_dictionary
+from .sounds.manager import sound_manager
 from .status import GunGameMatchStatus, GunGameRoundStatus, GunGameStatus
 from .warmup import warmup_manager
 from .weapons.manager import weapon_order_manager
@@ -68,6 +72,22 @@ def _player_spawn(game_event):
 
     # Give player their current weapon
     player.give_level_weapon()
+
+    # Give CTs defusers, if need be
+    if player.team == 3 and give_defusers.get_bool():
+        player.has_defuser = True
+
+    # Give player armor, if necessary
+    armor_type = {1: 'kevlar', 2: 'assaultsuit'}.get(give_armor.get_int())
+    if armor_type is not None:
+        equip = Entity.find_or_create('game_player_equip')
+        equip.add_output(
+            'item_{armor_type} 1'.format(
+                armor_type=armor_type
+            ),
+            caller=player,
+            activator=player,
+        )
 
     # Skip bots
     if player.is_fake_client():
@@ -210,25 +230,25 @@ def _server_cvar(game_event):
     cvarvalue = game_event['cvarvalue']
 
     # Did the weapon order change?
-    if cvarname == order_file.get_name():
+    if cvarname == order_file.name:
 
         # Set the new weapon order
         weapon_order_manager.set_active_weapon_order(cvarvalue)
 
     # Did the randomize value change?
-    elif cvarname == order_randomize.get_name():
+    elif cvarname == order_randomize.name:
 
         # Set the randomize value
         weapon_order_manager.set_randomize(cvarvalue)
 
     # Did the multi_kill override value change?
-    elif cvarname == multi_kill_override.get_name():
+    elif cvarname == multi_kill_override.name:
 
         # Print out the new weapon order
         weapon_order_manager.print_order()
 
     # Did the warmup weapon change?
-    elif cvarname == warmup_weapon.get_name():
+    elif cvarname == warmup_weapon.name:
 
         # Set the new warmup weapon
         warmup_manager.set_warmup_weapon()
@@ -250,27 +270,34 @@ def _gg_win(game_event):
     if not winner.is_fake_client():
         winner.wins += 1
 
-    # Get a game_end entity
-    entity = Entity.find_or_create('game_end')
-
-    # End the match to move to the next map
-    entity.end_game()
-
     # Send the winner messages
     message_manager.chat_message(
         index=winner.index,
         message='Winner_Player',
-        name=winner.name,
+        winner=winner.name,
     )
     for second in range(4):
         Delay(
             second,
             message_manager.center_message,
             message='Winner_Player_Center',
-            name=winner.name,
+            winner=winner.name,
         )
     color = {2: RED, 3: BLUE}.get(winner.team, WHITE)
-    message_manager.top_message('Player_Won', color, 4.0, name=winner.name)
+    message_manager.top_message('Player_Won', color, 4.0, winner=winner.name)
+
+    # Play the winner sound
+    winner_sound = sound_manager.play_sound('winner')
+
+    # Set the dynamic chat time, if needed
+    if dynamic_chat_time.get_bool():
+        ConVar('mp_chattime').set_float(winner_sound.duration)
+
+    # Get a game_end entity
+    entity = Entity.find_or_create('game_end')
+
+    # End the match to move to the next map
+    entity.end_game()
 
 
 @Event('gg_map_end')
