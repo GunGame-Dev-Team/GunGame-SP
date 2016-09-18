@@ -18,7 +18,7 @@ from .attributes import (
     attribute_post_hooks, attribute_pre_hooks, player_attributes,
 )
 from .database import winners_database
-from ..sounds import sound_manager
+from ..sounds.manager import sound_manager
 from ..status import GunGameMatchStatus, GunGameStatus
 from ..weapons.manager import weapon_order_manager
 
