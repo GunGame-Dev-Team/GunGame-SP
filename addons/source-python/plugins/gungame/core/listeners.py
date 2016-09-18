@@ -16,7 +16,7 @@ from listeners.tick import Delay
 
 # GunGame
 from .config.misc import (
-    allow_kills_after_round, dynamic_chat_time, give_defusers,
+    allow_kills_after_round, dynamic_chat_time, give_armor, give_defusers,
 )
 from .config.warmup import enabled as warmup_enabled, weapon as warmup_weapon
 from .config.weapon import order_file, order_randomize, multi_kill_override
@@ -76,6 +76,18 @@ def _player_spawn(game_event):
     # Give CTs defusers, if need be
     if player.team == 3 and give_defusers.get_bool():
         player.has_defuser = True
+
+    # Give player armor, if necessary
+    armor_type = {1: 'kevlar', 2: 'assaultsuit'}.get(give_armor.get_int())
+    if armor_type is not None:
+        equip = Entity.find_or_create('game_player_equip')
+        equip.add_output(
+            'item_{armor_type} 1'.format(
+                armor_type=armor_type
+            ),
+            caller=player,
+            activator=player,
+        )
 
     # Skip bots
     if player.is_fake_client():
