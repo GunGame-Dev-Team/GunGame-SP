@@ -46,19 +46,19 @@ def load_all_configs():
         ).isfile():
             continue
 
-        module_import = (
-            'gungame.plugins.{plugin_type}.{plugin_name}.configuration'.format(
-                plugin_type=plugin_type,
-                plugin_name=plugin_name,
-            )
-        )
         try:
-            import_module(module_import)
-        except ImportError:
+            import_module(
+                'gungame.plugins.{plugin_type}.{plugin_name}.'
+                'configuration'.format(
+                    plugin_type=plugin_type,
+                    plugin_name=plugin_name,
+                )
+            )
+        except Exception:
             warn(
                 'Unable to import configuration for {plugin} due to error:'
                 '\n\n\t{error}'.format(
                     plugin=plugin_name,
-                    error=sys.exc_info()[1].msg
+                    error=sys.exc_info()[1]
                 )
             )
