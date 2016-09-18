@@ -1,14 +1,12 @@
 # ../gungame/core/sounds/manager.py
 
-"""Sound based functionality."""
+"""Provides a class used to ."""
 
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
 # Python
 from collections import defaultdict
-from contextlib import suppress
-from importlib import import_module
 from random import shuffle
 from warnings import warn
 
@@ -19,41 +17,20 @@ from configobj import ConfigObj
 from engines.sound import Sound
 from filesystem import is_vpk_file
 from paths import SOUND_PATH
-from translations.strings import LangStrings
 
 # GunGame
-from .config.misc import sound_pack
-from .paths import GUNGAME_SOUND_PACK_PATH
-from .plugins.valid import valid_plugins
+from ..config.misc import sound_pack
+from ..paths import GUNGAME_SOUND_PACK_PATH
 
 
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
+    'RandomSounds',
     '_SoundManager',
     'sound_manager',
 )
-
-
-# =============================================================================
-# >> GLOBAL VARIABLES
-# =============================================================================
-# Store the core sounds with their defaults
-# TODO: create sounds specific to this new version of GunGame
-# TODO: sounds in the ../hl2/ vpk files are not working (count_down/winner)
-_core_sounds = {
-    'count_down': 'hl1/fvox/beep.wav',
-    'level_down': 'source-python/gungame/default/smb3_powerdown.mp3',
-    'level_up': 'source-python/gungame/default/smb3_powerup.mp3',
-    'multi_kill': 'source-python/gungame/default/smb_star.mp3',
-    'nade_level': 'source-python/gungame/default/nade_level.mp3',
-    'knife_level': 'source-python/gungame/default/knife_level.mp3',
-    'welcome': 'source-python/gungame/default/gg5_welcome.mp3',
-    'winner': 'winner_sounds.txt',
-}
-
-_sound_strings = LangStrings('gungame/core/config/sound_pack')
 
 
 # =============================================================================
@@ -88,80 +65,10 @@ class _SoundManager(defaultdict):
         super().__init__(default_factory)
         self._defaults = dict()
 
-        # Register all core sounds
-        for name, default in _core_sounds.items():
-            self.register_sound(name, default)
-
-        # Loop through all plugins
-        for plugin_name in valid_plugins.all:
-            plugin_type = valid_plugins.get_plugin_type(plugin_name)
-
-            # Register all plugin based sounds
-            with suppress(ImportError):
-                import_module(
-                    'gungame.plugins.{plugin_type}.{plugin_name}.sounds'.format(
-                        plugin_type=plugin_type,
-                        plugin_name=plugin_name,
-                    )
-                )
-
-        # Create the default files, if necessary
-        self._create_default_sound_pack()
-        self._create_winner_sounds()
-
-    def _create_default_sound_pack(self):
-        """Create/update the default sound pack."""
-        # Retrieve the current default sounds
-        file = GUNGAME_SOUND_PACK_PATH / 'default.ini'
-        ini = ConfigObj(file)
-
-        # Add all 'new' default sounds to the default config file
-        for item, value in sorted(self._defaults.items()):
-            if item in ini:
-                continue
-            ini[item] = value
-
-        # Save the default file
-        ini.write()
-
-    @staticmethod
-    def _create_winner_sounds():
-        """Create the winner sounds random file."""
-        # Get the winner_sounds path
-        file = GUNGAME_SOUND_PACK_PATH / 'random_sounds' / 'winner_sounds.txt'
-
-        # If the file already exists, no need to create it
-        if file.isfile():
-            return
-
-        # Create the winner_sounds file
-        with file.open('w') as open_file:
-
-            # Add the header
-            open_file.write(
-                '// {breaker}\n'.format(
-                    breaker='-' * 76,
-                )
-            )
-            for line in _sound_strings['Random'].get_string().splitlines():
-                open_file.write(
-                    '// {line}\n'.format(
-                        line=line,
-                    )
-                )
-            open_file.write(
-                '// {breaker}\n\n\n'.format(
-                    breaker='-' * 76,
-                )
-            )
-
-            # Add in the default winner sounds
-            for name in ('14', '15', '23_SuitSong3', '31'):
-                open_file.write(
-                    'music/HL2_song{name}.mp3\n'.format(
-                        name=name,
-                    )
-                )
+    @property
+    def defaults(self):
+        """"""
+        return self._defaults
 
     def load_sounds(self):
         """Load all sounds into the dictionary."""
@@ -298,11 +205,11 @@ class _SoundManager(defaultdict):
         """
         return extension in ('wav', 'mp3')
 
-    def register_sound(self, sound_name, value):
+    def register_sound(self, sound_name, default):
         """Register the sound and add the default value to the defaults.
 
         :param str sound_name: The type of sound to register.
-        :param str value: The default value for the sound type.
+        :param str default: The default value for the sound type.
         """
         # Was the sound type already registered?
         if sound_name in self._defaults:
@@ -314,9 +221,11 @@ class _SoundManager(defaultdict):
             return
 
         # Was a valid extension type given?
-        extension = value.rsplit('.', 1)[1]
-        if not self.is_allowed_sound_extension(
-                extension) and extension != 'txt':
+        extension = default.rsplit('.', 1)[1]
+        if (
+            not self.is_allowed_sound_extension(extension)
+            and extension != 'txt'
+        ):
             warn(
                 'Invalid extension "{extension}".  Sound "{sound}" '
                 'not registered.'.format(
@@ -327,7 +236,7 @@ class _SoundManager(defaultdict):
             return
 
         # Register the sound with its default value
-        self._defaults[sound_name] = value
+        self._defaults[sound_name] = default
 
     def get_sound(self, sound_name):
         """Return the sound from the given name.

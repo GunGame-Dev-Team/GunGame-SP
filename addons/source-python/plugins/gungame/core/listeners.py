@@ -26,7 +26,7 @@ from .leaders import leader_manager
 from .messages import message_manager
 from .players.attributes import AttributePostHook
 from .players.dictionary import player_dictionary
-from .sounds import sound_manager
+from .sounds.manager import sound_manager
 from .status import GunGameMatchStatus, GunGameRoundStatus, GunGameStatus
 from .warmup import warmup_manager
 from .weapons.manager import weapon_order_manager
