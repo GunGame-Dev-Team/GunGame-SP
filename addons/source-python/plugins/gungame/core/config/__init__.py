@@ -14,6 +14,7 @@ from warnings import warn
 from path import Path
 
 # GunGame
+from ..paths import GUNGAME_PLUGINS_PATH
 from ..plugins.valid import valid_plugins
 
 
@@ -40,6 +41,11 @@ def load_all_configs():
         )
     for plugin_name in valid_plugins.all:
         plugin_type = valid_plugins.get_plugin_type(plugin_name)
+        if not GUNGAME_PLUGINS_PATH.joinpath(
+            plugin_type, plugin_name, 'configuration.py',
+        ).isfile():
+            continue
+
         module_import = (
             'gungame.plugins.{plugin_type}.{plugin_name}.configuration'.format(
                 plugin_type=plugin_type,
@@ -49,14 +55,9 @@ def load_all_configs():
         try:
             import_module(module_import)
         except ImportError:
-            message = sys.exc_info()[1].msg
-            if message == "No module named '{module_import}'".format(
-                module_import=module_import,
-            ):
-                continue
             warn(
                 'Unable to import configuration for {plugin} due to error:'
-                '\n\t{error}'.format(
+                '\n\n\t{error}'.format(
                     plugin=plugin_name,
                     error=sys.exc_info()[1].msg
                 )
