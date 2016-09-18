@@ -44,7 +44,7 @@ class DMPlayer(Player):
     def _countdown(self):
         """Send messages about impending respawn and respawns the player."""
         # Is the player alive?
-        if not self.isdead:
+        if not self.dead:
 
             # No need to respawn them
             return
