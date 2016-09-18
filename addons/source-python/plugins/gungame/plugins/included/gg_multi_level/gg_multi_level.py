@@ -95,6 +95,7 @@ class _MultiLevelManager(dict):
             on_tick_listener_manager.register_listener(self._tick)
         if userid in self:
             del self[userid]
+        self[userid] = _MultiLevelPlayer.from_userid(userid)
 
     def _tick(self):
         current_gravity = gravity.get_int()
