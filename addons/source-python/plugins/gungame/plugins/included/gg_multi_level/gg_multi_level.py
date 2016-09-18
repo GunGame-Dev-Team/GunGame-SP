@@ -24,6 +24,7 @@ from gungame.core.sounds.manager import sound_manager
 from .configuration import (
     gravity, length, levels, speed, tk_attacker_reset, tk_victim_reset,
 )
+from .custom_events import GG_Multi_Level
 
 
 # =============================================================================
@@ -96,6 +97,8 @@ class _MultiLevelManager(dict):
         if userid in self:
             del self[userid]
         self[userid] = _MultiLevelPlayer.from_userid(userid)
+        with GG_Multi_Level() as event:
+            event.userid = userid
 
     def _tick(self):
         current_gravity = gravity.get_int()
