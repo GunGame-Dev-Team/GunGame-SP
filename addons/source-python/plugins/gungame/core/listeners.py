@@ -7,6 +7,7 @@
 # =============================================================================
 # Source.Python
 from colors import BLUE, RED, WHITE
+from cvars import ConVar
 from entities.entity import Entity
 from events import Event
 from filters.entities import EntityIter
@@ -14,7 +15,7 @@ from listeners import OnLevelInit, OnLevelShutdown
 from listeners.tick import Delay
 
 # GunGame
-from .config.misc import allow_kills_after_round
+from .config.misc import allow_kills_after_round, dynamic_chat_time
 from .config.warmup import enabled as warmup_enabled, weapon as warmup_weapon
 from .config.weapon import order_file, order_randomize, multi_kill_override
 from .credits import gungame_credits
@@ -23,6 +24,7 @@ from .leaders import leader_manager
 from .messages import message_manager
 from .players.attributes import AttributePostHook
 from .players.dictionary import player_dictionary
+from .sounds import sound_manager
 from .status import GunGameMatchStatus, GunGameRoundStatus, GunGameStatus
 from .warmup import warmup_manager
 from .weapons.manager import weapon_order_manager
@@ -250,12 +252,6 @@ def _gg_win(game_event):
     if not winner.is_fake_client():
         winner.wins += 1
 
-    # Get a game_end entity
-    entity = Entity.find_or_create('game_end')
-
-    # End the match to move to the next map
-    entity.end_game()
-
     # Send the winner messages
     message_manager.chat_message(
         index=winner.index,
@@ -271,6 +267,19 @@ def _gg_win(game_event):
         )
     color = {2: RED, 3: BLUE}.get(winner.team, WHITE)
     message_manager.top_message('Player_Won', color, 4.0, winner=winner.name)
+
+    # Play the winner sound
+    winner_sound = sound_manager.play_sound('winner')
+
+    # Set the dynamic chat time, if needed
+    if dynamic_chat_time.get_bool():
+        ConVar('mp_chattime').set_float(winner_sound.duration)
+
+    # Get a game_end entity
+    entity = Entity.find_or_create('game_end')
+
+    # End the match to move to the next map
+    entity.end_game()
 
 
 @Event('gg_map_end')
