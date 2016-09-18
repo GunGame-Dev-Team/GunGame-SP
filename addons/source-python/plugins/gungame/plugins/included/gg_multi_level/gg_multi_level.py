@@ -51,8 +51,8 @@ class _MultiLevelPlayer(Player):
         self.sound = sound_manager.emit_sound('multi_level', index)
         self.start_gravity = self.gravity
         self.start_speed = self.speed
-        self.gravity = gravity.get_int()
-        self.speed = speed.get_int()
+        self.gravity = gravity.get_int() / 100
+        self.speed = speed.get_int() / 100
         self.end_time = time() + length.get_float()
         self.give_spark_entity()
 
