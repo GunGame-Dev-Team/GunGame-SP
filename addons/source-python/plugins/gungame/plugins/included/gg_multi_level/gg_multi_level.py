@@ -9,7 +9,6 @@
 from time import time
 
 # Source.Python
-from entities.constants import EntityFlags
 from entities.entity import Entity
 from events import Event
 from listeners import on_tick_listener_manager
@@ -103,7 +102,6 @@ class _MultiLevelManager(dict):
                 del self[userid]
                 continue
             player.gravity = current_gravity
-
 
 multi_level_manager = _MultiLevelManager()
 
