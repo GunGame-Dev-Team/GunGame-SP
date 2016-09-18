@@ -31,10 +31,14 @@ from .configuration import (
 # =============================================================================
 _knife_weapons = set([weapon.basename for weapon in WeaponClassIter('knife')])
 _nade_weapons = set([
-    weapon.basename for weapon in WeaponClassIter('explosive')])
+    weapon.basename for weapon in WeaponClassIter('explosive')
+])
 with suppress(KeyError):
-    _nade_weapons.update(set([
-        weapon.basename for weapon in WeaponClassIter('incendiary')]))
+    _nade_weapons.update(
+        set([
+            weapon.basename for weapon in WeaponClassIter('incendiary')
+        ])
+    )
 
 
 # =============================================================================

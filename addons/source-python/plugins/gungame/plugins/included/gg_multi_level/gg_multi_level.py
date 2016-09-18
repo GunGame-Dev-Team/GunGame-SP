@@ -5,13 +5,21 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Python
+from time import time
+
 # Source.Python
+from entities.constants import EntityFlags
+from entities.entity import Entity
 from events import Event
+from listeners import on_tick_listener_manager
+from mathlib import Vector
 from players.entity import Player
 
 # GunGame
 from gungame.core.players.attributes import player_attributes
 from gungame.core.players.dictionary import player_dictionary
+from gungame.core.sounds.manager import sound_manager
 
 # Plugin
 from .configuration import (
@@ -20,25 +28,82 @@ from .configuration import (
 
 
 # =============================================================================
-# >> REGISTRATION
+# >> LOAD & UNLOAD
 # =============================================================================
-player_attributes.register_attribute('multi_levels', 0)
+def load():
+    player_attributes.register_attribute('multi_levels', 0)
+
+
+def unload():
+    player_attributes.unregister_attribute('multi_levels')
 
 
 # =============================================================================
 # >> CLASSES
 # =============================================================================
+class _MultiLevelPlayer(Player):
+    """"""
+
+    spark_entity = None
+
+    def __init__(self, index):
+        super(_MultiLevelPlayer, self).__init__(index)
+        self.sound = sound_manager.emit_sound('multi_level', index)
+        self.start_gravity = self.gravity
+        self.start_speed = self.speed
+        self.gravity = gravity.get_int()
+        self.speed = speed.get_int()
+        self.end_time = time() + length.get_float()
+        self.give_spark_entity()
+
+    def give_spark_entity(self):
+        entity = self.spark_entity = Entity.create('env_spark')
+        entity.spawn_flags = 896
+        entity.angles = Vector(-90, 0, 0)
+        entity.magnitude = 8
+        entity.trail_length = 3
+        entity.start_spark()
+
+    def remove_multi_level(self):
+        self.gravity = self.start_gravity
+        self.speed = self.start_speed
+        self.sound.stop(self.index)
+        self.remove_spark_entity()
+
+    def remove_spark_entity(self):
+        self.spark_entity.stop_spark()
+        self.spark_entity.remove()
+
+
 class _MultiLevelManager(dict):
     """"""
 
+    def __delitem__(self, userid):
+        if userid not in self:
+            return
+        self[userid].remove_multi_level()
+        super(_MultiLevelManager, self).__delitem__(userid)
+        if not len(self):
+            on_tick_listener_manager.unregister_listener(self._tick)
+
     def clear(self):
-        super().clear()
+        for userid in list(self):
+            del self[userid]
 
-    def give_multi_level(self, player):
-        pass
+    def give_multi_level(self, userid):
+        if not len(self):
+            on_tick_listener_manager.register_listener(self._tick)
+        if userid in self:
+            del self[userid]
 
-    def reset_player(self, player):
-        pass
+    def _tick(self):
+        current_gravity = gravity.get_int()
+        for userid, player in list(self.items()):
+            if player.end_time <= time():
+                del self[userid]
+                continue
+            player.gravity = current_gravity
+
 
 multi_level_manager = _MultiLevelManager()
 
@@ -60,25 +125,28 @@ def _player_levelup(game_event):
 # =============================================================================
 @Event('player_death')
 def _reset_team_killers(game_event):
-    victim = Player.from_userid(game_event['userid'])
+    userid = game_event['userid']
     attacker = game_event['attacker']
 
     # Suicide?
-    if attacker in (0, victim.userid):
-        multi_level_manager.reset_player(victim)
+    if attacker in (0, userid):
+        del multi_level_manager[userid]
         return
-
-    killer = Player.from_userid(attacker)
 
     # Not team-kill?
-    if victim.team != killer.team:
-        multi_level_manager.reset_player(victim)
+    if Player.from_userid(userid).team != Player.from_userid(attacker).team:
+        del multi_level_manager[userid]
         return
 
-    # Reset team-kill victim's multi-level
+    # Reset team-kill victim's multi-level?
     if not tk_victim_reset.get_bool():
-        multi_level_manager.reset_player(victim)
+        del multi_level_manager[userid]
 
-    # Reset the team-killer's multi-level
+    # Reset the team-killer's multi-level?
     if tk_attacker_reset.get_bool():
-        multi_level_manager.reset_player(killer)
+        del multi_level_manager[attacker]
+
+
+@Event('player_disconnect')
+def _remove_disconnecting_player(game_event):
+    del multi_level_manager[game_event['userid']]
