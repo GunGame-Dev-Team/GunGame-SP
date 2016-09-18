@@ -61,6 +61,7 @@ class _MultiLevelPlayer(Player):
         entity.angles = Vector(-90, 0, 0)
         entity.magnitude = 8
         entity.trail_length = 3
+        entity.set_parent(self, -1)
         entity.start_spark()
 
     def remove_multi_level(self):
