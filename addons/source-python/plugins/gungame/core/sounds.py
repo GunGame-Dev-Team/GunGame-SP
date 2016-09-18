@@ -41,6 +41,7 @@ __all__ = (
 # =============================================================================
 # Store the core sounds with their defaults
 # TODO: create sounds specific to this new version of GunGame
+# TODO: sounds in the ../hl2/ vpk files are not working (count_down/winner)
 _core_sounds = {
     'count_down': 'hl1/fvox/beep.wav',
     'level_down': 'source-python/gungame/default/smb3_powerdown.mp3',
