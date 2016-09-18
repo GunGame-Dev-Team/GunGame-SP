@@ -15,7 +15,9 @@ from listeners import OnLevelInit, OnLevelShutdown
 from listeners.tick import Delay
 
 # GunGame
-from .config.misc import allow_kills_after_round, dynamic_chat_time
+from .config.misc import (
+    allow_kills_after_round, dynamic_chat_time, give_defusers,
+)
 from .config.warmup import enabled as warmup_enabled, weapon as warmup_weapon
 from .config.weapon import order_file, order_randomize, multi_kill_override
 from .credits import gungame_credits
@@ -70,6 +72,10 @@ def _player_spawn(game_event):
 
     # Give player their current weapon
     player.give_level_weapon()
+
+    # Give CTs defusers, if need be
+    if player.team == 3 and give_defusers.get_bool():
+        player.has_defuser = True
 
     # Skip bots
     if player.is_fake_client():
