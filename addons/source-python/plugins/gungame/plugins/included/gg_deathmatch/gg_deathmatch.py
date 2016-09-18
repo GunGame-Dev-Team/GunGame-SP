@@ -41,7 +41,7 @@ class DMPlayer(Player):
 
     def start_repeat(self):
         """Start the player's respawn countdown."""
-        self.repeat.start(1, delay.get_int())
+        self.repeat.start(1, max(delay.get_int(), 1))
 
     def _countdown(self):
         """Send messages about impending respawn and respawns the player."""
