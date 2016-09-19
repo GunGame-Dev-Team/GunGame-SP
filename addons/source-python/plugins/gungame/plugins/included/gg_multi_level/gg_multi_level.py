@@ -63,6 +63,7 @@ class _MultiLevelPlayer(Player):
         entity.magnitude = 8
         entity.trail_length = 3
         entity.set_parent(self, -1)
+        entity.origin = self.origin
         entity.start_spark()
 
     def remove_multi_level(self):
