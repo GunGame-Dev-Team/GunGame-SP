@@ -99,6 +99,7 @@ class _MultiLevelManager(dict):
         self[userid] = _MultiLevelPlayer.from_userid(userid)
         with GG_Multi_Level() as event:
             event.userid = userid
+            event.leveler = userid
 
     def _tick(self):
         current_gravity = gravity.get_int()
@@ -120,7 +121,7 @@ def _player_levelup(game_event):
     player.multi_levels += 1
     if player.multi_levels >= levels.get_int():
         # Give or increase multi-level
-        multi_level_manager.give_multi_level(player)
+        multi_level_manager.give_multi_level(player.userid)
 
 
 # =============================================================================
