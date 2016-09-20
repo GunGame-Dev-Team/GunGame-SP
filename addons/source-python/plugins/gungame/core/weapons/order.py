@@ -8,12 +8,10 @@
 # Python
 from random import shuffle
 
-# Source.Python
-from filters.weapons import WeaponClassIter
-
 # GunGame
 from ..config.weapon import multi_kill_override
 from .errors import WeaponOrderError
+from .groups import primary_weapons, secondary_weapons
 
 
 # =============================================================================
@@ -27,13 +25,7 @@ __all__ = (
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
-_primary_weapons = [
-    weapon.basename for weapon in WeaponClassIter('primary')
-]
-_secondary_weapons = [
-    weapon.basename for weapon in WeaponClassIter('secondary')
-]
-_multi_kill_weapons = _primary_weapons + _secondary_weapons
+_multi_kill_weapons = primary_weapons + secondary_weapons
 
 
 # =============================================================================
