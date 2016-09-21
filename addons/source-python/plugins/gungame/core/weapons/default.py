@@ -100,8 +100,8 @@ def _create_short_order():
 def _create_random_order():
     """Create the random weapon order file, if necessary."""
     random_order = GUNGAME_WEAPON_ORDER_PATH / 'random.txt'
-    # if random_order.isfile():
-    #     return
+    if random_order.isfile():
+        return
     with random_order.open('w') as open_file:
         open_file.write(_default_header)
         all_weapon_copy = list(all_weapons)
