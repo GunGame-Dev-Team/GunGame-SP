@@ -11,7 +11,11 @@ from random import shuffle
 # GunGame
 from ..config.weapon import multi_kill_override
 from .errors import WeaponOrderError
-from .groups import primary_weapons, secondary_weapons
+from .groups import (
+    machine_gun_weapons, other_primary_weapons,other_secondary_weapons,
+    other_weapons, pistol_weapons, rifle_weapons, shotgun_weapons, smg_weapons,
+    sniper_weapons,
+)
 
 
 # =============================================================================
@@ -25,7 +29,11 @@ __all__ = (
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
-_multi_kill_weapons = primary_weapons + secondary_weapons
+_multi_kill_weapons = (
+    machine_gun_weapons | other_primary_weapons | other_secondary_weapons |
+    other_weapons | pistol_weapons | rifle_weapons | shotgun_weapons |
+    smg_weapons | sniper_weapons
+)
 
 
 # =============================================================================
