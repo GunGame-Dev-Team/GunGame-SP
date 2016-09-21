@@ -15,6 +15,7 @@ from ..config.weapon import order_file, order_randomize
 from ..paths import GUNGAME_WEAPON_ORDER_PATH
 from ..status import GunGameMatchStatus, GunGameStatus
 from . import gg_weapons_logger
+from .default import create_default_weapon_orders
 from .order import WeaponOrder
 
 
@@ -77,8 +78,7 @@ class _WeaponOrderManager(dict):
         self._print_delay = None
 
         # Create the default files
-        self._create_default_order()
-        self._create_short_order()
+        create_default_weapon_orders()
 
     @property
     def active(self):
@@ -220,38 +220,5 @@ class _WeaponOrderManager(dict):
 
         # Restart the match
         engine_server.server_command('mp_restartgame 1')
-
-    @staticmethod
-    def _create_default_order():
-        """Create the default weapon order file, if necessary."""
-        default = GUNGAME_WEAPON_ORDER_PATH / 'default.txt'
-        if default.isfile():
-            return
-        with default.open('w') as open_file:
-            # TODO: print header
-            for weapon in (
-                _primary_weapons + _secondary_weapons +
-                _explosive_weapons + _melee_weapons
-            ):
-                open_file.write(
-                    '{weapon}\n'.format(
-                        weapon=weapon,
-                    )
-                )
-
-    @staticmethod
-    def _create_short_order():
-        """Create the short weapon order file, if necessary."""
-        short = GUNGAME_WEAPON_ORDER_PATH / 'short.txt'
-        if short.isfile():
-            return
-        with short.open('w') as open_file:
-            # TODO: print header
-            for weapon in _secondary_weapons:
-                open_file.write(
-                    '{weapon}\n'.format(
-                        weapon=weapon,
-                    )
-                )
 
 weapon_order_manager = _WeaponOrderManager()
