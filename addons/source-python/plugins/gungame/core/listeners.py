@@ -379,6 +379,7 @@ def _post_multi_kill(player, attribute, new_value, old_value):
         kills=new_value,
         total=multi_kill,
     )
+    player.play_sound('multi_kill')
 
 
 # =============================================================================

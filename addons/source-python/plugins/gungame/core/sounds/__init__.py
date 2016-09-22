@@ -29,12 +29,13 @@ from ..plugins.valid import valid_plugins
 # TODO: create sounds specific to this new version of GunGame
 # TODO: sounds in the ../hl2/ vpk files are not working (count_down/winner)
 _core_sounds = {
-    'count_down': 'hl1/fvox/beep.wav',
+    'welcome': 'source-python/gungame/default/gg5_welcome.mp3',
+    'multi_kill': 'common/stuck1.wav',
     'level_down': 'source-python/gungame/default/smb3_powerdown.mp3',
     'level_up': 'source-python/gungame/default/smb3_powerup.mp3',
     'nade_level': 'source-python/gungame/default/nade_level.mp3',
     'knife_level': 'source-python/gungame/default/knife_level.mp3',
-    'welcome': 'source-python/gungame/default/gg5_welcome.mp3',
+    'count_down': 'hl1/fvox/beep.wav',
     'winner': 'winner_sounds.txt',
 }
 
