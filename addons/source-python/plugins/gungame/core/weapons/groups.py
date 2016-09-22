@@ -5,6 +5,9 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Python
+from collections import OrderedDict
+
 # Source.Python
 from core import GAME_NAME
 from filters.weapons import WeaponClassIter
@@ -36,25 +39,27 @@ __all__ = (
 # =============================================================================
 all_weapons = set()
 
+_weapon_sets = OrderedDict()
+
 # Primary Weapon sets
-shotgun_weapons = set()
-smg_weapons = set()
-sniper_weapons = set()
-rifle_weapons = set()
-machine_gun_weapons = set()
-other_primary_weapons = set()
+shotgun_weapons = _weapon_sets['shotgun'] = set()
+smg_weapons = _weapon_sets['smg'] = set()
+sniper_weapons = _weapon_sets['sniper'] = set()
+rifle_weapons = _weapon_sets['rifle'] = set()
+machine_gun_weapons = _weapon_sets['machinegun'] = set()
+other_primary_weapons = _weapon_sets['primary'] = set()
 
 # Secondary Weapon sets
-pistol_weapons = set()
-other_secondary_weapons = set()
+pistol_weapons = _weapon_sets['pistol'] = set()
+other_secondary_weapons = _weapon_sets['secondary'] = set()
 
 # Projectile Weapon sets
-explosive_weapons = set()
-incendiary_weapons = set()
-grenade_weapons = set()
+explosive_weapons = _weapon_sets['explosive'] = set()
+incendiary_weapons = _weapon_sets['incendiary'] = set()
+grenade_weapons = _weapon_sets['grenade'] = set()
 
 # Melee Weapon sets
-melee_weapons = set()
+melee_weapons = _weapon_sets['melee'] = set()
 
 # Other Weapon sets
 other_weapons = set()
@@ -69,30 +74,10 @@ def _get_weapon_sets():
             continue
         if 'all' in weapon.tags and len(weapon.tags) == 1:
             continue
-        if 'shotgun' in weapon.tags:
-            shotgun_weapons.add(weapon.basename)
-        elif 'smg' in weapon.tags:
-            smg_weapons.add(weapon.basename)
-        elif 'sniper' in weapon.tags:
-            sniper_weapons.add(weapon.basename)
-        elif 'rifle' in weapon.tags:
-            rifle_weapons.add(weapon.basename)
-        elif 'machinegun' in weapon.tags:
-            machine_gun_weapons.add(weapon.basename)
-        elif 'primary' in weapon.tags:
-            other_primary_weapons.add(weapon.basename)
-        elif 'pistol' in weapon.tags:
-            pistol_weapons.add(weapon.basename)
-        elif 'secondary' in weapon.tags:
-            other_secondary_weapons.add(weapon.basename)
-        elif 'explosive' in weapon.tags:
-            explosive_weapons.add(weapon.basename)
-        elif 'incendiary' in weapon.tags:
-            incendiary_weapons.add(weapon.basename)
-        elif 'grenade' in weapon.tags:
-            grenade_weapons.add(weapon.basename)
-        elif 'melee' in weapon.tags:
-            melee_weapons.add(weapon.basename)
+        for tag, weapon_set in _weapon_sets:
+            if tag in weapon.tags:
+                weapon_set.add(weapon.basename)
+                break
         else:
             other_weapons.add(weapon.basename)
         all_weapons.add(weapon.basename)
