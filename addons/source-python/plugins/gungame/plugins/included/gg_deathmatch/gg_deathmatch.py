@@ -64,7 +64,7 @@ class DMPlayer(Player):
                 'DeathMatch:Respawning')
 
             # Respawn the player
-            self.respawn()
+            self.spawn()
 
     def stop_repeat(self):
         """Stop the player's repeat."""
