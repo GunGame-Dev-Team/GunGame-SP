@@ -159,7 +159,7 @@ class GunGamePlayer(Player):
         for weapon in self.weapons():
             if weapon.classname in exclude:
                 continue
-            self.drop_weapon(weapon, None, None)
+            self.drop_weapon(weapon)
             weapon.remove()
 
     def give_level_weapon(self):
@@ -170,13 +170,9 @@ class GunGamePlayer(Player):
                 return
         for entity in self.weapons():
             if weapon_manager[entity.classname].slot == weapon.slot:
-                self.drop_weapon(entity, None, None)
+                self.drop_weapon(entity)
                 entity.remove()
-        self._give_named_item(weapon.name)
-
-    def _give_named_item(self, weapon):
-        """Give the player a weapon."""
-        self.give_named_item(weapon, 0)
+        self.give_named_item(weapon.name)
 
     # =========================================================================
     # >> MESSAGE FUNCTIONALITY

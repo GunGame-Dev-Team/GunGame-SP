@@ -13,20 +13,11 @@ from core import GAME_NAME
 
 # GunGame
 from gungame.core.messages import message_manager
-from gungame.core.players.instance import GunGamePlayer
 
 
 # =============================================================================
 # >> OVERRIDES
 # =============================================================================
-def _give_named_item(player, weapon):
-    """Override for give_named_item to add other arguments."""
-    player.give_named_item(weapon, 0, None, True)
-
-# Set the override
-GunGamePlayer._give_named_item = _give_named_item
-
-
 class _NoMessage(object):
     """Class used to hook non-supported message types."""
 

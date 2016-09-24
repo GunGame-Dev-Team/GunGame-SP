@@ -78,7 +78,7 @@ def _disable_objectives(game_event=None):
             if owner is not None:
 
                 # Force the owner to drop the entity
-                owner.drop_weapon(weapon, None, None)
+                owner.drop_weapon(weapon)
 
             # Remove the entity from the server
             weapon.remove()
