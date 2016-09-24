@@ -12,7 +12,6 @@ from operator import attrgetter
 # Source.Python
 from events import Event
 from listeners.tick import Delay
-from players.helpers import index_from_userid
 
 # GunGame
 from gungame.core.status import GunGameRoundStatus, GunGameStatus
@@ -96,5 +95,6 @@ def _respawn_player(userid):
     """Respawn the given userid after validation."""
     if GunGameStatus.ROUND is GunGameRoundStatus.INACTIVE:
         return
-    if index_from_userid(userid, False) is not None:
-        player_dictionary[userid].spawn()
+    player = player_dictionary.get(userid)
+    if player is not None:
+        player.spawn()
