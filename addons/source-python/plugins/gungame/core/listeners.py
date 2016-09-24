@@ -280,8 +280,10 @@ def _gg_win(game_event):
         Delay(
             second,
             message_manager.center_message,
-            message='Winner_Player_Center',
-            winner=winner.name,
+            kwargs={
+                'message': 'Winner_Player_Center',
+                'winner': winner.name,
+            }
         )
     color = {2: RED, 3: BLUE}.get(winner.team, WHITE)
     message_manager.top_message('Player_Won', color, 4.0, winner=winner.name)
