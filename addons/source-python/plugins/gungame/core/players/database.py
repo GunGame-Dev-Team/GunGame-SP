@@ -96,7 +96,7 @@ class _WinsDatabase(defaultdict):
         """Return the SQL cursor."""
         return self._cursor
 
-    def increment_player_wins(self, player, wins):
+    def set_player_wins(self, player, wins):
         """Update the player's database values."""
         # Get the current time stamp
         time_stamp = time()
@@ -116,7 +116,7 @@ class _WinsDatabase(defaultdict):
 
         # Set the values for the instance
         instance.name = player.name
-        instance.wins += wins
+        instance.wins = wins
         instance.time_stamp = time_stamp
         instance.last_win = time_stamp
 

@@ -254,7 +254,7 @@ class GunGamePlayer(Player):
     def wins(self, wins):
         """Add a win for the player."""
         if not (self.is_fake_client() or 'BOT' in self.steamid):
-            winners_database.increment_player_wins(self, wins)
+            winners_database.set_player_wins(self, wins)
 
     @property
     def rank(self):
