@@ -14,7 +14,7 @@ from warnings import warn
 from engines.server import engine_server
 from filters.players import PlayerIter
 from filters.weapons import WeaponClassIter
-from listeners.tick import TickRepeat
+from listeners.tick import Repeat
 
 # GunGame
 from .config.warmup import (
@@ -71,7 +71,7 @@ class _WarmupManager(object):
 
     def __init__(self):
         """Store the base attributes."""
-        self._repeat = TickRepeat(self._countdown)
+        self._repeat = Repeat(self._countdown)
         self._extensions = 0
         self._warmup_time = 0
         self._weapon = None

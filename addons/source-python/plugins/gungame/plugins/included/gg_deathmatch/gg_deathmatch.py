@@ -10,7 +10,7 @@ from commands import CommandReturn
 from commands.client import ClientCommand
 from events import Event
 from listeners import OnLevelShutdown
-from listeners.tick import TickRepeat, TickRepeatStatus
+from listeners.tick import Repeat, RepeatStatus
 from players.entity import Player
 from players.helpers import userid_from_index
 
@@ -28,13 +28,13 @@ class DMPlayer(Player):
     """Class used to interact with a specific player."""
 
     def __init__(self, index):
-        """Store the TickRepeat instance for the player."""
+        """Store the Repeat instance for the player."""
         super().__init__(index)
-        self._repeat = TickRepeat(self._countdown)
+        self._repeat = Repeat(self._countdown)
 
     @property
     def repeat(self):
-        """Return the player's TickRepeat instance."""
+        """Return the player's Repeat instance."""
         return self._repeat
 
     def start_repeat(self):
@@ -54,14 +54,17 @@ class DMPlayer(Player):
 
             # Message the player with the countdown
             player_dictionary[self.userid].hint_message(
-                'DeathMatch:CountDown', seconds=self.repeat.remaining)
+                'DeathMatch:CountDown',
+                seconds=self.repeat.remaining,
+            )
 
         # Are there no more loops remaining for the player?
         else:
 
             # Message the player that they are respawning
             player_dictionary[self.userid].hint_message(
-                'DeathMatch:Respawning')
+                'DeathMatch:Respawning'
+            )
 
             # Respawn the player
             self.spawn()
@@ -72,7 +75,7 @@ class DMPlayer(Player):
 
     def is_repeat_active(self):
         """Return whether the player's repeat is running."""
-        return self.repeat.status == TickRepeatStatus.RUNNING
+        return self.repeat.status == RepeatStatus.RUNNING
 
 
 class _DeathMatchPlayers(dict):
