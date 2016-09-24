@@ -7,6 +7,7 @@
 # =============================================================================
 # Python
 from collections import defaultdict
+from operator import attrgetter
 
 # Source.Python
 from events import Event
@@ -34,21 +35,24 @@ def _player_death(game_event):
     if GunGameStatus.ROUND is GunGameRoundStatus.INACTIVE:
         return
     victim = player_dictionary[game_event['userid']]
-    Delay(0, _respawn_victims, victim.userid)
+    Delay(0, _respawn_victims, (victim.userid, ))
     attacker = game_event['attacker']
     if attacker in (victim.userid, 0):
-        Delay(5, _respawn_player, victim.userid)
+        Delay(5, _respawn_player, (victim.userid, ))
         victim.chat_message('Elimination:Suicide')
         return
     killer = player_dictionary[attacker]
     if victim.team == killer.team:
-        Delay(5, _respawn_player, victim.userid)
+        Delay(5, _respawn_player, (victim.userid, ))
         victim.chat_message('Elimination:TeamKill')
         return
     # TODO: Test reconnecting to see if players are not respawned
     _eliminated_players[killer.userid].add(victim.userid)
     victim.chat_message(
-        'Elimination:Attacker', killer.index, attacker=killer)
+        'Elimination:Attacker',
+        killer.index,
+        attacker=killer
+    )
 
 
 @Event('round_start')
@@ -62,23 +66,30 @@ def _round_start(game_event):
 # =============================================================================
 def _respawn_victims(userid):
     """Respawn all victim's of the given userid."""
-    victims = _eliminated_players.pop(userid, None)
-    if not victims:
+    victims = _eliminated_players.pop(userid, [])
+    if not len(victims):
         return
     if GunGameStatus.ROUND is GunGameRoundStatus.INACTIVE:
         return
-    players = set()
+    players = list()
     for victim in victims:
-        if index_from_userid(victim, False) is not None:
-            player = player_dictionary[victim]
-            if player.team == 1:
-                continue
-            players.add(player.name)
-            player.respawn()
+        player = player_dictionary.get(victim)
+        if player is None:
+            continue
+        if player.team == 1:
+            continue
+        players.append(player)
+        player.spawn()
     if players:
         message_manager.chat_message(
-            'Elimination:Respawning', player.index,
-            player='\x01, \x03'.join(sorted(players)))
+            'Elimination:Respawning', players[0].index,
+            player='\x01, \x03'.join(
+                map(
+                    attrgetter('name'),
+                    players
+                )
+            )
+        )
 
 
 def _respawn_player(userid):
@@ -86,4 +97,4 @@ def _respawn_player(userid):
     if GunGameStatus.ROUND is GunGameRoundStatus.INACTIVE:
         return
     if index_from_userid(userid, False) is not None:
-        player_dictionary[userid].respawn()
+        player_dictionary[userid].spawn()
