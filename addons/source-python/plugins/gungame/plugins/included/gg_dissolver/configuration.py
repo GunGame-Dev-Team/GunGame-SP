@@ -33,13 +33,19 @@ with GunGameConfigManager(info.name) as _config:
 
         for _name in DissolveType.__members__:
 
-            dissolver_type.Options.append('{0} = {1}'.format(
-                getattr(DissolveType, _name).real, _name))
+            dissolver_type.Options.append(
+                '{value} = {name}'.format(
+                    value=getattr(DissolveType, _name).real,
+                    name=_name,
+                )
+            )
 
-        _num_dissolve_types = len(DissolveType)
+        _num_dissolve_types = len(DissolveType.__members__)
 
         dissolver_type.add_text(
-            random=_num_dissolve_types, remove=_num_dissolve_types + 1)
+            random=_num_dissolve_types,
+            remove=_num_dissolve_types + 1,
+        )
 
     with _config.cvar('magnitude', 2) as magnitude:
         magnitude.add_text()

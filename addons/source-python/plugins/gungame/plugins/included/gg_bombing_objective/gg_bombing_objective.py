@@ -5,15 +5,14 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Python
-from contextlib import suppress
-
 # Source.Python
 from events import Event
-from filters.weapons import WeaponClassIter
 
 # GunGame
 from gungame.core.players.dictionary import player_dictionary
+from gungame.core.weapons.groups import (
+    explosive_weapons, incendiary_weapons, grenade_weapons, melee_weapons
+)
 from gungame.core.weapons.manager import weapon_order_manager
 
 # Plugin
@@ -26,12 +25,7 @@ from .configuration import (
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
-_knife_weapons = set([weapon.basename for weapon in WeaponClassIter('knife')])
-_nade_weapons = set([
-    weapon.basename for weapon in WeaponClassIter('explosive')])
-with suppress(KeyError):
-    _nade_weapons.update(set([
-        weapon.basename for weapon in WeaponClassIter('incendiary')]))
+_nade_weapons = explosive_weapons | incendiary_weapons | grenade_weapons
 
 
 # =============================================================================
@@ -69,7 +63,9 @@ def _get_levels_to_increase(player, reason):
         skip_nade = detonated_skip_nade.get_int()
         skip_knife = detonated_skip_knife.get_int()
     else:
-        raise ValueError('Invalid reason given "{0}".'.format(reason))
+        raise ValueError(
+            'Invalid reason given "{reason}".'.format(reason=reason)
+        )
 
     if base_levels <= 0:
         return 0
@@ -79,11 +75,17 @@ def _get_levels_to_increase(player, reason):
     for level_increase in range(base_levels + 1):
         level = player.level + level_increase
         if level > weapon_order_manager.max_levels:
-            return level
+            return level_increase
         weapon = weapon_order_manager.active[level].weapon
-        if (weapon in _nade_weapons and not skip_nade) or (
-                weapon in _knife_weapons and not skip_knife):
-            player.chat_message('BombingObjective:NoSkip:{0}'.format(
-                    reason.title()), weapon=weapon)
+        if (
+            (weapon in _nade_weapons and not skip_nade) or
+            (weapon in melee_weapons and not skip_knife)
+        ):
+            player.chat_message(
+                'BombingObjective:NoSkip:{reason}'.format(
+                    reason=reason.title()
+                ),
+                weapon=weapon,
+            )
             return level_increase
     return level_increase
