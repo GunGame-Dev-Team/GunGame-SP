@@ -67,12 +67,12 @@ class GunGameConfigManager(ConfigManager):
 
     def cvar(
         self, name, default=0, description=None, flags=0, min_value=None,
-        max_value=None,
+        max_value=None, **tokens
     ):
         """Override cvar method to add cvar as _GunGameCvarManager object."""
         section = _GunGameCvarManager(
-            name, default, description, flags, min_value,
-            max_value, self.cvar_prefix, self.translations,
+            name, default, description, flags, min_value, max_value,
+            self.cvar_prefix, self.translations, **tokens
         )
         self._cvars.add(name)
         self._sections.append(section)
@@ -84,7 +84,7 @@ class _GunGameCvarManager(_CvarManager):
 
     def __init__(
         self, name, default, description, flags, min_value, max_value,
-        cvar_prefix, translations,
+        cvar_prefix, translations, **tokens
     ):
         """Get the true description and store the translations."""
         self._base_item = None
@@ -92,7 +92,7 @@ class _GunGameCvarManager(_CvarManager):
             description = name
         if description in translations:
             self._base_item = description + ':'
-            description = translations[description]
+            description = translations[description].get_string(**tokens)
         super().__init__(
             cvar_prefix + name, default, description,
             flags, min_value, max_value,
@@ -111,7 +111,9 @@ class _GunGameCvarManager(_CvarManager):
             if not item.startswith(self._base_item):
                 continue
             if item.count(':') < 2:
-                raise ValueError('Invalid item.')
+                raise ValueError(
+                    'Invalid item ({item}).'.format(item=item)
+                )
             attribute = item.replace(self._base_item, '', 1).split(':')[0]
             getattr(self, attribute).append(
                 self.translations[item].get_string(**tokens)
