@@ -50,12 +50,12 @@ class DMPlayer(Player):
             return
 
         # Does the player's repeat have more loops remaining?
-        if self.repeat.remaining:
+        if self.repeat.loops_remaining:
 
             # Message the player with the countdown
             player_dictionary[self.userid].hint_message(
                 'DeathMatch:CountDown',
-                seconds=self.repeat.remaining,
+                seconds=self.repeat.loops_remaining,
             )
 
         # Are there no more loops remaining for the player?
@@ -92,10 +92,11 @@ class _DeathMatchPlayers(dict):
     def __delitem__(self, userid):
         """Stop the player's repeat before removing them."""
         # Is the player in the dictionary?
-        if userid in self:
+        if userid not in self:
+            return
 
-            # Stop the player's repeat
-            self[userid].stop_repeat()
+        # Stop the player's repeat
+        self[userid].stop_repeat()
 
         # Remove the player from the dictionary
         super().__delitem__(userid)
