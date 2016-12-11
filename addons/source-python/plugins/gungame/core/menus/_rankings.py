@@ -26,9 +26,9 @@ def get_winners_menu(player):
 
     winners = sorted(
         winners_database,
-        key=lambda unique_id: (
-            winners_database[unique_id].wins,
-            -winners_database[unique_id].time_stamp,
+        key=lambda key: (
+            winners_database[key].wins,
+            -winners_database[key].time_stamp,
         ),
         reverse=True,
     )

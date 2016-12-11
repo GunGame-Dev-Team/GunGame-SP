@@ -10,7 +10,7 @@ from filters.players import PlayerIter
 
 # GunGame
 from .events.included.leaders import (
-    GG_Leader_Disconnect, GG_Leader_LostLevel, GG_New_Leader, GG_Tied_Leader,
+    GG_Leader_Disconnect, GG_Leader_Lost_Level, GG_New_Leader, GG_Tied_Leader,
 )
 from .messages import message_manager
 from .players.dictionary import player_dictionary
@@ -68,7 +68,7 @@ class _LeaderManager(dict):
         """Add the player to the dictionary."""
         self[userid] = player_dictionary[userid].level
 
-    def player_levelup(self, userid):
+    def player_level_up(self, userid):
         """Set the player's level and see if the leaders changed."""
         # Get the player's new level
         player_level = player_dictionary[userid].level
@@ -109,7 +109,7 @@ class _LeaderManager(dict):
                 player=player,
             )
 
-    def player_leveldown(self, userid):
+    def player_level_down(self, userid):
         """Set the player's level and see if the leaders changed."""
         if not self.is_leading(userid):
             self[userid] = player_dictionary[userid].level
@@ -118,7 +118,7 @@ class _LeaderManager(dict):
         old_level = self[userid]
         self[userid] = player_dictionary[userid].level
         new_level = self.leader_level
-        with GG_Leader_LostLevel() as event:
+        with GG_Leader_Lost_Level() as event:
             event.userid = event.leveler = userid
             event.old_leaders = old_leaders
             event.old_level = old_level

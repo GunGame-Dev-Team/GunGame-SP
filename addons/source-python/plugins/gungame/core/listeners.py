@@ -286,7 +286,7 @@ def _gg_win(game_event):
             }
         )
     color = {2: RED, 3: BLUE}.get(winner.team, WHITE)
-    message_manager.top_message('Player_Won', color, 4.0, winner=winner.name)
+    message_manager.top_message('Player_Won', color, 4, winner=winner.name)
 
     # Play the winner sound
     winner_sound = sound_manager.play_sound('winner')
@@ -318,23 +318,23 @@ def _gg_start(game_event):
     weapon_order_manager.print_order()
 
 
-@Event('gg_levelup')
-def _gg_levelup(game_event):
+@Event('gg_level_up')
+def _gg_level_up(game_event):
     """Increase the player leader level and send level info."""
     # Get the player's userid
     userid = game_event['leveler']
 
     # Set the player's level in the leader dictionary
-    leader_manager.player_levelup(userid)
+    leader_manager.player_level_up(userid)
 
     # Send the player their new level info
     _send_level_info(player_dictionary[userid])
 
 
-@Event('gg_leveldown')
-def _gg_leveldown(game_event):
+@Event('gg_level_down')
+def _gg_level_down(game_event):
     """Set the player's level in the leader dictionary."""
-    leader_manager.player_leveldown(game_event['leveler'])
+    leader_manager.player_level_down(game_event['leveler'])
 
 
 # =============================================================================

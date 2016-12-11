@@ -5,15 +5,11 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Python
-import sys
-
 # Source.Python
 from plugins.manager import PluginManager
 
 # GunGame
 from ..events.included.plugins import GG_Plugin_Unloaded
-from ..paths import GUNGAME_PLUGINS_PATH
 from . import gg_plugins_logger
 from .valid import valid_plugins
 
@@ -85,16 +81,5 @@ class _GGPluginManager(PluginManager):
         self._base_import = self._base_import_prefix + plugin_type + '.'
         self._current_plugin = plugin_name
         super()._remove_modules(plugin_name)
-
-    def _remove_module(self, module):
-        """Remove a module."""
-        plugin_path = GUNGAME_PLUGINS_PATH.joinpath(
-            valid_plugins.get_plugin_type(self._current_plugin),
-            self._current_plugin,
-            '__init__.py',
-        )
-        if plugin_path == sys.modules[module].__file__:
-            return
-        super()._remove_module(module)
 
 gg_plugin_manager = _GGPluginManager('gungame')

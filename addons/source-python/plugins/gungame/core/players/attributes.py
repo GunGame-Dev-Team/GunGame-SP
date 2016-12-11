@@ -91,7 +91,7 @@ class _AttributeHook(list):
         """Verify the callback is not a member and is callable."""
         # Is the callback already registered?
         if callback in self:
-            raise ValueError('Callback aready registered.')
+            raise ValueError('Callback already registered.')
 
         # Is the callback not callable?
         if not callable(callback):

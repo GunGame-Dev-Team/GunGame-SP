@@ -116,8 +116,8 @@ multi_level_manager = _MultiLevelManager()
 # =============================================================================
 # >> GUNGAME EVENTS
 # =============================================================================
-@Event('gg_levelup')
-def _player_levelup(game_event):
+@Event('gg_level_up')
+def _player_level_up(game_event):
     player = player_dictionary[game_event['leveler']]
     player.multi_levels += 1
     if player.multi_levels >= levels.get_int():

@@ -106,13 +106,13 @@ def _end_match(game_event):
     Entity.find_or_create('game_end').end_game()
 
 
-@Event('gg_levelup')
+@Event('gg_level_up')
 def _check_team_increase(game_event):
     # TODO: check to see if player increased team's level
     player = player_dictionary[game_event['leveler']]
 
 
-@Event('gg_leveldown')
+@Event('gg_level_down')
 def _check_team_decrease(game_event):
     # TODO: check to see if player decreased team's level
     player = player_dictionary[game_event['leveler']]

@@ -215,14 +215,14 @@ class _MessageManager(dict):
         if isinstance(users, int):
             users = (users, )
 
-        # Set the subkeys values
-        subkeys = {'title': title, 'type': panel_type, 'msg': message}
+        # Set the sub keys values
+        sub_keys = {'title': title, 'type': panel_type, 'msg': message}
 
         # Send the message to the users
-        VGUIMenu('info', subkeys, visible).send(*users, **tokens)
+        VGUIMenu('info', sub_keys, visible).send(*users, **tokens)
 
     def top_message(
-        self, message='', color=WHITE, time=4.0, *users, **tokens
+        self, message='', color=WHITE, time=4, *users, **tokens
     ):
         """Send a toptext message to the given players."""
         # Get the message to send

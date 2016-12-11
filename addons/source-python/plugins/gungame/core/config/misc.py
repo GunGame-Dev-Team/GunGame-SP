@@ -1,6 +1,6 @@
 # ../gungame/core/config/misc.py
 
-"""GunGame warmup configuration."""
+"""GunGame miscellaneous configuration."""
 
 # =============================================================================
 # >> IMPORTS

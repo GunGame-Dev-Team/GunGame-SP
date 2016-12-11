@@ -11,7 +11,7 @@ from players.entity import Player
 from weapons.manager import weapon_manager
 
 # GunGame
-from ..events.included.leveling import GG_LevelDown, GG_LevelUp
+from ..events.included.leveling import GG_Level_Down, GG_Level_Up
 from ..events.included.match import GG_Win
 from ..messages import message_manager
 from .attributes import (
@@ -103,7 +103,7 @@ class GunGamePlayer(Player):
         if self.level != new_level:
             return
         self.multi_kill = 0
-        with GG_LevelUp() as event:
+        with GG_Level_Up() as event:
             event.attacker = event.leveler = self.userid
             event.userid = event.victim = victim
             event.old_level = old_level
@@ -129,7 +129,7 @@ class GunGamePlayer(Player):
         if self.level != new_level:
             return
         self.multi_kill = 0
-        with GG_LevelDown() as event:
+        with GG_Level_Down() as event:
             event.attacker = attacker
             event.leveler = event.userid = self.userid
             event.old_level = old_level
@@ -218,7 +218,7 @@ class GunGamePlayer(Player):
             panel_type, title, message, visible, self.index, **tokens
         )
 
-    def top_message(self, message='', color=WHITE, time=4.0, **tokens):
+    def top_message(self, message='', color=WHITE, time=4, **tokens):
         """Send a toptext message to the player."""
         message_manager.top_message(message, color, time, self.index, **tokens)
 
@@ -294,7 +294,7 @@ class GunGamePlayer(Player):
             # Sort the tied players by their last win
             sorted_ties = sorted(
                 tied_players,
-                key=lambda unique_id: winners_database[unique_id].last_win
+                key=lambda key: winners_database[key].last_win
             )
 
             # Get the final rank of the player

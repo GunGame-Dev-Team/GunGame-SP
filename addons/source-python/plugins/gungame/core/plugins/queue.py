@@ -39,6 +39,7 @@ class _PluginQueue(dict):
     manager = gg_plugin_manager
     translations = manager.translations
     logger = gg_plugins_queue_logger
+    prefix = None
 
     def __missing__(self, item):
         """Add the item to its queue and loop through queues after 1 tick."""

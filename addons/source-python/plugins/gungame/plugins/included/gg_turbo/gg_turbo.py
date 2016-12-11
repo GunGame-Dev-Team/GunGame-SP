@@ -1,6 +1,6 @@
 # ../gungame/plugins/included/gg_turbo/gg_turbo.py
 
-"""Plugin that gives the next weapon immediately upon levelup."""
+"""Plugin that gives the next weapon immediately upon level-up."""
 
 # =============================================================================
 # >> IMPORTS

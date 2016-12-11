@@ -18,7 +18,7 @@ from ..resource import GGResourceFile
 # =============================================================================
 __all__ = (
     'GG_Leader_Disconnect',
-    'GG_Leader_LostLevel',
+    'GG_Leader_Lost_Level',
     'GG_New_Leader',
     'GG_Tied_Leader',
 )
@@ -58,7 +58,7 @@ class GG_Tied_Leader(CustomEvent):
     leader_level = ByteVariable("The current leader's level")
 
 
-class GG_Leader_LostLevel(CustomEvent):
+class GG_Leader_Lost_Level(CustomEvent):
     """Called when the leader loses a level."""
 
     userid = leveler = ShortVariable(
@@ -91,5 +91,5 @@ class GG_Leader_Disconnect(CustomEvent):
 # =============================================================================
 GGResourceFile(
     'leaders', GG_New_Leader, GG_Tied_Leader,
-    GG_Leader_LostLevel, GG_Leader_Disconnect,
+    GG_Leader_Lost_Level, GG_Leader_Disconnect,
 )

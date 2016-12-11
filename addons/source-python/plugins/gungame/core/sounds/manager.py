@@ -256,10 +256,10 @@ class _SoundManager(defaultdict):
         pack = sound_pack.get_string()
         if pack not in self:
             raise ValueError(
-                'Invalid sound pack "{sound_pack}".  Change "{cvarname}" '
+                'Invalid sound pack "{sound_pack}".  Change "{cvar_name}" '
                 'to a valid sound pack name.'.format(
                     sound_pack=pack,
-                    cvarname=sound_pack.name,
+                    cvar_name=sound_pack.name,
                 )
             )
 

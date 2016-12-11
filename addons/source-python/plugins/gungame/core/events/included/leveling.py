@@ -17,29 +17,29 @@ from ..resource import GGResourceFile
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'GG_LevelDown',
-    'GG_LevelUp',
+    'GG_Level_Down',
+    'GG_Level_Up',
 )
 
 
 # =============================================================================
 # >> CLASSES
 # =============================================================================
-class GG_LevelUp(CustomEvent):
+class GG_Level_Up(CustomEvent):
     """Called when a player levels up."""
 
     attacker = leveler = ShortVariable(
         'The userid of the player that leveled up'
     )
     userid = victim = ShortVariable(
-        'The userid of the victim that caused the levelup'
+        'The userid of the victim that caused the level-up'
     )
     old_level = ByteVariable('The old level of the player that leveled up')
     new_level = ByteVariable('The new level of the player that leveled up')
-    reason = StringVariable('The reason for the levelup')
+    reason = StringVariable('The reason for the level-up')
 
 
-class GG_LevelDown(CustomEvent):
+class GG_Level_Down(CustomEvent):
     """Called when a player loses a level."""
 
     userid = leveler = ShortVariable(
@@ -50,10 +50,10 @@ class GG_LevelDown(CustomEvent):
     )
     old_level = ByteVariable('The old level of the player that leveled down')
     new_level = ByteVariable('The new level of the player that leveled down')
-    reason = StringVariable('The reason for the leveldown')
+    reason = StringVariable('The reason for the level-down')
 
 
 # =============================================================================
 # >> RESOURCE FILE
 # =============================================================================
-GGResourceFile('leveling', GG_LevelUp, GG_LevelDown)
+GGResourceFile('leveling', GG_Level_Up, GG_Level_Down)
