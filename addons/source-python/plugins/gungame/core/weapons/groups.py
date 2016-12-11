@@ -11,6 +11,7 @@ from collections import OrderedDict
 # Source.Python
 from core import GAME_NAME
 from filters.weapons import WeaponClassIter
+from weapons.manager import weapon_manager
 
 
 # =============================================================================
@@ -70,11 +71,11 @@ other_weapons = set()
 # =============================================================================
 def _get_weapon_sets():
     for weapon in WeaponClassIter():
-        if 'objective' in weapon.tags or 'tool' in weapon.tags:
+        if 'objective' in weapon.tags or 'tool' in weapon.tags or 'earned' in weapon.tags:
             continue
         if 'all' in weapon.tags and len(weapon.tags) == 1:
             continue
-        for tag, weapon_set in _weapon_sets:
+        for tag, weapon_set in _weapon_sets.items():
             if tag in weapon.tags:
                 weapon_set.add(weapon.basename)
                 break
