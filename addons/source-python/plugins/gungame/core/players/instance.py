@@ -109,6 +109,7 @@ class GunGamePlayer(Player):
             event.old_level = old_level
             event.new_level = new_level
             event.reason = reason
+        self.play_sound('level_up')
 
     def decrease_level(self, levels, attacker=0, reason=''):
         """Decrease the player's level by the given amount."""
@@ -134,6 +135,7 @@ class GunGamePlayer(Player):
             event.old_level = old_level
             event.new_level = new_level
             event.reason = reason
+        self.play_sound('level_down')
 
     # =========================================================================
     # >> WEAPON FUNCTIONALITY
