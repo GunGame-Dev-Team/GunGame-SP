@@ -13,7 +13,6 @@ from warnings import warn
 # Source.Python
 from engines.server import engine_server
 from filters.players import PlayerIter
-from filters.weapons import WeaponClassIter
 from listeners.tick import Repeat
 
 # GunGame
@@ -22,6 +21,7 @@ from .config.warmup import (
     players_reached, start_config, end_config,
 )
 from .status import GunGameMatchStatus, GunGameStatus
+from .weapons.groups import all_weapons, melee_weapons
 from .weapons.manager import weapon_order_manager
 
 
@@ -37,27 +37,7 @@ __all__ = (
 # >> GLOBAL VARIABLES
 # =============================================================================
 # Get all possible warmup weapons
-_possible_weapons = set(
-    [
-        weapon.basename for weapon in WeaponClassIter('primary')
-    ]
-)
-_possible_weapons.update(
-    [
-        weapon.basename for weapon in WeaponClassIter('secondary')
-    ]
-)
-_possible_weapons.update(
-    [
-        weapon.basename for weapon in WeaponClassIter('explosive')
-    ]
-)
-if 'incendiary' in WeaponClassIter.filters:
-    _possible_weapons.update(
-        [
-            weapon.basename for weapon in WeaponClassIter('incendiary')
-        ]
-    )
+_possible_weapons = all_weapons - melee_weapons
 
 # Get a generator for human players
 _human_no_spec = PlayerIter('human', ['spec', 'un'])
@@ -150,7 +130,7 @@ class _WarmupManager(object):
         # Was an invalid value given?
         if self._warmup_time <= 0:
             warn(
-                '"gg_warmup_time" is set to an invalid number.' +
+                '"gg_warmup_time" is set to an invalid number.'
                 '  Skipping warmup round.'
             )
             self.end_warmup()

@@ -32,7 +32,7 @@ def send_score_menu(index):
         player = Player(index)
         for userid in sorted(
             player_dictionary,
-            key=lambda userid: player_dictionary[userid].level,
+            key=lambda key: player_dictionary[key].level,
             reverse=True,
         ):
             current_player = player_dictionary[userid]

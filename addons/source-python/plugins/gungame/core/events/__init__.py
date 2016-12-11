@@ -22,7 +22,11 @@ from ..plugins.valid import valid_plugins
 # Import the included events
 for event_file in Path(__file__).parent.joinpath('included').files():
     if event_file.namebase != '__init__':
-        import_module('gungame.core.events.included.' + event_file.namebase)
+        import_module(
+            'gungame.core.events.included.{module}'.format(
+                module=event_file.namebase
+            )
+        )
 
 
 # =============================================================================
