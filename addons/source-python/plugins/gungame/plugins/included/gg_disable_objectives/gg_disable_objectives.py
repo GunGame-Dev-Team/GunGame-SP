@@ -12,6 +12,7 @@ from enum import IntEnum
 from events import Event
 from filters.entities import EntityIter
 from filters.weapons import WeaponIter
+from players.entity import Player
 
 # Plugin
 from .configuration import disable_type
@@ -72,13 +73,13 @@ def _disable_objectives(game_event=None):
         for weapon in WeaponIter('objective'):
 
             # Get the entity's owner
-            owner = weapon.current_owner
+            owner = weapon.owner
 
             # Does the entity have an owner?
             if owner is not None:
 
                 # Force the owner to drop the entity
-                owner.drop_weapon(weapon)
+                Player(owner.index).drop_weapon(weapon)
 
             # Remove the entity from the server
             weapon.remove()
