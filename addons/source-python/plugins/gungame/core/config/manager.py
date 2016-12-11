@@ -102,7 +102,11 @@ class _GunGameCvarManager(_CvarManager):
     def add_text(self, **tokens):
         """Add all other text for the ConVar."""
         if self._base_item is None:
-            raise ValueError('No translations set for instance.')
+            raise ValueError(
+                'No translations set for instance ({cvar_name}).'.format(
+                    cvar_name=self.name
+                )
+            )
         for item in sorted(self.translations):
             if not item.startswith(self._base_item):
                 continue
