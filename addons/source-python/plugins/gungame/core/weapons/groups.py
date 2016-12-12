@@ -38,6 +38,7 @@ __all__ = (
 # >> GLOBAL VARIABLES
 # =============================================================================
 all_weapons = set()
+all_grenade_weapons = set()
 
 _weapon_sets = OrderedDict()
 
@@ -85,6 +86,9 @@ def _get_weapon_sets():
         else:
             other_weapons.add(weapon.basename)
         all_weapons.add(weapon.basename)
+    all_grenade_weapons.update(
+        explosive_weapons | grenade_weapons | incendiary_weapons
+    )
 
 _get_weapon_sets()
 
