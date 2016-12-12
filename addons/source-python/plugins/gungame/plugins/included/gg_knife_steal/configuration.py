@@ -7,10 +7,7 @@
 # =============================================================================
 # GunGame
 from gungame.core.config.manager import GunGameConfigManager
-from gungame.core.weapons.groups import (
-    explosive_weapons, incendiary_weapons, grenade_weapons as _grenade_weapons,
-    melee_weapons
-)
+from gungame.core.weapons.groups import all_grenade_weapons, melee_weapons
 
 # Plugin
 from .info import info
@@ -36,7 +33,7 @@ with GunGameConfigManager(info.name) as _config:
 
     grenade_weapons = dict()
 
-    for _weapon in explosive_weapons | incendiary_weapons | _grenade_weapons:
+    for _weapon in all_grenade_weapons:
 
         _skip_name = 'skip_{weapon}'.format(weapon=_weapon)
         with _config.cvar(

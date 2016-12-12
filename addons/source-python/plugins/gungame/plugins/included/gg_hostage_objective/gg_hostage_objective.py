@@ -12,9 +12,7 @@ from filters.entities import EntityIter
 # GunGame
 from gungame.core.players.attributes import player_attributes
 from gungame.core.players.dictionary import player_dictionary
-from gungame.core.weapons.groups import (
-    explosive_weapons, incendiary_weapons, grenade_weapons, melee_weapons
-)
+from gungame.core.weapons.groups import all_grenade_weapons, melee_weapons
 from gungame.core.weapons.manager import weapon_order_manager
 
 # Plugin
@@ -23,12 +21,6 @@ from .configuration import (
     rescued_skip_knife, rescued_skip_nade, stopped_count, stopped_levels,
     stopped_skip_knife, stopped_skip_nade,
 )
-
-
-# =============================================================================
-# >> GLOBAL VARIABLES
-# =============================================================================
-_nade_weapons = explosive_weapons | incendiary_weapons | grenade_weapons
 
 
 # =============================================================================
@@ -134,7 +126,7 @@ def _get_levels_to_increase(player, reason):
             return level_increase
         weapon = weapon_order_manager.active[level].weapon
         if (
-            (weapon in _nade_weapons and not skip_nade) or
+            (weapon in all_grenade_weapons and not skip_nade) or
             (weapon in melee_weapons and not skip_knife)
         ):
             player.chat_message(

@@ -7,7 +7,6 @@
 # =============================================================================
 # Source.Python
 from engines.server import engine_server
-from filters.weapons import WeaponClassIter
 from listeners.tick import Delay
 
 # GunGame
@@ -32,32 +31,6 @@ __all__ = (
 # >> GLOBAL VARIABLES
 # =============================================================================
 gg_weapons_manager_logger = gg_weapons_logger.manager
-
-# Store the weapons by type
-_primary_weapons = sorted(
-    [
-        weapon.basename for weapon in WeaponClassIter('primary')
-    ]
-)
-
-_secondary_weapons = sorted(
-    [
-        weapon.basename for weapon in WeaponClassIter('secondary')
-    ]
-)
-
-_explosive_weapons = sorted(
-    [
-        weapon.basename for weapon in WeaponClassIter('explosive')
-        if weapon.basename not in _primary_weapons + _secondary_weapons
-    ]
-)
-
-_melee_weapons = sorted(
-    [
-        weapon.basename for weapon in WeaponClassIter('melee')
-    ]
-)
 
 
 # =============================================================================
@@ -165,7 +138,9 @@ class _WeaponOrderManager(dict):
             multi_kills.append(self.active[level].multi_kill)
             weapons.append(self.active[level].weapon)
         level_length = max(len(str(max(levels))), len('Level')) + 2
-        multi_kill_length = max(len(str(max(multi_kills))), len('multi_kill')) + 2
+        multi_kill_length = max(
+            len(str(max(multi_kills))), len('multi_kill')
+        ) + 2
         weapon_length = max([
             len(weapon) for weapon in weapons] + [len('Weapon')]) + 4
         joint = (
