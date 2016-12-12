@@ -164,16 +164,17 @@ class GunGamePlayer(Player):
             self.drop_weapon(weapon)
             weapon.remove()
 
-    def give_level_weapon(self):
+    def give_level_weapon(self, drop_current_for_slot=True):
         """Give the player the weapon of their current level."""
         weapon = weapon_manager[self.level_weapon]
         for entity in self.weapons():
             if entity.classname == weapon.name:
                 return
-        for entity in self.weapons():
-            if weapon_manager[entity.classname].slot == weapon.slot:
-                self.drop_weapon(entity)
-                entity.remove()
+        if drop_current_for_slot:
+            for entity in self.weapons():
+                if weapon_manager[entity.classname].slot == weapon.slot:
+                    self.drop_weapon(entity)
+                    entity.remove()
         self.give_named_item(weapon.name)
 
     # =========================================================================
