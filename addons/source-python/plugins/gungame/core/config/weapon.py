@@ -1,4 +1,4 @@
-# ../gungame/core/config/core/weapons.py
+# ../gungame/core/config/weapon.py
 
 """GunGame weapons configuration."""
 

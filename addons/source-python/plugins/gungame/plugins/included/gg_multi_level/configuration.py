@@ -1,4 +1,4 @@
-# ../gungame/plugins/included/gg_deathmatch/configuration.py
+# ../gungame/plugins/included/gg_multi_level/configuration.py
 
 """Creates the gg_deathmatch configuration."""
 

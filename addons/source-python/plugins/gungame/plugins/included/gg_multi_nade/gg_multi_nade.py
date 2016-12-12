@@ -1,4 +1,4 @@
-# ../gungame/plugins/included/gg_multi_nade/__init__.py
+# ../gungame/plugins/included/gg_multi_nade/gg_multi_nade.py
 
 """Plugin to get multiple grenades when on grenade levels."""
 

@@ -1,4 +1,4 @@
-# ../gungame/core/config/core/warmup.py
+# ../gungame/core/config/warmup.py
 
 """GunGame warmup configuration."""
 

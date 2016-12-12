@@ -1,4 +1,4 @@
-# ../gungame/.py
+# ../gungame/gungame.py
 
 """Weapon leveling game modification."""
 
