@@ -85,10 +85,11 @@ def _get_weapon_sets():
                 break
         else:
             other_weapons.add(weapon.basename)
+        if 'grenade' in weapon.tags:
+            all_grenade_weapons.update(
+                explosive_weapons | grenade_weapons | incendiary_weapons
+            )
         all_weapons.add(weapon.basename)
-    all_grenade_weapons.update(
-        explosive_weapons | grenade_weapons | incendiary_weapons
-    )
 
 _get_weapon_sets()
 
