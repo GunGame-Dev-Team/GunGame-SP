@@ -6,6 +6,7 @@ GunGame is a plugin created using the [Source.Python](https://github.com/Source-
 GunGame is a leveling mod where players must advance weapon-by-weapon.  The first player to get through all weapons is the winner.
 
 <br>
+
 ## Installation
 To install, simply download the current release (not currently available) and extract the contents into the main directory on your server.
 
@@ -15,6 +16,7 @@ sp plugin load gungame
 ```
 
 <br>
+
 ## Configuration
 After having loaded GunGame once, all of the configuration files will be created in your server's **../cfg/source-python/gungame/** directory.
 

@@ -6,7 +6,7 @@
 # >> IMPORTS
 # =============================================================================
 # Source.Python
-from engines.server import engine_server
+from engines.server import queue_command_string
 from listeners.tick import Delay
 
 # GunGame
@@ -194,6 +194,6 @@ class _WeaponOrderManager(dict):
         player_dictionary.clear()
 
         # Restart the match
-        engine_server.server_command('mp_restartgame 1')
+        queue_command_string('mp_restartgame 1')
 
 weapon_order_manager = _WeaponOrderManager()

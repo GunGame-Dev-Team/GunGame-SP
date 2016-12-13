@@ -21,7 +21,7 @@ from .configuration import (
 
 
 # =============================================================================
-# GAME EVENTS
+# >> GAME EVENTS
 # =============================================================================
 @Event('bomb_defused')
 def _bomb_defused(game_event):
