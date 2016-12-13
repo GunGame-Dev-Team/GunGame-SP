@@ -19,6 +19,7 @@ from .info import info
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
+    'dissolver_delay',
     'dissolver_type',
     'magnitude',
 )
@@ -32,7 +33,6 @@ with GunGameConfigManager(info.name) as _config:
     with _config.cvar('type') as dissolver_type:
 
         for _name in DissolveType.__members__:
-
             dissolver_type.Options.append(
                 '{value} = {name}'.format(
                     value=getattr(DissolveType, _name).real,
@@ -41,7 +41,6 @@ with GunGameConfigManager(info.name) as _config:
             )
 
         _num_dissolve_types = len(DissolveType.__members__)
-
         dissolver_type.add_text(
             random=_num_dissolve_types,
             remove=_num_dissolve_types + 1,
@@ -49,3 +48,6 @@ with GunGameConfigManager(info.name) as _config:
 
     with _config.cvar('magnitude', 2) as magnitude:
         magnitude.add_text()
+
+    with _config.cvar('delay') as dissolver_delay:
+        dissolver_delay.add_text()
