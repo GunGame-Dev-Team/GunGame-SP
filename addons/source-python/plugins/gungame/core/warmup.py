@@ -20,6 +20,8 @@ from .config.warmup import (
     weapon as warmup_weapon, time as warmup_time, min_players, max_extensions,
     players_reached, start_config, end_config,
 )
+from .messages import message_manager
+from .sounds.manager import sound_manager
 from .status import GunGameMatchStatus, GunGameStatus
 from .weapons.groups import all_weapons, melee_weapons
 from .weapons.manager import weapon_order_manager
@@ -184,7 +186,7 @@ class _WarmupManager(object):
     def _countdown(self):
         """Determine what to do once a second during warmup."""
         # Get the remaining time for warmup
-        remaining = self.repeat.remaining
+        remaining = self.repeat.loops_remaining
 
         # Is there no more time for the warmup?
         if not remaining:
@@ -200,11 +202,17 @@ class _WarmupManager(object):
             current = players_reached.get_int()
 
             # Should warmup end?
-            if current == 2 or (
-                    self.extensions and current == 1):
+            if (
+                current == 2 or
+                (self.extensions and current == 1)
+            ):
+
+                message_manager.center_message(
+                    message='Warmup:Reduce',
+                )
 
                 # Cause warmup to end in 1 second
-                self.repeat.reduce(self.repeat.remaining - 1)
+                self.repeat.reduce(self.repeat.loops_remaining - 1)
                 return
 
         # Is there just one second remaining in warmup?
@@ -213,18 +221,22 @@ class _WarmupManager(object):
             # Should warmup be extended?
             if self.extensions < max_extensions.get_int():
 
-                # TODO: send message about the extension
+                message_manager.center_message(
+                    message='Warmup:Extend',
+                )
 
                 # Extend the warmup round
                 self._extensions += 1
                 self.repeat.extend(self._warmup_time)
                 return
 
-        # TODO: send message to players about remaining warmup time
+        message_manager.center_message(
+            message='Warmup:Countdown',
+            seconds=remaining,
+        )
 
         if remaining <= 5:
-            # TODO: play a beeping sound to indicate warmup ending soon
-            pass
+            sound_manager.play_sound('countdown')
 
 # Get the _WarmupManager instance
 warmup_manager = _WarmupManager()
