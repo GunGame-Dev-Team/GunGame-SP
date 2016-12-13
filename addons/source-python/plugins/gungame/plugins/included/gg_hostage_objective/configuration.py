@@ -33,6 +33,7 @@ __all__ = (
 # >> CONFIGURATION
 # =============================================================================
 with GunGameConfigManager(info.name) as _config:
+
     with _config.cvar('rescued_levels', 1) as rescued_levels:
         rescued_levels.add_text()
 

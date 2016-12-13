@@ -41,8 +41,8 @@ with GunGameConfigManager(info.name) as _config:
     with _config.cvar('gravity', 100) as gravity:
         gravity.add_text()
 
-    with _config.cvar('tk_attacker_reset', 0) as tk_attacker_reset:
+    with _config.cvar('tk_attacker_reset') as tk_attacker_reset:
         tk_attacker_reset.add_text()
 
-    with _config.cvar('tk_victim_reset', 0) as tk_victim_reset:
+    with _config.cvar('tk_victim_reset') as tk_victim_reset:
         tk_victim_reset.add_text()
