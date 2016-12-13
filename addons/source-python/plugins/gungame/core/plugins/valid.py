@@ -9,6 +9,9 @@
 from importlib import import_module
 from warnings import warn
 
+# Source.Python
+from plugins.info import PluginInfo
+
 # GunGame
 from ..paths import GUNGAME_PLUGINS_PATH
 
@@ -136,10 +139,12 @@ class _ValidPlugins(object):
             )
 
             # Does the info have an info attribute?
-            if not hasattr(info, 'info'):
+            if not (
+                hasattr(info, 'info') and isinstance(info.info, PluginInfo)
+            ):
                 warn(
                     '{plugin_type} plugin "{plugin_name}" info.py does not '
-                    'contain an info object.'.format(
+                    'contain a PluginInfo object.'.format(
                         plugin_type=plugin_type.title(),
                         plugin_name=plugin,
                     )
