@@ -12,6 +12,8 @@ addons/source-python/data/plugins/gungame/
 addons/source-python/plugins/gungame/plugins/custom/
 !addons/source-python/plugins/gungame/plugins/custom/__init__.py
 resource/source-python/translations/gungame/custom_plugins/
+!resource/source-python/translations/gungame/custom_plugins/readme.md
+!resource/source-python/translations/gungame/custom_plugins/config/readme.md
 
 # Server-specific configuration files
 cfg/source-python/gungame/weapon_orders/
