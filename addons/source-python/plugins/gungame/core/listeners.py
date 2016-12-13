@@ -272,8 +272,8 @@ def _gg_win(game_event):
 
     # Send the winner messages
     message_manager.chat_message(
+        message='Winner:Long',
         index=winner.index,
-        message='Winner_Player',
         winner=winner.name,
     )
     for second in range(4):
@@ -281,12 +281,16 @@ def _gg_win(game_event):
             second,
             message_manager.center_message,
             kwargs={
-                'message': 'Winner_Player_Center',
+                'message': 'Winner:Short',
                 'winner': winner.name,
             }
         )
     color = {2: RED, 3: BLUE}.get(winner.team, WHITE)
-    message_manager.top_message('Player_Won', color, 4, winner=winner.name)
+    message_manager.top_message(
+        message='Winner:Short',
+        color=color,
+        winner=winner.name
+    )
 
     # Play the winner sound
     winner_sound = sound_manager.play_sound('winner')
@@ -295,10 +299,8 @@ def _gg_win(game_event):
     if dynamic_chat_time.get_bool():
         ConVar('mp_chattime').set_float(winner_sound.duration)
 
-    # Get a game_end entity
-    entity = Entity.find_or_create('game_end')
-
     # End the match to move to the next map
+    entity = Entity.find_or_create('game_end')
     entity.end_game()
 
 
