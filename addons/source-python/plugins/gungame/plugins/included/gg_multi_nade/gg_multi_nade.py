@@ -10,6 +10,7 @@ from collections import defaultdict
 
 # Source.Python
 from events import Event
+from listeners.tick import Delay
 
 # GunGame
 from gungame.core.players.dictionary import player_dictionary
@@ -28,32 +29,26 @@ _nade_count = defaultdict(int)
 # =============================================================================
 # >> GAME EVENTS
 # =============================================================================
-@Event(
-    'decoy_detonate', 'flashbang_detonate', 'hegrenade_detonate',
-    'molotov_detonate', 'smokegrenade_detonate'
-)
-def give_another_nade(game_event):
+@Event('weapon_fire')
+def delay_give_new_weapon(game_event):
+    weapon = game_event['weapon']
+    if weapon not in all_grenade_weapons:
+        return
+
     try:
         player = player_dictionary[game_event['userid']]
     # TODO: Clarify this exception type
     except Exception:
         return
 
-    if player.dead:
-        return
-
-    weapon = player.level_weapon
-    if weapon not in all_grenade_weapons:
-        return
-
-    grenade = game_event.name.replace('_detonate', '')
-    if grenade != weapon:
+    if weapon != player.level_weapon:
         return
 
     _nade_count[player.userid] += 1
     value = max_nades.get_int()
     if not value or _nade_count[player.userid] < value:
-        player.give_level_weapon(drop_current_for_slot=False)
+        # TODO: adjust this delay value
+        Delay(1, give_new_weapon, (player.userid, weapon))
 
 
 @Event('player_spawn', 'gg_level_up')
@@ -61,3 +56,22 @@ def reset_player_count(game_event):
     userid = game_event['userid']
     if userid in _nade_count:
         del _nade_count[userid]
+
+
+# =============================================================================
+# >> HELPER FUNCTIONS
+# =============================================================================
+def give_new_weapon(userid, weapon):
+    try:
+        player = player_dictionary[userid]
+    # TODO: Clarify this exception type
+    except Exception:
+        return
+
+    if player.dead:
+        return
+
+    if weapon != player.level_weapon:
+        return
+
+    player.give_level_weapon(drop_current_for_slot=False)
