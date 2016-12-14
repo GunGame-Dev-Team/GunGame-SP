@@ -87,7 +87,7 @@ def _steal_level(game_event):
 @AttributePreHook('level')
 def _pre_level_change(player, attribute, new_value):
     """Store players leveling off of knife level."""
-    if player.level_weapon not in knife_weapons:
+    if not player.level or player.level_weapon not in knife_weapons:
         return
 
     _recently_off_knife[player.userid] = {
