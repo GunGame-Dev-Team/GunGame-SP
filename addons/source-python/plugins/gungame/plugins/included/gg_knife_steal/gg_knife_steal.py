@@ -17,6 +17,7 @@ from gungame.core.players.dictionary import player_dictionary
 from .configuration import (
     grenade_weapons, knife_weapons, level_one_victim, limit
 )
+from .custom_events import GG_Knife_Steal
 
 
 # =============================================================================
@@ -27,7 +28,7 @@ _recently_off_knife = dict()
 
 
 # =============================================================================
-# >> EVENTS
+# >> GAME EVENTS
 # =============================================================================
 @Event('player_death')
 def _steal_level(game_event):
@@ -47,21 +48,23 @@ def _steal_level(game_event):
 
     if attacker in _recently_off_knife:
         weapon = _recently_off_knife[attacker]['weapon']
-        level = _recently_off_knife[attacker]['level']
+        killer_level = _recently_off_knife[attacker]['level']
     else:
         weapon = killer.level_weapon
-        level = killer.level
+        killer_level = killer.level
 
     # TODO: AFK checks
     # killer.chat_message('KnifeSteal:AFK')
 
+    victim_level = victim.level
+
     current = limit.get_int()
-    difference = level - victim.level
+    difference = killer_level - victim_level
     if current and difference > current:
         killer.chat_message('KnifeSteal:Difference', levels=difference)
         return
 
-    if victim.level == 1 and not level_one_victim.get_bool():
+    if victim_level == 1 and not level_one_victim.get_bool():
         killer.chat_message('KnifeSteal:LevelOne')
         return
 
@@ -79,6 +82,14 @@ def _steal_level(game_event):
 
     victim.decrease_level(1, attacker, 'steal')
     killer.increase_level(1, userid, 'steal')
+
+    if victim.level == victim_level - 1 and killer.level == killer_level + 1:
+
+        with GG_Knife_Steal() as event:
+            event.attacker = event.leveler = killer.userid
+            event.attacker_level = killer.level
+            event.userid = event.victim = victim.userid
+            event.userid_level = victim.level
 
 
 # =============================================================================
