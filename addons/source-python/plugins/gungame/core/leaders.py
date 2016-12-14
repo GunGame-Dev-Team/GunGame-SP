@@ -87,7 +87,7 @@ class _LeaderManager(dict):
                 event.old_leaders = old_leaders
                 event.leaders = new_leaders
                 event.leader_level = new_level
-            message = 'Leader_Tied_{tied_type}'.format(
+            message = 'Leader:Tied:{tied_type}'.format(
                 tied_type='Singular' if count == 2 else 'Plural'
             )
             message_manager.chat_message(
@@ -104,7 +104,7 @@ class _LeaderManager(dict):
                 event.leaders = new_leaders
                 event.leader_level = new_level
             message_manager.chat_message(
-                'Leader_New',
+                'Leader:New:Singular',
                 player.index,
                 player=player,
             )
@@ -151,14 +151,14 @@ class _LeaderManager(dict):
         if len(current) == 1:
             player = player_dictionary[current[0]]
             message_manager.chat_message(
-                'Leader_New',
+                'Leader:New:Singular',
                 player.index,
                 player=player,
             )
         else:
             names = [player_dictionary[player].name for player in current]
             message_manager.chat_message(
-                'Leader_New_Plural',
+                'Leader:New:Plural',
                 names=names,
                 level=level,
             )

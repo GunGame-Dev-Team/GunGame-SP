@@ -13,6 +13,7 @@ from events import Event
 from filters.entities import EntityIter
 from listeners import OnLevelInit, OnLevelShutdown
 from listeners.tick import Delay
+from weapons.manager import weapon_manager
 
 # GunGame
 from .config.misc import (
@@ -132,7 +133,7 @@ def _player_death(game_event):
         return
 
     # Did the killer kill using their level's weapon?
-    if game_event['weapon'] != killer.level_weapon:
+    if weapon_manager[game_event['weapon']].basename != killer.level_weapon:
         return
 
     # Increase the killer's multi_kill
@@ -171,11 +172,9 @@ def _player_activate(game_event):
     if player.is_fake_client():
         return
 
-    # Get the message to use
-    message = 'JoinPlayer_Ranked' if player.wins else 'JoinPlayer_Rank'
-
-    # Send the joining message
-    message_manager.chat_message(message, player=player)
+    if player.wins:
+        message = 'Player:Join:Ranked' if player.rank else 'Player:Join:Wins'
+        message_manager.chat_message(message, player=player)
 
     # Print a message if the joining player is in the credits
     for credit_type in gungame_credits:
@@ -184,7 +183,7 @@ def _player_activate(game_event):
             steam_id3 = gungame_credits[credit_type][name]['steam_id3']
             if player.steamid in (steam_id2, steam_id3):
                 message_manager.chat_message(
-                    'JoinPlayer_Credits',
+                    'Player:Join:Credits',
                     player=player,
                     credit_type=credit_type,
                 )
@@ -379,7 +378,7 @@ def _post_multi_kill(player, attribute, new_value, old_value):
 
     # Send the multi_kill message
     player.hint_message(
-        message='multi_kill_Notification',
+        message='LevelInfo:Current:Kills',
         kills=new_value,
         total=multi_kill,
     )
@@ -411,14 +410,14 @@ def _send_level_info(player):
     language = player.language
 
     # Get the player's current level information
-    text = message_manager['LevelInfo_Current_Level'].get_string(
+    text = message_manager['LevelInfo:Current:Level'].get_string(
         language,
         player=player,
         total=weapon_order_manager.max_levels,
     )
 
     # Add the player's weapon information to the message
-    text += message_manager['LevelInfo_Current_Weapon'].get_string(
+    text += message_manager['LevelInfo:Current:Weapon'].get_string(
         language,
         player=player,
     )
@@ -428,10 +427,11 @@ def _send_level_info(player):
 
     # If the multi_kill value is not 1, add the multi_kill to the message
     if multi_kill > 1:
-        text += message_manager['LevelInfo_Required_Kills'].get_string(
+        text += message_manager['LevelInfo:Current:Kills'].get_string(
             language,
-            player=player,
-        )
+            kills=player.multi_kill,
+            total=player.level_multi_kill,
+        ) + '\n'
 
     # Get the current leaders
     leaders = leader_manager.current_leaders
@@ -443,14 +443,14 @@ def _send_level_info(player):
     if leaders is None:
 
         # Add the no leaders text to the message
-        text += message_manager['LevelInfo_No_Leaders'].get_string(language)
+        text += message_manager['LevelInfo:Leaders:None'].get_string(language)
 
     # Is the player the only current leader?
     elif len(leaders) == 1 and player.userid in leaders:
 
         # Add the current leader text to the message
         text += message_manager[
-            'LevelInfo_Current_Leader'
+            'LevelInfo:Current:Leader'
         ].get_string(language)
 
     # Is the player one of multiple current leaders?
@@ -458,14 +458,14 @@ def _send_level_info(player):
 
         # Add the amongst leaders text to the message
         text += message_manager[
-            'LevelInfo_Amongst_Leaders'
+            'LevelInfo:Leaders:Among'
         ].get_string(language)
 
     # Is the player not one of the current leaders?
     else:
 
         # Add the current leader text to the message
-        text += message_manager['LevelInfo_Leader_Level'].get_string(
+        text += message_manager['LevelInfo:Leaders:Level'].get_string(
             language,
             level=leader_level,
             total=weapon_order_manager.max_levels,
