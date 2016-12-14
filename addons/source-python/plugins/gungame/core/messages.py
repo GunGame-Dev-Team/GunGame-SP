@@ -42,8 +42,8 @@ class _MessageManager(dict):
         super().__init__()
 
         # Create base dictionaries to store message hooks
-        self._hooked_messages = defaultdict()
-        self._hooked_prefixes = defaultdict()
+        self._hooked_messages = defaultdict(int)
+        self._hooked_prefixes = defaultdict(int)
 
         # Loop through all directories in the GunGame translations directory
         for folder in GUNGAME_TRANSLATION_PATH.dirs():
