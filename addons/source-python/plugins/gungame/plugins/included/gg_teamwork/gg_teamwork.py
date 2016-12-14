@@ -30,6 +30,13 @@ from .custom_events import GG_Team_Win
 
 
 # =============================================================================
+# >> LOAD & UNLOAD
+# =============================================================================
+def load():
+    message_manager.hook_prefix('Leader:')
+
+
+# =============================================================================
 # >> CLASSES
 # =============================================================================
 class _TeamManager(dict):
@@ -50,7 +57,7 @@ class _TeamManagement(object):
 
     @property
     def index(self):
-        return self.leader.level if self.leader is not None else 0
+        return self.leader.index if self.leader is not None else 0
 
     @property
     def name(self):
@@ -67,9 +74,9 @@ class _TeamManagement(object):
         current = self._leader
         self._leader = player
         self.leader_userid = None if player is None else player.userid
-        if current is None and player is None:
+        if current is None or player is None:
             return
-        if current.level < player.level:
+        if current.level < player.level or current.userid == player.userid:
             message_manager.chat_message(
                 message='TeamWork:Leader:Increase',
                 index=self.index,
@@ -90,10 +97,12 @@ class _TeamManagement(object):
         self.leader = None
 
     def set_team_player_levels(self):
+        if self.leader_level is None:
+            self.find_team_leader()
         self.level = self.leader_level
         if self.level is None:
             return
-        for player in player_dictionary:
+        for player in player_dictionary.values():
             if player.team != self.number:
                 continue
             if player.level == self.level:
@@ -106,7 +115,7 @@ class _TeamManagement(object):
 
     def find_team_leader(self, leveler=None, old_level=None, disconnect=False):
         team_players = {
-            player.level: player for player in player_dictionary
+            player.level: player for player in player_dictionary.values()
             if player.team == self.number
         }
         if not team_players:
@@ -201,7 +210,10 @@ def _clear_team_dictionary(game_event=None):
 def _level_up(game_event):
     player = player_dictionary[game_event['leveler']]
     team = _team_manager[player.team]
-    if team.leader is None or team.leader_level < game_event['new_level']:
+    if (
+        team.leader_userid in (None, player.userid) or
+        team.leader_level < game_event['new_level']
+    ):
         team.leader = player
 
 
@@ -219,7 +231,7 @@ def _end_match(game_event):
     GunGameStatus.MATCH = GunGameMatchStatus.POST
 
     # Get the winning team information
-    winning_team = game_event['winner']
+    winning_team = _team_manager[game_event['winner']]
 
     # Send the winner messages
     message_manager.chat_message(
@@ -263,8 +275,21 @@ def _end_match(game_event):
 # =============================================================================
 @PreEvent('gg_win')
 def pre_gg_win(game_event):
-    winning_team = player_dictionary[game_event['winner']].team
-    with GG_Team_Win() as event:
-        event.winner = winning_team,
-        event.loser = 5 - winning_team
+    team_number = player_dictionary[game_event['winner']].team
+    Delay(
+        delay=0,
+        callback=_fire_win_event,
+        args=(
+            team_number,
+        ),
+    )
     return EventAction.BLOCK
+
+
+# =============================================================================
+# >> HELPER FUNCTIONS
+# =============================================================================
+def _fire_win_event(team_number):
+    with GG_Team_Win() as event:
+        event.winner = team_number
+        event.loser = 5 - team_number
