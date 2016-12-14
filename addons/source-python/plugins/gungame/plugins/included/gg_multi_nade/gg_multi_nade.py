@@ -74,4 +74,4 @@ def give_new_weapon(userid, weapon):
     if weapon != player.level_weapon:
         return
 
-    player.give_level_weapon(drop_current_for_slot=False)
+    player.give_level_weapon()
