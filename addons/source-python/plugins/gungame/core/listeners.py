@@ -68,10 +68,8 @@ def _player_spawn(game_event):
     if player.team < 2:
         return
 
-    # Remove all weapons except for knife
-    player.remove_all_weapons(exclude='knife')
-
-    # Give player their current weapon
+    # Give the player their new weapon
+    player.strip_weapons()
     player.give_level_weapon()
 
     # Give CTs defusers, if need be
@@ -146,7 +144,11 @@ def _player_death(game_event):
         return
 
     # Level the player up
-    killer.increase_level(1, userid, 'kill')
+    killer.increase_level(
+        levels=1,
+        reason='kill',
+        victim=userid,
+    )
 
 
 @Event('player_activate')
@@ -322,20 +324,19 @@ def _gg_start(game_event):
 @Event('gg_level_up')
 def _gg_level_up(game_event):
     """Increase the player leader level and send level info."""
-    # Get the player's userid
     userid = game_event['leveler']
-
-    # Set the player's level in the leader dictionary
     leader_manager.player_level_up(userid)
-
-    # Send the player their new level info
-    _send_level_info(player_dictionary[userid])
+    player = player_dictionary[userid]
+    player.play_sound('level_up')
+    _send_level_info(player)
 
 
 @Event('gg_level_down')
 def _gg_level_down(game_event):
     """Set the player's level in the leader dictionary."""
-    leader_manager.player_level_down(game_event['leveler'])
+    userid = game_event['leveler']
+    leader_manager.player_level_down(userid)
+    player_dictionary[userid].play_sound('level_down')
 
 
 # =============================================================================

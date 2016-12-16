@@ -82,7 +82,7 @@ class GunGamePlayer(Player):
     # =========================================================================
     # >> LEVEL FUNCTIONALITY
     # =========================================================================
-    def increase_level(self, levels, victim=0, reason=''):
+    def increase_level(self, levels, reason, victim=0):
         """Increase the player's level by the given amount."""
         if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
             return
@@ -109,9 +109,8 @@ class GunGamePlayer(Player):
             event.old_level = old_level
             event.new_level = new_level
             event.reason = reason
-        self.play_sound('level_up')
 
-    def decrease_level(self, levels, attacker=0, reason=''):
+    def decrease_level(self, levels, reason, attacker=0):
         """Decrease the player's level by the given amount."""
         if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
             return
@@ -135,7 +134,6 @@ class GunGamePlayer(Player):
             event.old_level = old_level
             event.new_level = new_level
             event.reason = reason
-        self.play_sound('level_down')
 
     # =========================================================================
     # >> WEAPON FUNCTIONALITY
@@ -150,36 +148,16 @@ class GunGamePlayer(Player):
         """Return the player's current level weapon."""
         return weapon_order_manager.active[self.level].weapon
 
-    def remove_all_weapons(self, exclude=None):
-        if exclude is None:
-            exclude = list()
-        elif isinstance(exclude, str):
-            exclude = [exclude]
-
-        exclude = [weapon_manager[weapon].name for weapon in exclude]
-
-        for weapon in self.weapons():
-            if weapon.classname in exclude:
-                continue
+    def strip_weapons(self):
+        for weapon in self.weapons(
+            not_filters=('grenade', 'melee', 'objective', 'tool')
+        ):
             self.drop_weapon(weapon)
             weapon.remove()
 
     def give_level_weapon(self):
         """Give the player the weapon of their current level."""
         weapon = weapon_manager[self.level_weapon]
-        for entity in self.weapons():
-            if entity.classname == weapon.name:
-                continue
-            tags = weapon_manager[entity.classname].tags
-            if (
-                'grenade' in tags or
-                'melee' in tags or
-                'objective' in tags or
-                'tool' in tags
-            ):
-                continue
-            self.drop_weapon(entity)
-            entity.remove()
         self.give_named_item(weapon.name)
 
     # =========================================================================
