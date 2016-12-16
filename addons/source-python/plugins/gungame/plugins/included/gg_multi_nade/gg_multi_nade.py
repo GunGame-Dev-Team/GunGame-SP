@@ -37,7 +37,7 @@ def delay_give_new_weapon(game_event):
 
     try:
         player = player_dictionary[game_event['userid']]
-    # TODO: Clarify this exception type
+    # TODO: clarify this exception
     except Exception:
         return
 
@@ -64,7 +64,7 @@ def reset_player_count(game_event):
 def give_new_weapon(userid, weapon):
     try:
         player = player_dictionary[userid]
-    # TODO: Clarify this exception type
+    # TODO: clarify this exception
     except Exception:
         return
 

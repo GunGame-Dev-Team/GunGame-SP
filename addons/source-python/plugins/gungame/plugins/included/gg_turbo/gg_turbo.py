@@ -14,4 +14,5 @@ from gungame.core.players.attributes import AttributePostHook
 @AttributePostHook('level')
 def _post_level_change(player, attribute, new_value, old_value):
     """Give the player their new weapon."""
+    player.strip_weapons()
     player.give_level_weapon()

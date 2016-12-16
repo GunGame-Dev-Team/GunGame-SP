@@ -72,16 +72,32 @@ def _steal_level(game_event):
         if not grenade_weapons[weapon]['skip'].get_bool():
             killer.chat_message('KnifeSteal:NoSkip', weapon=weapon)
             if grenade_weapons[weapon]['level'].get_bool():
-                victim.decrease_level(1, attacker, 'steal')
+                victim.decrease_level(
+                    levels=1,
+                    reason='steal',
+                    attacker=attacker,
+                )
             return
 
     if weapon in knife_weapons:
         if knife_weapons[weapon].get_bool():
-            victim.decrease_level(1, attacker, 'steal')
+            victim.decrease_level(
+                levels=1,
+                reason='steal',
+                attacker=attacker,
+            )
         return
 
-    victim.decrease_level(1, attacker, 'steal')
-    killer.increase_level(1, userid, 'steal')
+    victim.decrease_level(
+        levels=1,
+        reason='steal',
+        attacker=attacker,
+    )
+    killer.increase_level(
+        levels=1,
+        reason='steal',
+        victim=userid,
+    )
 
     if victim.level == victim_level - 1 and killer.level == killer_level + 1:
 

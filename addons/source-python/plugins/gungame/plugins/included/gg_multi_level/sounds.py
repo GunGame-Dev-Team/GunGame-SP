@@ -13,6 +13,6 @@ from gungame.core.sounds.manager import sound_manager
 # >> SOUND REGISTRATION
 # =============================================================================
 sound_manager.register_sound(
-    'multi_level',
-    'source-python/gungame/default/smb_star.mp3'
+    sound_name='multi_level',
+    default='source-python/gungame/default/smb_star.mp3',
 )

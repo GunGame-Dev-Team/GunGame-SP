@@ -48,7 +48,10 @@ _sound_strings = LangStrings('gungame/core/config/sound_pack')
 def register_all_sounds():
     # Register all core sounds
     for name, default in _core_sounds.items():
-        sound_manager.register_sound(name, default)
+        sound_manager.register_sound(
+            sound_name=name,
+            default=default,
+        )
 
     # Loop through all plugins
     for plugin_name in valid_plugins.all:
