@@ -22,3 +22,9 @@ def _increment_winning_team(game_event):
         return
 
     winner.increase_multi_kill()
+
+
+@Event('round_start')
+def _send_level_messages(game_event):
+    for team in team_dictionary:
+        team.send_current_level_message()
