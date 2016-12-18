@@ -7,6 +7,7 @@
 # =============================================================================
 # Source.Python
 from engines.server import queue_command_string
+from hooks.exceptions import except_hooks
 from listeners.tick import Delay
 
 # GunGame
@@ -15,6 +16,7 @@ from ..paths import GUNGAME_WEAPON_ORDER_PATH
 from ..status import GunGameMatchStatus, GunGameStatus
 from . import gg_weapons_logger
 from .default import create_default_weapon_orders
+from .errors import WeaponOrderError
 from .order import WeaponOrder
 
 
@@ -73,7 +75,14 @@ class _WeaponOrderManager(dict):
     def get_weapon_orders(self):
         """Retrieve all weapon orders and store them in the dictionary."""
         for file in GUNGAME_WEAPON_ORDER_PATH.files():
-            self[file.namebase] = WeaponOrder(file)
+            try:
+                self[file.namebase] = WeaponOrder(file)
+            except WeaponOrderError:
+                # TODO: make this gungame specific
+                except_hooks.print_exception()
+
+        if not len(self):
+            raise ValueError('No valid weapon order files found.')
 
     def set_start_convars(self):
         """Set all base ConVars on load."""

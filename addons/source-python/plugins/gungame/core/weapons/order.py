@@ -7,14 +7,15 @@
 # =============================================================================
 # Python
 from random import shuffle
+from warnings import warn
 
 # GunGame
 from ..config.weapon import multi_kill_override
 from .errors import WeaponOrderError
 from .groups import (
-    machine_gun_weapons, other_primary_weapons, other_secondary_weapons,
-    other_weapons, pistol_weapons, rifle_weapons, shotgun_weapons, smg_weapons,
-    sniper_weapons,
+    all_weapons, machine_gun_weapons, other_primary_weapons,
+    other_secondary_weapons, other_weapons, pistol_weapons, rifle_weapons,
+    shotgun_weapons, smg_weapons, sniper_weapons,
 )
 
 
@@ -45,25 +46,58 @@ class WeaponOrder(dict):
     def __init__(self, file_path):
         """Store the values from the given path."""
         super().__init__()
+        level = 0
         with file_path.open() as open_file:
-            level = 0
             for line in open_file:
                 line = line.strip()
                 if not line:
                     continue
                 if line.startswith('//'):
                     continue
-                try:
-                    weapon, multi_kill = line.split()
-                except ValueError:
-                    weapon = line
+                values = line.split()
+                if len(values) == 2:
+                    weapon, multi_kill = values
+                elif len(values) == 1:
+                    weapon = values[0]
                     multi_kill = 1
+                else:
+                    warn(
+                        'Invalid line "{line}" in weapon order file: '
+                        '{file_name}'.format(
+                            line=line,
+                            file_name=file_path.namebase,
+                        )
+                    )
+                    continue
                 try:
                     multi_kill = int(multi_kill)
                 except ValueError:
-                    raise WeaponOrderError()
+                    warn(
+                        'Invalid multi-kill value "{multi_kill}" in weapon '
+                        'order file: {file_name}'.format(
+                            multi_kill=multi_kill,
+                            file_name=file_path.namebase,
+                        )
+                    )
+                    continue
+                if weapon not in all_weapons:
+                    warn(
+                        'Invalid weapon "{weapon}" in weapon order file: '
+                        '{file_name}'.format(
+                            weapon=weapon,
+                            file_name=file_path.namebase,
+                        )
+                    )
+                    continue
                 level += 1
                 self[level] = _LevelWeapon(weapon, multi_kill)
+        if not level:
+            raise WeaponOrderError(
+                'No valid lines found in weapon order file '
+                '"{file_name}".'.format(
+                    file_name=file_path.namebase,
+                )
+            )
         self._file_path = file_path
         self._name = self.file_path.namebase
         self._title = self.name.replace('_', ' ').title()
