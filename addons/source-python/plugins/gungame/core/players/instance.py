@@ -148,17 +148,30 @@ class GunGamePlayer(Player):
         """Return the player's current level weapon."""
         return weapon_order_manager.active[self.level].weapon
 
+    @property
+    def level_weapon_classname(self):
+        return weapon_manager[self.level_weapon].name
+
     def strip_weapons(self):
         for weapon in self.weapons(
             not_filters=('grenade', 'melee', 'objective', 'tool')
         ):
+            if weapon.classname == self.level_weapon_classname:
+                continue
             self.drop_weapon(weapon)
             weapon.remove()
 
+    def has_level_weapon(self):
+        for weapon in self.weapons():
+            if weapon.classname == self.level_weapon_classname:
+                return True
+        return False
+
     def give_level_weapon(self):
         """Give the player the weapon of their current level."""
-        weapon = weapon_manager[self.level_weapon]
-        self.give_named_item(weapon.name)
+        if self.has_level_weapon():
+            return
+        self.give_named_item(self.level_weapon_classname)
 
     # =========================================================================
     # >> MESSAGE FUNCTIONALITY
