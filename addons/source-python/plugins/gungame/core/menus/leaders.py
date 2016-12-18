@@ -27,9 +27,9 @@ def send_leaders_menu(index):
     menu = PagedMenu(title=_menu_strings['Leader:Current'])
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         menu.append(_menu_strings['Inactive'])
-    elif 'gg_teamplay' in gg_plugin_manager:
-        # TODO: Implement teamplay menus once teamplay is implemented
-        menu.append(_menu_strings['Leader:TeamPlay'])
+    elif gg_plugin_manager.is_team_game:
+        # TODO: Implement team menus once teamplay/teamwork are implemented
+        menu.append(_menu_strings['Leader:Team'])
     elif leader_manager.current_leaders is None:
         menu.append(_menu_strings['Leader:None'])
     else:

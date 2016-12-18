@@ -37,6 +37,7 @@ class _GGPluginManager(PluginManager):
 
     logger = gg_plugins_manager_logger
     _base_import_prefix = 'gungame.plugins.'
+    _team_based_plugins = ('gg_teamplay', 'gg_teamwork')
 
     def __missing__(self, plugin_name):
         """Set the base import path and add the plugin."""
@@ -66,6 +67,13 @@ class _GGPluginManager(PluginManager):
         with GG_Plugin_Unloaded() as event:
             event.plugin = plugin_name
             event.plugin_type = valid_plugins.get_plugin_type(plugin_name)
+
+    @property
+    def is_team_game(self):
+        for plugin in self._team_based_plugins:
+            if plugin in self:
+                return True
+        return False
 
     def _remove_modules(self, plugin_name):
         """Remove a plugin and all its modules."""

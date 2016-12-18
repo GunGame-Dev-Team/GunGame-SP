@@ -33,10 +33,10 @@ def send_level_menu(index):
     )
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         menu.append(_menu_strings['Inactive'])
-    elif 'gg_teamplay' in gg_plugin_manager:
-        # TODO: Implement teamplay menus once teamplay is implemented
+    elif gg_plugin_manager.is_team_game:
+        # TODO: Implement team menus once teamplay/teamwork are implemented
         menu.clear()
-        menu.append(_menu_strings['Level:TeamPlay'])
+        menu.append(_menu_strings['Level:Team'])
     elif player.team < 2:
         menu.append(Text(_menu_strings['Level:Inactive']))
     else:
