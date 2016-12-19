@@ -8,6 +8,7 @@
 # Source.Python
 from events import Event
 from listeners.tick import Delay
+from weapons.manager import weapon_manager
 
 # GunGame
 from gungame.core.players.attributes import AttributePreHook
@@ -18,6 +19,7 @@ from .configuration import (
     grenade_weapons, knife_weapons, level_one_victim, limit
 )
 from .custom_events import GG_Knife_Steal
+from .settings import auto_switch
 
 
 # =============================================================================
@@ -25,6 +27,9 @@ from .custom_events import GG_Knife_Steal
 # =============================================================================
 # Store a dictionary to know when a player recently leveled from knife level
 _recently_off_knife = dict()
+_knife_classnames = {
+    x.name for x in weapon_manager.values() if x.basename in knife_weapons
+}
 
 
 # =============================================================================
@@ -109,6 +114,16 @@ def _steal_level(game_event):
 
 
 # =============================================================================
+# >> GUNGAME EVENTS
+# =============================================================================
+@Event('gg_knife_steal')
+def _on_knife_steal(game_event):
+    attacker = player_dictionary[game_event['leveler']]
+    if auto_switch.get_setting(attacker.index):
+        Delay(0, _set_back_to_knife, (attacker.userid, ))
+
+
+# =============================================================================
 # >> ATTRIBUTE CALLBACKS
 # =============================================================================
 @AttributePreHook('level')
@@ -122,3 +137,15 @@ def _pre_level_change(player, attribute, new_value):
         'weapon': player.level_weapon
     }
     Delay(0, _recently_off_knife.__delitem__, args=(player.userid, ))
+
+
+# =============================================================================
+# >> HELPER FUNCTIONS
+# =============================================================================
+def _set_back_to_knife(userid):
+    player = player_dictionary[userid]
+    if player.active_weapon not in _knife_classnames:
+        player.client_command(
+            'lastinv',
+            server_side=True,
+        )
