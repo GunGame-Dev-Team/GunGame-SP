@@ -14,6 +14,9 @@ from gungame.core.players.attributes import AttributePreHook
 from gungame.core.players.dictionary import player_dictionary
 from gungame.core.weapons.groups import all_grenade_weapons
 
+# Plugin
+from .settings import auto_switch
+
 
 # =============================================================================
 # >> GLOBAL VARIABLES
@@ -43,9 +46,9 @@ def _earn_nade(game_event):
     if attacker in _recently_off_nade:
         return
 
-    weapon = game_event['weapon']
-    if killer.level_weapon != weapon:
-        killer.give_level_weapon()
+    weapon = killer.give_level_weapon()
+    if auto_switch.get_setting(killer.index):
+        killer.equip_weapon(weapon)
 
 
 # =============================================================================
