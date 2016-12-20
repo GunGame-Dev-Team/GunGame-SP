@@ -9,10 +9,12 @@
 from events import Event
 
 # GunGame
+from gungame.core.config.weapon import prop_physics
 from gungame.core.players.dictionary import player_dictionary
-from gungame.core.weapons.groups import melee_weapons
+from gungame.core.weapons.groups import grenade_weapons, melee_weapons
 
 # Plugin
+from .configuration import count_grenade_kills, count_melee_kills
 from .manager import team_dictionary
 
 
@@ -21,7 +23,6 @@ from .manager import team_dictionary
 # =============================================================================
 @Event('player_death')
 def _increment_team_multi_kill(game_event):
-    weapon = game_event['weapon']
     attacker = player_dictionary.get(game_event['attacker'])
     if attacker is None:
         return
@@ -34,15 +35,15 @@ def _increment_team_multi_kill(game_event):
     if team is None:
         return
 
+    weapon = game_event['weapon']
     if weapon != team.level_weapon:
-        if weapon == 'prop_physics':
-            # TODO: add conditionals
-            if True:
-                return
+        if weapon == 'prop_physics' and not prop_physics.get_int():
+            return
 
-        elif weapon in melee_weapons:
-            # TODO: add conditionals
-            if True:
-                return
+        elif weapon in melee_weapons and not count_melee_kills.get_int():
+            return
+
+        elif weapon in grenade_weapons and not count_grenade_kills.get_int():
+            return
 
     team.increase_multi_kill()
