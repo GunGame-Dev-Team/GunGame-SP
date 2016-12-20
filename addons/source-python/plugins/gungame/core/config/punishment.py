@@ -24,9 +24,15 @@ __all__ = (
 with GunGameConfigManager('punishment') as _config:
     _config._cvar_prefix = 'gg_'
 
-    # TODO: AFK
+    with _config.cvar('afk') as afk_punish:
+        afk_punish.add_text()
+    with _config.cvar('afk_type') as afk_type:
+        afk_type.add_text()
+    with _config.cvar('afk_length') as afk_length:
+        afk_length.add_text()
 
-    # TODO: Retry
+    with _config.cvar('retry') as retry_punish:
+        retry_punish.add_text()
 
     # Suicide
     with _config.cvar('suicide') as suicide_punish:
