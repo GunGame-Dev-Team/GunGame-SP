@@ -17,7 +17,8 @@ from weapons.manager import weapon_manager
 
 # GunGame
 from .config.misc import (
-    allow_kills_after_round, dynamic_chat_time, give_armor, give_defusers,
+    allow_kills_after_round, cancel_on_fire, dynamic_chat_time, give_armor,
+    give_defusers, level_on_protect,
 )
 from .config.punishment import (
     level_one_team_kill, suicide_punish, team_kill_punish,
@@ -75,6 +76,9 @@ def _player_spawn(game_event):
     # Verify that the player is on a team
     if player.team < 2:
         return
+
+    # Spawn protection
+    player.give_spawn_protection()
 
     # Give the player their new weapon
     player.strip_weapons()
@@ -138,6 +142,9 @@ def _player_death(game_event):
     # Was this a team-kill?
     if victim.team == killer.team:
         _punish_team_kill(killer)
+        return
+
+    if killer.in_spawn_protection and not level_on_protect.get_int():
         return
 
     # Did the killer kill using their level's weapon?
@@ -221,6 +228,17 @@ def _player_team(game_event):
         return
     _team_changers.add(userid)
     Delay(0.2, _team_changers.remove, (userid, ))
+
+
+@Event('weapon_fire')
+def _weapon_fire(game_event):
+    if not cancel_on_fire.get_int():
+        return
+    player = player_dictionary[game_event['userid']]
+    if not player.in_spawn_protection:
+        return
+    if cancel_on_fire.get_int():
+        player.remove_spawn_protection()
 
 
 # =============================================================================

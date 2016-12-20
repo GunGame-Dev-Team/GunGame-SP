@@ -35,6 +35,15 @@ with GunGameConfigManager('misc') as _config:
     with _config.cvar('dynamic_chat_time') as dynamic_chat_time:
         dynamic_chat_time.add_text()
 
+    with _config.cvar('spawn_protection') as spawn_protection:
+        spawn_protection.add_text()
+
+    with _config.cvar('spawn_protect_cancel_on_fire') as cancel_on_fire:
+        cancel_on_fire.add_text()
+
+    with _config.cvar('spawn_protect_can_level_up') as level_on_protect:
+        level_on_protect.add_text()
+
     with _config.cvar('give_armor') as give_armor:
         give_armor.add_text()
 

@@ -7,10 +7,12 @@
 # =============================================================================
 # Source.Python
 from colors import WHITE
+from listeners.tick import Delay
 from players.entity import Player
 from weapons.manager import weapon_manager
 
 # GunGame
+from ..config.misc import spawn_protection
 from ..events.included.leveling import GG_Level_Down, GG_Level_Up
 from ..events.included.match import GG_Win
 from ..messages import message_manager
@@ -39,6 +41,9 @@ class GunGamePlayer(Player):
 
     level = 0
     multi_kill = 0
+    in_spawn_protection = False
+    _protect_delay = None
+    _color = None
 
     def __setattr__(self, attr, value):
         """Verify that the attribute's value should be set."""
@@ -218,6 +223,28 @@ class GunGamePlayer(Player):
     def top_message(self, message='', color=WHITE, time=4, **tokens):
         """Send a toptext message to the player."""
         message_manager.top_message(message, color, time, self.index, **tokens)
+
+    # =========================================================================
+    # >> SPAWN PROTECT FUNCTIONALITY
+    # =========================================================================
+    def give_spawn_protection(self):
+        delay = spawn_protection.get_float()
+        if delay <= 0:
+            return
+        self.in_spawn_protection = True
+        self.godmode = True
+        self._color = self.color
+        self.color = self.color.with_alpha(100)
+        self._protect_delay = Delay(delay, self.remove_spawn_protection)
+
+    def remove_spawn_protection(self):
+        if self._protect_delay is None:
+            return
+        self._protect_delay.cancel()
+        self._protect_delay = None
+        self.godmode = False
+        self.color = self._color
+        self.in_spawn_protection = False
 
     # =========================================================================
     # >> SOUND FUNCTIONALITY
