@@ -23,7 +23,9 @@ from .config.punishment import (
     level_one_team_kill, suicide_punish, team_kill_punish,
 )
 from .config.warmup import enabled as warmup_enabled, weapon as warmup_weapon
-from .config.weapon import order_file, order_randomize, multi_kill_override
+from .config.weapon import (
+    order_file, order_randomize, multi_kill_override, prop_physics
+)
 from .credits import gungame_credits
 from .events.included.match import GG_Start
 from .leaders import leader_manager
@@ -139,7 +141,11 @@ def _player_death(game_event):
         return
 
     # Did the killer kill using their level's weapon?
-    if weapon_manager[game_event['weapon']].basename != killer.level_weapon:
+    weapon = game_event['weapon']
+    if weapon != 'prop_physics':
+        if weapon_manager[weapon].basename != killer.level_weapon:
+            return
+    elif not prop_physics.get_int():
         return
 
     # Increase the killer's multi_kill

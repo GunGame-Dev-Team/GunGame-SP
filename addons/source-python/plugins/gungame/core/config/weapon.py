@@ -59,3 +59,6 @@ with GunGameConfigManager('weapon') as _config:
         'multi_kill_override', flags=ConVarFlags.NOTIFY,
     ) as multi_kill_override:
         multi_kill_override.add_text()
+
+    with _config.cvar('prop_physics') as prop_physics:
+        prop_physics.add_text()
