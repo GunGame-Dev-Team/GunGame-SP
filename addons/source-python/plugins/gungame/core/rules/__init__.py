@@ -37,7 +37,7 @@ class _GunGameRulesDictionary(dict):
 
     def get_rules(self, player):
         language = player.language
-        message = self.header.get_string(language) + ':\n\n'
+        message = ''
         for plugin_name, rules in self.items():
             if plugin_name not in gg_plugin_manager:
                 continue
@@ -56,7 +56,9 @@ class _GunGameRulesDictionary(dict):
                         **convar_tokens
                     )
                 message += '\t\t' + rule + '\n\n'
-        return message
+        if not message:
+            message = rules_translations['Rules:Empty'].get_string(language)
+        return self.header.get_string(language) + ':\n\n' + message
 
 all_gungame_rules = _GunGameRulesDictionary()
 
