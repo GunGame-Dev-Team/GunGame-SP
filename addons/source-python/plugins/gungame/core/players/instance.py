@@ -157,10 +157,11 @@ class GunGamePlayer(Player):
     def level_weapon_classname(self):
         return weapon_manager[self.level_weapon].name
 
-    def strip_weapons(self):
-        for weapon in self.weapons(
-            not_filters=('grenade', 'melee', 'objective', 'tool')
-        ):
+    def strip_weapons(self, strip_grenades=False):
+        not_filters = ('melee', 'objective', 'tool')
+        if not strip_grenades:
+            not_filters += ('grenade', )
+        for weapon in self.weapons(not_filters=not_filters):
             if weapon.classname == self.level_weapon_classname:
                 continue
             self.drop_weapon(weapon)
