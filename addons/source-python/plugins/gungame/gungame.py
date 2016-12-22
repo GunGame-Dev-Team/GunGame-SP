@@ -25,6 +25,7 @@ from .core.events.storage import gg_resource_list
 from .core.logger import gg_logger
 from .core.players.database import winners_database
 from .core.plugins.command import gg_command_manager
+from .core.rules import define_all_rules
 from .core.settings import register_player_settings
 from .core.sounds import register_all_sounds
 from .core.status import GunGameMatchStatus, GunGameStatus
@@ -43,7 +44,7 @@ _base_strings = LangStrings('gungame/load_and_unload')
 # >> LOAD & UNLOAD FUNCTIONS
 # =============================================================================
 def load():
-    """Initialize ."""
+    """Initialize GunGame."""
     # Initialize GunGame logging
     # TODO: Make sure to enable logging prior to the start message
     current = 1
@@ -114,6 +115,16 @@ def load():
     current += 1
     load_all_configs()
 
+    # Initialize GunGame rules
+    gg_logger.log_message(
+        _base_strings['Initialize:Rules'].get_string(
+            current=current,
+            total=total,
+        )
+    )
+    current += 1
+    define_all_rules()
+
     # Initialize GunGame player settings
     gg_logger.log_message(
         _base_strings['Initialize:Settings'].get_string(
@@ -170,7 +181,7 @@ def load():
 
 
 def unload():
-    """Clean up ."""
+    """Clean up GunGame."""
     # Start the cleanup process
     GunGameStatus.MATCH = GunGameMatchStatus.UNLOADING
     current = 1

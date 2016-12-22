@@ -47,6 +47,8 @@ class _MessageManager(dict):
 
         # Loop through all directories in the GunGame translations directory
         for folder in GUNGAME_TRANSLATION_PATH.dirs():
+            if folder.namebase == 'rules':
+                continue
 
             # Loop through all translation files in the current directory
             for file in folder.files('*.ini'):
