@@ -11,10 +11,18 @@ from players.helpers import userid_from_index
 
 # GunGame
 from ..leaders import leader_manager
-from . import _menu_strings
+from . import menu_strings
 from ..players.dictionary import player_dictionary
 from ..plugins.manager import gg_plugin_manager
 from ..status import GunGameMatchStatus, GunGameStatus
+
+
+# =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = (
+    'send_level_menu',
+)
 
 
 # =============================================================================
@@ -27,22 +35,22 @@ def send_level_menu(index):
     menu.append(
         SimpleOption(
             1,
-            _menu_strings['Level:Title'],
+            menu_strings['Level:Title'],
             selectable=False,
         )
     )
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
-        menu.append(_menu_strings['Inactive'])
+        menu.append(menu_strings['Inactive'])
     elif gg_plugin_manager.is_team_game:
         # TODO: Implement team menus once teamplay/teamwork are implemented
         menu.clear()
-        menu.append(_menu_strings['Level:Team'])
+        menu.append(menu_strings['Level:Team'])
     elif player.team < 2:
-        menu.append(Text(_menu_strings['Level:Inactive']))
+        menu.append(Text(menu_strings['Level:Inactive']))
     else:
         menu.append(
             Text(
-                _menu_strings['Level:Current'].get_string(
+                menu_strings['Level:Current'].get_string(
                     player.language,
                     level=player.level,
                 )
@@ -50,7 +58,7 @@ def send_level_menu(index):
         )
         menu.append(
             Text(
-                _menu_strings['Level:Weapon'].get_string(
+                menu_strings['Level:Weapon'].get_string(
                     player.language,
                     kills=player.level_multi_kill - player.multi_kill,
                     weapon=player.level_weapon,
@@ -59,30 +67,30 @@ def send_level_menu(index):
         )
         leaders = leader_manager.current_leaders
         if leaders is None:
-            menu.append(Text(_menu_strings['Leader:None']))
+            menu.append(Text(menu_strings['Leader:None']))
         elif player.userid not in leaders:
             menu.append(
                 Text(
-                    _menu_strings['Level:Trailing'].get_string(
+                    menu_strings['Level:Trailing'].get_string(
                         player.language,
                         levels=leader_manager.leader_level - player.level,
                     )
                 )
             )
         elif len(leaders) > 1:
-            menu.append(Text(_menu_strings['Level:Tied']))
+            menu.append(Text(menu_strings['Level:Tied']))
         else:
-            menu.append(Text(_menu_strings['Level:Leading']))
+            menu.append(Text(menu_strings['Level:Leading']))
         menu.append(
             SimpleOption(
                 2,
-                _menu_strings['Level:Wins-Title'],
+                menu_strings['Level:Wins-Title'],
                 selectable=False,
             )
         )
         menu.append(
             Text(
-                _menu_strings['Level:Wins'].get_string(
+                menu_strings['Level:Wins'].get_string(
                     player.language,
                     wins=player.wins,
                 )

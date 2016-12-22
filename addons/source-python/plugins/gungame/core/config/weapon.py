@@ -20,6 +20,7 @@ __all__ = (
     'order_choose_random',
     'order_file',
     'order_randomize',
+    'prop_physics',
     'random_weapon_each_time',
     'randomize_per_player',
 )

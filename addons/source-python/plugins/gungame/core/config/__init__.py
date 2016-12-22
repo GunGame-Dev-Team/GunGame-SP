@@ -14,6 +14,7 @@ from warnings import warn
 from path import Path
 
 # GunGame
+from .. import gg_core_logger
 from ..paths import GUNGAME_PLUGINS_PATH
 from ..plugins.valid import valid_plugins
 
@@ -22,8 +23,15 @@ from ..plugins.valid import valid_plugins
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
+    'gg_config_logger',
     'load_all_configs',
 )
+
+
+# =============================================================================
+# >> GLOBAL VARIABLES
+# =============================================================================
+gg_config_logger = gg_core_logger.config
 
 
 # =============================================================================

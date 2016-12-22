@@ -14,6 +14,7 @@ from config.manager import ConfigManager
 from translations.strings import LangStrings
 
 # GunGame
+from . import gg_config_logger
 from ..plugins.valid import valid_plugins
 
 
@@ -22,7 +23,14 @@ from ..plugins.valid import valid_plugins
 # =============================================================================
 __all__ = (
     'GunGameConfigManager',
+    'gg_config_manager_logger',
 )
+
+
+# =============================================================================
+# >> GLOBAL VARIABLES
+# =============================================================================
+gg_config_manager_logger = gg_config_logger.manager
 
 
 # =============================================================================

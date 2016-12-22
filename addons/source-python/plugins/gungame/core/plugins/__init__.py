@@ -13,7 +13,16 @@ from .. import gg_core_logger
 
 
 # =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = (
+    'gg_plugins_logger',
+    'plugin_strings',
+)
+
+
+# =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
 gg_plugins_logger = gg_core_logger.plugins
-_plugin_strings = LangStrings('_core/plugin_strings')
+plugin_strings = LangStrings('_core/plugin_strings')

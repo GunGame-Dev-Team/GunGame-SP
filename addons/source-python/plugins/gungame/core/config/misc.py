@@ -14,12 +14,15 @@ from .manager import GunGameConfigManager
 # =============================================================================
 __all__ = (
     'allow_kills_after_round',
+    'cancel_on_fire',
     'dynamic_chat_time',
     'give_armor',
     'give_defusers',
+    'level_on_protect',
     'map_strip_exceptions',
     'prune_database',
     'sound_pack',
+    'spawn_protection',
 )
 
 
