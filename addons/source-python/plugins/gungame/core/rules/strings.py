@@ -34,21 +34,29 @@ class _RulesTranslations(dict):
         """Add 'gungame' and the plugin type to the path."""
         super().__init__()
 
-        for file in GUNGAME_TRANSLATION_PATH.joinpath('rules').files('*.ini'):
-            if file.namebase.endswith('_server'):
-                continue
-            instance = LangStrings(
-                file.replace(TRANSLATION_PATH, '')[1:~3]
-            )
-            for key, value in instance.items():
-                if key in self:
-                    warn(
-                        'Translation key "{translation_key}" '
-                        'already registered.'.format(
-                            translation_key=key,
-                        )
+        rules_path = GUNGAME_TRANSLATION_PATH / 'rules'
+        for file in rules_path.files('*.ini'):
+            if not file.namebase.endswith('_server'):
+                self._add_contents(file)
+
+        for directory in rules_path.dirs():
+            for file in directory.files('*.ini'):
+                if not file.namebase.endswith('_server'):
+                    self._add_contents(file)
+
+    def _add_contents(self, file):
+        instance = LangStrings(
+            file.replace(TRANSLATION_PATH, '')[1:~3]
+        )
+        for key, value in instance.items():
+            if key in self:
+                warn(
+                    'Translation key "{translation_key}" '
+                    'already registered.'.format(
+                        translation_key=key,
                     )
-                    continue
-                self[key] = value
+                )
+                continue
+            self[key] = value
 
 rules_translations = _RulesTranslations()
