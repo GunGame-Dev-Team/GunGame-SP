@@ -35,9 +35,7 @@ class _RulesTranslations(dict):
         super().__init__()
 
         rules_path = GUNGAME_TRANSLATION_PATH / 'rules'
-        for file in rules_path.files('*.ini'):
-            if not file.namebase.endswith('_server'):
-                self._add_contents(file)
+        self._add_contents(rules_path / 'core.ini')
 
         for directory in rules_path.dirs():
             for file in directory.files('*.ini'):
