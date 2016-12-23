@@ -6,6 +6,7 @@
 # >> IMPORTS
 # =============================================================================
 # Python
+from collections import OrderedDict
 from importlib import import_module
 import sys
 from warnings import warn
@@ -29,7 +30,7 @@ __all__ = (
 # =============================================================================
 # >> CLASSES
 # =============================================================================
-class _GunGameRulesDictionary(dict):
+class _GunGameRulesDictionary(OrderedDict):
 
     def __init__(self):
         super().__init__()
