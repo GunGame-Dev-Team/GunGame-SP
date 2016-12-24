@@ -34,18 +34,8 @@ class ValidPlugin(object):
 
     def __init__(self, info, description):
         """Store the info and description."""
-        self._info = info
-        self._description = description
-
-    @property
-    def info(self):
-        """Return the plugin's info instance."""
-        return self._info
-
-    @property
-    def description(self):
-        """Return the plugin's description."""
-        return self._description
+        self.info = info
+        self.description = description
 
 
 class _ValidPlugins(object):
@@ -53,13 +43,19 @@ class _ValidPlugins(object):
 
     def __init__(self):
         """Store all plugins by their type."""
-        self._included = self._get_plugins_by_type('included')
-        self._custom = self._get_plugins_by_type('custom')
+        self.included = self._get_plugins_by_type('included')
+        self.custom = self._get_plugins_by_type('custom')
         for plugin in list(self.custom):
             if plugin in self.included:
                 del self.custom[plugin]
-        self._all = dict(self.included)
-        self._all.update(self.custom)
+                warn(
+                    'Custom plugin "{plugin_name}" is invalid, as there is '
+                    'already an included plugin of the same name.'.format(
+                        plugin_name=plugin,
+                    )
+                )
+        self.all = dict(self.included)
+        self.all.update(self.custom)
 
     def get_plugin_type(self, plugin):
         """Return the type (included or custom) for the given plugin."""
@@ -71,21 +67,6 @@ class _ValidPlugins(object):
                 plugin_name=plugin,
             )
         )
-
-    @property
-    def included(self):
-        """Return the included plugins."""
-        return self._included
-
-    @property
-    def custom(self):
-        """Return the custom plugins."""
-        return self._custom
-
-    @property
-    def all(self):
-        """Return all of the plugins."""
-        return self._all
 
     @staticmethod
     def _get_plugins_by_type(plugin_type):
