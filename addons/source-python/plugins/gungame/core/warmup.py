@@ -53,36 +53,11 @@ class _WarmupManager(object):
 
     def __init__(self):
         """Store the base attributes."""
-        self._repeat = Repeat(self._countdown)
-        self._extensions = 0
-        self._warmup_time = 0
-        self._weapon = None
-        self._weapon_cycle = None
-
-    @property
-    def repeat(self):
-        """Return the warmup manager repeat."""
-        return self._repeat
-
-    @property
-    def extensions(self):
-        """Return the number of extensions used in warmup."""
-        return self._extensions
-
-    @property
-    def warmup_time(self):
-        """Return the length of the warmup round."""
-        return self._warmup_time
-
-    @property
-    def weapon(self):
-        """Return the warmup weapon."""
-        return self._weapon
-
-    @property
-    def weapon_cycle(self):
-        """Return the cycle of warmup weapons."""
-        return self._weapon_cycle
+        self.repeat = Repeat(self._countdown)
+        self.extensions = 0
+        self.warmup_time = 0
+        self.weapon = None
+        self.weapon_cycle = None
 
     def set_warmup_weapon(self):
         """Set the warmup weapon(s)."""

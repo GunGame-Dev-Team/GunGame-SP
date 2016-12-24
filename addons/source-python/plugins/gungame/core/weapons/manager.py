@@ -48,7 +48,7 @@ class _WeaponOrderManager(dict):
         # Set the default attributes
         self._active = None
         self._order = None
-        self._randomize = False
+        self.randomize = False
         self._delay = None
         self._print_delay = None
 
@@ -61,11 +61,6 @@ class _WeaponOrderManager(dict):
         if self.randomize:
             return self[self._active].random_order
         return self[self._active]
-
-    @property
-    def randomize(self):
-        """Return whether or not to use a randomized weapon order."""
-        return self._randomize
 
     @property
     def max_levels(self):

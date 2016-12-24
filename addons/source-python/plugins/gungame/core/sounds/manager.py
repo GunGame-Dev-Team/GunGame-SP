@@ -63,12 +63,7 @@ class _SoundManager(defaultdict):
     def __init__(self, default_factory):
         """Store all default core sounds."""
         super().__init__(default_factory)
-        self._defaults = dict()
-
-    @property
-    def defaults(self):
-        """"""
-        return self._defaults
+        self.defaults = dict()
 
     def load_sounds(self):
         """Load all sounds into the dictionary."""

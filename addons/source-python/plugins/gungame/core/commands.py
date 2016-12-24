@@ -33,7 +33,7 @@ class _MenuCommand(object):
 
     def __init__(self, name):
         """Store the base name and send_menu callback."""
-        self._name = name
+        self.name = name
         module = import_module(
             'gungame.core.menus.{menu_name}'.format(
                 menu_name=self.name,
@@ -45,11 +45,6 @@ class _MenuCommand(object):
                 menu_name=self.name,
             )
         )
-
-    @property
-    def name(self):
-        """Return the base name of the command."""
-        return self._name
 
     def register_commands(self):
         """Register the public, private, and client commands."""

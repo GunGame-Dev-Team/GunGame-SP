@@ -51,19 +51,13 @@ class _TeamManagement(object):
         self.number = number
         self.alias = alias
         self.level = 1
-        self._name = None
+        self.name = team_names[self.number]
         self._leader = None
         self.leader_userid = None
 
     @property
     def index(self):
         return self.leader.index if self.leader is not None else 0
-
-    @property
-    def name(self):
-        if self._name is None:
-            self._name = team_names[self.number]
-        return self._name
 
     @property
     def leader(self):

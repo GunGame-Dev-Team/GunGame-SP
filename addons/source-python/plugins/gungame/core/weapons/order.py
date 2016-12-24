@@ -98,39 +98,19 @@ class WeaponOrder(dict):
                     file_name=file_path.namebase,
                 )
             )
-        self._file_path = file_path
-        self._name = self.file_path.namebase
-        self._title = self.name.replace('_', ' ').title()
-        self._random_order = None
-
-    @property
-    def name(self):
-        """Return the weapon order's name."""
-        return self._name
-
-    @property
-    def file_path(self):
-        """Return the weapon order's file path."""
-        return self._file_path
-
-    @property
-    def title(self):
-        """Return the weapon order's title."""
-        return self._title
+        self.file_path = file_path
+        self.name = self.file_path.namebase
+        self.title = self.name.replace('_', ' ').title()
+        self.random_order = None
 
     @property
     def max_levels(self):
         """Return the maximum number of levels for the weapon order."""
         return len(self)
 
-    @property
-    def random_order(self):
-        """Return the randomized weapon order."""
-        return self._random_order
-
     def randomize_order(self):
         """Get a randomized weapon order based on the instance."""
-        self._random_order = dict()
+        self.random_order = dict()
         randomize_weapons = list(self.values())
         keep_at_end = list()
         for weapon in reversed(randomize_weapons):
@@ -143,7 +123,7 @@ class WeaponOrder(dict):
         shuffle(randomize_weapons)
         randomize_weapons.extend(keep_at_end)
         for level, value in enumerate(randomize_weapons, 1):
-            self._random_order[level] = value
+            self.random_order[level] = value
 
 
 class _LevelWeapon(object):
@@ -151,13 +131,8 @@ class _LevelWeapon(object):
 
     def __init__(self, weapon, multi_kill):
         """Store the base values."""
-        self._weapon = weapon
+        self.weapon = weapon
         self._multi_kill = multi_kill
-
-    @property
-    def weapon(self):
-        """Return the level's weapon."""
-        return self._weapon
 
     @property
     def multi_kill(self):
