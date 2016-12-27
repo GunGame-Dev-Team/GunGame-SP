@@ -15,7 +15,7 @@ from listeners.tick import Delay
 from ..events.included.plugins import GG_Plugin_Loaded
 from ..plugins import gg_plugins_logger
 from ..plugins.manager import gg_plugin_manager
-from ..plugins.valid import valid_plugins
+from ..plugins.valid import plugin_requirements, valid_plugins
 
 
 # =============================================================================
@@ -74,6 +74,18 @@ class _PluginQueue(dict):
         """Unload all plugins in the unload queue."""
         # Loop through all plugins to unload
         for plugin_name in self['unload']:
+
+            if plugin_name in plugin_requirements:
+                for other in plugin_requirements[plugin_name]:
+                    if other in self.manager and other not in self['unload']:
+                        warn(
+                            'Plugin "{plugin_name}" is required by "{other}". '
+                            'Please unload "{other}" or load {plugin_name} '
+                            'again to avoid issues.'.format(
+                                plugin_name=plugin_name,
+                                other=other,
+                            )
+                        )
 
             # Unload the plugin
             del self.manager[plugin_name]

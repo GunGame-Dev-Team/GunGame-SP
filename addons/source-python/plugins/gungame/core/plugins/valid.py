@@ -6,6 +6,7 @@
 # >> IMPORTS
 # =============================================================================
 # Python
+from collections import defaultdict
 from importlib import import_module
 from warnings import warn
 
@@ -22,8 +23,15 @@ from ..paths import GUNGAME_PLUGINS_PATH
 __all__ = (
     'ValidPlugin',
     '_ValidPlugins',
+    'plugin_requirements',
     'valid_plugins',
 )
+
+
+# =============================================================================
+# >> GLOBAL VARIABLES
+# =============================================================================
+plugin_requirements = defaultdict(list)
 
 
 # =============================================================================
@@ -134,6 +142,12 @@ class _ValidPlugins(object):
 
             # Add the plugin to the dictionary
             plugins[str(plugin.namebase)] = ValidPlugin(info.info, description)
+
+            if not hasattr(info, 'required'):
+                return
+
+            for other in info.required:
+                plugin_requirements[other].append(str(plugin.namebase))
 
         # Return the dictionary
         return plugins
