@@ -9,9 +9,10 @@
 from plugins.manager import PluginManager
 
 # GunGame
-from ..events.included.plugins import GG_Plugin_Unloaded
 from . import gg_plugins_logger
 from .valid import valid_plugins
+from ..events.included.plugins import GG_Plugin_Unloaded
+from ..teams import team_levels
 
 
 # =============================================================================
@@ -36,9 +37,9 @@ gg_plugins_manager_logger = gg_plugins_logger.manager
 class _GGPluginManager(PluginManager):
     """The GunGame plugin manager class."""
 
+    prefix = ''
     logger = gg_plugins_manager_logger
     _base_import_prefix = 'gungame.plugins.'
-    _team_based_plugins = ('gg_teamplay', 'gg_teamwork')
 
     def __missing__(self, plugin_name):
         """Set the base import path and add the plugin."""
@@ -71,10 +72,7 @@ class _GGPluginManager(PluginManager):
 
     @property
     def is_team_game(self):
-        for plugin in self._team_based_plugins:
-            if plugin in self:
-                return True
-        return False
+        return any(team_levels.values())
 
     def _remove_modules(self, plugin_name):
         """Remove a plugin and all its modules."""
