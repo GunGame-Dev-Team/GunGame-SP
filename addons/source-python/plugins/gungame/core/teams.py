@@ -14,16 +14,29 @@ from players.teams import team_managers, teams_by_number
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
+    'team_levels',
     'team_names',
 )
+
+
+# =============================================================================
+# >> CLASSES
+# =============================================================================
+class _TeamLevels(dict):
+    def clear(self):
+        for x in self:
+            self[x] = 0
 
 
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
 team_names = dict()
+team_levels = _TeamLevels()
 
 for _class_name in team_managers:
     for _entity in EntityIter(_class_name):
-        if teams_by_number.get(_entity.team, 'un') not in ('un', 'spec'):
-            team_names[_entity.team] = _entity.team_name
+        if teams_by_number.get(_entity.team, 'un') in ('un', 'spec'):
+            continue
+        team_names[_entity.team] = _entity.team_name
+        team_levels[_entity.team] = 0
