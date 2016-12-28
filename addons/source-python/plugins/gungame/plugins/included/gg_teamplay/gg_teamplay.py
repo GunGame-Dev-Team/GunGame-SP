@@ -18,7 +18,15 @@ from listeners.tick import Delay
 
 # GunGame
 from gungame.core.plugins.manager import gg_plugin_manager
+from gungame.core.teams import team_levels
 from gungame.core.weapons.manager import weapon_order_manager
+
+
+# =============================================================================
+# >> LOAD & UNLOAD
+# =============================================================================
+def unload():
+    team_levels.clear()
 
 
 # =============================================================================

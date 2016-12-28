@@ -18,7 +18,7 @@ from gungame.core.messages import message_manager
 from gungame.core.players.dictionary import player_dictionary
 from gungame.core.sounds.manager import sound_manager
 from gungame.core.status import GunGameMatchStatus, GunGameStatus
-from gungame.core.teams import team_names
+from gungame.core.teams import team_levels, team_names
 from gungame.core.weapons.manager import weapon_order_manager
 
 # Plugin
@@ -35,6 +35,7 @@ class _TeamManager(object):
         self.level = 1
         self.multi_kill = 0
         self.team_number = team_number
+        team_levels[self.team_number] = self.level
 
     @property
     def name(self):
@@ -75,9 +76,9 @@ class _TeamManager(object):
         if self.level == weapon_order_manager.max_levels:
             self.declare_winner()
         else:
-            self.increase_level(levels=1)
+            self.increase_level()
 
-    def increase_level(self, levels):
+    def increase_level(self, levels=1):
         if not isinstance(levels, int) or levels < 1:
             raise ValueError(
                 'Invalid value given for levels "{levels}".'.format(
@@ -85,11 +86,13 @@ class _TeamManager(object):
                 )
             )
         self.multi_kill = 0
+        current_level = self.level
         self.level += levels
+        team_levels[self.team_number] = self.level
         with GG_Team_Level_Up() as event:
             event.team = self.team_number
-            event.old_level = self.level - 1
-            event.name = self.level
+            event.old_level = current_level
+            event.new_level = self.level
             event.style = _teamplay_manager.current_module
 
     def declare_winner(self):
