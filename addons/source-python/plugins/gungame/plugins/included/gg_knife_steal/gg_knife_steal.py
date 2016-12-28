@@ -110,7 +110,7 @@ def _steal_level(game_event):
             event.attacker = event.leveler = killer.userid
             event.attacker_level = killer.level
             event.userid = event.victim = victim.userid
-            event.userid_level = victim.level
+            event.victim_level = victim.level
 
 
 # =============================================================================
