@@ -44,14 +44,14 @@ def get_winners_menu(player):
         instance = winners_database[unique_id]
         menu.append(
             ListOption(
-                rank,
-                '{name} [{wins}]'.format(
+                choice_index=rank,
+                text='{name} [{wins}]'.format(
                     name=instance.name,
                     wins=instance.wins
                 ),
-                unique_id,
-                player.uniqueid == unique_id,
-                False,
+                value=unique_id,
+                highlight=player.uniqueid == unique_id,
+                selectable=False,
             )
         )
     return menu

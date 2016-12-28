@@ -38,14 +38,14 @@ def send_weapons_menu(index):
         for level, instance in weapon_order_manager.active.items():
             menu.append(
                 ListOption(
-                    level,
-                    '{weapon} [{multi_kill}]'.format(
+                    choice_index=level,
+                    text='{weapon} [{multi_kill}]'.format(
                         weapon=instance.weapon,
                         multi_kill=instance.multi_kill,
                     ),
-                    level,
-                    level == player.level,
-                    False,
+                    value=level,
+                    highlight=level == player.level,
+                    selectable=False,
                 )
             )
     menu.send(index)
