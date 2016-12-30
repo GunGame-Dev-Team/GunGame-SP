@@ -12,14 +12,14 @@ from players.entity import Player
 from weapons.manager import weapon_manager
 
 # GunGame
-from ..config.misc import spawn_protection
-from ..events.included.leveling import GG_Level_Down, GG_Level_Up
-from ..events.included.match import GG_Win
-from ..messages import message_manager
 from .attributes import (
     attribute_post_hooks, attribute_pre_hooks, player_attributes,
 )
 from .database import winners_database
+from ..config.misc import spawn_protection
+from ..events.included.leveling import GG_Level_Down, GG_Level_Up
+from ..events.included.match import GG_Win
+from ..messages import message_manager
 from ..sounds.manager import sound_manager
 from ..status import GunGameMatchStatus, GunGameStatus
 from ..weapons.manager import weapon_order_manager

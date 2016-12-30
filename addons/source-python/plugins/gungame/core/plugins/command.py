@@ -11,12 +11,12 @@ from plugins.command import SubCommandManager
 from translations.strings import LangStrings
 
 # GunGame
-from ..credits import gungame_credits
 from . import plugin_strings, gg_plugins_logger
 from .instance import GGLoadedPlugin
 from .manager import gg_plugin_manager
 from .queue import plugin_queue
 from .valid import valid_plugins
+from ..credits import gungame_credits
 from ..weapons.manager import weapon_order_manager
 
 
