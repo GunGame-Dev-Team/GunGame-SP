@@ -10,8 +10,9 @@ from menus import SimpleMenu, SimpleOption, Text
 from players.helpers import userid_from_index
 
 # GunGame
-from ..leaders import leader_manager
 from . import menu_strings
+from ..commands.registration import register_command_callback
+from ..leaders import leader_manager
 from ..players.dictionary import player_dictionary
 from ..plugins.manager import gg_plugin_manager
 from ..status import GunGameMatchStatus, GunGameStatus
@@ -29,6 +30,7 @@ __all__ = (
 # =============================================================================
 # >> FUNCTIONS
 # =============================================================================
+@register_command_callback('level', menu_strings['Level:Text'])
 def send_level_menu(index):
     """Send the level menu to the player."""
     menu = SimpleMenu()

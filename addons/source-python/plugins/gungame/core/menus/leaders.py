@@ -10,9 +10,10 @@ from menus import PagedMenu
 from players.entity import Player
 
 # GunGame
-from ..leaders import leader_manager
 from . import menu_strings
 from ._options import StarOption
+from ..commands.registration import register_command_callback
+from ..leaders import leader_manager
 from ..players.dictionary import player_dictionary
 from ..plugins.manager import gg_plugin_manager
 from ..status import GunGameMatchStatus, GunGameStatus
@@ -31,6 +32,7 @@ __all__ = (
 # =============================================================================
 # >> FUNCTIONS
 # =============================================================================
+@register_command_callback('leaders', menu_strings['Leader:Text'])
 def send_leaders_menu(index):
     """Send the leaders menu to the player."""
     menu = PagedMenu(title=menu_strings['Leader:Current'])

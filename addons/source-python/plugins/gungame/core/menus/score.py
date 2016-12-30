@@ -12,6 +12,7 @@ from players.entity import Player
 # GunGame
 from . import menu_strings
 from ._options import ListOption
+from ..commands.registration import register_command_callback
 from ..players.dictionary import player_dictionary
 from ..plugins.manager import gg_plugin_manager
 from ..status import GunGameMatchStatus, GunGameStatus
@@ -29,6 +30,7 @@ __all__ = (
 # =============================================================================
 # >> FUNCTIONS
 # =============================================================================
+@register_command_callback('score', menu_strings['Score:Text'])
 def send_score_menu(index):
     """Send the score menu to the player."""
     menu = PagedMenu(title=menu_strings['Score:Title'])

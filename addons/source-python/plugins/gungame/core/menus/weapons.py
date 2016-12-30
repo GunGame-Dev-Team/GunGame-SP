@@ -12,6 +12,7 @@ from players.helpers import userid_from_index
 # GunGame
 from . import menu_strings
 from ._options import ListOption
+from ..commands.registration import register_command_callback
 from ..players.dictionary import player_dictionary
 from ..status import GunGameMatchStatus, GunGameStatus
 from ..weapons.manager import weapon_order_manager
@@ -28,6 +29,7 @@ __all__ = (
 # =============================================================================
 # >> FUNCTIONS
 # =============================================================================
+@register_command_callback('weapons', menu_strings['Weapons:Text'])
 def send_weapons_menu(index):
     """Send the weapon menu to the player."""
     menu = PagedMenu(title=menu_strings['Weapons:Title'])
