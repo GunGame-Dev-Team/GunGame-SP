@@ -10,13 +10,13 @@ from random import shuffle
 from warnings import warn
 
 # GunGame
-from ..config.weapon import multi_kill_override
 from .errors import WeaponOrderError
 from .groups import (
     all_weapons, machine_gun_weapons, other_primary_weapons,
     other_secondary_weapons, other_weapons, pistol_weapons, rifle_weapons,
     shotgun_weapons, smg_weapons, sniper_weapons,
 )
+from ..config.weapon import multi_kill_override
 
 
 # =============================================================================

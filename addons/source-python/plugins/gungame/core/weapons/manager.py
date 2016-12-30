@@ -11,13 +11,13 @@ from hooks.exceptions import except_hooks
 from listeners.tick import Delay
 
 # GunGame
-from ..config.weapon import order_file, order_randomize
-from ..paths import GUNGAME_WEAPON_ORDER_PATH
-from ..status import GunGameMatchStatus, GunGameStatus
 from . import gg_weapons_logger
 from .default import create_default_weapon_orders
 from .errors import WeaponOrderError
 from .order import WeaponOrder
+from ..config.weapon import order_file, order_randomize
+from ..paths import GUNGAME_WEAPON_ORDER_PATH
+from ..status import GunGameMatchStatus, GunGameStatus
 
 
 # =============================================================================
@@ -103,9 +103,11 @@ class _WeaponOrderManager(dict):
 
     def set_randomize(self, value):
         """Set the randomize value and randomize the weapon order."""
+        if not isinstance(value, bool):
+            value = bool(int(value))
         if self.randomize == value:
             return
-        self._randomize = value
+        self.randomize = value
         if value:
             self[self._active].randomize_order()
         self.restart_game()
