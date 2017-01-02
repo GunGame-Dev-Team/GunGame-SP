@@ -9,9 +9,17 @@
 from menus import PagedMenu
 
 # GunGame
-from . import _menu_strings
+from . import menu_strings
 from ._options import ListOption
 from ..players.database import winners_database
+
+
+# =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = (
+    'get_winners_menu',
+)
 
 
 # =============================================================================
@@ -19,9 +27,9 @@ from ..players.database import winners_database
 # =============================================================================
 def get_winners_menu(player):
     """Return a sorted menu of all winners."""
-    menu = PagedMenu(title=_menu_strings['Winners:Title'])
+    menu = PagedMenu(title=menu_strings['Winners:Title'])
     if not winners_database:
-        menu.description = _menu_strings['Winners:None']
+        menu.description = menu_strings['Winners:None']
         return menu
 
     winners = sorted(
@@ -36,14 +44,14 @@ def get_winners_menu(player):
         instance = winners_database[unique_id]
         menu.append(
             ListOption(
-                rank,
-                '{name} [{wins}]'.format(
+                choice_index=rank,
+                text='{name} [{wins}]'.format(
                     name=instance.name,
                     wins=instance.wins
                 ),
-                unique_id,
-                player.uniqueid == unique_id,
-                False,
+                value=unique_id,
+                highlight=player.uniqueid == unique_id,
+                selectable=False,
             )
         )
     return menu

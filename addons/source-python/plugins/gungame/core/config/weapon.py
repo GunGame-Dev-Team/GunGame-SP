@@ -20,6 +20,7 @@ __all__ = (
     'order_choose_random',
     'order_file',
     'order_randomize',
+    'prop_physics',
     'random_weapon_each_time',
     'randomize_per_player',
 )
@@ -59,3 +60,6 @@ with GunGameConfigManager('weapon') as _config:
         'multi_kill_override', flags=ConVarFlags.NOTIFY,
     ) as multi_kill_override:
         multi_kill_override.add_text()
+
+    with _config.cvar('prop_physics') as prop_physics:
+        prop_physics.add_text()

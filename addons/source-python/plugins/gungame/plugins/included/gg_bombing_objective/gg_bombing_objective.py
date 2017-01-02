@@ -28,11 +28,16 @@ def _bomb_defused(game_event):
     """Level the defuser up."""
     player = player_dictionary[game_event['userid']]
     levels = _get_levels_to_increase(player, 'defused')
-    if levels:
-        player.increase_level(
-            levels=levels,
-            reason='bomb_defused',
-        )
+    if not levels:
+        return
+    player.increase_level(
+        levels=levels,
+        reason='bomb_defused',
+    )
+    player.chat_message(
+        message='BombingObjective:Leveled:Defused',
+        levels=levels,
+    )
 
 
 @Event('bomb_exploded')
@@ -40,11 +45,16 @@ def _bomb_exploded(game_event):
     """Level the detonator up."""
     player = player_dictionary[game_event['userid']]
     levels = _get_levels_to_increase(player, 'detonated')
-    if levels:
-        player.increase_level(
-            levels=levels,
-            reason='bomb_detonated',
-        )
+    if not levels:
+        return
+    player.increase_level(
+        levels=levels,
+        reason='bomb_detonated',
+    )
+    player.chat_message(
+        message='BombingObjective:Leveled:Detonated',
+        levels=levels,
+    )
 
 
 # =============================================================================

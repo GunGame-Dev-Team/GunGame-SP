@@ -48,15 +48,22 @@ def _hostage_rescued(game_event):
     """Level the rescuer up."""
     player = player_dictionary[game_event['userid']]
     player.hostage_rescues += 1
-    if player.hostage_rescues < rescued_count.get_int():
+    required = rescued_count.get_int()
+    if player.hostage_rescues < required:
         return
     player.hostage_rescues = 0
     levels = _get_levels_to_increase(player, 'rescued')
-    if levels:
-        player.increase_level(
-            levels=levels,
-            reason='hostage_rescued',
-        )
+    if not levels:
+        return
+    player.increase_level(
+        levels=levels,
+        reason='hostage_rescued',
+    )
+    player.chat_message(
+        message='HostageObjective:Leveled:Rescued',
+        levels=levels,
+        count=required,
+    )
 
 
 @Event('player_death')
@@ -81,11 +88,17 @@ def _player_death(game_event):
         return
     player.hostage_stops -= required
     levels = _get_levels_to_increase(player, 'stopped')
-    if levels:
-        player.increase_level(
-            levels=levels,
-            reason='hostage_stopped',
-        )
+    if not levels:
+        return
+    player.increase_level(
+        levels=levels,
+        reason='hostage_stopped',
+    )
+    player.chat_message(
+        message='HostageObjective:Leveled:Stopped',
+        levels=levels,
+        count=required,
+    )
 
 
 @Event('hostage_killed')
@@ -103,11 +116,17 @@ def _hostage_killed(game_event):
     if player.hostage_kills < min_count:
         return
     player.hostage_kills = 0
+    starting_level = player.level
     player.decrease_level(
         levels=levels,
         reason='hostage_killed',
     )
-    player.chat_message('HostageObjective:Killed', player=player)
+    if player.level < starting_level:
+        player.chat_message(
+            message='HostageObjective:Leveled:Killed',
+            player=player,
+            count=min_count,
+        )
 
 
 # =============================================================================

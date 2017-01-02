@@ -22,7 +22,7 @@ from gungame.core.players.dictionary import player_dictionary
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
-_eliminated_players = defaultdict(set)
+eliminated_players = defaultdict(set)
 
 
 # =============================================================================
@@ -46,7 +46,7 @@ def _player_death(game_event):
         victim.chat_message('Elimination:TeamKill')
         return
     # TODO: Test reconnecting to see if players are not respawned
-    _eliminated_players[killer.userid].add(victim.userid)
+    eliminated_players[killer.userid].add(victim.userid)
     victim.chat_message(
         'Elimination:Attacker',
         killer.index,
@@ -65,7 +65,7 @@ def _round_start(game_event):
 # =============================================================================
 def _respawn_victims(userid):
     """Respawn all victim's of the given userid."""
-    victims = _eliminated_players.pop(userid, [])
+    victims = eliminated_players.pop(userid, [])
     if not len(victims):
         return
     if GunGameStatus.ROUND is GunGameRoundStatus.INACTIVE:

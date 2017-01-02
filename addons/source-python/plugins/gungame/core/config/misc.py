@@ -14,12 +14,15 @@ from .manager import GunGameConfigManager
 # =============================================================================
 __all__ = (
     'allow_kills_after_round',
+    'cancel_on_fire',
     'dynamic_chat_time',
     'give_armor',
     'give_defusers',
+    'level_on_protect',
     'map_strip_exceptions',
     'prune_database',
     'sound_pack',
+    'spawn_protection',
 )
 
 
@@ -34,6 +37,15 @@ with GunGameConfigManager('misc') as _config:
 
     with _config.cvar('dynamic_chat_time') as dynamic_chat_time:
         dynamic_chat_time.add_text()
+
+    with _config.cvar('spawn_protection') as spawn_protection:
+        spawn_protection.add_text()
+
+    with _config.cvar('spawn_protect_cancel_on_fire') as cancel_on_fire:
+        cancel_on_fire.add_text()
+
+    with _config.cvar('spawn_protect_can_level_up') as level_on_protect:
+        level_on_protect.add_text()
 
     with _config.cvar('give_armor') as give_armor:
         give_armor.add_text()

@@ -10,26 +10,49 @@ from menus import PagedMenu
 from players.entity import Player
 
 # GunGame
-from . import _menu_strings
+from . import menu_strings
 from ._options import ListOption
+from ..commands.registration import register_command_callback
 from ..players.dictionary import player_dictionary
 from ..plugins.manager import gg_plugin_manager
 from ..status import GunGameMatchStatus, GunGameStatus
+from ..teams import team_levels, team_names
+
+
+# =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = (
+    'send_score_menu',
+)
 
 
 # =============================================================================
 # >> FUNCTIONS
 # =============================================================================
+@register_command_callback('score', menu_strings['Score:Text'])
 def send_score_menu(index):
     """Send the score menu to the player."""
-    menu = PagedMenu(title=_menu_strings['Score:Title'])
+    menu = PagedMenu(title=menu_strings['Score:Title'])
+    player = Player(index)
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
-        menu.append(_menu_strings['Inactive'])
-    elif 'gg_teamplay' in gg_plugin_manager:
-        # TODO: Implement teamplay menus once teamplay is implemented
-        pass
+        menu.append(menu_strings['Inactive'])
+    elif gg_plugin_manager.is_team_game:
+        for team in sorted(
+            team_levels,
+            key=lambda x: team_levels[x],
+            reverse=True,
+        ):
+            menu.append(
+                ListOption(
+                    choice_index=team_levels[team],
+                    text=team_names[team],
+                    value=team,
+                    highlight=team == player.team,
+                    selectable=False,
+                )
+            )
     else:
-        player = Player(index)
         for userid in sorted(
             player_dictionary,
             key=lambda key: player_dictionary[key].level,
@@ -38,11 +61,11 @@ def send_score_menu(index):
             current_player = player_dictionary[userid]
             menu.append(
                 ListOption(
-                    current_player.level,
-                    current_player.name,
-                    current_player.unique_id,
-                    current_player.unique_id == player.unique_id,
-                    False,
+                    choice_index=current_player.level,
+                    text=current_player.name,
+                    value=current_player.unique_id,
+                    highlight=current_player.unique_id == player.unique_id,
+                    selectable=False,
                 )
             )
     menu.send(index)

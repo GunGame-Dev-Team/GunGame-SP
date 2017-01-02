@@ -14,14 +14,14 @@ from random import randint, shuffle
 from translations.strings import LangStrings
 
 # GunGame
-from ..config.weapon import order_randomize
-from ..paths import GUNGAME_WEAPON_ORDER_PATH
 from .groups import (
     all_weapons, explosive_weapons, grenade_weapons, incendiary_weapons,
     machine_gun_weapons, melee_weapons, other_primary_weapons,
     other_secondary_weapons, other_weapons, pistol_weapons, rifle_weapons,
     shotgun_weapons, smg_weapons, sniper_weapons,
 )
+from ..config.weapon import order_randomize
+from ..paths import GUNGAME_WEAPON_ORDER_PATH
 
 
 # =============================================================================

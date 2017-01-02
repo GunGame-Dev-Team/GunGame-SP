@@ -37,7 +37,7 @@ class GG_Knife_Steal(CustomEvent):
     userid = victim = ShortVariable(
         'The userid of the player that had a level stolen'
     )
-    userid_level = ByteVariable('The new level of the victim')
+    victim_level = ByteVariable('The new level of the victim')
 
 
 # =============================================================================

@@ -17,6 +17,7 @@ from .instance import GunGamePlayer
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
+    '_PlayerDictionary',
     'player_dictionary',
 )
 
@@ -72,7 +73,7 @@ class _PlayerDictionary(dict):
                 setattr(
                     player,
                     attribute,
-                    player_attributes[attribute].default,
+                    player_attributes[attribute],
                 )
 
         # Return the current instance

@@ -18,6 +18,7 @@ from filters.weapons import WeaponClassIter
 # =============================================================================
 __all__ = (
     'all_weapons',
+    'all_grenade_weapons',
     'explosive_weapons',
     'grenade_weapons',
     'incendiary_weapons',

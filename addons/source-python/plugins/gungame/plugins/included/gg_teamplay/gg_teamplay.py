@@ -18,7 +18,15 @@ from listeners.tick import Delay
 
 # GunGame
 from gungame.core.plugins.manager import gg_plugin_manager
+from gungame.core.teams import team_levels
 from gungame.core.weapons.manager import weapon_order_manager
+
+
+# =============================================================================
+# >> LOAD & UNLOAD
+# =============================================================================
+def unload():
+    team_levels.clear()
 
 
 # =============================================================================
@@ -37,12 +45,12 @@ class _TeamplayManager(object):
         self.finished_initial_load = True
 
     def load_module(self, module=None):
-        if self.deathmatch_only_game:
-            module = 'deathmatch'
         if self.current_module is not None:
             raise ValueError(
                 'A module is currently loaded, cannot load another.'
             )
+        if self.deathmatch_only_game:
+            module = 'deathmatch'
         if module is None:
             module = (
                 'deathmatch' if 'gg_deathmatch' in gg_plugin_manager

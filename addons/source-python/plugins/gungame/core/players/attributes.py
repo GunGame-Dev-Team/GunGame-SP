@@ -21,19 +21,6 @@ __all__ = (
 # =============================================================================
 # >> CLASSES
 # =============================================================================
-class _Attribute(object):
-    """Class used to store an attribute with its default value."""
-
-    def __init__(self, default):
-        """Store the default value on instantiation."""
-        self._default = default
-
-    @property
-    def default(self):
-        """Return the default value of the attribute."""
-        return self._default
-
-
 class _PlayerAttributes(dict):
     """Dictionary class used to store player attributes for GunGame."""
 
@@ -49,23 +36,12 @@ class _PlayerAttributes(dict):
                 )
             )
 
-        # Is the value given an _Attribute instance?
-        if not isinstance(value, _Attribute):
-
-            # If not, raise an error
-            raise TypeError(
-                'Given value "{value}" is not an '
-                '_Attribute instance'.format(
-                    value=value,
-                )
-            )
-
         # Add the item to the dictionary
         super().__setitem__(item, value)
 
     def register_attribute(self, attribute, default):
         """Store the attribute in the dictionary with its default value."""
-        self[attribute] = _Attribute(default)
+        self[attribute] = default
 
     def unregister_attribute(self, attribute):
         """Remove the attribute from the dictionary."""

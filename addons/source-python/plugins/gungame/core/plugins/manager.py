@@ -9,9 +9,20 @@
 from plugins.manager import PluginManager
 
 # GunGame
-from ..events.included.plugins import GG_Plugin_Unloaded
 from . import gg_plugins_logger
 from .valid import valid_plugins
+from ..events.included.plugins import GG_Plugin_Unloaded
+from ..teams import team_levels
+
+
+# =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = (
+    '_GGPluginManager',
+    'gg_plugin_manager',
+    'gg_plugins_manager_logger',
+)
 
 
 # =============================================================================
@@ -21,20 +32,12 @@ gg_plugins_manager_logger = gg_plugins_logger.manager
 
 
 # =============================================================================
-# >> ALL DECLARATION
-# =============================================================================
-__all__ = (
-    '_GGPluginManager',
-    'gg_plugin_manager',
-)
-
-
-# =============================================================================
 # >> CLASSES
 # =============================================================================
 class _GGPluginManager(PluginManager):
     """The GunGame plugin manager class."""
 
+    prefix = ''
     logger = gg_plugins_manager_logger
     _base_import_prefix = 'gungame.plugins.'
 
@@ -66,6 +69,10 @@ class _GGPluginManager(PluginManager):
         with GG_Plugin_Unloaded() as event:
             event.plugin = plugin_name
             event.plugin_type = valid_plugins.get_plugin_type(plugin_name)
+
+    @property
+    def is_team_game(self):
+        return any(team_levels.values())
 
     def _remove_modules(self, plugin_name):
         """Remove a plugin and all its modules."""

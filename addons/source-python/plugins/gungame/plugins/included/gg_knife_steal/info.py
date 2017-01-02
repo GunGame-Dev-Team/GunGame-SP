@@ -16,3 +16,4 @@ info = PluginInfo()
 info.name = 'gg_knife_steal'
 info.title = 'GG Knife Steal'
 info.author = 'GG Dev Team'
+info.conflicts = ['gg_teamplay']

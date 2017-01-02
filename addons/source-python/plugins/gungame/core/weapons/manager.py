@@ -7,15 +7,17 @@
 # =============================================================================
 # Source.Python
 from engines.server import queue_command_string
+from hooks.exceptions import except_hooks
 from listeners.tick import Delay
 
 # GunGame
+from . import gg_weapons_logger
+from .default import create_default_weapon_orders
+from .errors import WeaponOrderError
+from .order import WeaponOrder
 from ..config.weapon import order_file, order_randomize
 from ..paths import GUNGAME_WEAPON_ORDER_PATH
 from ..status import GunGameMatchStatus, GunGameStatus
-from . import gg_weapons_logger
-from .default import create_default_weapon_orders
-from .order import WeaponOrder
 
 
 # =============================================================================
@@ -46,7 +48,7 @@ class _WeaponOrderManager(dict):
         # Set the default attributes
         self._active = None
         self._order = None
-        self._randomize = False
+        self.randomize = False
         self._delay = None
         self._print_delay = None
 
@@ -61,11 +63,6 @@ class _WeaponOrderManager(dict):
         return self[self._active]
 
     @property
-    def randomize(self):
-        """Return whether or not to use a randomized weapon order."""
-        return self._randomize
-
-    @property
     def max_levels(self):
         """Return the current weapon order's max levels."""
         return self.active.max_levels
@@ -73,7 +70,14 @@ class _WeaponOrderManager(dict):
     def get_weapon_orders(self):
         """Retrieve all weapon orders and store them in the dictionary."""
         for file in GUNGAME_WEAPON_ORDER_PATH.files():
-            self[file.namebase] = WeaponOrder(file)
+            try:
+                self[file.namebase] = WeaponOrder(file)
+            except WeaponOrderError:
+                # TODO: make this gungame specific
+                except_hooks.print_exception()
+
+        if not len(self):
+            raise ValueError('No valid weapon order files found.')
 
     def set_start_convars(self):
         """Set all base ConVars on load."""
@@ -99,9 +103,11 @@ class _WeaponOrderManager(dict):
 
     def set_randomize(self, value):
         """Set the randomize value and randomize the weapon order."""
+        if not isinstance(value, bool):
+            value = bool(int(value))
         if self.randomize == value:
             return
-        self._randomize = value
+        self.randomize = value
         if value:
             self[self._active].randomize_order()
         self.restart_game()

@@ -21,7 +21,7 @@ from gungame.core.messages import message_manager
 from gungame.core.players.dictionary import player_dictionary
 from gungame.core.sounds.manager import sound_manager
 from gungame.core.status import GunGameMatchStatus, GunGameStatus
-from gungame.core.teams import team_names
+from gungame.core.teams import team_levels, team_names
 from gungame.core.weapons.manager import weapon_order_manager
 
 # Plugin
@@ -34,6 +34,10 @@ from .custom_events import GG_Team_Win
 # =============================================================================
 def load():
     message_manager.hook_prefix('Leader:')
+
+
+def unload():
+    team_levels.clear()
 
 
 # =============================================================================
@@ -51,19 +55,13 @@ class _TeamManagement(object):
         self.number = number
         self.alias = alias
         self.level = 1
-        self._name = None
+        self.name = team_names[self.number]
         self._leader = None
         self.leader_userid = None
 
     @property
     def index(self):
         return self.leader.index if self.leader is not None else 0
-
-    @property
-    def name(self):
-        if self._name is None:
-            self._name = team_names[self.number]
-        return self._name
 
     @property
     def leader(self):
@@ -75,7 +73,9 @@ class _TeamManagement(object):
         self._leader = player
         self.leader_userid = None if player is None else player.userid
         if current is None or player is None:
+            team_levels[self.number] = 0
             return
+        team_levels[self.number] = player.level
         if current.level < player.level or current.userid == player.userid:
             message_manager.chat_message(
                 message='TeamWork:Leader:Increase',
@@ -95,6 +95,7 @@ class _TeamManagement(object):
 
     def reset_values(self):
         self.leader = None
+        team_levels.clear()
 
     def set_team_player_levels(self):
         if self.leader_level is None:
@@ -155,7 +156,7 @@ class _TeamManagement(object):
             weapon=weapon_order_manager.active[self.leader_level].weapon,
         )
 
-_team_manager = _TeamManager({
+teamwork_manager = _TeamManager({
     number: _TeamManagement(number, alias)
     for number, alias in teams_by_number.items()
     if alias not in ('un', 'spec')
@@ -170,11 +171,11 @@ def _check_team_leaders(game_event):
     userid = game_event['userid']
     old_team_number = game_event['oldteam']
 
-    old_team = _team_manager.get(old_team_number)
+    old_team = teamwork_manager.get(old_team_number)
     if old_team and old_team.leader_userid == userid:
         old_team.find_team_leader(disconnect=True)
 
-    new_team = _team_manager.get(game_event['team'])
+    new_team = teamwork_manager.get(game_event['team'])
     if not new_team:
         return
 
@@ -187,13 +188,13 @@ def _check_team_leaders(game_event):
 
 @Event('round_start')
 def _send_level_messages(game_event):
-    for team in _team_manager.values():
+    for team in teamwork_manager.values():
         team.send_level_message()
 
 
 @Event('round_end')
 def _sync_player_levels(game_event):
-    for team in _team_manager.values():
+    for team in teamwork_manager.values():
         team.set_team_player_levels()
 
 
@@ -203,13 +204,13 @@ def _sync_player_levels(game_event):
 @Event('gg_start')
 @OnLevelInit
 def _clear_team_dictionary(game_event=None):
-    _team_manager.clear()
+    teamwork_manager.clear()
 
 
 @Event('gg_level_up')
 def _level_up(game_event):
     player = player_dictionary[game_event['leveler']]
-    team = _team_manager[player.team]
+    team = teamwork_manager[player.team]
     if (
         team.leader_userid in (None, player.userid) or
         team.leader_level < game_event['new_level']
@@ -220,7 +221,7 @@ def _level_up(game_event):
 @Event('gg_level_down')
 def _check_team_decrease(game_event):
     player = player_dictionary[game_event['leveler']]
-    team = _team_manager[player.team]
+    team = teamwork_manager[player.team]
     if team.leader.userid == player.userid:
         team.find_team_leader(player, game_event['old_level'])
 
@@ -231,7 +232,7 @@ def _end_match(game_event):
     GunGameStatus.MATCH = GunGameMatchStatus.POST
 
     # Get the winning team information
-    winning_team = _team_manager[game_event['winner']]
+    winning_team = teamwork_manager[game_event['winner']]
 
     # Send the winner messages
     message_manager.chat_message(

@@ -45,11 +45,11 @@ class _WinsDatabase(defaultdict):
         super().__init__(default_factory)
 
         # Establish the SQL connection
-        self._connection = connect(GUNGAME_DATA_PATH / 'winners.db')
+        self.connection = connect(GUNGAME_DATA_PATH / 'winners.db')
         self.connection.text_factory = str
 
         # Get the cursor
-        self._cursor = self.connection.cursor()
+        self.cursor = self.connection.cursor()
 
         # Create the gungame_winners table if it does not already exist
         self.cursor.execute(
@@ -85,16 +85,6 @@ class _WinsDatabase(defaultdict):
             instance.wins = int(wins)
             instance.time_stamp = float(time_stamp)
             instance.last_win = float(last_win)
-
-    @property
-    def connection(self):
-        """Return the SQL connection."""
-        return self._connection
-
-    @property
-    def cursor(self):
-        """Return the SQL cursor."""
-        return self._cursor
 
     def set_player_wins(self, player, wins):
         """Update the player's database values."""

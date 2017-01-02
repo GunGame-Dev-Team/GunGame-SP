@@ -30,12 +30,7 @@ class DMPlayer(Player):
     def __init__(self, index):
         """Store the Repeat instance for the player."""
         super().__init__(index)
-        self._repeat = Repeat(self._countdown, cancel_on_level_end=True)
-
-    @property
-    def repeat(self):
-        """Return the player's Repeat instance."""
-        return self._repeat
+        self.repeat = Repeat(self._countdown, cancel_on_level_end=True)
 
     def start_repeat(self):
         """Start the player's respawn countdown."""

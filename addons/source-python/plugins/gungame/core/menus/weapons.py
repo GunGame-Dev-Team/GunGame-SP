@@ -10,34 +10,44 @@ from menus import PagedMenu
 from players.helpers import userid_from_index
 
 # GunGame
-from . import _menu_strings
+from . import menu_strings
 from ._options import ListOption
+from ..commands.registration import register_command_callback
 from ..players.dictionary import player_dictionary
 from ..status import GunGameMatchStatus, GunGameStatus
 from ..weapons.manager import weapon_order_manager
 
 
 # =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = (
+    'send_weapons_menu',
+)
+
+
+# =============================================================================
 # >> FUNCTIONS
 # =============================================================================
+@register_command_callback('weapons', menu_strings['Weapons:Text'])
 def send_weapons_menu(index):
     """Send the weapon menu to the player."""
-    menu = PagedMenu(title=_menu_strings['Weapons:Title'])
+    menu = PagedMenu(title=menu_strings['Weapons:Title'])
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
-        menu.append(_menu_strings['Inactive'])
+        menu.append(menu_strings['Inactive'])
     else:
         player = player_dictionary[userid_from_index(index)]
         for level, instance in weapon_order_manager.active.items():
             menu.append(
                 ListOption(
-                    level,
-                    '{weapon} [{multi_kill}]'.format(
+                    choice_index=level,
+                    text='{weapon} [{multi_kill}]'.format(
                         weapon=instance.weapon,
                         multi_kill=instance.multi_kill,
                     ),
-                    level,
-                    level == player.level,
-                    False,
+                    value=level,
+                    highlight=level == player.level,
+                    selectable=False,
                 )
             )
     menu.send(index)

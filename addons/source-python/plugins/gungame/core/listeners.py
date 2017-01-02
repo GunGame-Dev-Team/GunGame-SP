@@ -17,10 +17,16 @@ from weapons.manager import weapon_manager
 
 # GunGame
 from .config.misc import (
-    allow_kills_after_round, dynamic_chat_time, give_armor, give_defusers,
+    allow_kills_after_round, cancel_on_fire, dynamic_chat_time, give_armor,
+    give_defusers, level_on_protect,
+)
+from .config.punishment import (
+    level_one_team_kill, suicide_punish, team_kill_punish,
 )
 from .config.warmup import enabled as warmup_enabled, weapon as warmup_weapon
-from .config.weapon import order_file, order_randomize, multi_kill_override
+from .config.weapon import (
+    order_file, order_randomize, multi_kill_override, prop_physics
+)
 from .credits import gungame_credits
 from .events.included.match import GG_Start
 from .leaders import leader_manager
@@ -34,18 +40,21 @@ from .weapons.manager import weapon_order_manager
 
 
 # =============================================================================
-# >> GLOBAL VARIABLES
-# =============================================================================
-# Create a set to store userids that have already had join messages
-_joined_players = set()
-
-
-# =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
     'start_match',
 )
+
+
+# =============================================================================
+# >> GLOBAL VARIABLES
+# =============================================================================
+# Create a set to store userids that have already had join messages
+_joined_players = set()
+
+# Create a set to store userids that have recently switched teams
+_team_changers = set()
 
 
 # =============================================================================
@@ -67,6 +76,9 @@ def _player_spawn(game_event):
     # Verify that the player is on a team
     if player.team < 2:
         return
+
+    # Spawn protection
+    player.give_spawn_protection()
 
     # Give the player their new weapon
     player.strip_weapons()
@@ -118,6 +130,7 @@ def _player_death(game_event):
 
     # Was this a suicide?
     if attacker in (userid, 0):
+        _punish_suicide(userid)
         return
 
     # Get the victim's instance
@@ -128,10 +141,18 @@ def _player_death(game_event):
 
     # Was this a team-kill?
     if victim.team == killer.team:
+        _punish_team_kill(killer)
+        return
+
+    if killer.in_spawn_protection and not level_on_protect.get_int():
         return
 
     # Did the killer kill using their level's weapon?
-    if weapon_manager[game_event['weapon']].basename != killer.level_weapon:
+    weapon = game_event['weapon']
+    if weapon != 'prop_physics':
+        if weapon_manager[weapon].basename != killer.level_weapon:
+            return
+    elif not prop_physics.get_int():
         return
 
     # Increase the killer's multi_kill
@@ -198,6 +219,26 @@ def _player_disconnect(game_event):
     userid = game_event['userid']
     player_dictionary.safe_remove(userid)
     leader_manager.check_disconnect(userid)
+
+
+@Event('player_team')
+def _player_team(game_event):
+    userid = game_event['userid']
+    if userid in _team_changers:
+        return
+    _team_changers.add(userid)
+    Delay(0.2, _team_changers.remove, (userid, ))
+
+
+@Event('weapon_fire')
+def _weapon_fire(game_event):
+    if not cancel_on_fire.get_int():
+        return
+    player = player_dictionary[game_event['userid']]
+    if not player.in_spawn_protection:
+        return
+    if cancel_on_fire.get_int():
+        player.remove_spawn_protection()
 
 
 # =============================================================================
@@ -475,3 +516,51 @@ def _send_level_info(player):
 
     # Send the player's level information message
     player.hint_message(message=text)
+
+
+def _punish_suicide(userid):
+    levels = suicide_punish.get_int()
+    if not levels:
+        return
+
+    if userid in _team_changers:
+        return
+
+    player = player_dictionary.get(userid)
+    if player is None:
+        return
+
+    if player.level == 1:
+        return
+
+    player.decrease_level(
+        levels=levels,
+        reason='suicide'
+    )
+    player.chat_message(
+        message='Punishment:Suicide',
+        player=player,
+    )
+
+
+def _punish_team_kill(player):
+    levels = team_kill_punish.get_int()
+    if not levels:
+        return
+
+    if player.levels == 1:
+        if level_one_team_kill.get_int():
+            player.slay()
+            player.chat_message(
+                message='Punishment:TeamKill:Slay',
+            )
+        return
+
+    player.decrease_level(
+        levels=levels,
+        reason='team-kill',
+    )
+    player.chat_message(
+        message='Punishment:TeamKill:Level',
+        player=player,
+    )

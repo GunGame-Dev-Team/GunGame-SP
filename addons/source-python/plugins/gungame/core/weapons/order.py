@@ -7,15 +7,16 @@
 # =============================================================================
 # Python
 from random import shuffle
+from warnings import warn
 
 # GunGame
-from ..config.weapon import multi_kill_override
 from .errors import WeaponOrderError
 from .groups import (
-    machine_gun_weapons, other_primary_weapons, other_secondary_weapons,
-    other_weapons, pistol_weapons, rifle_weapons, shotgun_weapons, smg_weapons,
-    sniper_weapons,
+    all_weapons, machine_gun_weapons, other_primary_weapons,
+    other_secondary_weapons, other_weapons, pistol_weapons, rifle_weapons,
+    shotgun_weapons, smg_weapons, sniper_weapons,
 )
+from ..config.weapon import multi_kill_override
 
 
 # =============================================================================
@@ -45,58 +46,71 @@ class WeaponOrder(dict):
     def __init__(self, file_path):
         """Store the values from the given path."""
         super().__init__()
+        level = 0
         with file_path.open() as open_file:
-            level = 0
             for line in open_file:
                 line = line.strip()
                 if not line:
                     continue
                 if line.startswith('//'):
                     continue
-                try:
-                    weapon, multi_kill = line.split()
-                except ValueError:
-                    weapon = line
+                values = line.split()
+                if len(values) == 2:
+                    weapon, multi_kill = values
+                elif len(values) == 1:
+                    weapon = values[0]
                     multi_kill = 1
+                else:
+                    warn(
+                        'Invalid line "{line}" in weapon order file: '
+                        '{file_name}'.format(
+                            line=line,
+                            file_name=file_path.namebase,
+                        )
+                    )
+                    continue
                 try:
                     multi_kill = int(multi_kill)
                 except ValueError:
-                    raise WeaponOrderError()
+                    warn(
+                        'Invalid multi-kill value "{multi_kill}" in weapon '
+                        'order file: {file_name}'.format(
+                            multi_kill=multi_kill,
+                            file_name=file_path.namebase,
+                        )
+                    )
+                    continue
+                if weapon not in all_weapons:
+                    warn(
+                        'Invalid weapon "{weapon}" in weapon order file: '
+                        '{file_name}'.format(
+                            weapon=weapon,
+                            file_name=file_path.namebase,
+                        )
+                    )
+                    continue
                 level += 1
                 self[level] = _LevelWeapon(weapon, multi_kill)
-        self._file_path = file_path
-        self._name = self.file_path.namebase
-        self._title = self.name.replace('_', ' ').title()
-        self._random_order = None
-
-    @property
-    def name(self):
-        """Return the weapon order's name."""
-        return self._name
-
-    @property
-    def file_path(self):
-        """Return the weapon order's file path."""
-        return self._file_path
-
-    @property
-    def title(self):
-        """Return the weapon order's title."""
-        return self._title
+        if not level:
+            raise WeaponOrderError(
+                'No valid lines found in weapon order file '
+                '"{file_name}".'.format(
+                    file_name=file_path.namebase,
+                )
+            )
+        self.file_path = file_path
+        self.name = self.file_path.namebase
+        self.title = self.name.replace('_', ' ').title()
+        self.random_order = None
 
     @property
     def max_levels(self):
         """Return the maximum number of levels for the weapon order."""
         return len(self)
 
-    @property
-    def random_order(self):
-        """Return the randomized weapon order."""
-        return self._random_order
-
     def randomize_order(self):
         """Get a randomized weapon order based on the instance."""
-        self._random_order = dict()
+        self.random_order = dict()
         randomize_weapons = list(self.values())
         keep_at_end = list()
         for weapon in reversed(randomize_weapons):
@@ -109,7 +123,7 @@ class WeaponOrder(dict):
         shuffle(randomize_weapons)
         randomize_weapons.extend(keep_at_end)
         for level, value in enumerate(randomize_weapons, 1):
-            self._random_order[level] = value
+            self.random_order[level] = value
 
 
 class _LevelWeapon(object):
@@ -117,13 +131,8 @@ class _LevelWeapon(object):
 
     def __init__(self, weapon, multi_kill):
         """Store the base values."""
-        self._weapon = weapon
+        self.weapon = weapon
         self._multi_kill = multi_kill
-
-    @property
-    def weapon(self):
-        """Return the level's weapon."""
-        return self._weapon
 
     @property
     def multi_kill(self):

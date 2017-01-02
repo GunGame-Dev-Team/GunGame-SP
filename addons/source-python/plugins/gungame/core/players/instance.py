@@ -7,17 +7,19 @@
 # =============================================================================
 # Source.Python
 from colors import WHITE
+from listeners.tick import Delay
 from players.entity import Player
 from weapons.manager import weapon_manager
 
 # GunGame
-from ..events.included.leveling import GG_Level_Down, GG_Level_Up
-from ..events.included.match import GG_Win
-from ..messages import message_manager
 from .attributes import (
     attribute_post_hooks, attribute_pre_hooks, player_attributes,
 )
 from .database import winners_database
+from ..config.misc import spawn_protection
+from ..events.included.leveling import GG_Level_Down, GG_Level_Up
+from ..events.included.match import GG_Win
+from ..messages import message_manager
 from ..sounds.manager import sound_manager
 from ..status import GunGameMatchStatus, GunGameStatus
 from ..weapons.manager import weapon_order_manager
@@ -39,6 +41,9 @@ class GunGamePlayer(Player):
 
     level = 0
     multi_kill = 0
+    in_spawn_protection = False
+    _protect_delay = None
+    _color = None
 
     def __setattr__(self, attr, value):
         """Verify that the attribute's value should be set."""
@@ -82,7 +87,7 @@ class GunGamePlayer(Player):
     # =========================================================================
     # >> LEVEL FUNCTIONALITY
     # =========================================================================
-    def increase_level(self, levels, reason, victim=0):
+    def increase_level(self, levels, reason, victim=0, delay=False):
         """Increase the player's level by the given amount."""
         if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
             return
@@ -103,6 +108,16 @@ class GunGamePlayer(Player):
         if self.level != new_level:
             return
         self.multi_kill = 0
+        if delay:
+            Delay(
+                delay=0,
+                callback=self._fire_level_up,
+                args=(victim, old_level, new_level, reason)
+            )
+        else:
+            self._fire_level_up(victim, old_level, new_level, reason)
+
+    def _fire_level_up(self, victim, old_level, new_level, reason):
         with GG_Level_Up() as event:
             event.attacker = event.leveler = self.userid
             event.userid = event.victim = victim
@@ -110,7 +125,7 @@ class GunGamePlayer(Player):
             event.new_level = new_level
             event.reason = reason
 
-    def decrease_level(self, levels, reason, attacker=0):
+    def decrease_level(self, levels, reason, attacker=0, delay=False):
         """Decrease the player's level by the given amount."""
         if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
             return
@@ -128,6 +143,16 @@ class GunGamePlayer(Player):
         if self.level != new_level:
             return
         self.multi_kill = 0
+        if delay:
+            Delay(
+                delay=0,
+                callback=self._fire_level_down,
+                args=(attacker, old_level, new_level, reason)
+            )
+        else:
+            self._fire_level_down(attacker, old_level, new_level, reason)
+
+    def _fire_level_down(self, attacker, old_level, new_level, reason):
         with GG_Level_Down() as event:
             event.attacker = attacker
             event.leveler = event.userid = self.userid
@@ -148,17 +173,31 @@ class GunGamePlayer(Player):
         """Return the player's current level weapon."""
         return weapon_order_manager.active[self.level].weapon
 
-    def strip_weapons(self):
-        for weapon in self.weapons(
-            not_filters=('grenade', 'melee', 'objective', 'tool')
-        ):
+    @property
+    def level_weapon_classname(self):
+        return weapon_manager[self.level_weapon].name
+
+    def strip_weapons(self, strip_grenades=False):
+        not_filters = ('melee', 'objective', 'tool')
+        if not strip_grenades:
+            not_filters += ('grenade', )
+        for weapon in self.weapons(not_filters=not_filters):
+            if weapon.classname == self.level_weapon_classname:
+                continue
             self.drop_weapon(weapon)
             weapon.remove()
 
+    def has_level_weapon(self):
+        for weapon in self.weapons():
+            if weapon.classname == self.level_weapon_classname:
+                return True
+        return False
+
     def give_level_weapon(self):
         """Give the player the weapon of their current level."""
-        weapon = weapon_manager[self.level_weapon]
-        self.give_named_item(weapon.name)
+        if self.has_level_weapon():
+            return
+        self.give_named_item(self.level_weapon_classname)
 
     # =========================================================================
     # >> MESSAGE FUNCTIONALITY
@@ -205,6 +244,28 @@ class GunGamePlayer(Player):
     def top_message(self, message='', color=WHITE, time=4, **tokens):
         """Send a toptext message to the player."""
         message_manager.top_message(message, color, time, self.index, **tokens)
+
+    # =========================================================================
+    # >> SPAWN PROTECT FUNCTIONALITY
+    # =========================================================================
+    def give_spawn_protection(self):
+        delay = spawn_protection.get_float()
+        if delay <= 0:
+            return
+        self.in_spawn_protection = True
+        self.godmode = True
+        self._color = self.color
+        self.color = self.color.with_alpha(100)
+        self._protect_delay = Delay(delay, self.remove_spawn_protection)
+
+    def remove_spawn_protection(self):
+        if self._protect_delay is None:
+            return
+        self._protect_delay.cancel()
+        self._protect_delay = None
+        self.godmode = False
+        self.color = self._color
+        self.in_spawn_protection = False
 
     # =========================================================================
     # >> SOUND FUNCTIONALITY

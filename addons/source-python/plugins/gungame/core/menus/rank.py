@@ -9,12 +9,23 @@
 from players.entity import Player
 
 # GunGame
+from . import menu_strings
 from ._rankings import get_winners_menu
+from ..commands.registration import register_command_callback
+
+
+# =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = (
+    'send_rank_menu',
+)
 
 
 # =============================================================================
 # >> FUNCTIONS
 # =============================================================================
+@register_command_callback('rank', menu_strings['Rank:Text'])
 def send_rank_menu(index):
     """Send the rank menu to the player."""
     player = Player(index)

@@ -11,19 +11,13 @@ from plugins.command import SubCommandManager
 from translations.strings import LangStrings
 
 # GunGame
-from ..credits import gungame_credits
-from . import _plugin_strings, gg_plugins_logger
+from . import plugin_strings, gg_plugins_logger
 from .instance import GGLoadedPlugin
 from .manager import gg_plugin_manager
 from .queue import plugin_queue
 from .valid import valid_plugins
+from ..credits import gungame_credits
 from ..weapons.manager import weapon_order_manager
-
-
-# =============================================================================
-# >> GLOBAL VARIABLES
-# =============================================================================
-gg_plugins_command_logger = gg_plugins_logger.command
 
 
 # =============================================================================
@@ -32,7 +26,14 @@ gg_plugins_command_logger = gg_plugins_logger.command
 __all__ = (
     '_GGSubCommandManager',
     'gg_command_manager',
+    'gg_plugins_command_logger',
 )
+
+
+# =============================================================================
+# >> GLOBAL VARIABLES
+# =============================================================================
+gg_plugins_command_logger = gg_plugins_logger.command
 
 
 # =============================================================================
@@ -137,7 +138,7 @@ class _GGSubCommandManager(SubCommandManager):
     def print_plugins(self):
         """List all currently loaded plugins."""
         # Get header messages
-        message = self.prefix + _plugin_strings[
+        message = self.prefix + plugin_strings[
             'Plugins'
         ].get_string() + '\n' + '=' * 61 + '\n'
 
@@ -202,7 +203,7 @@ class _GGSubCommandManager(SubCommandManager):
     def print_credits(self):
         """Print the GunGame credits."""
         # Get header messages
-        message = '\n' + self.prefix + _plugin_strings[
+        message = '\n' + self.prefix + plugin_strings[
             'Credits'
         ].get_string() + '\n' + '=' * 61 + '\n\n'
 

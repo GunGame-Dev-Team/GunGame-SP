@@ -5,6 +5,9 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Python
+from warnings import warn
+
 # Source.Python
 from listeners.tick import Delay
 
@@ -12,13 +15,7 @@ from listeners.tick import Delay
 from ..events.included.plugins import GG_Plugin_Loaded
 from ..plugins import gg_plugins_logger
 from ..plugins.manager import gg_plugin_manager
-from ..plugins.valid import valid_plugins
-
-
-# =============================================================================
-# >> GLOBAL VARIABLES
-# =============================================================================
-gg_plugins_queue_logger = gg_plugins_logger.queue
+from ..plugins.valid import plugin_requirements, valid_plugins
 
 
 # =============================================================================
@@ -28,6 +25,12 @@ __all__ = (
     '_PluginQueue',
     'plugin_queue',
 )
+
+
+# =============================================================================
+# >> GLOBAL VARIABLES
+# =============================================================================
+gg_plugins_queue_logger = gg_plugins_logger.queue
 
 
 # =============================================================================
@@ -72,6 +75,18 @@ class _PluginQueue(dict):
         # Loop through all plugins to unload
         for plugin_name in self['unload']:
 
+            if plugin_name in plugin_requirements:
+                for other in plugin_requirements[plugin_name]:
+                    if other in self.manager and other not in self['unload']:
+                        warn(
+                            'Plugin "{plugin_name}" is required by "{other}". '
+                            'Please unload "{other}" or load {plugin_name} '
+                            'again to avoid issues.'.format(
+                                plugin_name=plugin_name,
+                                other=other,
+                            )
+                        )
+
             # Unload the plugin
             del self.manager[plugin_name]
 
@@ -79,6 +94,46 @@ class _PluginQueue(dict):
         """Load all plugins in the load queue."""
         # Loop through all plugins to load
         for plugin_name in self['load']:
+
+            # Retrieve the plugin's type
+            try:
+                plugin_type = valid_plugins.get_plugin_type(plugin_name)
+            except ValueError:
+                warn(
+                    'Plugin "{plugin_name}" is invalid.'.format(
+                        plugin_name=plugin_name,
+                    )
+                )
+                continue
+            plugin_info = getattr(valid_plugins, plugin_type)[plugin_name].info
+
+            # Check for conflicts
+            if hasattr(plugin_info, 'conflicts'):
+                conflict = False
+                for other in plugin_info.conflicts:
+                    if other in self.manager:
+                        warn(
+                            'Loaded plugin "{other}" conflicts with plugin '
+                            '"{plugin_name}". Unable to load.'.format(
+                                other=other,
+                                plugin_name=plugin_name,
+                            )
+                        )
+                        conflict = True
+                if conflict:
+                    continue
+
+            # Check for requirements
+            if hasattr(plugin_info, 'requires'):
+                for other in plugin_info.requires:
+                    if other not in self.manager and other not in self['load']:
+                        warn(
+                            'Plugin "{other}" is required by "{plugin_name}". '
+                            'Please load "{other}" to avoid issues.'.format(
+                                other=other,
+                                plugin_name=plugin_name,
+                            )
+                        )
 
             # Load the plugin and get its instance
             plugin = self.manager[plugin_name]
@@ -106,7 +161,7 @@ class _PluginQueue(dict):
             # Fire the gg_plugin_load event
             with GG_Plugin_Loaded() as event:
                 event.plugin = plugin_name
-                event.plugin_type = valid_plugins.get_plugin_type(plugin_name)
+                event.plugin_type = plugin_type
 
 # Get the _PluginQueue instance
 plugin_queue = _PluginQueue()

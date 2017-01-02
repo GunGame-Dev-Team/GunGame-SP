@@ -17,6 +17,7 @@ from .info import info
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
+    'auto_switch_default',
     'grenade_weapons',
     'knife_weapons',
     'level_one_victim',
@@ -75,3 +76,6 @@ with GunGameConfigManager(info.name) as _config:
 
     with _config.cvar('level_one_victim') as level_one_victim:
         level_one_victim.add_text()
+
+    with _config.cvar('auto_switch_default') as auto_switch_default:
+        auto_switch_default.add_text()
