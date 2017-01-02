@@ -69,7 +69,7 @@ class _WeaponOrderManager(dict):
 
     def get_weapon_orders(self):
         """Retrieve all weapon orders and store them in the dictionary."""
-        for file in GUNGAME_WEAPON_ORDER_PATH.files():
+        for file in GUNGAME_WEAPON_ORDER_PATH.files('*.txt'):
             try:
                 self[file.namebase] = WeaponOrder(file)
             except WeaponOrderError:
