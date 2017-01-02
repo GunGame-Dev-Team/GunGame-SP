@@ -12,7 +12,7 @@ from gungame.core.sounds.manager import sound_manager
 # =============================================================================
 # >> SOUND REGISTRATION
 # =============================================================================
-sound_manager.register_sound(
-    sound_name='',
-    default='',
-)
+# sound_manager.register_sound(
+#     sound_name='',
+#     default='',
+# )
