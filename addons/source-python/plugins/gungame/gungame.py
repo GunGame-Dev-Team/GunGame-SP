@@ -19,7 +19,9 @@ from translations.strings import LangStrings
 
 # GunGame
 from .info import info
-from .core.commands import register_all_commands, unregister_all_commands
+from .core.commands.commands import (
+    register_all_commands, unregister_all_commands
+)
 from .core.config import load_all_configs
 from .core.events.storage import gg_resource_list
 from .core.logger import gg_logger
