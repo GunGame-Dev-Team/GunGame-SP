@@ -12,7 +12,7 @@ from importlib import import_module
 # Source.Python
 from core import GAME_NAME
 from cvars.tags import sv_tags
-from engines.server import engine_server
+from engines.server import queue_command_string
 from filters.entities import EntityIter
 from listeners.tick import Delay
 from translations.strings import LangStrings
@@ -39,7 +39,7 @@ _base_strings = LangStrings('gungame/load_and_unload')
 
 
 # =============================================================================
-# >> LOAD & UNLOAD FUNCTIONS
+# >> LOAD & UNLOAD
 # =============================================================================
 def load():
     """Initialize ."""
@@ -213,4 +213,4 @@ def unload():
     gg_logger.log_message(
         _base_strings['End:Clean'].get_string()
     )
-    engine_server.server_command('mp_restartgame 1')
+    queue_command_string('mp_restartgame 1')
