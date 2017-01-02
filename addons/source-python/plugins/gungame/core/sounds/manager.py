@@ -77,7 +77,7 @@ class _SoundManager(defaultdict):
             for item, value in ini.items():
 
                 # Is the current sound a valid sound type?
-                if item not in self._defaults:
+                if item not in self.defaults:
                     warn(
                         'Sound "{sound}" in file "{file_name}" is not registered.'.format(
                             sound=item,
@@ -182,7 +182,7 @@ class _SoundManager(defaultdict):
 
             # Loop through all known sound types that were
             #   not represented in the current sound pack
-            for missing in set(self._defaults).difference(self[file.namebase]):
+            for missing in set(self.defaults).difference(self[file.namebase]):
                 warn(
                     'Sound "{sound}" missing in "{sound_pack}" '
                     'sound pack.'.format(
@@ -207,7 +207,7 @@ class _SoundManager(defaultdict):
         :param str default: The default value for the sound type.
         """
         # Was the sound type already registered?
-        if sound_name in self._defaults:
+        if sound_name in self.defaults:
             warn(
                 'Sound "{sound}" already registered!'.format(
                     sound=sound_name,
@@ -231,7 +231,7 @@ class _SoundManager(defaultdict):
             return
 
         # Register the sound with its default value
-        self._defaults[sound_name] = default
+        self.defaults[sound_name] = default
 
     def get_sound(self, sound_name):
         """Return the sound from the given name.
@@ -240,7 +240,7 @@ class _SoundManager(defaultdict):
         :rtype: Sound
         """
         # Was an invalid sound type given?
-        if sound_name not in self._defaults:
+        if sound_name not in self.defaults:
             raise ValueError(
                 'Invalid sound name "{sound}".  Sound not registered.'.format(
                     sound=sound_name,
