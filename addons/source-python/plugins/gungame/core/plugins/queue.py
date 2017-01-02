@@ -110,7 +110,6 @@ class _PluginQueue(dict):
 
             # Check for conflicts
             with suppress(KeyError):
-                print(plugin_info.conflicts)
                 conflict = False
                 for other in plugin_info.conflicts:
                     if other in self.manager:
@@ -127,7 +126,6 @@ class _PluginQueue(dict):
 
             # Check for requirements
             with suppress(KeyError):
-                print(plugin_info.required)
                 for other in plugin_info.required:
                     if other not in self.manager and other not in self['load']:
                         warn(
