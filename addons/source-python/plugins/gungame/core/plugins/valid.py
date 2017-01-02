@@ -144,7 +144,7 @@ class _ValidPlugins(object):
             plugins[str(plugin.namebase)] = ValidPlugin(info.info, description)
 
             if not hasattr(info, 'required'):
-                return
+                continue
 
             for other in info.required:
                 plugin_requirements[other].append(str(plugin.namebase))
