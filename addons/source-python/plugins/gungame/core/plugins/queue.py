@@ -6,6 +6,7 @@
 # >> IMPORTS
 # =============================================================================
 # Python
+from contextlib import suppress
 from warnings import warn
 
 # Source.Python
@@ -108,7 +109,8 @@ class _PluginQueue(dict):
             plugin_info = getattr(valid_plugins, plugin_type)[plugin_name].info
 
             # Check for conflicts
-            if hasattr(plugin_info, 'conflicts'):
+            with suppress(KeyError):
+                print(plugin_info.conflicts)
                 conflict = False
                 for other in plugin_info.conflicts:
                     if other in self.manager:
@@ -124,8 +126,9 @@ class _PluginQueue(dict):
                     continue
 
             # Check for requirements
-            if hasattr(plugin_info, 'requires'):
-                for other in plugin_info.requires:
+            with suppress(KeyError):
+                print(plugin_info.required)
+                for other in plugin_info.required:
                     if other not in self.manager and other not in self['load']:
                         warn(
                             'Plugin "{other}" is required by "{plugin_name}". '
