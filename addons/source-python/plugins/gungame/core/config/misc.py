@@ -53,9 +53,11 @@ with GunGameConfigManager('misc') as _config:
     with _config.cvar('give_defusers') as give_defusers:
         give_defusers.add_text()
 
+    # TODO: implement
     with _config.cvar('map_strip_exceptions') as map_strip_exceptions:
         map_strip_exceptions.add_text()
 
+    # TODO: implement
     with _config.cvar('prune_database') as prune_database:
         prune_database.add_text()
 
