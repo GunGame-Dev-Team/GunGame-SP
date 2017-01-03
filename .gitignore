@@ -16,8 +16,9 @@ resource/source-python/translations/gungame/custom_plugins/
 !resource/source-python/translations/gungame/custom_plugins/config/readme.md
 
 # Server-specific configuration files
-cfg/source-python/gungame/weapon_orders/
+cfg/source-python/gungame/gamemodes
 cfg/source-python/gungame/sound_packs/
+cfg/source-python/gungame/weapon_orders/
 
 # PyCharm files
 .idea/
