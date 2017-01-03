@@ -70,13 +70,13 @@ class _TeamplayManager(object):
 
         if self.current_module in AutoUnload._module_instances:
             self._unload_auto_unload_instances(
-                AutoUnload._module_instances[self.current_module].values()
+                AutoUnload._module_instances[self.current_module]
             )
             del AutoUnload._module_instances[self.current_module]
 
         if self.current_module in WeakAutoUnload._module_instances:
             self._unload_auto_unload_instances(
-                WeakAutoUnload._module_instances[self.current_module].values()
+                WeakAutoUnload._module_instances[self.current_module]
             )
             del WeakAutoUnload._module_instances[self.current_module]
 
