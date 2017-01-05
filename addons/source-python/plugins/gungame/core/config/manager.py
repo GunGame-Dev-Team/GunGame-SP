@@ -52,7 +52,7 @@ class GunGameConfigManager(ConfigManager):
 
         # Get the path for a base config
         except ValueError:
-            folder = 'core'
+            folder = None
             file_path = base_path / name + '_settings'
             cvar_prefix = 'gg_{plugin_name}_'.format(
                 plugin_name=name,
@@ -61,8 +61,8 @@ class GunGameConfigManager(ConfigManager):
         try:
             # Add the translations
             self.translations = LangStrings(
-                'gungame/{plugin_type}/config/{plugin_name}'.format(
-                    plugin_type=folder,
+                'gungame/config/{plugin_type}{plugin_name}'.format(
+                    plugin_type=folder + '/' if folder is not None else '',
                     plugin_name=name,
                 )
             )

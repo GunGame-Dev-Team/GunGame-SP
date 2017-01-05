@@ -45,38 +45,33 @@ class _MessageManager(dict):
         self._hooked_messages = defaultdict(int)
         self._hooked_prefixes = defaultdict(int)
 
-        # Loop through all directories in the GunGame translations directory
-        for folder in GUNGAME_TRANSLATION_PATH.dirs():
-            if folder.namebase == 'rules':
+        # Loop through all message translation files
+        message_path = GUNGAME_TRANSLATION_PATH / 'messages'
+        for file in message_path.walkfiles('*.ini'):
+            # Skip all server-specific files
+            if file.namebase.endswith('_server'):
                 continue
 
-            # Loop through all translation files in the current directory
-            for file in folder.files('*.ini'):
+            # Get the current translations
+            instance = LangStrings(
+                file.replace(TRANSLATION_PATH, '')[1:~3]
+            )
 
-                # Skip all server-specific files
-                if file.namebase.endswith('_server'):
+            # Loop through all translations in the current file
+            for key, value in instance.items():
+
+                # Verify that the name is unique
+                if key in self:
+                    warn(
+                        'Translation key "{translation_key}" '
+                        'already registered.'.format(
+                            translation_key=key,
+                        )
+                    )
                     continue
 
-                # Get the current translations
-                instance = LangStrings(
-                    file.replace(TRANSLATION_PATH, '')[1:~3]
-                )
-
-                # Loop through all translations in the current file
-                for key, value in instance.items():
-
-                    # Verify that the name is unique
-                    if key in self:
-                        warn(
-                            'Translation key "{translation_key}" '
-                            'already registered.'.format(
-                                translation_key=key,
-                            )
-                        )
-                        continue
-
-                    # Add the translations to the dictionary
-                    self[key] = value
+                # Add the translations to the dictionary
+                self[key] = value
 
     def hook_message(self, message_name):
         """Add a hook to the given message's refcount."""

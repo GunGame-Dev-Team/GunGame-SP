@@ -35,7 +35,7 @@ __all__ = (
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
-_weapon_strings = LangStrings('gungame/core/weapon_order')
+_weapon_strings = LangStrings('gungame/weapon_order')
 
 _weapon_groups = OrderedDict([
     ('PISTOLS', sorted(pistol_weapons)),

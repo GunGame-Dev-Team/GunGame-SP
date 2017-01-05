@@ -39,7 +39,7 @@ _core_sounds = {
     'winner': 'winner_sounds.txt',
 }
 
-_sound_strings = LangStrings('gungame/core/config/sound_pack')
+_sound_strings = LangStrings('gungame/config/sound_pack')
 
 
 # =============================================================================
