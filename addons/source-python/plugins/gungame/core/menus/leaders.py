@@ -32,7 +32,7 @@ __all__ = (
 # =============================================================================
 # >> FUNCTIONS
 # =============================================================================
-@register_command_callback('leaders', menu_strings['Leader:Text'])
+@register_command_callback('leaders', 'Leader:Text')
 def send_leaders_menu(index):
     """Send the leaders menu to the player."""
     menu = PagedMenu(title=menu_strings['Leader:Current'])

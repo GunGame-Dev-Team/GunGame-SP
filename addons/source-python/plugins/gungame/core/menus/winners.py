@@ -26,7 +26,7 @@ __all__ = (
 # =============================================================================
 # >> FUNCTIONS
 # =============================================================================
-@register_command_callback('winners', menu_strings['Winners:Text'])
+@register_command_callback('winners', 'Winners:Text')
 def send_winners_menu(index):
     """Send the winners menu to the player."""
     get_winners_menu(Player(index)).send(index)

@@ -5,26 +5,26 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-from configobj import ConfigObj
+# Python
+from collections import defaultdict
 
+# Source.Python
 from commands.client import client_command_manager
 from commands.say import say_command_manager
+from events import Event
 from translations.strings import TranslationStrings
 
-from . import command_strings
-from ..paths import GUNGAME_CFG_PATH
+# GunGame
+from . import commands_ini_file
+from .strings import commands_translations
 
 
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
-_commands_ini = ConfigObj(GUNGAME_CFG_PATH / 'commands.ini')
-if not _commands_ini:
-    _commands_ini.initial_comment = (
-        command_strings['Commands:Header'].get_string().splitlines()
-    )
 
 command_dictionary = dict()
+plugin_commands = defaultdict(list)
 
 
 # =============================================================================
@@ -34,13 +34,18 @@ class _RegisteredCommand(object):
     def __init__(self, name, text, callback):
         self.name = self.commands = name
         self.callback = callback
-        if self.name in _commands_ini:
-            self.commands = _commands_ini[self.name].split(',')
+        module = self.callback.__module__
+        if module.startswith('gungame.plugins'):
+            plugin_commands[module.split('.')[3]].append(self.name)
+        if self.name in commands_ini_file:
+            self.commands = commands_ini_file[self.name].split(',')
             return
-        _commands_ini[self.name] = self.name
+        commands_ini_file[self.name] = self.name
+        if text in commands_translations:
+            text = commands_translations[text]
         if isinstance(text, TranslationStrings):
             text = text.get_string()
-        _commands_ini.comments[self.name] = [''] + text.splitlines()
+        commands_ini_file.comments[self.name] = [''] + text.splitlines()
 
     def register_commands(self):
         """Register the public, private, and client commands."""
@@ -126,3 +131,24 @@ def _send_command_menu(command, index, team_only=None):
 
     # Return the block value
     return block
+
+
+# =============================================================================
+# >> EVENTS
+# =============================================================================
+@Event('gg_plugin_loaded')
+def _register_commands(game_event):
+    plugin = game_event['plugin']
+    if plugin not in plugin_commands:
+        return
+    for name in plugin_commands[plugin]:
+        command_dictionary[name].register_commands()
+
+
+@Event('gg_plugin_unloaded')
+def _register_commands(game_event):
+    plugin = game_event['plugin']
+    if plugin not in plugin_commands:
+        return
+    for name in plugin_commands[plugin]:
+        command_dictionary[name].unregister_commands()

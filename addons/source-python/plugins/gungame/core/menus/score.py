@@ -30,7 +30,7 @@ __all__ = (
 # =============================================================================
 # >> FUNCTIONS
 # =============================================================================
-@register_command_callback('score', menu_strings['Score:Text'])
+@register_command_callback('score', 'Score:Text')
 def send_score_menu(index):
     """Send the score menu to the player."""
     menu = PagedMenu(title=menu_strings['Score:Title'])

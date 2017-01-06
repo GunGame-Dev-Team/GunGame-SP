@@ -30,7 +30,7 @@ __all__ = (
 # =============================================================================
 # >> FUNCTIONS
 # =============================================================================
-@register_command_callback('level', menu_strings['Level:Text'])
+@register_command_callback('level', 'Level:Text')
 def send_level_menu(index):
     """Send the level menu to the player."""
     menu = SimpleMenu()

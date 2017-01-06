@@ -93,7 +93,8 @@ class _GGPluginManager(PluginManager):
     def _is_related_module(base_name, module):
         """Check if a plugin's base name is related to a module name."""
         if module.split('.')[~0] in (
-            'configuration', 'custom_events', 'info', 'rules', 'settings',
+            'commands', 'configuration', 'custom_events', 'info', 'rules',
+            'settings',
         ):
             return False
         return PluginManager._is_related_module(base_name, module)

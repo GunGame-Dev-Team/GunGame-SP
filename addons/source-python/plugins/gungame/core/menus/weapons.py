@@ -29,7 +29,7 @@ __all__ = (
 # =============================================================================
 # >> FUNCTIONS
 # =============================================================================
-@register_command_callback('weapons', menu_strings['Weapons:Text'])
+@register_command_callback('weapons', 'Weapons:Text')
 def send_weapons_menu(index):
     """Send the weapon menu to the player."""
     menu = PagedMenu(title=menu_strings['Weapons:Title'])

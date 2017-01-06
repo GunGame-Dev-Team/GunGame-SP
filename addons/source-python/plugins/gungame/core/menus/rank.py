@@ -25,7 +25,7 @@ __all__ = (
 # =============================================================================
 # >> FUNCTIONS
 # =============================================================================
-@register_command_callback('rank', menu_strings['Rank:Text'])
+@register_command_callback('rank', 'Rank:Text')
 def send_rank_menu(index):
     """Send the rank menu to the player."""
     player = Player(index)

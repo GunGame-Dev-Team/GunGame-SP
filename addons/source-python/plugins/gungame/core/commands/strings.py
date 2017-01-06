@@ -1,6 +1,6 @@
-# ../gungame/core/rules/strings.py
+# ../gungame/core/commands/strings.py
 
-"""GunGame rules translation functionality."""
+"""GunGame commands translation functionality."""
 
 # =============================================================================
 # >> IMPORTS
@@ -20,23 +20,23 @@ from gungame.core.paths import GUNGAME_TRANSLATION_PATH
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'rules_translations',
+    'commands_translations',
 )
 
 
 # =============================================================================
 # >> CLASSES
 # =============================================================================
-class _RulesTranslations(dict):
-    """Class used to store rules translations."""
+class _CommandsTranslations(dict):
+    """Class used to store commands translations."""
 
     def __init__(self):
         super().__init__()
 
-        rules_path = GUNGAME_TRANSLATION_PATH / 'rules'
-        self._add_contents(rules_path / 'core.ini')
+        commands_path = GUNGAME_TRANSLATION_PATH / 'commands'
+        self._add_contents(commands_path / 'core.ini')
 
-        for directory in rules_path.dirs():
+        for directory in commands_path.dirs():
             for file in directory.files('*.ini'):
                 if not file.namebase.endswith('_server'):
                     self._add_contents(file)
@@ -56,4 +56,4 @@ class _RulesTranslations(dict):
                 continue
             self[key] = value
 
-rules_translations = _RulesTranslations()
+commands_translations = _CommandsTranslations()
