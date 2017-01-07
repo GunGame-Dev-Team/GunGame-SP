@@ -13,10 +13,12 @@ from weapons.manager import weapon_manager
 # GunGame
 from gungame.core.players.attributes import AttributePreHook
 from gungame.core.players.dictionary import player_dictionary
+from gungame.core.weapons.groups import all_grenade_weapons, melee_weapons
 
 # Plugin
 from .configuration import (
-    grenade_weapons, knife_weapons, level_one_victim, limit
+    level_down_knife_level, level_one_victim, level_victim_nade, limit,
+    skip_nade,
 )
 from .custom_events import GG_Knife_Steal
 from .settings import auto_switch
@@ -28,7 +30,7 @@ from .settings import auto_switch
 # Store a dictionary to know when a player recently leveled from knife level
 _recently_off_knife = dict()
 _knife_classnames = {
-    x.name for x in weapon_manager.values() if x.basename in knife_weapons
+    x.name for x in weapon_manager.values() if x.basename in melee_weapons
 }
 
 
@@ -73,19 +75,18 @@ def _steal_level(game_event):
         killer.chat_message('KnifeSteal:LevelOne')
         return
 
-    if weapon in grenade_weapons:
-        if not grenade_weapons[weapon]['skip'].get_bool():
-            killer.chat_message('KnifeSteal:NoSkip', weapon=weapon)
-            if grenade_weapons[weapon]['level'].get_bool():
-                victim.decrease_level(
-                    levels=1,
-                    reason='steal',
-                    attacker=attacker,
-                )
-            return
+    if weapon in all_grenade_weapons and not skip_nade.get_bool():
+        killer.chat_message('KnifeSteal:NoSkip', weapon=weapon)
+        if level_victim_nade.get_bool():
+            victim.decrease_level(
+                levels=1,
+                reason='steal',
+                attacker=attacker,
+            )
+        return
 
-    if weapon in knife_weapons:
-        if knife_weapons[weapon].get_bool():
+    if weapon in melee_weapons:
+        if level_down_knife_level.get_bool():
             victim.decrease_level(
                 levels=1,
                 reason='steal',
@@ -129,7 +130,7 @@ def _on_knife_steal(game_event):
 @AttributePreHook('level')
 def _pre_level_change(player, attribute, new_value):
     """Store players leveling off of knife level."""
-    if not player.level or player.level_weapon not in knife_weapons:
+    if not player.level or player.level_weapon not in melee_weapons:
         return
 
     _recently_off_knife[player.userid] = {
