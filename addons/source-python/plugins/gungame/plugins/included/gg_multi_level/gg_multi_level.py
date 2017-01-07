@@ -90,8 +90,9 @@ class _MultiLevelPlayer(Player):
 class _MultiLevelManager(dict):
     """"""
 
-    def __delitem__(self, userid):
-        player_dictionary[userid].multi_levels = 0
+    def __delitem__(self, userid, disconnecting=False):
+        if not disconnecting:
+            player_dictionary[userid].multi_levels = 0
         if userid not in self:
             return
         self[userid].remove_multi_level()
@@ -102,6 +103,9 @@ class _MultiLevelManager(dict):
     def clear(self):
         for userid in list(self):
             del self[userid]
+
+    def delete_disconnecting_player(self, userid):
+        self.__delitem__(userid, disconnecting=True)
 
     def give_multi_level(self, userid):
         if not len(self):
@@ -165,4 +169,4 @@ def _reset_team_killers(game_event):
 
 @Event('player_disconnect')
 def _remove_disconnecting_player(game_event):
-    del multi_level_manager[game_event['userid']]
+    multi_level_manager.delete_disconnecting_player(game_event['userid'])
