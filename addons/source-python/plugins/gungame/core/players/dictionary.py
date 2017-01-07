@@ -8,6 +8,9 @@
 # Python
 from collections import defaultdict
 
+# Source.Python
+from players.helpers import userid_from_index
+
 # GunGame
 from .attributes import player_attributes
 from .instance import GunGamePlayer
@@ -78,6 +81,9 @@ class _PlayerDictionary(dict):
 
         # Return the current instance
         return player
+
+    def from_index(self, index):
+        return self[userid_from_index(index)]
 
     def safe_remove(self, userid):
         """Store the player's values in case they rejoin."""
