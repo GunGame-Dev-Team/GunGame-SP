@@ -95,6 +95,7 @@ class _PlayerDictionary(dict):
                 self[userid],
                 attribute,
             )
+        self[userid].cancel_protect_delay()
         del self[userid]
 
     def clear(self):

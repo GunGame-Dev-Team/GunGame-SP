@@ -259,16 +259,24 @@ class GunGamePlayer(Player):
         self.godmode = True
         self._color = self.color
         self.color = self.color.with_alpha(100)
-        self._protect_delay = Delay(delay, self.remove_spawn_protection)
+        self._protect_delay = Delay(
+            delay=delay,
+            callback=self.remove_spawn_protection,
+            kwargs={'from_delay': True},
+        )
 
-    def remove_spawn_protection(self):
-        if self._protect_delay is None:
-            return
-        self._protect_delay.cancel()
-        self._protect_delay = None
+    def remove_spawn_protection(self, from_delay=False):
+        self.cancel_protect_delay(from_delay)
         self.godmode = False
         self.color = self._color
         self.in_spawn_protection = False
+
+    def cancel_protect_delay(self, from_delay=False):
+        if self._protect_delay is None:
+            return
+        if not from_delay:
+            self._protect_delay.cancel()
+        self._protect_delay = None
 
     # =========================================================================
     # >> SOUND FUNCTIONALITY
