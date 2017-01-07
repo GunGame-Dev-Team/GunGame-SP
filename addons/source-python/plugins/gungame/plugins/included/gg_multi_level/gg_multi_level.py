@@ -91,7 +91,7 @@ class _MultiLevelManager(dict):
     """"""
 
     def __delitem__(self, userid):
-        player_dictionary[userid].mulit_levels = 0
+        player_dictionary[userid].multi_levels = 0
         if userid not in self:
             return
         self[userid].remove_multi_level()
