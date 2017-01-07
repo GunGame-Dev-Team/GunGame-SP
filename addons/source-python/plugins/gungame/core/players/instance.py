@@ -43,7 +43,6 @@ class GunGamePlayer(Player):
     multi_kill = 0
     in_spawn_protection = False
     _protect_delay = None
-    _color = None
 
     def __setattr__(self, attr, value):
         """Verify that the attribute's value should be set."""
@@ -257,7 +256,6 @@ class GunGamePlayer(Player):
             return
         self.in_spawn_protection = True
         self.godmode = True
-        self._color = self.color
         self.color = self.color.with_alpha(100)
         self._protect_delay = Delay(
             delay=delay,
@@ -268,7 +266,7 @@ class GunGamePlayer(Player):
     def remove_spawn_protection(self, from_delay=False):
         self.cancel_protect_delay(from_delay)
         self.godmode = False
-        self.color = self._color
+        self.color = self.color.with_alpha(255)
         self.in_spawn_protection = False
 
     def cancel_protect_delay(self, from_delay=False):
