@@ -12,6 +12,7 @@ from time import time
 from entities.entity import Entity
 from events import Event
 from listeners import on_tick_listener_manager
+from listeners.tick import Delay
 from mathlib import Vector
 from players.entity import Player
 
@@ -45,6 +46,7 @@ class _MultiLevelPlayer(Player):
     """"""
 
     spark_entity = None
+    delay = None
 
     def __init__(self, index):
         super(_MultiLevelPlayer, self).__init__(index)
@@ -55,6 +57,11 @@ class _MultiLevelPlayer(Player):
         self.speed = speed.get_int() / 100
         self.end_time = time() + length.get_float()
         self.give_spark_entity()
+        self.delay = Delay(
+            delay=self.sound.duration,
+            callback=self.remove_multi_level,
+            kwargs={'from_delay': True},
+        )
 
     def give_spark_entity(self):
         entity = self.spark_entity = Entity.create('env_spark')
@@ -66,7 +73,10 @@ class _MultiLevelPlayer(Player):
         entity.origin = self.origin
         entity.start_spark()
 
-    def remove_multi_level(self):
+    def remove_multi_level(self, from_delay=False):
+        if not from_delay and self.delay is not None:
+            self.delay.cancel()
+        self.delay = None
         self.gravity = self.start_gravity
         self.speed = self.start_speed
         self.sound.stop(self.index)
@@ -81,6 +91,7 @@ class _MultiLevelManager(dict):
     """"""
 
     def __delitem__(self, userid):
+        player_dictionary[userid].mulit_levels = 0
         if userid not in self:
             return
         self[userid].remove_multi_level()
