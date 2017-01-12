@@ -66,8 +66,7 @@ def dissolve_ragdoll(userid, current_type):
     # Get the ragdoll entity
     try:
         inthandle = Player.from_userid(userid).ragdoll
-    # TODO: clarify this exception
-    except Exception:
+    except ValueError:
         return
 
     if inthandle == INVALID_ENTITY_INTHANDLE:

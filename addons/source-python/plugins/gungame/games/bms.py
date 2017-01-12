@@ -32,8 +32,7 @@ resource_file.load_events()
 def entity_spawned(base_entity):
     try:
         entity = Entity(base_entity.index)
-    # TODO: clarify this exception
-    except Exception:
+    except ValueError:
         return
 
     if entity.classname != 'grenade_frag':
@@ -41,8 +40,7 @@ def entity_spawned(base_entity):
 
     try:
         player = Player(entity.owner.index)
-    # TODO: clarify this exception
-    except Exception:
+    except ValueError:
         return
 
     with Weapon_Fire() as event:
