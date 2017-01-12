@@ -17,7 +17,9 @@ from .manager import gg_plugin_manager
 from .queue import plugin_queue
 from .valid import valid_plugins
 from ..credits import gungame_credits
+from ..messages import message_manager
 from ..weapons.manager import weapon_order_manager
+from gungame.info import info
 
 
 # =============================================================================
@@ -34,6 +36,8 @@ __all__ = (
 # >> GLOBAL VARIABLES
 # =============================================================================
 gg_plugins_command_logger = gg_plugins_logger.command
+
+command_strings = LangStrings('gungame/sub_commands')
 
 
 # =============================================================================
@@ -54,7 +58,7 @@ class _GGSubCommandManager(SubCommandManager):
         # Set the queue's prefix
         plugin_queue.prefix = self.prefix
 
-    def load_plugin(self, plugin_name):
+    def load_plugin(self, plugin_name, index=None):
         """Load a plugin by name."""
         # Get the plugin name with the gg_ prefix
         if not plugin_name.startswith('gg_'):
@@ -77,13 +81,19 @@ class _GGSubCommandManager(SubCommandManager):
 
         # Was an invalid plugin name given?
         if plugin_name not in valid_plugins.all:
-            # TODO: log message that it is not a valid plugin name
+            self._send_message(
+                self.prefix +
+                command_strings['SubCommand:Plugin:Invalid'].get_string(
+                    plugin_name=plugin_name,
+                ),
+                index,
+            )
             return
 
         # Add the plugin to the current queue
         plugin_queue['load'].add(plugin_name)
 
-    def unload_plugin(self, plugin_name):
+    def unload_plugin(self, plugin_name, index=None):
         """Unload a plugin by name."""
         # Get the plugin name with the gg_ prefix
         if not plugin_name.startswith('gg_'):
@@ -100,7 +110,13 @@ class _GGSubCommandManager(SubCommandManager):
 
             # Was an invalid plugin name given?
             if plugin_name not in valid_plugins.all:
-                # TODO: log message that it is not a valid plugin name
+                self._send_message(
+                    self.prefix +
+                    command_strings['SubCommand:Plugin:Invalid'].get_string(
+                        plugin_name=plugin_name,
+                    ),
+                    index,
+                )
                 return
 
             # No need to go further
@@ -109,7 +125,7 @@ class _GGSubCommandManager(SubCommandManager):
         # Add the plugin to the current queue
         plugin_queue['unload'].add(plugin_name)
 
-    def reload_plugin(self, plugin_name):
+    def reload_plugin(self, plugin_name, index=None):
         """Reload a plugin by name."""
         # Get the plugin name with the gg_ prefix
         if not plugin_name.startswith('gg_'):
@@ -120,7 +136,13 @@ class _GGSubCommandManager(SubCommandManager):
 
             # Was an invalid plugin name given?
             if plugin_name not in valid_plugins.all:
-                # TODO: log message that it is not a valid plugin name
+                self._send_message(
+                    self.prefix +
+                    command_strings['SubCommand:Plugin:Invalid'].get_string(
+                        plugin_name=plugin_name,
+                    ),
+                    index,
+                )
                 return
 
             # Attempt to load the plugin
@@ -135,15 +157,20 @@ class _GGSubCommandManager(SubCommandManager):
         # Add the plugin to the reload queue
         plugin_queue['reload'].add(plugin_name)
 
-    def print_plugins(self):
+    def print_plugins(self, index=None):
         """List all currently loaded plugins."""
         # Get header messages
         message = self.prefix + plugin_strings[
             'Plugins'
         ].get_string() + '\n' + '=' * 61 + '\n'
 
-        # Loop through all loaded plugins
-        for plugin_name in sorted(self.manager):
+        loaded_included = sorted([
+            name for name in self.manager if name in valid_plugins.included
+        ])
+        loaded_custom = sorted([
+            name for name in self.manager if name in valid_plugins.custom
+        ])
+        for plugin_name in loaded_included + loaded_custom:
 
             # Add the plugin's name to the message
             message += '\n{plugin_name} ({plugin_type}):\n\n'.format(
@@ -195,12 +222,18 @@ class _GGSubCommandManager(SubCommandManager):
         message += '=' * 61
 
         # Print the message
-        self.logger.log_message(message)
+        self._send_message(message, index)
 
-    def print_version(self):
+    def print_version(self, index=None):
         """Print the GunGame version information."""
+        self._send_message(
+            self.prefix + command_strings['SubCommand:Version'].get_string(
+                version=info.version,
+            ),
+            index
+        )
 
-    def print_credits(self):
+    def print_credits(self, index=None):
         """Print the GunGame credits."""
         # Get header messages
         message = '\n' + self.prefix + plugin_strings[
@@ -225,12 +258,19 @@ class _GGSubCommandManager(SubCommandManager):
             message += '\n'
 
         # Print the message
-        self.logger.log_message(message + '=' * 61 + '\n\n')
+        self._send_message(message + '=' * 61 + '\n\n', index)
 
     @staticmethod
     def restart_match():
         """Restart the match."""
         weapon_order_manager.restart_game()
+
+    def _send_message(self, message, index):
+        if index is None:
+            self.logger.log_message(message)
+        else:
+            for line in message.splitlines():
+                message_manager.echo_message(line, index)
 
     def unload_all_plugins(self):
         """Unload all plugins when GunGame is unloading."""
@@ -244,37 +284,37 @@ gg_command_manager = _GGSubCommandManager('gg', 'GunGame base command.')
 @gg_command_manager.server_sub_command(['plugin', 'load'])
 @gg_command_manager.client_sub_command(['plugin', 'load'], 'gungame.load')
 def _gg_plugin_load(command_info, plugin):
-    gg_command_manager.load_plugin(plugin)
+    gg_command_manager.load_plugin(plugin, command_info.index)
 
 
 @gg_command_manager.server_sub_command(['plugin', 'unload'])
 @gg_command_manager.client_sub_command(['plugin', 'unload'], 'gungame.unload')
 def _gg_plugin_unload(command_info, plugin):
-    gg_command_manager.unload_plugin(plugin)
+    gg_command_manager.unload_plugin(plugin, command_info.index)
 
 
 @gg_command_manager.server_sub_command(['plugin', 'reload'])
 @gg_command_manager.client_sub_command(['plugin', 'reload'], 'gungame.reload')
 def _gg_plugin_reload(command_info, plugin):
-    gg_command_manager.reload_plugin(plugin)
+    gg_command_manager.reload_plugin(plugin, command_info.index)
 
 
 @gg_command_manager.server_sub_command(['plugin', 'list'])
 @gg_command_manager.client_sub_command(['plugin', 'list'])
 def _gg_plugin_list(command_info):
-    gg_command_manager.print_plugins()
+    gg_command_manager.print_plugins(command_info.index)
 
 
 @gg_command_manager.server_sub_command(['version'])
 @gg_command_manager.client_sub_command(['version'])
 def _gg_version(command_info):
-    gg_command_manager.print_version()
+    gg_command_manager.print_version(command_info.index)
 
 
 @gg_command_manager.server_sub_command(['credits'])
 @gg_command_manager.client_sub_command(['credits'])
 def _gg_credits(command_info):
-    gg_command_manager.print_credits()
+    gg_command_manager.print_credits(command_info.index)
 
 
 @gg_command_manager.server_sub_command(['restart'])
