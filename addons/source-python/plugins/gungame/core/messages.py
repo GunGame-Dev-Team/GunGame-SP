@@ -12,7 +12,8 @@ from warnings import warn
 # Source.Python
 from colors import WHITE
 from messages import (
-    DialogMsg, HudMsg, HintText, KeyHintText, SayText2, TextMsg, VGUIMenu,
+    DialogMsg, HudDestination, HudMsg, HintText, KeyHintText, SayText2,
+    TextMsg, VGUIMenu,
 )
 from paths import TRANSLATION_PATH
 from translations.strings import LangStrings, TranslationStrings
@@ -139,7 +140,7 @@ class _MessageManager(dict):
             users = (users, )
 
         # Send the message to the users
-        TextMsg(message, TextMsg.CONSOLE).send(*users, **tokens)
+        TextMsg(message, HudDestination.CONSOLE).send(*users, **tokens)
 
     def hint_message(self, message='', *users, **tokens):
         """Send a hint message to the given players."""

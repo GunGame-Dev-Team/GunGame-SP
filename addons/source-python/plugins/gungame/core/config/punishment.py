@@ -30,7 +30,7 @@ with GunGameConfigManager('punishment') as _config:
     _config._cvar_prefix = 'gg_'
 
     # AFK
-    # TODO: implement
+    # TODO: add in functionality
     with _config.cvar('afk') as afk_punish:
         afk_punish.add_text()
     with _config.cvar('afk_type') as afk_type:
@@ -39,7 +39,7 @@ with GunGameConfigManager('punishment') as _config:
         afk_length.add_text()
 
     # Retry
-    # TODO: implement
+    # TODO: add in functionality
     with _config.cvar('retry') as retry_punish:
         retry_punish.add_text()
 
