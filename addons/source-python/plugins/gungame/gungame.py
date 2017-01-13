@@ -158,7 +158,7 @@ def load():
         )
     )
     current += 1
-    sv_tags.add(info.basename)
+    sv_tags.add(info.name)
 
     # Wait 1 tick to see if gg_start should be called
     gg_logger.log_message(
@@ -198,7 +198,7 @@ def unload():
         )
     )
     current += 1
-    sv_tags.remove(info.basename)
+    sv_tags.remove(info.name)
 
     # Clean GunGame plugins
     gg_logger.log_message(

@@ -5,16 +5,11 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Source.Python
-from plugins.info import PluginInfo
+# GunGame
+from gungame.core.plugins.info import GunGamePluginInfo
 
 
 # =============================================================================
 # >> PLUGIN INFO
 # =============================================================================
-info = PluginInfo()
-info.name = 'gg_deathmatch'
-info.title = 'GG Deathmatch'
-info.author = 'GG Dev Team'
-info.required = ['gg_dead_strip', 'gg_dissolver']
-info.conflicts = ['gg_elimination', 'gg_teamwork']
+info = GunGamePluginInfo(__name__)

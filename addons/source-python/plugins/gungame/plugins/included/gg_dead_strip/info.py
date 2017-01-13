@@ -5,14 +5,11 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Source.Python
-from plugins.info import PluginInfo
+# GunGame
+from gungame.core.plugins.info import GunGamePluginInfo
 
 
 # =============================================================================
 # >> PLUGIN INFO
 # =============================================================================
-info = PluginInfo()
-info.name = 'gg_dead_strip'
-info.title = 'GG Dead Strip'
-info.author = 'GG Dev Team'
+info = GunGamePluginInfo(__name__)

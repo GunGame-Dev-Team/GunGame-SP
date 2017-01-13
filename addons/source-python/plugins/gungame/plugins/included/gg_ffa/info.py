@@ -5,15 +5,11 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Source.Python
-from plugins.info import PluginInfo
+# GunGame
+from gungame.core.plugins.info import GunGamePluginInfo
 
 
 # =============================================================================
 # >> PLUGIN INFO
 # =============================================================================
-info = PluginInfo()
-info.name = 'gg_ffa'
-info.title = 'GG FFA'
-info.author = 'GG Dev Team'
-info.conflicts = ['gg_teamplay', 'gg_teamwork']
+info = GunGamePluginInfo(__name__)

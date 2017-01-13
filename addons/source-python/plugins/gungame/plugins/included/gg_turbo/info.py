@@ -5,15 +5,11 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Source.Python
-from plugins.info import PluginInfo
+# GunGame
+from gungame.core.plugins.info import GunGamePluginInfo
 
 
 # =============================================================================
 # >> PLUGIN INFO
 # =============================================================================
-info = PluginInfo()
-info.name = 'gg_turbo'
-info.title = 'GG Turbo'
-info.author = 'GG Dev Team'
-info.conflicts = ['gg_knife_elite']
+info = GunGamePluginInfo(__name__)

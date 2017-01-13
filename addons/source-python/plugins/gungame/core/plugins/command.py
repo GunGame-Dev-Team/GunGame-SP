@@ -278,7 +278,7 @@ class _GGSubCommandManager(SubCommandManager):
             del self.manager[plugin_name]
 
 # Get the "gg" command instance
-gg_command_manager = _GGSubCommandManager('gg', 'GunGame base command.')
+gg_command_manager = _GGSubCommandManager('gg')
 
 
 @gg_command_manager.server_sub_command(['plugin', 'load'])
