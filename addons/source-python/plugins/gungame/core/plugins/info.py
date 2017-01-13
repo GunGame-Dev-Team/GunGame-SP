@@ -18,5 +18,5 @@ class GunGamePluginInfo(PluginInfo):
         ini_file = GUNGAME_PLUGINS_PATH / path[2] / name / 'info.ini'
         if not ini_file.isfile():
             raise ValueError('two')
-        ini = ConfigObj(ini_file, unrepr=True)
+        ini = ConfigObj(ini_file)
         super().__init__(name, **ini)
