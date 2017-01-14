@@ -17,8 +17,10 @@ from filters.weapons import WeaponClassIter
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'all_weapons',
     'all_grenade_weapons',
+    'all_primary_weapons',
+    'all_secondary_weapons',
+    'all_weapons',
     'explosive_weapons',
     'grenade_weapons',
     'incendiary_weapons',
@@ -39,6 +41,8 @@ __all__ = (
 # >> GLOBAL VARIABLES
 # =============================================================================
 all_weapons = set()
+all_primary_weapons = set()
+all_secondary_weapons = set()
 all_grenade_weapons = set()
 
 _weapon_sets = OrderedDict()
@@ -86,10 +90,12 @@ def _get_weapon_sets():
                 break
         else:
             other_weapons.add(weapon.basename)
+        if 'primary' in weapon.tags:
+            all_primary_weapons.add(weapon.basename)
+        if 'secondary' in weapon.tags:
+            all_secondary_weapons.add(weapon.basename)
         if 'grenade' in weapon.tags:
-            all_grenade_weapons.update(
-                explosive_weapons | grenade_weapons | incendiary_weapons
-            )
+            all_grenade_weapons.add(weapon.basename)
         all_weapons.add(weapon.basename)
 
 _get_weapon_sets()
