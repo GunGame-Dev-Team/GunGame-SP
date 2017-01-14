@@ -7,6 +7,7 @@
 # =============================================================================
 # GunGame
 from . import all_gungame_rules
+from .strings import rules_translations
 
 
 # =============================================================================
@@ -51,7 +52,15 @@ class GunGameRules(dict):
             )
         del self[name]
 
-    def register_convar_token(self, token_name, convar, convar_type):
+    def register_all_rules(self):
+        for key, value in rules_translations.items():
+            if key.startswith('{title}:'.format(title=self.title)):
+                self.register_rule(
+                    name=key,
+                    value=value,
+                )
+
+    def register_convar_token(self, token_name, convar, convar_type='int'):
         if token_name in self.convar_tokens:
             raise ValueError(
                 'Token name "{token_name}" already registered.'.format(
