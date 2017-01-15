@@ -15,10 +15,11 @@ from translations.strings import LangStrings
 
 # GunGame
 from .groups import (
-    all_weapons, explosive_weapons, grenade_weapons, incendiary_weapons,
-    machine_gun_weapons, melee_weapons, other_primary_weapons,
-    other_secondary_weapons, other_weapons, pistol_weapons, rifle_weapons,
-    shotgun_weapons, smg_weapons, sniper_weapons,
+    all_weapons, all_primary_weapons, all_secondary_weapons, explosive_weapons,
+    grenade_weapons, incendiary_weapons, machine_gun_weapons, melee_weapons,
+    other_primary_weapons, other_secondary_weapons, other_weapons,
+    pistol_weapons, rifle_weapons, shotgun_weapons, smg_weapons,
+    sniper_weapons,
 )
 from ..config.weapon import order_randomize
 from ..paths import GUNGAME_WEAPON_ORDER_PATH
@@ -61,6 +62,7 @@ def create_default_weapon_orders():
     _create_default_order()
     _create_short_order()
     _create_random_order()
+    _create_nade_bonus_order()
 
 
 # =============================================================================
@@ -102,10 +104,10 @@ def _create_random_order():
     random_order = GUNGAME_WEAPON_ORDER_PATH / 'random.txt'
     if random_order.isfile():
         return
+    all_weapon_copy = list(all_weapons)
+    shuffle(all_weapon_copy)
     with random_order.open('w') as open_file:
         open_file.write(_default_header)
-        all_weapon_copy = list(all_weapons)
-        shuffle(all_weapon_copy)
         for weapon in all_weapon_copy:
             multi_kill = randint(0, 3)
             if not multi_kill:
@@ -123,6 +125,24 @@ def _create_random_order():
                         multi_kill=multi_kill,
                     )
                 )
+
+
+def _create_nade_bonus_order():
+    """Create the nade bonus weapon order file, if necessary."""
+    nade_bonus = GUNGAME_WEAPON_ORDER_PATH / 'nade_bonus.txt'
+    if nade_bonus.isfile():
+        return
+    weapon_copy = sorted(all_secondary_weapons)
+    if not weapon_copy:
+        weapon_copy = sorted(all_primary_weapons)
+    with nade_bonus.open('w') as open_file:
+        open_file.write(_default_header)
+        for weapon in weapon_copy:
+            open_file.write(
+                '{weapon} 2\n'.format(
+                    weapon=weapon,
+                )
+            )
 
 
 def _get_header():
