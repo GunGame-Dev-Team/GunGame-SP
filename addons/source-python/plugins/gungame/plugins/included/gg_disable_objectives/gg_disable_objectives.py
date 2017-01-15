@@ -57,44 +57,26 @@ def unload():
 @Event('round_start')
 def _disable_objectives(game_event=None):
     """Disable objectives each round."""
-    # Get the objectives to disable
     objectives = disable_type.get_int()
 
     # Do bombing objectives need removed?
     if objectives & ObjectiveType.BOMBING:
 
-        # Loop through all bomb targets
+        # Disable bomb targets
         for entity in EntityIter('func_bomb_target'):
-
-            # Disable the bomb target
             entity.disable()
 
-        # Loop through all c4 entities
+        # Remove all c4 entities
         for weapon in WeaponIter('objective'):
-
-            # Get the entity's owner
-            owner = weapon.owner
-
-            # Does the entity have an owner?
-            if owner is not None:
-
-                # Force the owner to drop the entity
-                Player(owner.index).drop_weapon(weapon)
-
-            # Remove the entity from the server
             weapon.remove()
 
     # Do hostage objectives need removed?
     if objectives & ObjectiveType.HOSTAGE:
 
-        # Loop through all rescue zones
+        # Disable hostage rescue zones
         for entity in EntityIter('func_hostage_rescue'):
-
-            # Disable the rescue zone
             entity.disable()
 
-        # Loop through all hostage entities
+        # Remove all hostage entities
         for entity in EntityIter('hostage_entity'):
-
-            # Remove the entity from the server
             entity.remove()

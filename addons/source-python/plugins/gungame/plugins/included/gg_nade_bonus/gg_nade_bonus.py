@@ -172,7 +172,6 @@ class _NadeBonusPlayer(object):
         weapon_name = weapon_manager[old_weapon].name
         for weapon in self.player.weapons():
             if weapon.classname == weapon_name:
-                self.player.drop_weapon(weapon)
                 weapon.remove()
         self.give_current_weapon()
 

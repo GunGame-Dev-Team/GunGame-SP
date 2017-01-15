@@ -186,7 +186,6 @@ class GunGamePlayer(Player):
                 continue
             if weapon.classname == self.level_weapon_classname:
                 continue
-            self.drop_weapon(weapon)
             weapon.remove()
 
     def has_level_weapon(self):
