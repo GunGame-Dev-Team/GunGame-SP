@@ -42,6 +42,7 @@ from .players.dictionary import player_dictionary
 from .sounds.manager import sound_manager
 from .status import GunGameMatchStatus, GunGameRoundStatus, GunGameStatus
 from .warmup import warmup_manager
+from .weapons.groups import melee_weapons
 from .weapons.manager import weapon_order_manager
 
 
@@ -61,6 +62,10 @@ _joined_players = set()
 
 # Create a set to store userids that have recently switched teams
 _team_changers = set()
+
+_melee_weapon = weapon_manager[
+    'knife' if 'knife' in melee_weapons else melee_weapons[0]
+].name
 
 
 # =============================================================================
@@ -98,6 +103,7 @@ def _player_spawn(game_event):
     armor_type = {1: 'kevlar', 2: 'assaultsuit'}.get(give_armor.get_int())
     if armor_type is not None:
         equip = Entity.find_or_create('game_player_equip')
+        equip.add_output('{weapon} 1'.format(weapon=_melee_weapon))
         equip.add_output(
             'item_{armor_type} 1'.format(
                 armor_type=armor_type
