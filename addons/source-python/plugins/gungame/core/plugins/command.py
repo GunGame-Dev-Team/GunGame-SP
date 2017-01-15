@@ -189,12 +189,14 @@ class _GGSubCommandManager(SubCommandManager):
 
             with suppress(KeyError):
                 message += '   required plugins:    {required}\n'.format(
-                    required=','.join(info.required),
+                    required='\n                        '.join(info.required),
                 )
 
             with suppress(KeyError):
                 message += '   plugin conflicts:    {conflicts}\n'.format(
-                    conflicts=','.join(info.conflicts),
+                    conflicts='\n                        '.join(
+                        info.conflicts,
+                    ),
                 )
 
             for attr in info.display_in_listing:
