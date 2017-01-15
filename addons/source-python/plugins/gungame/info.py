@@ -6,10 +6,10 @@
 # >> IMPORTS
 # =============================================================================
 # Source.Python
-from core.manager import core_plugin_manager
+from plugins.manager import plugin_manager
 
 
 # =============================================================================
 # >> PLUGIN INFO
 # =============================================================================
-info = core_plugin_manager.get_plugin_info(__name__)
+info = plugin_manager.get_plugin_info(__name__)

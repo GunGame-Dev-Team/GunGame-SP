@@ -13,10 +13,9 @@ from warnings import warn
 from listeners.tick import Delay
 
 # GunGame
-from ..events.included.plugins import GG_Plugin_Loaded
-from ..plugins import gg_plugins_logger
-from ..plugins.manager import gg_plugin_manager
-from ..plugins.valid import plugin_requirements, valid_plugins
+from . import gg_plugins_logger
+from .manager import gg_plugin_manager
+from .valid import plugin_requirements, valid_plugins
 
 
 # =============================================================================
@@ -41,9 +40,11 @@ class _PluginQueue(dict):
     """Plugin queue class used to load/unload plugins."""
 
     manager = gg_plugin_manager
-    translations = manager.translations
     logger = gg_plugins_queue_logger
     prefix = None
+
+    def __init__(self):
+        super().__init__()
 
     def __missing__(self, item):
         """Add the item to its queue and loop through queues after 1 tick."""
@@ -89,7 +90,10 @@ class _PluginQueue(dict):
                         )
 
             # Unload the plugin
-            del self.manager[plugin_name]
+            self.manager.set_base_import(
+                value=valid_plugins.get_plugin_type(plugin_name)
+            )
+            self.manager.unload(plugin_name)
 
     def _load_plugins(self):
         """Load all plugins in the load queue."""
@@ -137,32 +141,8 @@ class _PluginQueue(dict):
                         )
 
             # Load the plugin and get its instance
-            plugin = self.manager[plugin_name]
-
-            # Was the plugin unable to be loaded?
-            if plugin is None:
-
-                # Send a message that the plugin was not loaded
-                self.logger.log_message(
-                    self.prefix + self.translations[
-                        'Unable to Load'
-                    ].get_string(plugin=plugin_name)
-                )
-
-                # No need to go further
-                return
-
-            # Send a message that the plugin was loaded
-            self.logger.log_message(
-                self.prefix + self.translations[
-                    'Successful Load'
-                ].get_string(plugin=plugin_name)
-            )
-
-            # Fire the gg_plugin_load event
-            with GG_Plugin_Loaded() as event:
-                event.plugin = plugin_name
-                event.plugin_type = plugin_type
+            self.manager.set_base_import(plugin_type)
+            self.manager.load(plugin_name)
 
 # Get the _PluginQueue instance
 plugin_queue = _PluginQueue()

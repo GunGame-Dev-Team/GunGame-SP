@@ -65,14 +65,14 @@ class _ValidPlugins(object):
         self.all = dict(self.included)
         self.all.update(self.custom)
 
-    def get_plugin_type(self, plugin):
+    def get_plugin_type(self, plugin_name):
         """Return the type (included or custom) for the given plugin."""
         for plugin_type in ('included', 'custom'):
-            if plugin in getattr(self, plugin_type):
+            if plugin_name in getattr(self, plugin_type):
                 return plugin_type
         raise ValueError(
             'No such plugin "{plugin_name}".'.format(
-                plugin_name=plugin,
+                plugin_name=plugin_name,
             )
         )
 

@@ -11,7 +11,7 @@ from plugins.manager import PluginManager
 # GunGame
 from . import gg_plugins_logger
 from .valid import valid_plugins
-from ..events.included.plugins import GG_Plugin_Unloaded
+from ..events.included.plugins import GG_Plugin_Loaded, GG_Plugin_Unloaded
 from ..teams import team_levels
 
 
@@ -40,39 +40,67 @@ class _GGPluginManager(PluginManager):
     prefix = ''
     logger = gg_plugins_manager_logger
     _base_import_prefix = 'gungame.plugins.'
+    translations = None
 
-    def __missing__(self, plugin_name):
-        """Set the base import path and add the plugin."""
-        if plugin_name not in valid_plugins.all:
+    def set_base_import(self, value):
+        if value not in ('included', 'custom'):
             raise ValueError(
-                'Invalid plugin_name "{plugin_name}".'.format(
-                    plugin_name=plugin_name,
+                'Value must be "included" or "custom" not "{value}".'.format(
+                    value=value,
                 )
             )
-        plugin_type = valid_plugins.get_plugin_type(plugin_name)
-        self._base_import = self._base_import_prefix + plugin_type + '.'
-        return super().__missing__(plugin_name)
+        self._base_import = self._base_import_prefix + value + '.'
 
-    def __delitem__(self, plugin_name):
-        """Unload the plugin and remove it from the dictionary."""
-        # Unload the plugin
-        super().__delitem__(plugin_name)
+    @property
+    def is_team_game(self):
+        return any(team_levels.values())
 
-        # Send a message that the plugin was unloaded
+    def load(self, plugin_name):
+        self.logger.log_message(
+            self.prefix + self.translations[
+                'Loading'
+            ].get_string(plugin=plugin_name)
+        )
+        super().load(plugin_name)
+
+        # Was the plugin unable to be loaded?
+        if plugin_name not in self:
+            self.logger.log_message(
+                self.prefix + self.translations[
+                    'Unable to Load'
+                ].get_string(plugin=plugin_name)
+            )
+            return
+
+        self.logger.log_message(
+            self.prefix + self.translations[
+                'Successful Load'
+            ].get_string(plugin=plugin_name)
+        )
+        with GG_Plugin_Loaded() as event:
+            event.plugin = plugin_name
+            event.plugin_type = valid_plugins.get_plugin_type(plugin_name)
+
+    def unload(self, plugin_name):
+        self.logger.log_message(
+            self.prefix + self.translations[
+                'Unloading'
+            ].get_string(plugin=plugin_name)
+        )
+        super().unload(plugin_name)
+        if plugin_name in self:
+            return
+
         self.logger.log_message(
             self.prefix + self.translations[
                 'Successful Unload'
             ].get_string(plugin=plugin_name)
         )
-
-        # Fire the gg_plugin_unloaded event
         with GG_Plugin_Unloaded() as event:
             event.plugin = plugin_name
-            event.plugin_type = valid_plugins.get_plugin_type(plugin_name)
-
-    @property
-    def is_team_game(self):
-        return any(team_levels.values())
+            event.plugin_type = valid_plugins.get_plugin_type(
+                plugin_name=plugin_name,
+            )
 
     def _remove_modules(self, plugin_name):
         """Remove a plugin and all its modules."""

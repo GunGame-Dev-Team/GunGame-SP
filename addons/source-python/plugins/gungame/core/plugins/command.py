@@ -12,7 +12,6 @@ from translations.strings import LangStrings
 
 # GunGame
 from . import plugin_strings, gg_plugins_logger
-from .instance import GGLoadedPlugin
 from .manager import gg_plugin_manager
 from .queue import plugin_queue
 from .valid import valid_plugins
@@ -46,17 +45,12 @@ command_strings = LangStrings('gungame/sub_commands')
 class _GGSubCommandManager(SubCommandManager):
     """Class used to integrate the "gg" command."""
 
-    manager = gg_plugin_manager
-    instance = GGLoadedPlugin
-    logger = gg_plugins_command_logger
-
     def __init__(self, *args, **kwargs):
         """Initialize the instance and set the queue prefix."""
-        # Call the super class' __init__
         super().__init__(*args, **kwargs)
 
-        # Set the queue's prefix
         plugin_queue.prefix = self.prefix
+        gg_plugin_manager.translations = self.translations
 
     def load_plugin(self, plugin_name, index=None):
         """Load a plugin by name."""
@@ -164,13 +158,7 @@ class _GGSubCommandManager(SubCommandManager):
             'Plugins'
         ].get_string() + '\n' + '=' * 61 + '\n'
 
-        loaded_included = sorted([
-            name for name in self.manager if name in valid_plugins.included
-        ])
-        loaded_custom = sorted([
-            name for name in self.manager if name in valid_plugins.custom
-        ])
-        for plugin_name in loaded_included + loaded_custom:
+        for plugin_name in sorted(self.manager):
 
             # Add the plugin's name to the message
             message += '\n{plugin_name} ({plugin_type}):\n\n'.format(
@@ -278,7 +266,11 @@ class _GGSubCommandManager(SubCommandManager):
             del self.manager[plugin_name]
 
 # Get the "gg" command instance
-gg_command_manager = _GGSubCommandManager('gg')
+gg_command_manager = _GGSubCommandManager(
+    manager=gg_plugin_manager,
+    command='gg',
+    logger=gg_plugins_command_logger,
+)
 
 
 @gg_command_manager.server_sub_command(['plugin', 'load'])
