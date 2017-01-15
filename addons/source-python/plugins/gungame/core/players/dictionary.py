@@ -94,6 +94,7 @@ class _PlayerDictionary(dict):
             self._removed_players[unique_id][attribute] = getattr(
                 self[userid],
                 attribute,
+                player_attributes[attribute]
             )
         self[userid].cancel_protect_delay()
         del self[userid]
