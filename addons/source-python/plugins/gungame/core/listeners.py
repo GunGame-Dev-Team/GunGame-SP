@@ -5,6 +5,9 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Python
+from contextlib import suppress
+
 # Source.Python
 from colors import BLUE, RED, WHITE
 from cvars import ConVar
@@ -14,6 +17,9 @@ from filters.entities import EntityIter
 from listeners import OnLevelInit, OnLevelShutdown
 from listeners.tick import Delay
 from weapons.manager import weapon_manager
+
+# Site-package
+from mutagen import MutagenError
 
 # GunGame
 from .config.misc import (
@@ -339,7 +345,8 @@ def _gg_win(game_event):
 
     # Set the dynamic chat time, if needed
     if dynamic_chat_time.get_bool():
-        ConVar('mp_chattime').set_float(winner_sound.duration)
+        with suppress(MutagenError):
+            ConVar('mp_chattime').set_float(winner_sound.duration)
 
     # End the match to move to the next map
     entity = Entity.find_or_create('game_end')
