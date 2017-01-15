@@ -5,8 +5,10 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Python
+from contextlib import suppress
+
 # Source.Python
-from cvars import ConVar
 from plugins.command import SubCommandManager
 from translations.strings import LangStrings
 
@@ -156,58 +158,52 @@ class _GGSubCommandManager(SubCommandManager):
         # Get header messages
         message = self.prefix + plugin_strings[
             'Plugins'
-        ].get_string() + '\n' + '=' * 61 + '\n'
+        ].get_string() + '\n' + '=' * 61 + '\n\n'
 
         for plugin_name in sorted(self.manager):
+            info = self.manager[plugin_name].info
 
-            # Add the plugin's name to the message
-            message += '\n{plugin_name} ({plugin_type}):\n\n'.format(
+            message += '{plugin_name} ({plugin_type}):\n'.format(
                 plugin_name=plugin_name,
                 plugin_type=valid_plugins.get_plugin_type(plugin_name),
             )
 
-            # Get the plugin's information
-            instance = valid_plugins.all[plugin_name]
+            message += '   title:               {info.verbose_name}\n'
 
-            # Get the description
-            try:
-                description = instance.info.description
-            except KeyError:
-                description = instance.description
+            if info.author is not None:
+                message += '   author:              {info.author}\n'
 
-            # Add the description
-            message += '\tdescription:\n\t\t{description}\n'.format(
-                description=description,
-            )
+            if info.description is not None:
+                message += '   description:         {info.description}\n'
 
-            # Loop through all items in the info
-            for item, value in instance.info.items():
+            if info.version != 'unversioned':
+                message += '   version:             {info.version}\n'
 
-                # Skip the item if it is a LangStrings instance
-                if isinstance(value, LangStrings):
-                    continue
+            if info.url is not None:
+                message += '   url:                 {info.url}\n'
 
-                # Is the value a ConVar?
-                if isinstance(value, ConVar):
-
-                    # Get the ConVar's text
-                    value = '{cvar_name}:\n\t\t\t{help_text}: {value}'.format(
-                        cvar_name=value.name,
-                        help_text=value.help_text,
-                        value=value.get_string(),
-                    )
-
-                # Add the current item to the message
-                message += '\t{item}:\n\t\t{value}\n'.format(
-                    item=item,
-                    value=value,
+            if info.public_convar is not None:
+                message += (
+                    '   public convar:       {info.public_convar.name}\n'
                 )
 
-            # Add 1 blank line between plugins
-            message += '\n'
+            with suppress(KeyError):
+                message += '   required plugins:    {required}\n'.format(
+                    required=','.join(info.required),
+                )
 
-        # Add the ending separator
-        message += '=' * 61
+            with suppress(KeyError):
+                message += '   plugin conflicts:    {conflicts}\n'.format(
+                    conflicts=','.join(info.conflicts),
+                )
+
+            for attr in info.display_in_listing:
+                message += (
+                    '   {name}:'.format(name=attr).ljust(20) +
+                    str(getattr(info, attr)) + '\n'
+                )
+
+            message = message.format(info=info) + '\n'
 
         # Print the message
         self._send_message(message, index)
