@@ -17,7 +17,6 @@ from .info import info
 # =============================================================================
 __all__ = (
     'gravity',
-    'length',
     'levels',
     'speed',
     'tk_attacker_reset',
@@ -31,9 +30,6 @@ __all__ = (
 with GunGameConfigManager(info.name) as _config:
     with _config.cvar('levels', 3) as levels:
         levels.add_text()
-
-    with _config.cvar('length', 10) as length:
-        length.add_text()
 
     with _config.cvar('speed', 150) as speed:
         speed.add_text()

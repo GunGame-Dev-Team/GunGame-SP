@@ -23,7 +23,7 @@ from gungame.core.sounds.manager import sound_manager
 
 # Plugin
 from .configuration import (
-    gravity, length, levels, speed, tk_attacker_reset, tk_victim_reset,
+    gravity, levels, speed, tk_attacker_reset, tk_victim_reset,
 )
 from .custom_events import GG_Multi_Level
 
@@ -55,12 +55,11 @@ class _MultiLevelPlayer(Player):
         self.start_speed = self.speed
         self.gravity = gravity.get_int() / 100
         self.speed = speed.get_int() / 100
-        self.end_time = time() + length.get_float()
         self.give_spark_entity()
         self.delay = Delay(
             delay=self.sound.duration,
-            callback=self.remove_multi_level,
-            kwargs={'from_delay': True},
+            callback=multi_level_manager.__delitem__,
+            args=(self.userid, ),
         )
 
     def give_spark_entity(self):
@@ -73,8 +72,8 @@ class _MultiLevelPlayer(Player):
         entity.origin = self.origin
         entity.start_spark()
 
-    def remove_multi_level(self, from_delay=False):
-        if not from_delay and self.delay is not None:
+    def remove_multi_level(self):
+        if self.delay is not None and self.delay.running:
             self.delay.cancel()
         self.delay = None
         self.gravity = self.start_gravity
@@ -119,10 +118,7 @@ class _MultiLevelManager(dict):
 
     def _tick(self):
         current_gravity = gravity.get_int()
-        for userid, player in list(self.items()):
-            if player.end_time <= time():
-                del self[userid]
-                continue
+        for player in self.values():
             player.gravity = current_gravity
 
 multi_level_manager = _MultiLevelManager()

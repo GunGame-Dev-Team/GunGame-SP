@@ -9,7 +9,7 @@
 from gungame.core.rules.instance import GunGameRules
 
 # Plugin
-from .configuration import length, levels
+from .configuration import levels
 from .info import info
 
 
@@ -17,10 +17,6 @@ from .info import info
 # >> RULES
 # =============================================================================
 multi_level_rules = GunGameRules(info.name)
-multi_level_rules.register_convar_token(
-    token_name='length',
-    convar=length,
-)
 multi_level_rules.register_convar_token(
     token_name='levels',
     convar=levels,
