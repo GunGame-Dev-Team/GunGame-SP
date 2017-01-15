@@ -82,7 +82,7 @@ class GunGameConfigManager(ConfigManager):
             name, default, description, flags, min_value, max_value,
             self.cvar_prefix, self.translations, **tokens
         )
-        self._cvars.add(name)
+        self._cvars.add(section.name)
         self._sections.append(section)
         return section
 
