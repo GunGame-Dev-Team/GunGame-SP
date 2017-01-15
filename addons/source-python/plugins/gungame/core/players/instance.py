@@ -86,7 +86,7 @@ class GunGamePlayer(Player):
     # =========================================================================
     # >> LEVEL FUNCTIONALITY
     # =========================================================================
-    def increase_level(self, levels, reason, victim=0, delay=False):
+    def increase_level(self, levels, reason, victim=0):
         """Increase the player's level by the given amount."""
         if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
             return
@@ -107,16 +107,7 @@ class GunGamePlayer(Player):
         if self.level != new_level:
             return
         self.multi_kill = 0
-        if delay:
-            Delay(
-                delay=0,
-                callback=self._fire_level_up,
-                args=(victim, old_level, new_level, reason)
-            )
-        else:
-            self._fire_level_up(victim, old_level, new_level, reason)
 
-    def _fire_level_up(self, victim, old_level, new_level, reason):
         with GG_Level_Up() as event:
             event.attacker = event.leveler = self.userid
             event.userid = event.victim = victim
@@ -124,7 +115,7 @@ class GunGamePlayer(Player):
             event.new_level = new_level
             event.reason = reason
 
-    def decrease_level(self, levels, reason, attacker=0, delay=False):
+    def decrease_level(self, levels, reason, attacker=0):
         """Decrease the player's level by the given amount."""
         if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
             return
@@ -142,16 +133,7 @@ class GunGamePlayer(Player):
         if self.level != new_level:
             return
         self.multi_kill = 0
-        if delay:
-            Delay(
-                delay=0,
-                callback=self._fire_level_down,
-                args=(attacker, old_level, new_level, reason)
-            )
-        else:
-            self._fire_level_down(attacker, old_level, new_level, reason)
 
-    def _fire_level_down(self, attacker, old_level, new_level, reason):
         with GG_Level_Down() as event:
             event.attacker = attacker
             event.leveler = event.userid = self.userid
