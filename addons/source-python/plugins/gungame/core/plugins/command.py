@@ -182,7 +182,7 @@ class _GGSubCommandManager(SubCommandManager):
             if info.url is not None:
                 message += '   url:                 {info.url}\n'
 
-            if info.public_convar is not None:
+            if info.public_convar:
                 message += (
                     '   public convar:       {info.public_convar.name}\n'
                 )
