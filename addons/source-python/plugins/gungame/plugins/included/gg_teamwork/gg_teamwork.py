@@ -206,8 +206,7 @@ def _send_level_messages(game_event):
 
 @Event('round_end')
 def _sync_player_levels(game_event):
-    for team in teamwork_manager.values():
-        team.set_team_player_levels()
+    Delay(0, _set_player_levels)
 
 
 # =============================================================================
@@ -303,6 +302,11 @@ def pre_gg_win(game_event):
 # =============================================================================
 # >> HELPER FUNCTIONS
 # =============================================================================
+def _set_player_levels():
+    for team in teamwork_manager.values():
+        team.set_team_player_levels()
+
+
 def _fire_win_event(team_number):
     with GG_Team_Win() as event:
         event.winner = team_number
