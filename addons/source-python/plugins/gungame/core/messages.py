@@ -198,7 +198,7 @@ class _MessageManager(dict):
         KeyHintText(message).send(*users, **tokens)
 
     def motd_message(
-        self, panel_type=2, title='',
+        self, panel_type='2', title='',
         message='', visible=True, *users, **tokens
     ):
         """Send a motd message to the given players."""
@@ -214,7 +214,7 @@ class _MessageManager(dict):
             users = (users, )
 
         # Set the sub keys values
-        sub_keys = {'title': title, 'type': panel_type, 'msg': message}
+        sub_keys = {'title': title, 'type': str(panel_type), 'msg': message}
 
         # Send the message to the users
         VGUIMenu('info', sub_keys, visible).send(*users, **tokens)
