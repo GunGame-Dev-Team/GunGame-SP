@@ -86,19 +86,20 @@ def _player_death(game_event):
     required = stopped_count.get_int()
     if player.hostage_stops < required:
         return
-    player.hostage_stops -= required
-    levels = _get_levels_to_increase(player, 'stopped')
-    if not levels:
-        return
-    player.increase_level(
-        levels=levels,
-        reason='hostage_stopped',
-    )
-    player.chat_message(
-        message='HostageObjective:Leveled:Stopped',
-        levels=levels,
-        count=required,
-    )
+    for x in range(int(player.hostage_stops / required)):
+        levels = _get_levels_to_increase(player, 'stopped')
+        if not levels:
+            return
+        player.hostage_stops -= required
+        player.increase_level(
+            levels=levels,
+            reason='hostage_stopped',
+        )
+        player.chat_message(
+            message='HostageObjective:Leveled:Stopped',
+            levels=levels,
+            count=required,
+        )
 
 
 @Event('hostage_killed')
