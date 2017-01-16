@@ -166,3 +166,8 @@ def _reset_team_killers(game_event):
 @Event('player_disconnect')
 def _remove_disconnecting_player(game_event):
     multi_level_manager.delete_disconnecting_player(game_event['userid'])
+
+
+@Event('round_end')
+def _remove_all_multi_levels(game_event):
+    multi_level_manager.clear()
