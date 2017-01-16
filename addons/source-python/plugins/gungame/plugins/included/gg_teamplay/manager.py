@@ -77,7 +77,7 @@ class _TeamManager(object):
 
     def increase_multi_kill(self):
         self.multi_kill += 1
-        if self.level_multi_kill < self.multi_kill:
+        if self.multi_kill < self.level_multi_kill:
             return
         if self.level == weapon_order_manager.max_levels:
             self.declare_winner()
@@ -150,6 +150,7 @@ class _TeamManager(object):
             message += ':MultiKill'
         message_manager.chat_message(
             message=message,
+            index=self.index,
             team=self,
         )
 
