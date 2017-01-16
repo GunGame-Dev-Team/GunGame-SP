@@ -85,7 +85,7 @@ class _TeamManagement(object):
         self._leader = player
         self.leader_userid = None if player is None else player.userid
         if current is None or player is None:
-            team_levels[self.number] = 0
+            team_levels[self.number] = 1
             return
         team_levels[self.number] = player.level
         if current.level < player.level or current.userid == player.userid:
