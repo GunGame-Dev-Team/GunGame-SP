@@ -60,6 +60,12 @@ def _round_start(game_event):
     message_manager.chat_message('Elimination:RoundInfo')
 
 
+@Event('round_end')
+def _round_end(game_event):
+    """Clear the dictionary."""
+    eliminated_players.clear()
+
+
 # =============================================================================
 # >> HELPER FUNCTIONS
 # =============================================================================
