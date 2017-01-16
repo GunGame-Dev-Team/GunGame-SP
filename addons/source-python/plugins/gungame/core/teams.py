@@ -39,7 +39,8 @@ team_levels = _TeamLevels()
 def _retrieve_team_data():
     for _class_name in team_managers:
         for _entity in EntityIter(_class_name):
-            teams_by_number.get(_entity.team, 'un') in ('un', 'spec')
+            if teams_by_number.get(_entity.team, 'un') in ('un', 'spec'):
+                continue
             team_names[_entity.team] = _entity.team_name
             team_levels[_entity.team] = 0
 
