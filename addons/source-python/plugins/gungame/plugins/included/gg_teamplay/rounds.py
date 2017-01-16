@@ -45,5 +45,5 @@ def _increment_winning_team(game_event):
 
 @Event('round_start')
 def _send_level_messages(game_event):
-    for team in team_dictionary:
-        team.send_current_level_message()
+    for instance in team_dictionary.values():
+        instance.send_current_level_message()
