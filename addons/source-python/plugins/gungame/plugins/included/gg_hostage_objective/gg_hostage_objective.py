@@ -109,7 +109,7 @@ def _hostage_killed(game_event):
     min_count = killed_count.get_int()
     if levels < 1 or min_count < 1:
         return
-    attacker = game_event['attacker']
+    attacker = game_event['userid']
     if not attacker:
         return
     player = player_dictionary[attacker]
