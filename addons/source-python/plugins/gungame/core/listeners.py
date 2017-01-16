@@ -464,25 +464,13 @@ def _send_level_info(player):
     # Get the player's language
     language = player.language
 
-    # Get the player's current level information
-    text = message_manager['LevelInfo:Current:Level'].get_string(
-        language,
-        player=player,
-        total=weapon_order_manager.max_levels,
-    )
-
-    # Add the player's weapon information to the message
-    text += message_manager['LevelInfo:Current:Weapon'].get_string(
-        language,
-        player=player,
-    )
-
     # Get the player's current level's multi_kill value
     multi_kill = player.level_multi_kill
 
     # If the multi_kill value is not 1, add the multi_kill to the message
+    kills_text = ''
     if multi_kill > 1:
-        text += message_manager['LevelInfo:Current:Kills'].get_string(
+        kills_text = message_manager['LevelInfo:Current:Kills'].get_string(
             language,
             kills=player.multi_kill,
             total=player.level_multi_kill,
@@ -498,21 +486,23 @@ def _send_level_info(player):
     if leaders is None:
 
         # Add the no leaders text to the message
-        text += message_manager['LevelInfo:Leaders:None'].get_string(language)
+        leaders_text = message_manager[
+            'LevelInfo:Leaders:None'
+        ].get_string(language)
 
     # Is the player the only current leader?
     elif len(leaders) == 1 and player.userid in leaders:
 
         # Add the current leader text to the message
-        text += message_manager[
-            'LevelInfo:Current:Leader'
+        leaders_text = message_manager[
+            'LevelInfo:Leaders:Current'
         ].get_string(language)
 
     # Is the player one of multiple current leaders?
     elif len(leaders) > 1 and player.userid in leaders:
 
         # Add the amongst leaders text to the message
-        text += message_manager[
+        leaders_text = message_manager[
             'LevelInfo:Leaders:Among'
         ].get_string(language)
 
@@ -520,7 +510,7 @@ def _send_level_info(player):
     else:
 
         # Add the current leader text to the message
-        text += message_manager['LevelInfo:Leaders:Level'].get_string(
+        leaders_text = message_manager['LevelInfo:Leaders:Level'].get_string(
             language,
             level=leader_level,
             total=weapon_order_manager.max_levels,
@@ -528,7 +518,13 @@ def _send_level_info(player):
         )
 
     # Send the player's level information message
-    player.hint_message(message=text)
+    player.hint_message(
+        message='LevelInfo:Current',
+        player=player,
+        total=weapon_order_manager.max_levels,
+        kills=kills_text,
+        leader=leaders_text,
+    )
 
 
 def _punish_suicide(userid):
