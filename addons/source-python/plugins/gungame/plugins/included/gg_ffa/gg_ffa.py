@@ -10,13 +10,14 @@ from entities import TakeDamageInfo
 from entities.entity import Entity
 from entities.hooks import EntityCondition, EntityPostHook, EntityPreHook
 from memory import make_object
+from players.entity import Player
 
 
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
 # Store a variable to know whether to revert the team or not
-_revert_team = set()
+_take_damage_dict = dict()
 
 
 # =============================================================================
@@ -24,27 +25,22 @@ _revert_team = set()
 # =============================================================================
 @EntityPreHook(EntityCondition.is_bot_player, 'on_take_damage')
 @EntityPreHook(EntityCondition.is_human_player, 'on_take_damage')
-def _pre_take_damage(args):
+def _pre_take_damage(stack_data):
     """Change the victim's team if they are on the attacker's team."""
-    # Get the TakeDamageInfo object
-    take_damage_info = make_object(TakeDamageInfo, args[1])
-
-    # Get the attacker's instance
+    take_damage_info = make_object(TakeDamageInfo, stack_data[1])
     attacker = Entity(take_damage_info.attacker)
-
-    # If the attacker is not a player, return
     if attacker.classname != 'player':
         return
 
-    # Get the victim's instance
-    victim = make_object(Entity, args[0])
-
-    # If the players are not on the same team, return
+    victim = make_object(Entity, stack_data[0])
     if victim.team != attacker.team:
         return
 
-    # Set the revert variable to know that we need to revert
-    _revert_team.add(victim.team)
+    address = stack_data.registers.esp.address.address
+    if address in _take_damage_dict:
+        return
+
+    _take_damage_dict[address] = (victim.index, victim.team)
 
     # Change the player's team by using the m_iTeamNum property
     victim.team = 5 - victim.team
@@ -52,14 +48,11 @@ def _pre_take_damage(args):
 
 @EntityPostHook(EntityCondition.is_bot_player, 'on_take_damage')
 @EntityPostHook(EntityCondition.is_human_player, 'on_take_damage')
-def _post_take_damage(args, return_value):
+def _post_take_damage(stack_data, return_value):
     """Revert the victim's team if necessary."""
-    # If the victim's team doesn't need reverted, return
-    if not _revert_team:
+    address = stack_data.registers.esp.address.address
+    if address not in _take_damage_dict:
         return
 
-    # Get the victim's instance
-    victim = make_object(Entity, args[0])
-
-    # Revert the player's team by using the m_iTeamNum property
-    victim.team = _revert_team.pop()
+    index, team = _take_damage_dict.pop(address)
+    Entity(index).team = team
