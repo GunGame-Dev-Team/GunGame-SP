@@ -14,6 +14,7 @@ from cvars import ConVar
 from entities.entity import Entity
 from events import Event
 from filters.players import PlayerIter
+from listeners import OnLevelEnd
 from listeners.tick import Delay
 from players.teams import teams_by_number
 
@@ -221,10 +222,6 @@ def _handle_team_win(game_event):
         with suppress(MutagenError):
             ConVar('mp_chattime').set_float(winner_sound.duration)
 
-    team_levels.clear(value=1)
-    for instance in team_dictionary.values():
-        instance.level = 1
-
     # End the match to move to the next map
     entity = Entity.find_or_create('game_end')
     entity.end_game()
@@ -240,3 +237,13 @@ def _level_hook(player, attribute, new_value):
         return
     if team.level != new_value:
         return False
+
+
+# =============================================================================
+# >> LISTENERS
+# =============================================================================
+@OnLevelEnd
+def _reset_team_levels():
+    team_levels.clear(value=1)
+    for instance in team_dictionary.values():
+        instance.level = 1
