@@ -13,7 +13,9 @@ from colors import BLUE, RED, WHITE
 from cvars import ConVar
 from entities.entity import Entity
 from events import Event
+from filters.players import PlayerIter
 from listeners.tick import Delay
+from players.teams import teams_by_number
 
 # Site-package
 from mutagen import MutagenError
@@ -21,6 +23,7 @@ from mutagen import MutagenError
 # GunGame
 from gungame.core.config.misc import dynamic_chat_time
 from gungame.core.messages import message_manager
+from gungame.core.players.attributes import AttributePreHook
 from gungame.core.players.dictionary import player_dictionary
 from gungame.core.sounds.manager import sound_manager
 from gungame.core.status import GunGameMatchStatus, GunGameStatus
@@ -41,6 +44,7 @@ class _TeamManager(object):
         self.level = 1
         self.multi_kill = 0
         self.team_number = team_number
+        self.alias = teams_by_number[self.team_number]
         team_levels[self.team_number] = self.level
 
     @property
@@ -95,6 +99,8 @@ class _TeamManager(object):
         current_level = self.level
         self.level += levels
         team_levels[self.team_number] = self.level
+        for player in PlayerIter(self.alias):
+            player_dictionary[player.userid].increase_level(1, 'teamplay')
         with GG_Team_Level_Up() as event:
             event.team = self.team_number
             event.old_level = current_level
@@ -215,6 +221,22 @@ def _handle_team_win(game_event):
         with suppress(MutagenError):
             ConVar('mp_chattime').set_float(winner_sound.duration)
 
+    team_levels.clear(value=1)
+    for instance in team_dictionary.values():
+        instance.level = 1
+
     # End the match to move to the next map
     entity = Entity.find_or_create('game_end')
     entity.end_game()
+
+
+# =============================================================================
+# >> HOOKS
+# =============================================================================
+@AttributePreHook('level')
+def _level_hook(player, attribute, new_value):
+    team = team_dictionary.get(player.team)
+    if team is None:
+        return
+    if team.level != new_value:
+        return False
