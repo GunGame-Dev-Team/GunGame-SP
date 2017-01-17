@@ -17,6 +17,7 @@ from hooks.exceptions import except_hooks
 from listeners.tick import Delay
 
 # GunGame
+from gungame.core.messages import message_manager
 from gungame.core.plugins.manager import gg_plugin_manager
 from gungame.core.teams import team_levels
 from gungame.core.weapons.manager import weapon_order_manager
@@ -25,7 +26,12 @@ from gungame.core.weapons.manager import weapon_order_manager
 # =============================================================================
 # >> LOAD & UNLOAD
 # =============================================================================
+def load():
+    message_manager.hook_prefix('LevelInfo:')
+
+
 def unload():
+    message_manager.unhook_prefix('LevelInfo:')
     team_levels.clear()
 
 
@@ -121,6 +127,6 @@ def _swap_style(game_event):
 # =============================================================================
 # >> EVENT HOOKS
 # =============================================================================
-@PreEvent('gg_level_up')
+@PreEvent('gg_level_up', 'gg_win')
 def _block_level_up(game_event):
     return EventAction.BLOCK
