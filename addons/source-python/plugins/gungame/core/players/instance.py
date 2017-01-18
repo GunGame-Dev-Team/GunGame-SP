@@ -8,7 +8,9 @@
 # Source.Python
 from colors import WHITE
 from listeners.tick import Delay
+from memory import make_object
 from players.entity import Player
+from weapons.entity import Weapon
 from weapons.manager import weapon_manager
 
 # GunGame
@@ -179,8 +181,11 @@ class GunGamePlayer(Player):
     def give_level_weapon(self):
         """Give the player the weapon of their current level."""
         if self.has_level_weapon():
-            return
-        self.give_named_item(self.level_weapon_classname)
+            return self.get_weapon(self.level_weapon_classname)
+        return make_object(
+            Weapon,
+            self.give_named_item(self.level_weapon_classname)
+        )
 
     # =========================================================================
     # >> MESSAGE FUNCTIONALITY
