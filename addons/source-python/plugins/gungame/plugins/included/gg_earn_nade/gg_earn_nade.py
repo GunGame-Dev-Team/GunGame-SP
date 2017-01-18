@@ -46,9 +46,15 @@ def _earn_nade(game_event):
     if attacker in _recently_off_nade:
         return
 
+    if killer.has_level_weapon():
+        return
+
     weapon = killer.give_level_weapon()
     if auto_switch.get_setting(killer.index):
-        killer.equip_weapon(weapon)
+        killer.client_command(
+            command='use {weapon}'.format(weapon=weapon.classname),
+            server_side=True,
+        )
 
 
 # =============================================================================
