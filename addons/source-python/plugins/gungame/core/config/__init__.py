@@ -8,14 +8,19 @@
 # Python
 from importlib import import_module
 import sys
+from textwrap import TextWrapper
 from warnings import warn
 
 # Site-Package
 from path import Path
 
+# Source.Python
+from engines.server import queue_command_string
+from translations.strings import LangStrings
+
 # GunGame
 from .. import gg_core_logger
-from ..paths import GUNGAME_PLUGINS_PATH
+from ..paths import GUNGAME_PLUGINS_PATH, GUNGAME_CFG_PATH
 from ..plugins.valid import valid_plugins
 
 
@@ -70,3 +75,27 @@ def load_all_configs():
                     error=sys.exc_info()[1]
                 )
             )
+
+    always_loaded = GUNGAME_CFG_PATH / 'gg_plugins.cfg'
+    if not always_loaded.isfile():
+        strings = LangStrings('gungame/plugins')
+        with always_loaded.open('w') as open_file:
+            wrapper = TextWrapper(
+                width=79,
+                initial_indent='// ',
+                subsequent_indent='// ',
+            )
+            text = strings['Plugins:Loaded:Always'].get_string(
+                plugins=', '.join(sorted(valid_plugins.all))
+            )
+            for line in text.splitlines(keepends=True):
+                if line == '\n':
+                    open_file.write(line)
+                    continue
+                for output in wrapper.wrap(line):
+                    open_file.write(output + '\n')
+
+    exec_path = always_loaded.replace(
+        always_loaded.parent.parent.parent, '',
+    )[1:~3].replace('\\', '/')
+    queue_command_string('exec {config}'.format(config=exec_path))
