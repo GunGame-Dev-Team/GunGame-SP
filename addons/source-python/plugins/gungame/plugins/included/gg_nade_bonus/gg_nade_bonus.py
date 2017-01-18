@@ -149,7 +149,7 @@ class _NadeBonusPlayer(object):
             return
 
         self.multi_kill += 1
-        if self.multi_kill < level.multi_kill:
+        if self.multi_kill < level._multi_kill:
             return
         if self.level == order.max_levels:
             mode = bonus_mode.get_int()
@@ -162,6 +162,7 @@ class _NadeBonusPlayer(object):
                     reason='nade_bonus',
                 )
         else:
+            self.multi_kill = 0
             self.level += 1
             self.check_turbo(weapon)
 
@@ -195,8 +196,10 @@ class _NadeBonusPlayer(object):
         )
 
     def _give_weapons(self, weapons):
+        if isinstance(weapons, str):
+            weapons = [weapons]
         for weapon in weapons:
-            self.player.give_named_item(weapon)
+            self.player.give_named_item(weapon_manager[weapon].name)
 
 
 # =============================================================================
