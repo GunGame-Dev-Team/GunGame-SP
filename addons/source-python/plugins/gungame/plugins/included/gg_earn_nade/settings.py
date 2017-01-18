@@ -17,7 +17,12 @@ from .configuration import auto_switch_default
 # =============================================================================
 # TODO: add 2nd argument and translations
 earn_nade_settings = gungame_player_settings.add_section('earn_nade_settings')
+
 # TODO: add 3rd argument and translations
-auto_switch = earn_nade_settings.add_bool_setting(
-    'auto_switch', auto_switch_default.get_bool(),
+# TODO: revert this and make it a bool once SP is updated
+# auto_switch = earn_nade_settings.add_bool_setting(
+#     'auto_switch', auto_switch_default.get_bool(),
+# )
+auto_switch = earn_nade_settings.add_int_setting(
+    'auto_switch', int(auto_switch_default.get_bool()),
 )

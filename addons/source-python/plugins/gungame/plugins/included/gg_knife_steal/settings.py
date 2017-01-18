@@ -17,7 +17,12 @@ from .configuration import auto_switch_default
 # =============================================================================
 # TODO: add 2nd argument and translations
 knife_steal_settings = gungame_player_settings.add_section('knife_steal')
+
 # TODO: add 3rd argument and translations
-auto_switch = knife_steal_settings.add_bool_setting(
-    'auto_switch', auto_switch_default.get_bool(),
+# TODO: revert this and make it a bool once SP is updated
+# auto_switch = knife_steal_settings.add_bool_setting(
+#     'auto_switch', auto_switch_default.get_bool(),
+# )
+auto_switch = knife_steal_settings.add_int_setting(
+    'auto_switch', int(auto_switch_default.get_bool()),
 )
