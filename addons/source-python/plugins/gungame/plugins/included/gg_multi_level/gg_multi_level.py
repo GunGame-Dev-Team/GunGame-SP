@@ -5,13 +5,11 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Python
-from time import time
-
 # Source.Python
 from entities.entity import Entity
 from events import Event
-from listeners import on_tick_listener_manager
+from filters.players import PlayerIter
+from listeners import OnLevelEnd, on_tick_listener_manager
 from listeners.tick import Delay
 from mathlib import Vector
 from players.entity import Player
@@ -20,6 +18,7 @@ from players.entity import Player
 from gungame.core.players.attributes import player_attributes
 from gungame.core.players.dictionary import player_dictionary
 from gungame.core.sounds.manager import sound_manager
+from gungame.core.status import GunGameRoundStatus, GunGameStatus
 
 # Plugin
 from .configuration import (
@@ -89,8 +88,8 @@ class _MultiLevelPlayer(Player):
 class _MultiLevelManager(dict):
     """"""
 
-    def __delitem__(self, userid, disconnecting=False):
-        if not disconnecting:
+    def __delitem__(self, userid, reset_levels=True):
+        if reset_levels:
             player_dictionary[userid].multi_levels = 0
         if userid not in self:
             return
@@ -99,18 +98,21 @@ class _MultiLevelManager(dict):
         if not len(self):
             on_tick_listener_manager.unregister_listener(self._tick)
 
-    def clear(self):
+    def clear(self, silent=False):
+        if silent:
+            super().clear()
+            return
         for userid in list(self):
             del self[userid]
 
     def delete_disconnecting_player(self, userid):
-        self.__delitem__(userid, disconnecting=True)
+        self.__delitem__(userid, reset_levels=False)
 
     def give_multi_level(self, userid):
         if not len(self):
             on_tick_listener_manager.register_listener(self._tick)
         if userid in self:
-            del self[userid]
+            self.__delitem__(userid, reset_levels=False)
         self[userid] = _MultiLevelPlayer.from_userid(userid)
         with GG_Multi_Level() as event:
             event.userid = userid
@@ -129,7 +131,10 @@ multi_level_manager = _MultiLevelManager()
 # =============================================================================
 @Event('gg_level_up')
 def _player_level_up(game_event):
+    if GunGameStatus.ROUND != GunGameRoundStatus.ACTIVE:
+        return
     player = player_dictionary[game_event['leveler']]
+    old = player.multi_levels
     player.multi_levels += 1
     if player.multi_levels >= levels.get_int():
         # Give or increase multi-level
@@ -169,5 +174,15 @@ def _remove_disconnecting_player(game_event):
 
 
 @Event('round_end')
-def _remove_all_multi_levels(game_event):
+def _reset_multi_level(game_event):
     multi_level_manager.clear()
+    for player in PlayerIter():
+        player_dictionary[player.userid].multi_levels = 0
+
+
+# =============================================================================
+# >> LISTENERS
+# =============================================================================
+@OnLevelEnd
+def _clear_multi_level():
+    multi_level_manager.clear(silent=True)
