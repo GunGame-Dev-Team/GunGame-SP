@@ -49,6 +49,8 @@ for file in GUNGAME_BASE_PATH.joinpath('core', 'menus').files():
         )
     )
 
+import_module('gungame.core.rules.command')
+
 for plugin_name in valid_plugins.all:
     plugin_type = valid_plugins.get_plugin_type(plugin_name)
     if GUNGAME_PLUGINS_PATH.joinpath(

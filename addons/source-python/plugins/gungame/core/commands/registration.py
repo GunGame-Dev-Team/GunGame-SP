@@ -22,7 +22,6 @@ from .strings import commands_translations
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
-
 command_dictionary = dict()
 plugin_commands = defaultdict(list)
 
