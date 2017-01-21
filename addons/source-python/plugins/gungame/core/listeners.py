@@ -14,7 +14,7 @@ from cvars import ConVar
 from entities.entity import Entity
 from events import Event
 from filters.entities import EntityIter
-from listeners import OnLevelInit, OnLevelShutdown
+from listeners import OnLevelInit, OnLevelEnd
 from listeners.tick import Delay
 from weapons.manager import weapon_manager
 
@@ -410,8 +410,8 @@ def _level_init(map_name):
     start_match()
 
 
-@OnLevelShutdown
-def _level_shutdown():
+@OnLevelEnd
+def _level_end():
     """Clear the player dictionary on map change."""
     player_dictionary.clear()
 

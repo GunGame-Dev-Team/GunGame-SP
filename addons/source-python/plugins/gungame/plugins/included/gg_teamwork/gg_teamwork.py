@@ -51,12 +51,12 @@ def unload():
 # =============================================================================
 class _TeamManager(dict):
     def clear(self):
-        for team_number in self:
-            self[team_number].reset_values()
+        team_levels.clear()
+        for team in self.values():
+            team.reset_values()
 
 
 class _TeamManagement(object):
-
     def __init__(self, number, alias):
         self.number = number
         self.alias = alias
@@ -104,10 +104,6 @@ class _TeamManagement(object):
     @property
     def color(self):
         return RED if self.number == 2 else BLUE
-
-    def reset_values(self):
-        self.leader = None
-        team_levels.clear()
 
     def set_team_player_levels(self):
         if self.leader_level is None:
@@ -167,6 +163,11 @@ class _TeamManagement(object):
             level=self.leader_level,
             weapon=weapon_order_manager.active[self.leader_level].weapon,
         )
+
+    def reset_values(self):
+        self._leader = None
+        self.level = 1
+
 
 teamwork_manager = _TeamManager({
     number: _TeamManagement(number, alias)
