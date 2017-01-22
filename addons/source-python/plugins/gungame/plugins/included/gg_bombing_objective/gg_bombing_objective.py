@@ -80,20 +80,20 @@ def _get_levels_to_increase(player, reason):
 
     level_increase = 0
 
-    for level_increase in range(base_levels + 1):
+    for level_increase in range(1, base_levels + 1):
         level = player.level + level_increase
         if level > weapon_order_manager.max_levels:
             return level_increase
-        weapon = weapon_order_manager.active[level].weapon
+        skip_weapon = weapon_order_manager.active[level - 1].weapon
         if (
-            (weapon in all_grenade_weapons and not skip_nade) or
-            (weapon in melee_weapons and not skip_knife)
+            (skip_weapon in all_grenade_weapons and not skip_nade) or
+            (skip_weapon in melee_weapons and not skip_knife)
         ):
             player.chat_message(
                 'BombingObjective:NoSkip:{reason}'.format(
                     reason=reason.title()
                 ),
-                weapon=weapon,
+                weapon=skip_weapon,
             )
-            return level_increase
+            return level_increase - 1
     return level_increase
