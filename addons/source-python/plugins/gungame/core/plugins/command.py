@@ -7,6 +7,7 @@
 # =============================================================================
 # Python
 from contextlib import suppress
+from textwrap import TextWrapper
 
 # Source.Python
 from plugins.command import SubCommandManager
@@ -160,52 +161,66 @@ class _GGSubCommandManager(SubCommandManager):
             'Plugins'
         ].get_string() + '\n' + '=' * 61 + '\n\n'
 
+        wrapper = TextWrapper(
+            width=79,
+            initial_indent='',
+            subsequent_indent=' ' * 27,
+        )
+
         for plugin_name in sorted(self.manager):
-            info = self.manager[plugin_name].info
+            plugin_info = self.manager[plugin_name].info
 
             message += '{plugin_name} ({plugin_type}):\n'.format(
                 plugin_name=plugin_name,
                 plugin_type=valid_plugins.get_plugin_type(plugin_name),
             )
 
-            message += '   title:               {info.verbose_name}\n'
+            message += '   title:               {plugin_info.verbose_name}\n'
 
-            if info.author is not None:
-                message += '   author:              {info.author}\n'
+            if plugin_info.author is not None:
+                message += '   author:              {plugin_info.author}\n'
 
-            if info.description is not None:
-                message += '   description:         {info.description}\n'
+            if plugin_info.description is not None:
+                description = wrapper.wrap(
+                    '   description:         {plugin_info.description}'.format(
+                        plugin_info=plugin_info,
+                    )
+                )
+                message += '\n'.join(description) + '\n'
 
-            if info.version != 'unversioned':
-                message += '   version:             {info.version}\n'
+            if plugin_info.version != 'unversioned':
+                message += '   version:             {plugin_info.version}\n'
 
-            if info.url is not None:
-                message += '   url:                 {info.url}\n'
+            if plugin_info.url is not None:
+                message += '   url:                 {plugin_info.url}\n'
 
-            if info.public_convar:
+            if plugin_info.public_convar:
                 message += (
-                    '   public convar:       {info.public_convar.name}\n'
+                    '   public convar:       '
+                    '{plugin_info.public_convar.name}\n'
                 )
 
             with suppress(KeyError):
                 message += '   required plugins:    {required}\n'.format(
-                    required='\n                        '.join(info.required),
+                    required='\n                        '.join(
+                        plugin_info.required
+                    ),
                 )
 
             with suppress(KeyError):
                 message += '   plugin conflicts:    {conflicts}\n'.format(
                     conflicts='\n                        '.join(
-                        info.conflicts,
+                        plugin_info.conflicts,
                     ),
                 )
 
-            for attr in info.display_in_listing:
+            for attr in plugin_info.display_in_listing:
                 message += (
                     '   {name}:'.format(name=attr).ljust(20) +
-                    str(getattr(info, attr)) + '\n'
+                    str(getattr(plugin_info, attr)) + '\n'
                 )
 
-            message = message.format(info=info) + '\n'
+            message = message.format(plugin_info=plugin_info) + '\n'
 
         # Print the message
         self._send_message(message, index)
