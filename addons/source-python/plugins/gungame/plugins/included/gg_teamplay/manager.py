@@ -218,7 +218,7 @@ def _handle_team_win(game_event):
     winner_sound = sound_manager.play_sound('winner')
 
     # Set the dynamic chat time, if needed
-    if dynamic_chat_time.get_bool():
+    if dynamic_chat_time.get_bool() and winner_sound is not None:
         with suppress(MutagenError):
             ConVar('mp_chattime').set_float(winner_sound.duration)
 
