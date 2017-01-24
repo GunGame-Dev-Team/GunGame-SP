@@ -64,6 +64,7 @@ class _SoundManager(defaultdict):
         """Store all default core sounds."""
         super().__init__(default_factory)
         self.defaults = dict()
+        self._sound_hooks = defaultdict(list)
 
     def load_sounds(self):
         """Load all sounds into the dictionary."""
@@ -233,6 +234,39 @@ class _SoundManager(defaultdict):
         # Register the sound with its default value
         self.defaults[sound_name] = default
 
+    def register_hook(self, sound_name, callback):
+        if (
+            sound_name in self._sound_hooks and
+            callback in self._sound_hooks[sound_name]
+        ):
+            raise ValueError(
+                'Hook "{callback}" already registered for '
+                'sound name "{sound_name}".'.format(
+                    callback=callback,
+                    sound_name=sound_name,
+                )
+            )
+        self._sound_hooks[sound_name].append(callback)
+
+    def unregister_hook(self, sound_name, callback):
+        if sound_name not in self._sound_hooks:
+            raise ValueError(
+                'No hooks registered for sound name "{sound_name}".'.format(
+                    sound_name=sound_name,
+                )
+            )
+        if callback not in self._sound_hooks[sound_name]:
+            raise ValueError(
+                'Hook "{callback}" is not registered for '
+                'sound name "{sound_name}".'.format(
+                    callback=callback,
+                    sound_name=sound_name,
+                )
+            )
+        self._sound_hooks[sound_name].remove(callback)
+        if not self._sound_hooks[sound_name]:
+            del self._sound_hooks[sound_name]
+
     def get_sound(self, sound_name):
         """Return the sound from the given name.
 
@@ -257,6 +291,14 @@ class _SoundManager(defaultdict):
                     cvar_name=sound_pack.name,
                 )
             )
+
+        if sound_name in self._sound_hooks:
+            block_sound = False
+            for callback in self._sound_hooks[sound_name]:
+                if callback() is False:
+                    block_sound = True
+            if block_sound:
+                return
 
         # Return the sound if its type is in the chosen sound pack
         if sound_name in self[pack]:
@@ -299,6 +341,8 @@ class _SoundManager(defaultdict):
         :rtype: Sound
         """
         sound = self.get_sound(sound_name)
+        if sound is None:
+            return
         sound.play(*users)
         return sound
 
@@ -310,6 +354,8 @@ class _SoundManager(defaultdict):
         :rtype: Sound
         """
         sound = self.get_sound(sound_name)
+        if sound is None:
+            return
         sound.index = index
         sound.play(*users)
         return sound
