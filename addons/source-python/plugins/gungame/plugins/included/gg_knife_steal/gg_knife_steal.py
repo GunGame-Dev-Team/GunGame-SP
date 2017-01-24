@@ -40,7 +40,8 @@ _knife_classnames = {
 @Event('player_death')
 def _steal_level(game_event):
     """Level up the killer and down the victim on knife kills."""
-    if game_event['weapon'] != 'knife':
+    event_weapon = game_event['weapon']
+    if event_weapon not in melee_weapons:
         return
 
     attacker = game_event['attacker']
@@ -72,7 +73,8 @@ def _steal_level(game_event):
         return
 
     if victim_level == 1 and not level_one_victim.get_bool():
-        killer.chat_message('KnifeSteal:LevelOne')
+        if weapon != event_weapon:
+            killer.chat_message('KnifeSteal:LevelOne')
         return
 
     if weapon in all_grenade_weapons and not skip_nade.get_bool():
