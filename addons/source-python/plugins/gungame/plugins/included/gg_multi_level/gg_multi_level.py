@@ -55,8 +55,9 @@ class _MultiLevelPlayer(Player):
         self.gravity = gravity.get_int() / 100
         self.speed = speed.get_int() / 100
         self.give_spark_entity()
+        duration = 10 if self.sound is None else self.sound.duration
         self.delay = Delay(
-            delay=self.sound.duration,
+            delay=duration,
             callback=multi_level_manager.__delitem__,
             args=(self.userid, ),
         )
@@ -77,7 +78,8 @@ class _MultiLevelPlayer(Player):
         self.delay = None
         self.gravity = self.start_gravity
         self.speed = self.start_speed
-        self.sound.stop(self.index)
+        if self.sound is not None:
+            self.sound.stop(self.index)
         self.remove_spark_entity()
 
     def remove_spark_entity(self):
