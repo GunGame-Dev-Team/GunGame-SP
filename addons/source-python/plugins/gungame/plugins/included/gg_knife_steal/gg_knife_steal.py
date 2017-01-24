@@ -105,6 +105,7 @@ def _steal_level(game_event):
         levels=1,
         reason='steal',
         victim=userid,
+        sound_name='knife_steal',
     )
 
     if victim.level == victim_level - 1 and killer.level == killer_level + 1:
