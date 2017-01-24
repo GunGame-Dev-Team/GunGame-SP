@@ -88,7 +88,10 @@ class _TeamManagement(object):
             team_levels[self.number] = 1
             return
         team_levels[self.number] = player.level
-        if current.level < player.level or current.userid == player.userid:
+        if (
+            (current.level < player.level or current.userid == player.userid)
+            and player.level < weapon_order_manager.max_levels
+        ):
             message_manager.chat_message(
                 message='TeamWork:Leader:Increase',
                 index=self.index,
