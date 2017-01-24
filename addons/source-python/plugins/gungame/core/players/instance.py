@@ -88,7 +88,7 @@ class GunGamePlayer(Player):
     # =========================================================================
     # >> LEVEL FUNCTIONALITY
     # =========================================================================
-    def increase_level(self, levels, reason, victim=0):
+    def increase_level(self, levels, reason, victim=0, sound_name='level_up'):
         """Increase the player's level by the given amount."""
         if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
             return
@@ -109,6 +109,7 @@ class GunGamePlayer(Player):
         if self.level != new_level:
             return
         self.multi_kill = 0
+        self.play_sound(sound_name)
 
         with GG_Level_Up() as event:
             event.attacker = event.leveler = self.userid
@@ -117,7 +118,9 @@ class GunGamePlayer(Player):
             event.new_level = new_level
             event.reason = reason
 
-    def decrease_level(self, levels, reason, attacker=0):
+    def decrease_level(
+        self, levels, reason, attacker=0, sound_name='level_down'
+    ):
         """Decrease the player's level by the given amount."""
         if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
             return
@@ -135,6 +138,7 @@ class GunGamePlayer(Player):
         if self.level != new_level:
             return
         self.multi_kill = 0
+        self.play_sound(sound_name)
 
         with GG_Level_Down() as event:
             event.attacker = attacker

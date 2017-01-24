@@ -350,7 +350,7 @@ def _gg_win(game_event):
     winner_sound = sound_manager.play_sound('winner')
 
     # Set the dynamic chat time, if needed
-    if dynamic_chat_time.get_bool():
+    if dynamic_chat_time.get_bool() and winner_sound is not None:
         with suppress(MutagenError):
             ConVar('mp_chattime').set_float(winner_sound.duration)
 
@@ -380,9 +380,7 @@ def _gg_level_up(game_event):
     """Increase the player leader level and send level info."""
     userid = game_event['leveler']
     leader_manager.player_level_up(userid)
-    player = player_dictionary[userid]
-    player.play_sound('level_up')
-    _send_level_info(player)
+    _send_level_info(player_dictionary[userid])
 
 
 @Event('gg_level_down')
@@ -390,7 +388,6 @@ def _gg_level_down(game_event):
     """Set the player's level in the leader dictionary."""
     userid = game_event['leveler']
     leader_manager.player_level_down(userid)
-    player_dictionary[userid].play_sound('level_down')
 
 
 # =============================================================================
