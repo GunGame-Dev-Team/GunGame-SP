@@ -18,6 +18,8 @@ from .configuration import quick_switch
 @AttributePostHook('level')
 def _post_level_change(player, attribute, new_value, old_value):
     """Give the player their new weapon."""
+    if not new_value:
+        return
     player.strip_weapons()
     player.give_level_weapon()
     if quick_switch.get_int():
