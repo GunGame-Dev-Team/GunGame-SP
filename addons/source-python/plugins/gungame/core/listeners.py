@@ -88,6 +88,9 @@ def _player_spawn(game_event):
     if player.team < 2:
         return
 
+    if not player.level:
+        return
+
     # Spawn protection
     player.give_spawn_protection()
 
