@@ -45,7 +45,14 @@ class _LeaderManager(dict):
     @property
     def leader_level(self):
         """Return the level of the leader."""
-        return max(self.values() or [1])
+        return max(
+            list(
+                filter(
+                    None,
+                    self.values()
+                )
+            ) or [1]
+        )
 
     @property
     def current_leaders(self):
