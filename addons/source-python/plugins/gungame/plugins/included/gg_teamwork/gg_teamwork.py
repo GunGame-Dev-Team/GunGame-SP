@@ -128,7 +128,7 @@ class _TeamManagement(object):
     def find_team_leader(self, leveler=None, old_level=None, disconnect=False):
         team_players = {
             player.level: player for player in player_dictionary.values()
-            if player.team == self.number
+            if player.team == self.number and player.level is not None
         }
         if not team_players:
             self.leader = None
