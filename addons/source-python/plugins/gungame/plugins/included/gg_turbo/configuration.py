@@ -16,6 +16,7 @@ from .info import info
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
+    'multiple_kills',
     'quick_switch',
 )
 
@@ -27,3 +28,6 @@ with GunGameConfigManager(info.name) as _config:
 
     with _config.cvar('quick_switch') as quick_switch:
         quick_switch.add_text()
+
+    with _config.cvar('multiple_kills') as multiple_kills:
+        multiple_kills.add_text()
