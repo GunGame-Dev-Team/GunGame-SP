@@ -123,7 +123,10 @@ class _TeamManagement(object):
             player.multi_kill = 0
 
     def set_joining_player_level(self, player):
-        player.level = self.level if join_team_level.get_int() else 1
+        level = self.level if join_team_level.get_int() else 1
+        if level is None:
+            level = self.level = 1
+        player.level = level
 
     def find_team_leader(self, leveler=None, old_level=None, disconnect=False):
         team_players = {
