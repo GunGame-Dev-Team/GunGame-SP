@@ -120,7 +120,10 @@ class _NadeBonusPlayer(object):
 
     @property
     def is_in_bonus(self):
-        return self.player.level_weapon in all_grenade_weapons
+        try:
+            return self.player.level_weapon in all_grenade_weapons
+        except KeyError:
+            return False
 
     def reset_level(self):
         self.level = 1
