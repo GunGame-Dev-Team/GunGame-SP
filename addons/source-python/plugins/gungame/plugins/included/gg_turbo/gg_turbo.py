@@ -7,6 +7,7 @@
 # =============================================================================
 # Source.Python
 from listeners.tick import Delay
+from players.helpers import userid_from_index
 
 # GunGame
 from gungame.core.players.attributes import AttributePostHook
@@ -27,10 +28,14 @@ def _post_level_change(player, attribute, new_value, old_value):
     if multiple_kills.get_bool():
         _give_level_weapon(player.userid)
     else:
-        Delay(0, _give_level_weapon, (player.userid, ))
+        Delay(0, _give_level_weapon, (player.index, ))
 
 
-def _give_level_weapon(userid):
+def _give_level_weapon(index):
+    try:
+        userid = userid_from_index(index)
+    except ValueError:
+        return
     player = player_dictionary[userid]
     player.strip_weapons()
     player.give_level_weapon()
