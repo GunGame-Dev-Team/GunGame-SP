@@ -2,6 +2,12 @@
 
 """Player attribute functionality."""
 
+# =============================================================================
+# >> IMPORTS
+# =============================================================================
+# Source.Python
+from core import AutoUnload
+
 
 # =============================================================================
 # >> ALL DECLARATION
@@ -144,7 +150,7 @@ attribute_pre_hooks = _AttributeHooks()
 attribute_post_hooks = _AttributeHooks()
 
 
-class _AttributeBase(object):
+class _AttributeBase(AutoUnload):
     """Decorator class used to register callbacks to an attribute."""
 
     def __init__(self, attribute):
