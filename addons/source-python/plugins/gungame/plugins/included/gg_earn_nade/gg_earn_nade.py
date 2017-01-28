@@ -70,4 +70,12 @@ def _pre_level_change(player, attribute, new_value):
         'level': player.level,
         'weapon': player.level_weapon
     }
-    Delay(0, _recently_off_nade.__delitem__, args=(player.userid, ))
+    Delay(0, _safe_remove, args=(player.userid, ))
+
+
+# =============================================================================
+# >> HELPER FUNCTIONS
+# =============================================================================
+def _safe_remove(userid):
+    if userid in _recently_off_nade:
+        del _recently_off_nade[userid]
