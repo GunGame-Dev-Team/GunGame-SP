@@ -84,6 +84,7 @@ def _steal_level(game_event):
                 levels=1,
                 reason='steal',
                 attacker=attacker,
+                sound_name='knife_stolen',
             )
         return
 
@@ -93,6 +94,7 @@ def _steal_level(game_event):
                 levels=1,
                 reason='steal',
                 attacker=attacker,
+                sound_name='knife_stolen',
             )
         return
 
@@ -100,6 +102,7 @@ def _steal_level(game_event):
         levels=1,
         reason='steal',
         attacker=attacker,
+        sound_name='knife_stolen',
     )
     killer.increase_level(
         levels=1,

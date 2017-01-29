@@ -16,3 +16,8 @@ sound_manager.register_sound(
     sound_name='knife_steal',
     default='source-python/gungame/default/smb3_1-up.mp3',
 )
+
+sound_manager.register_sound(
+    sound_name='knife_stolen',
+    default='source-python/gungame/default/smb3_powerdown.mp3',
+)
