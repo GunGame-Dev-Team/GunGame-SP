@@ -12,6 +12,7 @@ from listeners.tick import Delay
 # GunGame
 from gungame.core.players.attributes import AttributePreHook
 from gungame.core.players.dictionary import player_dictionary
+from gungame.core.status import GunGameMatchStatus, GunGameStatus
 from gungame.core.weapons.groups import all_grenade_weapons
 
 # Plugin
@@ -30,6 +31,9 @@ _recently_off_nade = dict()
 # =============================================================================
 @Event('player_death')
 def _earn_nade(game_event):
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+        return
+
     userid = game_event['userid']
     attacker = game_event['attacker']
     if attacker in (userid, 0):

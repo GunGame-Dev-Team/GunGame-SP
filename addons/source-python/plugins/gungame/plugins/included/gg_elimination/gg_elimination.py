@@ -14,9 +14,11 @@ from events import Event
 from listeners.tick import Delay
 
 # GunGame
-from gungame.core.status import GunGameRoundStatus, GunGameStatus
 from gungame.core.messages import message_manager
 from gungame.core.players.dictionary import player_dictionary
+from gungame.core.status import (
+    GunGameMatchStatus, GunGameRoundStatus, GunGameStatus,
+)
 
 
 # =============================================================================
@@ -31,8 +33,12 @@ eliminated_players = defaultdict(set)
 @Event('player_death')
 def _player_death(game_event):
     """Respawn any players the victim killed."""
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+        return
+
     if GunGameStatus.ROUND is GunGameRoundStatus.INACTIVE:
         return
+
     victim = player_dictionary[game_event['userid']]
     Delay(0, _respawn_victims, args=(victim.userid, ))
     attacker = game_event['attacker']
@@ -57,6 +63,9 @@ def _player_death(game_event):
 @Event('round_start')
 def _round_start(game_event):
     """Send the elimination info message."""
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+        return
+
     message_manager.chat_message('Elimination:RoundInfo')
 
 

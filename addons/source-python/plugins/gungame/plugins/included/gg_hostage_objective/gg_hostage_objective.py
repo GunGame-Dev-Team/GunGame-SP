@@ -12,6 +12,7 @@ from filters.entities import EntityIter
 # GunGame
 from gungame.core.players.attributes import player_attributes
 from gungame.core.players.dictionary import player_dictionary
+from gungame.core.status import GunGameMatchStatus, GunGameStatus
 from gungame.core.weapons.groups import all_grenade_weapons, melee_weapons
 from gungame.core.weapons.manager import weapon_order_manager
 
@@ -46,6 +47,9 @@ def unload():
 @Event('hostage_rescued')
 def _hostage_rescued(game_event):
     """Level the rescuer up."""
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+        return
+
     player = player_dictionary[game_event['userid']]
     player.hostage_rescues += 1
     required = rescued_count.get_int()
@@ -69,6 +73,9 @@ def _hostage_rescued(game_event):
 @Event('player_death')
 def _player_death(game_event):
     """Level the stopper up."""
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+        return
+
     victim = player_dictionary[game_event['userid']]
     hostages = len([
         entity for entity in EntityIter('hostage_entity')
@@ -105,6 +112,9 @@ def _player_death(game_event):
 @Event('hostage_killed')
 def _hostage_killed(game_event):
     """Level the killer down."""
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+        return
+
     levels = killed_levels.get_int()
     min_count = killed_count.get_int()
     if levels < 1 or min_count < 1:

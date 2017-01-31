@@ -10,6 +10,7 @@ from events import Event
 
 # GunGame
 from gungame.core.rules.strings import rules_translations
+from gungame.core.status import GunGameMatchStatus, GunGameStatus
 
 # Plugin
 from .manager import team_dictionary
@@ -36,6 +37,9 @@ for _key, _value in rules_translations.items():
 # =============================================================================
 @Event('round_end')
 def _increment_winning_team(game_event):
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+        return
+
     winner = team_dictionary.get(game_event['winner'])
     if winner is None:
         return
@@ -45,5 +49,8 @@ def _increment_winning_team(game_event):
 
 @Event('round_start')
 def _send_level_messages(game_event):
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+        return
+
     for instance in team_dictionary.values():
         instance.send_current_level_message()

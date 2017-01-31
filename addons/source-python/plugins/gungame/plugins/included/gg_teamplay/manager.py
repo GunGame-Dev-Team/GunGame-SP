@@ -171,6 +171,9 @@ team_dictionary = {
 # =============================================================================
 @Event('player_spawn')
 def _send_level_info(game_event):
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+        return
+
     player = player_dictionary[game_event['userid']]
     team = team_dictionary.get(player.team)
     if team is None:

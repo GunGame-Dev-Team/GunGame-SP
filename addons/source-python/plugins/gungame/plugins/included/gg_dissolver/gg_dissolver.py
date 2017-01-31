@@ -17,6 +17,9 @@ from events import Event
 from listeners.tick import Delay
 from players.entity import Player
 
+# GunGame
+from gungame.core.status import GunGameMatchStatus, GunGameStatus
+
 # Plugin
 from .configuration import dissolver_delay, dissolver_type, magnitude
 
@@ -33,6 +36,9 @@ _num_dissolve_types = len(DissolveType.__members__)
 @Event('player_death')
 def dissolve_player_ragdoll(game_event):
     """Dissolve/remove the player's ragdoll on death."""
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+        return
+
     # Get the type of dissolver to use
     current_type = dissolver_type.get_int()
 

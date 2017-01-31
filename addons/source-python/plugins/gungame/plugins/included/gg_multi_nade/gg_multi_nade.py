@@ -14,6 +14,7 @@ from listeners.tick import Delay
 
 # GunGame
 from gungame.core.players.dictionary import player_dictionary
+from gungame.core.status import GunGameMatchStatus, GunGameStatus
 from gungame.core.weapons.groups import all_grenade_weapons
 
 # Plugin
@@ -31,6 +32,9 @@ _nade_count = defaultdict(int)
 # =============================================================================
 @Event('weapon_fire')
 def delay_give_new_weapon(game_event):
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+        return
+
     weapon = game_event['weapon']
     if weapon not in all_grenade_weapons:
         return

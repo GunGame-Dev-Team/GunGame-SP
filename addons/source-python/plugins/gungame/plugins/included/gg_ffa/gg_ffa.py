@@ -10,7 +10,9 @@ from entities import TakeDamageInfo
 from entities.entity import Entity
 from entities.hooks import EntityCondition, EntityPostHook, EntityPreHook
 from memory import make_object
-from players.entity import Player
+
+# GunGame
+from gungame.core.status import GunGameMatchStatus, GunGameStatus
 
 
 # =============================================================================
@@ -27,6 +29,9 @@ _take_damage_dict = dict()
 @EntityPreHook(EntityCondition.is_human_player, 'on_take_damage')
 def _pre_take_damage(stack_data):
     """Change the victim's team if they are on the attacker's team."""
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+        return
+
     take_damage_info = make_object(TakeDamageInfo, stack_data[1])
     attacker = Entity(take_damage_info.attacker)
     if attacker.classname != 'player':

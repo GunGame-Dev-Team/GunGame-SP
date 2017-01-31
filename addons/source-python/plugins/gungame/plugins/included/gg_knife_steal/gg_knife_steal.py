@@ -13,6 +13,7 @@ from weapons.manager import weapon_manager
 # GunGame
 from gungame.core.players.attributes import AttributePreHook
 from gungame.core.players.dictionary import player_dictionary
+from gungame.core.status import GunGameMatchStatus, GunGameStatus
 from gungame.core.weapons.groups import all_grenade_weapons, melee_weapons
 
 # Plugin
@@ -40,6 +41,9 @@ _knife_classnames = {
 @Event('player_death')
 def _steal_level(game_event):
     """Level up the killer and down the victim on knife kills."""
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+        return
+
     event_weapon = game_event['weapon']
     if event_weapon not in melee_weapons:
         return

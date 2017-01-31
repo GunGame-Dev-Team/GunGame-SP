@@ -16,6 +16,7 @@ from players.helpers import userid_from_index
 
 # GunGame
 from gungame.core.players.dictionary import player_dictionary
+from gungame.core.status import GunGameMatchStatus, GunGameStatus
 
 # Plugin
 from .configuration import delay
@@ -111,6 +112,9 @@ deathmatch_players = _DeathMatchPlayers()
 @ClientCommand('jointeam')
 def _jointeam(command, index):
     """Cancel a player's repeat if they join spectators."""
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+        return
+
     # Is the player joining spectators?
     if command[1] != 1:
 
@@ -139,6 +143,9 @@ def _jointeam(command, index):
 @ClientCommand('joinclass')
 def _joinclass(command, index):
     """Hook joinclass to start a player's repeat."""
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+        return
+
     # Get the player's userid
     userid = userid_from_index(index)
 
@@ -155,6 +162,9 @@ def _joinclass(command, index):
 @Event('player_spawn')
 def _player_spawn(game_event):
     """Start bot repeats in case they join mid round."""
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+        return
+
     # Get the player's userid
     userid = game_event['userid']
 
@@ -171,6 +181,9 @@ def _player_spawn(game_event):
 @Event('player_death')
 def _player_death(game_event):
     """Start the player's repeat when they are killed."""
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+        return
+
     # Get the player's userid
     userid = game_event['userid']
 

@@ -12,6 +12,7 @@ from events import Event
 from gungame.core.config.weapon import prop_physics
 from gungame.core.players.dictionary import player_dictionary
 from gungame.core.rules.strings import rules_translations
+from gungame.core.status import GunGameMatchStatus, GunGameStatus
 from gungame.core.weapons.groups import grenade_weapons, melee_weapons
 
 # Plugin
@@ -40,6 +41,9 @@ for _key, _value in rules_translations.items():
 # =============================================================================
 @Event('player_death')
 def _increment_team_multi_kill(game_event):
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+        return
+
     attacker = player_dictionary.get(game_event['attacker'])
     if attacker is None:
         return

@@ -187,6 +187,9 @@ teamwork_manager = _TeamManager({
 # =============================================================================
 @Event('player_team')
 def _check_team_leaders(game_event):
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+        return
+
     userid = game_event['userid']
     old_team_number = game_event['oldteam']
 
@@ -207,12 +210,18 @@ def _check_team_leaders(game_event):
 
 @Event('round_start')
 def _send_level_messages(game_event):
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+        return
+
     for team in teamwork_manager.values():
         team.send_level_message()
 
 
 @Event('round_end')
 def _sync_player_levels(game_event):
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+        return
+
     Delay(0, _set_player_levels)
 
 

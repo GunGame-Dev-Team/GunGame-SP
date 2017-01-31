@@ -17,6 +17,7 @@ from weapons.manager import weapon_manager
 # GunGame
 from gungame.core.players.dictionary import player_dictionary
 from gungame.core.plugins.manager import gg_plugin_manager
+from gungame.core.status import GunGameMatchStatus, GunGameStatus
 from gungame.core.weapons.groups import (
     all_grenade_weapons, all_primary_weapons, all_secondary_weapons,
     all_weapons,
@@ -210,11 +211,17 @@ class _NadeBonusPlayer(object):
 # =============================================================================
 @Event('player_spawn')
 def _give_current_weapon(game_event):
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+        return
+
     nade_bonus_dictionary[game_event['userid']].check_on_spawn()
 
 
 @Event('player_death')
 def _increment_multi_kill(game_event):
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+        return
+
     userid = game_event['userid']
     attacker = game_event['attacker']
 
