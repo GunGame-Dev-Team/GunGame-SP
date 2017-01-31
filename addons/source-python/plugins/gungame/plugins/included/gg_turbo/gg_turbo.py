@@ -26,7 +26,7 @@ def _post_level_change(player, attribute, new_value, old_value):
     if not new_value:
         return
     if multiple_kills.get_bool():
-        _give_level_weapon(player.userid)
+        _give_level_weapon(player.index)
     else:
         Delay(0, _give_level_weapon, (player.index, ))
 
