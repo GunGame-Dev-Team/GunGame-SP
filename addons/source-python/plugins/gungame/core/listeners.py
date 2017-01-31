@@ -34,7 +34,7 @@ from .config.weapon import (
     order_file, order_randomize, multi_kill_override, prop_physics
 )
 from .credits import gungame_credits
-from .events.included.match import GG_Start
+from .events.included.match import GG_Map_End, GG_Start
 from .leaders import leader_manager
 from .messages import message_manager
 from .players.attributes import AttributePostHook
@@ -247,11 +247,16 @@ def _player_team(game_event):
 
 @Event('weapon_fire')
 def _weapon_fire(game_event):
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+        return
+
     if not cancel_on_fire.get_int():
         return
+
     player = player_dictionary[game_event['userid']]
     if not player.in_spawn_protection:
         return
+
     if cancel_on_fire.get_int():
         player.remove_spawn_protection()
 
@@ -414,6 +419,9 @@ def _level_init(map_name):
 def _level_end():
     """Clear the player dictionary on map change."""
     player_dictionary.clear()
+
+    if GunGameStatus.MATCH is not GunGameMatchStatus.POST:
+        GG_Map_End().fire()
 
 
 # =============================================================================
