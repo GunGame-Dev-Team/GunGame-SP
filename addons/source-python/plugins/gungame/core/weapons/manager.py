@@ -50,7 +50,6 @@ class _WeaponOrderManager(dict):
         self._order = None
         self.randomize = False
         self._delay = None
-        self._print_delay = None
 
         # Create the default files
         create_default_weapon_orders()
@@ -113,18 +112,9 @@ class _WeaponOrderManager(dict):
         self.restart_game()
 
     def print_order(self):
-        """Delay 1 tick to print the current weapon order."""
-        # Cancel the delay if it is active
-        if self._print_delay is not None:
-            self._print_delay.cancel()
-
-        # Print the order in 1 tick
-        self._print_delay = Delay(0.2, self._print_order)
-
-    def _print_order(self):
         """Print the current weapon order."""
-        # Reset the delay
-        self._print_delay = None
+        if GunGameStatus.MATCH != GunGameMatchStatus.ACTIVE:
+            return
 
         # Set the prefix
         prefix = '[GunGame]'
