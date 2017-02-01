@@ -17,13 +17,11 @@ from .manager import GunGameConfigManager
 # =============================================================================
 __all__ = (
     'enabled',
-    'end_config',
     'max_extensions',
     'min_players',
     'players_reached',
-    'start_config',
-    'time',
-    'weapon',
+    'warmup_time',
+    'warmup_weapon',
 )
 
 
@@ -36,11 +34,11 @@ with GunGameConfigManager('warmup') as _config:
 
     with _config.cvar(
         'weapon', 'hegrenade', flags=ConVarFlags.NOTIFY,
-    ) as weapon:
-        weapon.add_text()
+    ) as warmup_weapon:
+        warmup_weapon.add_text()
 
-    with _config.cvar('time', 30) as time:
-        time.add_text()
+    with _config.cvar('time', 30) as warmup_time:
+        warmup_time.add_text()
 
     with _config.cvar('min_players', 4) as min_players:
         min_players.add_text()
@@ -50,9 +48,3 @@ with GunGameConfigManager('warmup') as _config:
 
     with _config.cvar('players_reached') as players_reached:
         players_reached.add_text()
-
-    with _config.cvar('start_config', '') as start_config:
-        start_config.add_text()
-
-    with _config.cvar('end_config', '') as end_config:
-        end_config.add_text()

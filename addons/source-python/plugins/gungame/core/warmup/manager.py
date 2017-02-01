@@ -1,4 +1,4 @@
-# ../gungame/core/warmup.py
+# ../gungame/core/warmup/manager.py
 
 """GunGame Warmup Round functionality."""
 
@@ -11,20 +11,20 @@ from random import shuffle
 from warnings import warn
 
 # Source.Python
-from engines.server import engine_server
 from filters.players import PlayerIter
 from listeners.tick import Repeat
+from weapons.manager import weapon_manager
 
 # GunGame
-from .config.warmup import (
-    weapon as warmup_weapon, time as warmup_time, min_players, max_extensions,
-    players_reached, start_config, end_config,
+from . import listeners
+from ..config.warmup import (
+    warmup_weapon, warmup_time, min_players, max_extensions, players_reached,
 )
-from .messages import message_manager
-from .sounds.manager import sound_manager
-from .status import GunGameMatchStatus, GunGameStatus
-from .weapons.groups import all_weapons, melee_weapons
-from .weapons.manager import weapon_order_manager
+from ..messages import message_manager
+from ..sounds.manager import sound_manager
+from ..status import GunGameMatchStatus, GunGameStatus
+from ..weapons.groups import all_weapons, melee_weapons
+from ..weapons.manager import weapon_order_manager
 
 
 # =============================================================================
@@ -53,7 +53,7 @@ class _WarmupManager(object):
 
     def __init__(self):
         """Store the base attributes."""
-        self.repeat = Repeat(self._countdown)
+        self.repeat = Repeat(self.countdown)
         self.extensions = 0
         self.warmup_time = 0
         self.weapon = None
@@ -68,7 +68,7 @@ class _WarmupManager(object):
         if current in _possible_weapons:
 
             # Set the weapon cycle to include just the weapon
-            self._weapon_cycle = cycle([current])
+            self.weapon_cycle = cycle([current])
             return
 
         # Are all weapons supposed to be used at random?
@@ -77,7 +77,7 @@ class _WarmupManager(object):
             # Set the weapon cycle to a randomized list of all weapons
             weapons = list(_possible_weapons)
             shuffle(weapons)
-            self._weapon_cycle = cycle(weapons)
+            self.weapon_cycle = cycle(weapons)
             return
 
         # Is the value a list of weapons?
@@ -90,22 +90,19 @@ class _WarmupManager(object):
                 ) if weapon in _possible_weapons
             ]
             if len(weapons):
-                self._weapon_cycle = cycle(weapons)
+                self.weapon_cycle = cycle(weapons)
                 return
 
         # Store the weapon cycle as the first weapon in the active weapon order
-        self._weapon_cycle = cycle([weapon_order_manager.active[1].weapon])
+        self.weapon_cycle = cycle([weapon_order_manager.active[1].weapon])
 
     def start_warmup(self):
         """Start warmup round."""
-        # Reset the extensions used
-        self._extensions = 0
-
-        # Get the amount of time for warmup
-        self._warmup_time = warmup_time.get_int()
+        self.extensions = 0
+        self.warmup_time = warmup_time.get_int()
 
         # Was an invalid value given?
-        if self._warmup_time <= 0:
+        if self.warmup_time <= 0:
             warn(
                 '"gg_warmup_time" is set to an invalid number.'
                 '  Skipping warmup round.'
@@ -113,52 +110,33 @@ class _WarmupManager(object):
             self.end_warmup()
             return
 
-        # Get the configuration to call on warmup start
-        current = start_config.get_string()
-
-        # Is a configuration file supposed to be called?
-        if current:
-
-            # Call the start configuration
-            engine_server.server_command(
-                'exec {config};'.format(
-                    config=current,
-                )
-            )
+        if self.weapon_cycle is None:
+            self.set_warmup_weapon()
 
         # Get the warmup weapon
-        self._find_warmup_weapon()
+        self.get_current_warmup_weapon()
 
         # Set the match status
         GunGameStatus.MATCH = GunGameMatchStatus.WARMUP
 
-        # TODO: Give warmup weapon
-
         # Start the warmup repeat
-        self.repeat.start(1, self._warmup_time)
+        self.repeat.start(1, self.warmup_time)
+
+        listeners.load()
 
     @staticmethod
     def end_warmup():
         """End warmup and start the match."""
-        # TODO: Call start match
-        # Get the configuration to call on warmup end
-        current = end_config.get_string()
+        listeners.unload()
+        from ..listeners import start_match
+        GunGameStatus.MATCH = GunGameMatchStatus.INACTIVE
+        start_match(ending_warmup=True)
 
-        # Is a configuration file supposed to be called?
-        if current:
-
-            # Call the end configuration
-            engine_server.server_command(
-                'exec {config};'.format(
-                    config=current,
-                )
-            )
-
-    def _find_warmup_weapon(self):
+    def get_current_warmup_weapon(self):
         """Return the next weapon in the warmup cycle."""
-        self._weapon = next(self.weapon_cycle)
+        self.weapon = next(self.weapon_cycle)
 
-    def _countdown(self):
+    def countdown(self):
         """Determine what to do once a second during warmup."""
         # Get the remaining time for warmup
         remaining = self.repeat.loops_remaining
@@ -201,8 +179,8 @@ class _WarmupManager(object):
                 )
 
                 # Extend the warmup round
-                self._extensions += 1
-                self.repeat.extend(self._warmup_time)
+                self.extensions += 1
+                self.repeat.extend(self.warmup_time)
                 return
 
         message_manager.center_message(
@@ -211,7 +189,7 @@ class _WarmupManager(object):
         )
 
         if remaining <= 5:
-            sound_manager.play_sound('countdown')
+            sound_manager.play_sound('count_down')
 
 # Get the _WarmupManager instance
 warmup_manager = _WarmupManager()

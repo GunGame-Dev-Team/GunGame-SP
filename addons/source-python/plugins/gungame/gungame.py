@@ -28,7 +28,6 @@ from .core.rules import define_all_rules
 from .core.settings import register_player_settings
 from .core.sounds import register_all_sounds
 from .core.status import GunGameMatchStatus, GunGameStatus
-from .core.warmup import warmup_manager
 from .core.weapons.manager import weapon_order_manager
 
 
@@ -167,9 +166,6 @@ def load():
 
     # Set the starting weapon convars
     weapon_order_manager.set_start_convars()
-
-    # Set the warmup weapon
-    warmup_manager.set_warmup_weapon()
 
     # Set the match status to inactive now that the loading process is complete
     GunGameStatus.MATCH = GunGameMatchStatus.INACTIVE

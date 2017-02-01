@@ -11,6 +11,7 @@ from contextlib import suppress
 # Source.Python
 from colors import BLUE, RED, WHITE
 from cvars import ConVar
+from engines.server import queue_command_string
 from entities.entity import Entity
 from events import Event
 from filters.entities import EntityIter
@@ -29,7 +30,7 @@ from .config.misc import (
 from .config.punishment import (
     level_one_team_kill, suicide_punish, team_kill_punish,
 )
-from .config.warmup import enabled as warmup_enabled, weapon as warmup_weapon
+from .config.warmup import enabled as warmup_enabled, warmup_weapon
 from .config.weapon import (
     order_file, order_randomize, multi_kill_override, prop_physics
 )
@@ -41,7 +42,7 @@ from .players.attributes import AttributePostHook
 from .players.dictionary import player_dictionary
 from .sounds.manager import sound_manager
 from .status import GunGameMatchStatus, GunGameRoundStatus, GunGameStatus
-from .warmup import warmup_manager
+from .warmup.manager import warmup_manager
 from .weapons.groups import melee_weapons
 from .weapons.manager import weapon_order_manager
 
@@ -293,26 +294,18 @@ def _server_cvar(game_event):
 
     # Did the weapon order change?
     if cvarname == order_file.name:
-
-        # Set the new weapon order
         weapon_order_manager.set_active_weapon_order(cvarvalue)
 
     # Did the randomize value change?
     elif cvarname == order_randomize.name:
-
-        # Set the randomize value
         weapon_order_manager.set_randomize(cvarvalue)
 
     # Did the multi_kill override value change?
     elif cvarname == multi_kill_override.name:
-
-        # Print out the new weapon order
         weapon_order_manager.print_order()
 
     # Did the warmup weapon change?
     elif cvarname == warmup_weapon.name:
-
-        # Set the new warmup weapon
         warmup_manager.set_warmup_weapon()
 
 
@@ -451,20 +444,18 @@ def _post_multi_kill(player, attribute, new_value, old_value):
 # =============================================================================
 # >> HELPER FUNCTIONS
 # =============================================================================
-def start_match():
+def start_match(ending_warmup=False):
     """Start the match if not already started or on hold."""
     # Is warmup supposed to happen?
-    if warmup_enabled.get_int():
-
-        # Start warmup
+    if not ending_warmup and warmup_enabled.get_bool():
         warmup_manager.start_warmup()
         return
 
     # Is the match supposed to start?
-    if GunGameStatus.MATCH is GunGameMatchStatus.INACTIVE:
-
-        # Start the match
-        GG_Start().fire()
+    if GunGameStatus.MATCH is not GunGameMatchStatus.INACTIVE:
+        return
+    queue_command_string('mp_restartgame 1')
+    GG_Start().fire()
 
 
 def _send_level_info(player):
