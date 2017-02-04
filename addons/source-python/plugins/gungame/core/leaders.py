@@ -69,7 +69,7 @@ class _LeaderManager(dict):
 
     def is_leading(self, userid):
         """Return whether the given player is a leader or not."""
-        return self[userid] == self.leader_level != 1
+        return self.get(userid) == self.leader_level != 1
 
     def add_player(self, userid):
         """Add the player to the dictionary."""
