@@ -38,3 +38,4 @@ class _NoMessage(object):
 # Set the overrides
 message_manager.hud_message = _NoMessage('HudMsg')._message_hook
 message_manager.top_message = _NoMessage('DialogMsg')._message_hook
+message_manager.center_message = message_manager.hint_message
