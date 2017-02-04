@@ -13,7 +13,6 @@ from warnings import warn
 # Source.Python
 from filters.players import PlayerIter
 from listeners.tick import Repeat
-from weapons.manager import weapon_manager
 
 # GunGame
 from . import listeners
@@ -98,6 +97,8 @@ class _WarmupManager(object):
 
     def start_warmup(self):
         """Start warmup round."""
+        if GunGameStatus.MATCH == GunGameMatchStatus.WARMUP:
+            return
         self.extensions = 0
         self.warmup_time = warmup_time.get_int()
 

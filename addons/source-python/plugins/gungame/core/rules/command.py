@@ -39,10 +39,6 @@ def send_rules(index):
     for plugin_name in sorted(loaded_plugins):
         menu.append(PagedOption(rules_translations[plugin_name], plugin_name))
     menu.send(index)
-    # for x, y in all_gungame_rules.items():
-    #     print(x)
-    #     for z in y:
-    #         print('\t', z)
 
 
 def _send_plugin_rules(parent_menu, index, choice):
