@@ -37,7 +37,9 @@ def send_leaders_menu(index):
     """Send the leaders menu to the player."""
     menu = PagedMenu(title=menu_strings['Leader:Current'])
     language = Player(index).language
-    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+    if GunGameStatus.MATCH is GunGameMatchStatus.WARMUP:
+        menu.append(menu_strings['Warmup'])
+    elif GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         menu.append(menu_strings['Inactive'])
     elif gg_plugin_manager.is_team_game:
         menu.append(menu_strings['Leader:Team'])

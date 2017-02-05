@@ -33,7 +33,9 @@ __all__ = (
 def send_weapons_menu(index):
     """Send the weapon menu to the player."""
     menu = PagedMenu(title=menu_strings['Weapons:Title'])
-    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+    if GunGameStatus.MATCH is GunGameMatchStatus.WARMUP:
+        menu.append(menu_strings['Warmup'])
+    elif GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         menu.append(menu_strings['Inactive'])
     else:
         player = player_dictionary[userid_from_index(index)]

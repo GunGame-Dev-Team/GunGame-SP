@@ -35,7 +35,9 @@ def send_score_menu(index):
     """Send the score menu to the player."""
     menu = PagedMenu(title=menu_strings['Score:Title'])
     player = Player(index)
-    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+    if GunGameStatus.MATCH is GunGameMatchStatus.WARMUP:
+        menu.append(menu_strings['Warmup'])
+    elif GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         menu.append(menu_strings['Inactive'])
     elif gg_plugin_manager.is_team_game:
         for team in sorted(
