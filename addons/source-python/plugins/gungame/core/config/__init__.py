@@ -77,23 +77,32 @@ def load_all_configs():
             )
 
     always_loaded = GUNGAME_CFG_PATH / 'gg_plugins.cfg'
-    if not always_loaded.isfile():
-        strings = LangStrings('gungame/plugins')
-        with always_loaded.open('w') as open_file:
-            wrapper = TextWrapper(
-                width=79,
-                initial_indent='// ',
-                subsequent_indent='// ',
-            )
-            text = strings['Plugins:Loaded:Always'].get_string(
-                plugins=', '.join(sorted(valid_plugins.all))
-            )
-            for line in text.splitlines(keepends=True):
-                if line == '\n':
-                    open_file.write(line)
-                    continue
-                for output in wrapper.wrap(line):
-                    open_file.write(output + '\n')
+    contents = []
+    if always_loaded.isfile():
+        with always_loaded.open() as open_file:
+            contents = open_file.read()
+        contents = [
+            line for line in contents.splitlines()
+            if line and not line.startswith('// ')
+        ]
+    strings = LangStrings('gungame/plugins')
+    with always_loaded.open('w') as open_file:
+        wrapper = TextWrapper(
+            width=79,
+            initial_indent='// ',
+            subsequent_indent='// ',
+        )
+        text = strings['Plugins:Loaded:Always'].get_string(
+            plugins=', '.join(sorted(valid_plugins.all))
+        )
+        for line in text.splitlines(keepends=True):
+            if line == '\n':
+                open_file.write(line)
+                continue
+            for output in wrapper.wrap(line):
+                open_file.write(output + '\n')
+        for line in contents:
+            open_file.write(line + '\n')
 
     exec_path = always_loaded.replace(
         always_loaded.parent.parent.parent, '',
