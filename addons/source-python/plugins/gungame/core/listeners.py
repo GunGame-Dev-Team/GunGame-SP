@@ -68,6 +68,8 @@ _melee_weapon = weapon_manager[
     'knife' if 'knife' in melee_weapons else melee_weapons[0]
 ].name
 
+_spawning_users = set()
+
 
 # =============================================================================
 # >> PLAYER GAME EVENTS
@@ -92,6 +94,12 @@ def _player_spawn(game_event):
     if not player.level:
         return
 
+    if player.userid in _spawning_users:
+        return
+
+    _spawning_users.add(player.userid)
+    Delay(0, _spawning_users.remove, (player.userid, ))
+
     # Spawn protection
     player.give_spawn_protection()
 
@@ -106,7 +114,9 @@ def _player_spawn(game_event):
     # Give player armor, if necessary
     armor_type = {1: 'kevlar', 2: 'assaultsuit'}.get(give_armor.get_int())
     if armor_type is not None:
-        equip = Entity.find_or_create('game_player_equip')
+        for entity in EntityIter('game_player_equip'):
+            entity.remove()
+        equip = Entity.create('game_player_equip')
         equip.add_output('{weapon} 1'.format(weapon=_melee_weapon))
         equip.add_output(
             'item_{armor_type} 1'.format(
@@ -454,6 +464,7 @@ def start_match(ending_warmup=False):
     # Is the match supposed to start?
     if GunGameStatus.MATCH is not GunGameMatchStatus.INACTIVE:
         return
+
     queue_command_string('mp_restartgame 1')
     GG_Start().fire()
 
