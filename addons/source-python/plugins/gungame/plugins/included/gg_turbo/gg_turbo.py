@@ -23,7 +23,7 @@ from .configuration import multiple_kills, quick_switch
 @AttributePostHook('level')
 def _post_level_change(player, attribute, new_value, old_value):
     """Give the player their new weapon."""
-    if not new_value:
+    if not new_value or not old_value:
         return
     if multiple_kills.get_bool():
         _give_level_weapon(player.index)
