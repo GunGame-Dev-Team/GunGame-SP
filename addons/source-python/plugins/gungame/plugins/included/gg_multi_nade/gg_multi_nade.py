@@ -31,7 +31,7 @@ _nade_count = defaultdict(int)
 # >> GAME EVENTS
 # =============================================================================
 @Event('weapon_fire')
-def delay_give_new_weapon(game_event):
+def _delay_give_new_weapon(game_event):
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         return
 
@@ -51,11 +51,11 @@ def delay_give_new_weapon(game_event):
     value = max_nades.get_int()
     if not value or _nade_count[player.userid] < value:
         # TODO: adjust this delay value
-        Delay(1, give_new_weapon, (player.userid, weapon))
+        Delay(1, _give_new_weapon, (player.userid, weapon))
 
 
 @Event('player_spawn', 'gg_level_up')
-def reset_player_count(game_event):
+def _reset_player_count(game_event):
     userid = game_event['userid']
     if userid in _nade_count:
         del _nade_count[userid]
@@ -64,7 +64,7 @@ def reset_player_count(game_event):
 # =============================================================================
 # >> HELPER FUNCTIONS
 # =============================================================================
-def give_new_weapon(userid, weapon):
+def _give_new_weapon(userid, weapon):
     try:
         player = player_dictionary[userid]
     except ValueError:

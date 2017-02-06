@@ -83,6 +83,7 @@ class GunGamePlayer(Player):
 
     @property
     def unique_id(self):
+        """Return the player's unique id."""
         return self.uniqueid
 
     # =========================================================================
@@ -162,9 +163,11 @@ class GunGamePlayer(Player):
 
     @property
     def level_weapon_classname(self):
+        """Return the classname of the player's current level weapon."""
         return weapon_manager[self.level_weapon].name
 
     def strip_weapons(self, strip_grenades=False):
+        """Strip weapons from the player."""
         not_filters = {'melee', 'objective', 'tool'}
         if not strip_grenades:
             not_filters |= {'grenade'}
@@ -177,6 +180,7 @@ class GunGamePlayer(Player):
             weapon.remove()
 
     def has_level_weapon(self):
+        """Return whether or not the player has their level weapon."""
         for weapon in self.weapons():
             if weapon.classname == self.level_weapon_classname:
                 return True
@@ -241,6 +245,7 @@ class GunGamePlayer(Player):
     # >> SPAWN PROTECT FUNCTIONALITY
     # =========================================================================
     def give_spawn_protection(self):
+        """Give the player spawn protection."""
         delay = spawn_protection.get_float()
         if delay <= 0:
             return
@@ -254,12 +259,14 @@ class GunGamePlayer(Player):
         )
 
     def remove_spawn_protection(self, from_delay=False):
+        """Remove the player's spawn protection."""
         self.cancel_protect_delay(from_delay)
         self.godmode = False
         self.color = self.color.with_alpha(255)
         self.in_spawn_protection = False
 
     def cancel_protect_delay(self, from_delay=False):
+        """Cancel the player's spawn protection delay."""
         if self._protect_delay is None:
             return
         if not from_delay:

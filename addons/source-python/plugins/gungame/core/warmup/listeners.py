@@ -1,6 +1,6 @@
 # ../gungame/core/warmup/listeners.py
 
-""""""
+"""Listener functions for warmup."""
 
 # =============================================================================
 # >> IMPORTS
@@ -27,6 +27,7 @@ from ..weapons.groups import all_grenade_weapons
 # >> LOAD & UNLOAD
 # =============================================================================
 def load():
+    """Register all warmup listeners."""
     event_manager.register_for_event('player_death', _player_death)
     event_manager.register_for_event('weapon_fire', _weapon_fire)
     event_manager.register_for_event('player_spawn', _player_spawn)
@@ -36,6 +37,7 @@ def load():
 
 
 def unload():
+    """Unregister all warmup listeners."""
     event_manager.unregister_for_event('player_death', _player_death)
     event_manager.unregister_for_event('weapon_fire', _weapon_fire)
     event_manager.unregister_for_event('player_spawn', _player_spawn)

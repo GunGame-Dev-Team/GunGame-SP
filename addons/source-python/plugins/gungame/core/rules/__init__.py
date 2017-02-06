@@ -31,12 +31,15 @@ __all__ = (
 # >> CLASSES
 # =============================================================================
 class _GunGameRulesDictionary(OrderedDict):
+    """Class used to store all rules."""
 
     def __init__(self):
+        """Create the dictionary and set the header."""
         super().__init__()
         self.header = rules_translations['Rules:Header']
 
     def get_rules(self, player):
+        """Return all rules in a string."""
         language = player.language
         message = ''
         for plugin_name, rules in self.items():
@@ -68,6 +71,7 @@ all_gungame_rules = _GunGameRulesDictionary()
 # >> FUNCTIONS
 # =============================================================================
 def define_all_rules():
+    """Find and store all rules."""
     # Loop through all plugins
     for plugin_name in valid_plugins.all:
         plugin_type = valid_plugins.get_plugin_type(plugin_name)

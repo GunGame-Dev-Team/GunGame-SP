@@ -30,7 +30,10 @@ plugin_commands = defaultdict(list)
 # >> CLASSES
 # =============================================================================
 class _RegisteredCommand(object):
+    """Class that handles registering of commands."""
+
     def __init__(self, name, text, callback):
+        """Store the commands to be registered."""
         self.name = self.commands = name
         self.callback = callback
         module = self.callback.__module__
@@ -93,6 +96,7 @@ class _RegisteredCommand(object):
 # >> DECORATOR FUNCTIONS
 # =============================================================================
 def register_command_callback(name, text):
+    """Decorator used to register/unregister commands."""
     if name in command_dictionary:
         raise ValueError(
             'Command type "{name}" is already registered.'.format(
@@ -137,6 +141,7 @@ def _send_command_menu(command, index, team_only=None):
 # =============================================================================
 @Event('gg_plugin_loaded')
 def _register_commands(game_event):
+    """Register commands for the loaded plugin."""
     plugin = game_event['plugin']
     if plugin not in plugin_commands:
         return
@@ -145,7 +150,8 @@ def _register_commands(game_event):
 
 
 @Event('gg_plugin_unloaded')
-def _register_commands(game_event):
+def _unregister_commands(game_event):
+    """Unregister commands for the unloaded plugin."""
     plugin = game_event['plugin']
     if plugin not in plugin_commands:
         return

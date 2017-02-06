@@ -22,7 +22,10 @@ __all__ = (
 # >> CLASSES
 # =============================================================================
 class GunGameRules(dict):
+    """Class used to store rules."""
+
     def __init__(self, plugin_name):
+        """Create the rules."""
         if plugin_name in all_gungame_rules:
             raise ValueError(
                 'Plugin "{plugin_name}" already registered with rules.'.format(
@@ -35,6 +38,7 @@ class GunGameRules(dict):
         all_gungame_rules[plugin_name] = self
 
     def register_rule(self, name, value):
+        """Register the given rule."""
         if name in self:
             raise ValueError(
                 'Rule "{name}" already registered.'.format(
@@ -44,6 +48,7 @@ class GunGameRules(dict):
         self[name] = value
 
     def unregister_rule(self, name):
+        """Unregister the given rule."""
         if name not in self:
             raise ValueError(
                 'Rule "{name}" is not registered.'.format(
@@ -53,6 +58,7 @@ class GunGameRules(dict):
         del self[name]
 
     def register_all_rules(self):
+        """Register all rules from the translation file."""
         for key, value in rules_translations.items():
             if key.startswith('{title}:'.format(title=self.title)):
                 self.register_rule(
@@ -61,6 +67,7 @@ class GunGameRules(dict):
                 )
 
     def register_convar_token(self, token_name, convar, convar_type='int'):
+        """Register the given ConVar token."""
         if token_name in self.convar_tokens:
             raise ValueError(
                 'Token name "{token_name}" already registered.'.format(

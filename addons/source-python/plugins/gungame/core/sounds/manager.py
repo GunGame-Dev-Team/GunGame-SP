@@ -80,7 +80,8 @@ class _SoundManager(defaultdict):
                 # Is the current sound a valid sound type?
                 if item not in self.defaults:
                     warn(
-                        'Sound "{sound}" in file "{file_name}" is not registered.'.format(
+                        'Sound "{sound}" in file "{file_name}" is not '
+                        'registered.'.format(
                             sound=item,
                             file_name=file.name,
                         )
@@ -219,8 +220,8 @@ class _SoundManager(defaultdict):
         # Was a valid extension type given?
         extension = default.rsplit('.', 1)[1]
         if (
-            not self.is_allowed_sound_extension(extension)
-            and extension != 'txt'
+            not self.is_allowed_sound_extension(extension) and
+            extension != 'txt'
         ):
             warn(
                 'Invalid extension "{extension}".  Sound "{sound}" '
@@ -235,6 +236,7 @@ class _SoundManager(defaultdict):
         self.defaults[sound_name] = default
 
     def register_hook(self, sound_name, callback):
+        """Register a hook for the given sound name."""
         if (
             sound_name in self._sound_hooks and
             callback in self._sound_hooks[sound_name]
@@ -249,6 +251,7 @@ class _SoundManager(defaultdict):
         self._sound_hooks[sound_name].append(callback)
 
     def unregister_hook(self, sound_name, callback):
+        """Unregister a hook from the given sound name."""
         if sound_name not in self._sound_hooks:
             raise ValueError(
                 'No hooks registered for sound name "{sound_name}".'.format(

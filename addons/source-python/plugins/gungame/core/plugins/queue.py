@@ -43,9 +43,6 @@ class _PluginQueue(dict):
     logger = gg_plugins_queue_logger
     prefix = None
 
-    def __init__(self):
-        super().__init__()
-
     def __missing__(self, item):
         """Add the item to its queue and loop through queues after 1 tick."""
         if item not in ('load', 'unload', 'reload'):

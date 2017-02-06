@@ -39,10 +39,13 @@ from .custom_events import GG_Team_Win
 # >> LOAD & UNLOAD
 # =============================================================================
 def load():
+    """Register the Leader message hook."""
     message_manager.hook_prefix('Leader:')
 
 
 def unload():
+    """Unregister the Leader message hook."""
+    message_manager.unhook_prefix('Leader:')
     team_levels.clear()
 
 
@@ -50,6 +53,8 @@ def unload():
 # >> CLASSES
 # =============================================================================
 class _TeamManager(dict):
+    """Dictionary class to store teams with their info."""
+
     def clear(self):
         team_levels.clear()
         for team in self.values():
@@ -57,7 +62,10 @@ class _TeamManager(dict):
 
 
 class _TeamManagement(object):
+    """Class used to interact with a specific team and its information."""
+
     def __init__(self, number, alias):
+        """Store all of the team information."""
         self.number = number
         self.alias = alias
         self.level = 1
@@ -67,20 +75,24 @@ class _TeamManagement(object):
 
     @property
     def name(self):
+        """Return the team's name."""
         if self._name is None:
             self._name = team_names.get(self.number)
         return self._name
 
     @property
     def index(self):
+        """Return the index of the team's leader."""
         return self.leader.index if self.leader is not None else 0
 
     @property
     def leader(self):
+        """Return the team's current leader."""
         return self._leader
 
     @leader.setter
     def leader(self, player):
+        """Set the team's leader."""
         current = self._leader
         self._leader = player
         self.leader_userid = None if player is None else player.userid
@@ -89,8 +101,10 @@ class _TeamManagement(object):
             return
         team_levels[self.number] = player.level
         if (
-            (current.level < player.level or current.userid == player.userid)
-            and player.level < weapon_order_manager.max_levels
+            (
+                current.level < player.level or
+                current.userid == player.userid
+            ) and player.level < weapon_order_manager.max_levels
         ):
             message_manager.chat_message(
                 message='TeamWork:Leader:Increase',
@@ -102,13 +116,16 @@ class _TeamManagement(object):
 
     @property
     def leader_level(self):
+        """Return the team leader's level."""
         return None if self.leader is None else self.leader.level
 
     @property
     def color(self):
+        """Return the team's color."""
         return RED if self.number == 2 else BLUE
 
     def set_team_player_levels(self):
+        """Set the level for all players on the team."""
         if self.leader_level is None:
             self.find_team_leader()
         self.level = self.leader_level
@@ -123,12 +140,14 @@ class _TeamManagement(object):
             player.multi_kill = 0
 
     def set_joining_player_level(self, player):
+        """Set the level of the player who joined the team."""
         level = self.level if join_team_level.get_int() else 1
         if level is None:
             level = self.level = 1
         player.level = level
 
     def find_team_leader(self, leveler=None, old_level=None, disconnect=False):
+        """Find the team's current leader."""
         team_players = {
             player.level: player for player in player_dictionary.values()
             if player.team == self.number and player.level is not None
@@ -160,6 +179,7 @@ class _TeamManagement(object):
             )
 
     def send_level_message(self):
+        """Send a message about the team's level."""
         if self.leader_level is None:
             return
         message_manager.chat_message(
@@ -171,6 +191,7 @@ class _TeamManagement(object):
         )
 
     def reset_values(self):
+        """Reset the team's values."""
         self._leader = None
         self.level = 1
 
@@ -303,7 +324,7 @@ def _end_match(game_event):
 # >> EVENT HOOKS
 # =============================================================================
 @PreEvent('gg_win')
-def pre_gg_win(game_event):
+def _pre_gg_win(game_event):
     team_number = player_dictionary[game_event['winner']].team
     Delay(
         delay=0,

@@ -53,8 +53,8 @@ class _WinsDatabase(defaultdict):
 
         # Create the gungame_winners table if it does not already exist
         self.cursor.execute(
-            'CREATE TABLE IF NOT EXISTS gungame_winners(unique_id varchar(20), '
-            'name varchar(31), wins varchar(10) DEFAULT 0, time_stamp '
+            'CREATE TABLE IF NOT EXISTS gungame_winners(unique_id varchar(20),'
+            ' name varchar(31), wins varchar(10) DEFAULT 0, time_stamp '
             'varchar(31), last_win varchar(31), PRIMARY KEY(unique_id DESC))'
         )
         self.cursor.execute('PRAGMA auto_vacuum = 1')

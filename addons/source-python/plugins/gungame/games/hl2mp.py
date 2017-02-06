@@ -17,6 +17,8 @@ from players.entity import Player
 # >> CUSTOM EVENTS
 # =============================================================================
 class Weapon_Fire(CustomEvent):
+    """Custom event to fire when players throw grenades."""
+
     userid = ShortVariable('The userid of the player that fired the weapon.')
     weapon = StringVariable('The type of weapon that was fired.')
 
@@ -29,7 +31,8 @@ resource_file.load_events()
 # >> LISTENERS
 # =============================================================================
 @OnEntitySpawned
-def entity_spawned(base_entity):
+def _entity_spawned(base_entity):
+    """Fire weapon_fire event when a grenade is thrown."""
     try:
         entity = Entity(base_entity.index)
     except ValueError:

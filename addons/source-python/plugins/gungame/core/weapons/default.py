@@ -59,6 +59,7 @@ _weapon_groups = OrderedDict([
 # >> FUNCTIONS
 # =============================================================================
 def create_default_weapon_orders():
+    """Create all of the default weapon orders."""
     _create_default_order()
     _create_short_order()
     _create_random_order()

@@ -31,10 +31,12 @@ from .custom_events import GG_Multi_Level
 # >> LOAD & UNLOAD
 # =============================================================================
 def load():
+    """Register the multi-level attribute for players."""
     player_attributes.register_attribute('multi_levels', 0)
 
 
 def unload():
+    """Unregister the multi-level attribute."""
     player_attributes.unregister_attribute('multi_levels')
 
 
@@ -42,12 +44,13 @@ def unload():
 # >> CLASSES
 # =============================================================================
 class _MultiLevelPlayer(Player):
-    """"""
+    """Class used to give/remove multi-level for a player."""
 
     spark_entity = None
     delay = None
 
     def __init__(self, index):
+        """Give the player multi-level."""
         super(_MultiLevelPlayer, self).__init__(index)
         self.sound = sound_manager.emit_sound('multi_level', index)
         self.start_gravity = self.gravity
@@ -63,6 +66,7 @@ class _MultiLevelPlayer(Player):
         )
 
     def give_spark_entity(self):
+        """Give the player an env_spark effect."""
         entity = self.spark_entity = Entity.create('env_spark')
         entity.spawn_flags = 896
         entity.angles = Vector(-90, 0, 0)
@@ -73,6 +77,7 @@ class _MultiLevelPlayer(Player):
         entity.start_spark()
 
     def remove_multi_level(self):
+        """Remove multi-level from the player."""
         if self.delay is not None and self.delay.running:
             self.delay.cancel()
         self.delay = None
@@ -83,14 +88,16 @@ class _MultiLevelPlayer(Player):
         self.remove_spark_entity()
 
     def remove_spark_entity(self):
+        """Remove the env_spark from the player."""
         self.spark_entity.stop_spark()
         self.spark_entity.remove()
 
 
 class _MultiLevelManager(dict):
-    """"""
+    """Dictionary to store players with multi-level effects."""
 
     def __delitem__(self, userid, reset_levels=True):
+        """Remove the player from the dictionary and remove the effects."""
         if reset_levels:
             player_dictionary[userid].multi_levels = 0
         if userid not in self:
@@ -101,6 +108,7 @@ class _MultiLevelManager(dict):
             on_tick_listener_manager.unregister_listener(self._tick)
 
     def clear(self, silent=False):
+        """Remove each player individually instead of just clearing."""
         if silent:
             super().clear()
             return
@@ -108,9 +116,11 @@ class _MultiLevelManager(dict):
             del self[userid]
 
     def delete_disconnecting_player(self, userid):
+        """Remove the disconnecting player from the dictionary."""
         self.__delitem__(userid, reset_levels=False)
 
     def give_multi_level(self, userid):
+        """Give the player multi-level effects."""
         if not len(self):
             on_tick_listener_manager.register_listener(self._tick)
         if userid in self:
@@ -121,6 +131,7 @@ class _MultiLevelManager(dict):
             event.leveler = userid
 
     def _tick(self):
+        """Reset multi-level players' gravity each tick."""
         current_gravity = gravity.get_int()
         for player in self.values():
             player.gravity = current_gravity
@@ -136,7 +147,6 @@ def _player_level_up(game_event):
     if GunGameStatus.ROUND != GunGameRoundStatus.ACTIVE:
         return
     player = player_dictionary[game_event['leveler']]
-    old = player.multi_levels
     player.multi_levels += 1
     if player.multi_levels >= levels.get_int():
         # Give or increase multi-level

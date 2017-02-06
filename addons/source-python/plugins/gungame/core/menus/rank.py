@@ -9,7 +9,6 @@
 from players.entity import Player
 
 # GunGame
-from . import menu_strings
 from ._rankings import get_winners_menu
 from ..commands.registration import register_command_callback
 

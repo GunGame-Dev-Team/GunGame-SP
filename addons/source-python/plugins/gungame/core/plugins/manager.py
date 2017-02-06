@@ -43,6 +43,7 @@ class _GGPluginManager(PluginManager):
     translations = None
 
     def set_base_import(self, value):
+        """Set the base import for other functionality."""
         if value not in ('included', 'custom'):
             raise ValueError(
                 'Value must be "included" or "custom" not "{value}".'.format(
@@ -53,9 +54,11 @@ class _GGPluginManager(PluginManager):
 
     @property
     def is_team_game(self):
+        """Return whether or not the current match is a team game."""
         return any(team_levels.values())
 
     def load(self, plugin_name):
+        """Load the given plugin."""
         self.logger.log_message(
             self.prefix + self.translations[
                 'Loading'
@@ -82,6 +85,7 @@ class _GGPluginManager(PluginManager):
             event.plugin_type = valid_plugins.get_plugin_type(plugin_name)
 
     def unload(self, plugin_name):
+        """Unload the given plugin."""
         self.logger.log_message(
             self.prefix + self.translations[
                 'Unloading'

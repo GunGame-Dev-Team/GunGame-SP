@@ -7,7 +7,6 @@
 # =============================================================================
 # GunGame
 from gungame.core.rules.instance import GunGameRules
-from gungame.core.rules.strings import rules_translations
 
 # Plugin
 from .configuration import (

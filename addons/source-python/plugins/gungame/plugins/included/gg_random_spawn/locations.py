@@ -32,7 +32,6 @@ if GAME_NAME == 'csgo':
                 base_entity.get_key_value_vector('angles'),
             )
 
-
     def set_location(class_name, origin, angles):
         base_entity = BaseEntity.create(class_name)
         base_entity.set_key_value_vector('origin', origin)
@@ -43,7 +42,6 @@ else:
     def get_locations(class_name):
         for entity in EntityIter(class_name):
             yield entity.origin, entity.angles
-
 
     def set_location(class_name, origin, angles):
         entity = Entity.create(class_name)

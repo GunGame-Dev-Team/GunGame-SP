@@ -27,10 +27,12 @@ from gungame.core.weapons.manager import weapon_order_manager
 # >> LOAD & UNLOAD
 # =============================================================================
 def load():
+    """Hook the LevelInfo messages so that the team messages can be sent."""
     message_manager.hook_prefix('LevelInfo:')
 
 
 def unload():
+    """Unhook the LevelInfo messages and clear the team level dictionary."""
     message_manager.unhook_prefix('LevelInfo:')
     team_levels.clear()
 
@@ -39,18 +41,19 @@ def unload():
 # >> CLASSES
 # =============================================================================
 class _TeamplayManager(object):
+    """Class used to load the proper teamplay gamemode."""
+
     finished_initial_load = False
     deathmatch_only_game = GAME_NAME in ('bms', 'hl2mp')
-
-    def __init__(self):
-        self.current_module = None
-        Delay(0, self.initialize)
+    current_module = None
 
     def initialize(self):
+        """Load the proper teamplay gamemode."""
         self.load_module()
         self.finished_initial_load = True
 
     def load_module(self, module=None):
+        """Load the given gamemode."""
         if self.current_module is not None:
             raise ValueError(
                 'A module is currently loaded, cannot load another.'
@@ -69,6 +72,7 @@ class _TeamplayManager(object):
         self.current_module = module_path
 
     def unload_current_module(self):
+        """Unload the current gamemode."""
         if self.current_module is None:
             raise ValueError('No module is currently loaded.')
 
@@ -98,6 +102,7 @@ class _TeamplayManager(object):
                 except_hooks.print_exception()
 
 _teamplay_manager = _TeamplayManager()
+Delay(0, _teamplay_manager.initialize)
 
 
 # =============================================================================

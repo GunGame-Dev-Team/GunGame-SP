@@ -83,6 +83,7 @@ class _PlayerDictionary(dict):
         return player
 
     def from_index(self, index):
+        """Return the player's instance from their index."""
         return self[userid_from_index(index)]
 
     def safe_remove(self, userid):
