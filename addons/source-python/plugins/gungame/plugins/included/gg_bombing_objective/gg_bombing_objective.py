@@ -24,42 +24,25 @@ from .configuration import (
 # =============================================================================
 # >> GAME EVENTS
 # =============================================================================
-@Event('bomb_defused')
-def _bomb_defused(game_event):
-    """Level the defuser up."""
+@Event('bomb_defused', 'bomb_exploded')
+def _bomb_event(game_event):
+    """Level the defuser/detonator up."""
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         return
 
+    event_name = game_event.name
     player = player_dictionary[game_event['userid']]
-    levels = _get_levels_to_increase(player, 'defused')
+    levels = _get_levels_to_increase(player, event_name)
     if not levels:
         return
     player.increase_level(
         levels=levels,
-        reason='bomb_defused',
+        reason=event_name,
     )
     player.chat_message(
-        message='BombingObjective:Leveled:Defused',
-        levels=levels,
-    )
-
-
-@Event('bomb_exploded')
-def _bomb_exploded(game_event):
-    """Level the detonator up."""
-    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
-        return
-
-    player = player_dictionary[game_event['userid']]
-    levels = _get_levels_to_increase(player, 'detonated')
-    if not levels:
-        return
-    player.increase_level(
-        levels=levels,
-        reason='bomb_detonated',
-    )
-    player.chat_message(
-        message='BombingObjective:Leveled:Detonated',
+        message='BombingObjective:Leveled:{event_name}'.format(
+            event_name=event_name
+        ),
         levels=levels,
     )
 
@@ -67,19 +50,19 @@ def _bomb_exploded(game_event):
 # =============================================================================
 # >> HELPER FUNCTIONS
 # =============================================================================
-def _get_levels_to_increase(player, reason):
+def _get_levels_to_increase(player, event_name):
     """Return the number of levels to increase the player."""
-    if reason == 'defused':
+    if event_name == 'bomb_defused':
         base_levels = defused_levels.get_int()
         skip_nade = defused_skip_nade.get_int()
         skip_knife = defused_skip_knife.get_int()
-    elif reason == 'detonated':
+    elif event_name == 'bomb_exploded':
         base_levels = detonated_levels.get_int()
         skip_nade = detonated_skip_nade.get_int()
         skip_knife = detonated_skip_knife.get_int()
     else:
         raise ValueError(
-            'Invalid reason given "{reason}".'.format(reason=reason)
+            'Invalid reason given "{reason}".'.format(reason=event_name)
         )
 
     if base_levels <= 0:
@@ -98,7 +81,7 @@ def _get_levels_to_increase(player, reason):
         ):
             player.chat_message(
                 'BombingObjective:NoSkip:{reason}'.format(
-                    reason=reason.title()
+                    reason=event_name,
                 ),
                 weapon=skip_weapon,
             )
