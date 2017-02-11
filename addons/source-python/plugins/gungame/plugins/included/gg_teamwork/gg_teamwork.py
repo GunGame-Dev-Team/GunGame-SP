@@ -55,6 +55,11 @@ def unload():
 class _TeamManager(dict):
     """Dictionary class to store teams with their info."""
 
+    def __init__(self):
+        super().__init__()
+        for number in team_levels:
+            self[number] = _TeamManagement(number)
+
     def clear(self):
         team_levels.clear()
         for team in self.values():
@@ -64,12 +69,12 @@ class _TeamManager(dict):
 class _TeamManagement(object):
     """Class used to interact with a specific team and its information."""
 
-    def __init__(self, number, alias):
+    def __init__(self, number):
         """Store all of the team information."""
         self.number = number
-        self.alias = alias
+        self.alias = teams_by_number[self.number]
         self.level = 1
-        self._name = team_names.get(self.number)
+        self._name = team_names[self.number]
         self._leader = None
         self.leader_userid = None
 
@@ -196,11 +201,7 @@ class _TeamManagement(object):
         self.level = 1
 
 
-teamwork_manager = _TeamManager({
-    number: _TeamManagement(number, alias)
-    for number, alias in teams_by_number.items()
-    if alias not in ('un', 'spec')
-})
+teamwork_manager = _TeamManager()
 
 
 # =============================================================================
