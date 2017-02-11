@@ -1,4 +1,4 @@
-# ../gungame/plugins/included/gg_random_spawn/__init__.py
+# ../gungame/plugins/included/gg_random_spawn/entities.py
 
 """Provides functions to get and set locations for spawn points."""
 

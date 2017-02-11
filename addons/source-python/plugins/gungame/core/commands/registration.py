@@ -1,4 +1,4 @@
-# ../gungame/core/commands/callbacks.py
+# ../gungame/core/commands/registration.py
 
 """Stores commands with their callbacks."""
 
