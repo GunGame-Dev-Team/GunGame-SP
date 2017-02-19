@@ -24,6 +24,7 @@ from ..events.included.match import GG_Win
 from ..messages import message_manager
 from ..sounds.manager import sound_manager
 from ..status import GunGameMatchStatus, GunGameStatus
+from ..weapons.groups import melee_weapons, incendiary_weapons
 from ..weapons.manager import weapon_order_manager
 
 
@@ -166,15 +167,19 @@ class GunGamePlayer(Player):
         """Return the classname of the player's current level weapon."""
         return weapon_manager[self.level_weapon].name
 
-    def strip_weapons(self, strip_grenades=False):
+    def strip_weapons(self, not_filters=None, remove_incendiary=False):
         """Strip weapons from the player."""
-        not_filters = {'melee', 'objective', 'tool'}
-        if not strip_grenades:
-            not_filters |= {'grenade'}
+        base_not_filters = {'objective', 'tool'}
+        if not_filters is None:
+            not_filters = set()
+        not_filters |= base_not_filters
+        if self.level_weapon not in melee_weapons:
+            not_filters |= {'melee'}
         for weapon in self.weapons():
             tags = weapon_manager[weapon.classname].tags
             if not_filters.intersection(tags):
-                continue
+                if not remove_incendiary or 'incendiary' not in tags:
+                    continue
             if weapon.classname == self.level_weapon_classname:
                 continue
             weapon.remove()

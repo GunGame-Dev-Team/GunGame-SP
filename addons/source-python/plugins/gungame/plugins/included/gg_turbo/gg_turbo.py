@@ -12,6 +12,7 @@ from players.helpers import userid_from_index
 # GunGame
 from gungame.core.players.attributes import AttributePostHook
 from gungame.core.players.dictionary import player_dictionary
+from gungame.core.weapons.groups import incendiary_weapons
 
 # Plugin
 from .configuration import multiple_kills, quick_switch
@@ -37,7 +38,10 @@ def _give_level_weapon(index):
     except ValueError:
         return
     player = player_dictionary[userid]
-    player.strip_weapons()
+    player.strip_weapons(
+        not_filters={'grenade'},
+        remove_incendiary=player.level_weapon in incendiary_weapons,
+    )
     player.give_level_weapon()
     if quick_switch.get_bool():
         # TODO: fix this for snipers

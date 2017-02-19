@@ -43,7 +43,7 @@ from .players.dictionary import player_dictionary
 from .sounds.manager import sound_manager
 from .status import GunGameMatchStatus, GunGameRoundStatus, GunGameStatus
 from .warmup.manager import warmup_manager
-from .weapons.groups import melee_weapons
+from .weapons.groups import incendiary_weapons, melee_weapons
 from .weapons.manager import weapon_order_manager
 
 
@@ -104,7 +104,10 @@ def _player_spawn(game_event):
     player.give_spawn_protection()
 
     # Give the player their new weapon
-    player.strip_weapons()
+    player.strip_weapons(
+        not_filters={'grenade'},
+        remove_incendiary=player.level_weapon in incendiary_weapons,
+    )
     player.give_level_weapon()
 
     # Give CTs defusers, if need be

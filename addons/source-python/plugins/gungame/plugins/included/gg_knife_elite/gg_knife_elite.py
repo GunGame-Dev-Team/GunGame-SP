@@ -17,4 +17,4 @@ from gungame.core.players.dictionary import player_dictionary
 # =============================================================================
 @Event('gg_level_up')
 def _strip_weapons(game_event):
-    player_dictionary[game_event['leveler']].strip_weapons(strip_grenades=True)
+    player_dictionary[game_event['leveler']].strip_weapons()
