@@ -143,10 +143,9 @@ class _ValidPlugins(object):
             # Add the plugin to the dictionary
             plugins[str(plugin.namebase)] = ValidPlugin(info.info, description)
 
-            if not hasattr(info, 'required'):
-                continue
+            required = info.info.get('required', [])
 
-            for other in info.required:
+            for other in required:
                 plugin_requirements[other].append(str(plugin.namebase))
 
         # Return the dictionary
