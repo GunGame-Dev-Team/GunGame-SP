@@ -25,7 +25,7 @@ from mutagen import MutagenError
 # GunGame
 from .config.misc import (
     allow_kills_after_round, cancel_on_fire, dynamic_chat_time, give_armor,
-    give_defusers, level_on_protect,
+    give_defusers, level_on_protect, send_rules_each_map
 )
 from .config.punishment import (
     level_one_team_kill, suicide_punish, team_kill_punish,
@@ -40,6 +40,7 @@ from .leaders import leader_manager
 from .messages import message_manager
 from .players.attributes import AttributePostHook
 from .players.dictionary import player_dictionary
+from .rules.command import send_rules
 from .sounds.manager import sound_manager
 from .status import GunGameMatchStatus, GunGameRoundStatus, GunGameStatus
 from .warmup.manager import warmup_manager
@@ -210,19 +211,23 @@ def _player_activate(game_event):
     # Add the player to the leader dictionary
     leader_manager.add_player(userid)
 
-    # Is the player just joining the game?
-    if userid in _joined_players:
-        return
-
-    # Add the userid to the joined players set
-    _joined_players.add(userid)
-
     # Get the player's instance
     player = player_dictionary[userid]
 
     # Is the player a bot?
     if player.is_fake_client():
         return
+
+    # Send the rules menu to the player
+    if send_rules_each_map.get_int():
+        send_rules(player.index)
+
+    # Is the player just joining the game?
+    if userid in _joined_players:
+        return
+
+    # Add the userid to the joined players set
+    _joined_players.add(userid)
 
     if player.wins:
         message = 'Player:Join:Ranked' if player.rank else 'Player:Join:Wins'
