@@ -63,3 +63,6 @@ with GunGameConfigManager('misc') as _config:
 
     with _config.cvar('sound_pack', 'default') as sound_pack:
         sound_pack.add_text()
+
+    with _config.cvar('send_rules_each_map') as send_rules_each_map:
+        send_rules_each_map.add_text()
