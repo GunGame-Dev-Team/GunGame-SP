@@ -106,6 +106,7 @@ def register_command_callback(name, text):
 
     def inner(function):
         command_dictionary[name] = _RegisteredCommand(name, text, function)
+        return function
     return inner
 
 
