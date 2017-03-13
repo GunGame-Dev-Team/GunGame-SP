@@ -22,17 +22,24 @@ __all__ = (
 # >> CLASSES
 # =============================================================================
 class _OldSpawnPoint(object):
+    """Stores an old spawn point location."""
+
     def __init__(self, class_name, origin, angles):
+        """Store the spawn point's base attributes."""
         self.class_name = class_name
         self.origin = origin
         self.angles = angles
 
     def restore_spawn_point(self):
+        """Restore the old spawn point."""
         set_location(self.class_name, self.origin, self.angles)
 
 
 class _SpawnPointBackups(list):
+    """Dictionary that holds all old spawn points."""
+
     def clear(self, restore=False):
+        """Clear the dictionary and restore all old spawn points."""
         if restore:
             for class_name in spawn_entities:
                 remove_locations(class_name)
@@ -41,6 +48,7 @@ class _SpawnPointBackups(list):
         super().clear()
 
     def store_backups(self):
+        """Store all current spawn points prior to removal."""
         for class_name in spawn_entities:
             for origin, angles in get_locations(class_name):
                 self.append(

@@ -158,6 +158,7 @@ class _MessageManager(dict):
         # Send the message to the users
         HintText(message).send(*users, **tokens)
 
+    # pylint: disable=too-many-arguments
     def hud_message(
         self, message='', x=-1.0, y=-1.0, color1=WHITE,
         color2=WHITE, effect=0, fade_in=0.0, fade_out=0.0,

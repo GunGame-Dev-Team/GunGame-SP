@@ -97,7 +97,8 @@ class _TeamplayManager(object):
         for instance in instances:
             try:
                 instance._unload_instance()
-            except:
+            # pylint: disable=broad-except
+            except Exception:
                 # TODO: make this gungame specific
                 except_hooks.print_exception()
 

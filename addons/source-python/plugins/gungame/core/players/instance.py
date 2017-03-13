@@ -24,7 +24,7 @@ from ..events.included.match import GG_Win
 from ..messages import message_manager
 from ..sounds.manager import sound_manager
 from ..status import GunGameMatchStatus, GunGameStatus
-from ..weapons.groups import melee_weapons, incendiary_weapons
+from ..weapons.groups import melee_weapons
 from ..weapons.manager import weapon_order_manager
 
 
@@ -219,6 +219,7 @@ class GunGamePlayer(Player):
         """Send a hint message to the player."""
         message_manager.hint_message(message, self.index, **tokens)
 
+    # pylint: disable=too-many-arguments
     def hud_message(
         self, message='', x=-1.0, y=-1.0, color1=WHITE,
         color2=WHITE, effect=0, fade_in=0.0, fade_out=0.0,

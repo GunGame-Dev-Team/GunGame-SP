@@ -32,21 +32,26 @@ from .configuration import bonus_mode, bonus_reset, bonus_weapon
 # >> CLASSES
 # =============================================================================
 class _NadeBonusDictionary(dict):
+    """Dictionary that holds players with their bonus weapons."""
 
     def __init__(self):
+        """Store the nade bonus weapon(s)."""
         super().__init__()
         self._weapon = self._validate_weapon()
 
     def __missing__(self, userid):
+        """Store the player in the dictionary."""
         value = self[userid] = _NadeBonusPlayer(userid)
         return value
 
     @property
     def weapon(self):
+        """Return the bonus weapon."""
         return self._weapon
 
     @weapon.setter
     def weapon(self, value):
+        """Set the bonus weapon using the convar and not the given value."""
         old_value = self._weapon
         new_value = self._validate_weapon()
         if not new_value:
@@ -58,6 +63,7 @@ class _NadeBonusDictionary(dict):
 
     @staticmethod
     def _validate_weapon():
+        """Return the validated bonus weapon(s)."""
         weapon = bonus_weapon.get_string()
         if weapon in weapon_order_manager:
             return weapon
@@ -110,36 +116,45 @@ nade_bonus_dictionary = _NadeBonusDictionary()
 
 
 class _NadeBonusPlayer(object):
+    """Stores a player with their bonus weapon."""
+
     def __init__(self, userid):
+        """Store the player and their bonus weapon attributes."""
         self.player = player_dictionary[userid]
         self.level = 1
         self.multi_kill = 0
 
     @property
     def delay_time(self):
+        """Return the amount of time to delay before giving weapons."""
         return 0.4 if self.player.is_fake_client() else 0.1
 
     @property
     def is_in_bonus(self):
+        """Return whether or not the player is on a nade level."""
         try:
             return self.player.level_weapon in all_grenade_weapons
         except KeyError:
             return False
 
     def reset_level(self):
+        """Reset the player's nade bonus level."""
         self.level = 1
         self.multi_kill = 0
 
     def check_on_spawn(self):
+        """Verify the spawning player is on a nade level."""
         if self.is_in_bonus:
             self.give_current_weapon()
 
     def check_new_level(self):
+        """Verify the leveling player is on a nade level."""
         self.reset_level()
         if self.is_in_bonus:
             self.give_current_weapon()
 
     def increment_multi_kill(self, weapon):
+        """Increment the player's nade bonus weapon."""
         if not self.is_in_bonus:
             return
 
@@ -171,6 +186,7 @@ class _NadeBonusPlayer(object):
             self.check_turbo(weapon)
 
     def check_turbo(self, old_weapon):
+        """Verify turbo is running and give the player their weapon now."""
         if 'gg_turbo' not in gg_plugin_manager:
             return
 
@@ -181,17 +197,13 @@ class _NadeBonusPlayer(object):
         self.give_current_weapon()
 
     def give_current_weapon(self):
+        """Give the player their current nade bonus weapon."""
         weapons = nade_bonus_dictionary.weapon
         if not weapons:
             return
 
         if weapons in weapon_order_manager:
-            Delay(
-                delay=self.delay_time,
-                callback=self._give_weapons,
-                args=(weapon_order_manager[weapons][self.level].weapon, ),
-            )
-            return
+            weapons = weapon_order_manager[weapons][self.level].weapon
 
         Delay(
             delay=self.delay_time,
@@ -200,6 +212,7 @@ class _NadeBonusPlayer(object):
         )
 
     def _give_weapons(self, weapons):
+        """Give the player their weapon."""
         if isinstance(weapons, str):
             weapons = [weapons]
         for weapon in weapons:

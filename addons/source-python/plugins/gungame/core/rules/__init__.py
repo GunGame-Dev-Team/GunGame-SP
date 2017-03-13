@@ -88,6 +88,7 @@ def define_all_rules():
                     plugin_name=plugin_name,
                 )
             )
+        # pylint: disable=broad-except
         except Exception:
             warn(
                 'Unable to import rules for {plugin} due to error:'

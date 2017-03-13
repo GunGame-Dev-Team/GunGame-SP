@@ -26,6 +26,7 @@ __all__ = (
 # =============================================================================
 if GAME_NAME == 'csgo':
     def get_locations(class_name):
+        """Return all current spawn points for the given class name."""
         for base_entity in BaseEntityIter(class_name):
             yield (
                 base_entity.get_key_value_vector('origin'),
@@ -33,6 +34,7 @@ if GAME_NAME == 'csgo':
             )
 
     def set_location(class_name, origin, angles):
+        """Create a spawn point at the given location."""
         base_entity = BaseEntity.create(class_name)
         base_entity.set_key_value_vector('origin', origin)
         base_entity.set_key_value_vector('angles', angles)
@@ -40,15 +42,18 @@ if GAME_NAME == 'csgo':
 
 else:
     def get_locations(class_name):
+        """Return all current spawn points for the given class name."""
         for entity in EntityIter(class_name):
             yield entity.origin, entity.angles
 
     def set_location(class_name, origin, angles):
+        """Create a spawn point at the given location."""
         entity = Entity.create(class_name)
         entity.origin = origin
         entity.angles = angles
 
 
 def remove_locations(class_name):
+    """Remove all current spawn points for the given class name."""
     for base_entity in BaseEntityIter(class_name):
         base_entity.remove()

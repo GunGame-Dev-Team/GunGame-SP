@@ -105,6 +105,7 @@ def register_command_callback(name, text):
         )
 
     def inner(function):
+        """Register the command to the given function."""
         command_dictionary[name] = _RegisteredCommand(name, text, function)
         return function
     return inner

@@ -66,7 +66,7 @@ _joined_players = set()
 _team_changers = set()
 
 _melee_weapon = weapon_manager[
-    'knife' if 'knife' in melee_weapons else melee_weapons[0]
+    'knife' if 'knife' in melee_weapons else list(melee_weapons)[0]
 ].name
 
 _spawning_users = set()

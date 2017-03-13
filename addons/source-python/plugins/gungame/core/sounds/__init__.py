@@ -70,6 +70,7 @@ def register_all_sounds():
                     plugin_name=plugin_name,
                 )
             )
+        # pylint: disable=broad-except
         except Exception:
             warn(
                 'Unable to import sounds for {plugin} due to error:'

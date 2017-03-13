@@ -14,6 +14,7 @@ from plugins.command import SubCommandManager
 from translations.strings import LangStrings
 
 # GunGame
+from gungame.info import info
 from . import plugin_strings, gg_plugins_logger
 from .manager import gg_plugin_manager
 from .queue import plugin_queue
@@ -21,7 +22,6 @@ from .valid import valid_plugins
 from ..credits import gungame_credits
 from ..messages import message_manager
 from ..weapons.manager import weapon_order_manager
-from gungame.info import info
 
 
 # =============================================================================

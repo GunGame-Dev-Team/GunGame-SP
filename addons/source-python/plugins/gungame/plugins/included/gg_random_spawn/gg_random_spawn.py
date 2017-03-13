@@ -32,10 +32,12 @@ SPAWN_POINT_PATH = GUNGAME_DATA_PATH / 'spawn_points'
 # >> LOAD & UNLOAD
 # =============================================================================
 def load():
+    """Store old spawn points and create the new ones on load."""
     _level_init(global_vars.map_name)
 
 
 def unload():
+    """Reset to the old spawn points on unload."""
     for class_name in spawn_entities:
         remove_locations(class_name)
     spawn_point_backups.clear(restore=True)

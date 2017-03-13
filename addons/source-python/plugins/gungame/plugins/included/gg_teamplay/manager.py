@@ -40,7 +40,10 @@ from .gg_teamplay import _teamplay_manager
 # >> CLASSES
 # =============================================================================
 class _TeamManager(object):
+    """Class used to store team based information."""
+
     def __init__(self, team_number):
+        """Store the team's base attributes."""
         super().__init__()
         self.level = 1
         self.multi_kill = 0
@@ -50,10 +53,12 @@ class _TeamManager(object):
 
     @property
     def name(self):
+        """Return the team's name."""
         return team_names[self.team_number]
 
     @property
     def index(self):
+        """Return an index of a player on the team."""
         for player in player_dictionary.values():
             if player.team == self.team_number:
                 return player.index
@@ -61,6 +66,7 @@ class _TeamManager(object):
 
     @property
     def level_multi_kill(self):
+        """Return the team's current level's multi-kill."""
         return (
             weapon_order_manager.active[self.level].multi_kill *
             self._get_multi_kill_multiplier()
@@ -68,9 +74,11 @@ class _TeamManager(object):
 
     @property
     def level_weapon(self):
+        """Return the team's current level's weapon."""
         return weapon_order_manager.active[self.level].weapon
 
     def _get_multi_kill_multiplier(self):
+        """Return the multi-kill multiplier for the team's current level."""
         if _teamplay_manager.current_module != 'deathmatch':
             return 1
 
@@ -81,6 +89,7 @@ class _TeamManager(object):
         )
 
     def increase_multi_kill(self):
+        """Increase the team's current multi-kill value."""
         self.multi_kill += 1
         if self.multi_kill < self.level_multi_kill:
             return
@@ -90,6 +99,7 @@ class _TeamManager(object):
             self.increase_level()
 
     def increase_level(self, levels=1):
+        """Increase the team's level."""
         if not isinstance(levels, int) or levels < 1:
             raise ValueError(
                 'Invalid value given for levels "{levels}".'.format(
@@ -109,12 +119,14 @@ class _TeamManager(object):
             event.style = _teamplay_manager.current_module
 
     def declare_winner(self):
+        """Call the team win event."""
         with GG_Team_Win() as event:
             event.winner = self.team_number
             event.loser = 5 - self.team_number
             event.style = _teamplay_manager.current_module
 
     def send_multi_kill_message(self):
+        """Send the team's current level/multi-kill message."""
         current_level = self.level
         other_team = team_dictionary[5 - self.team_number]
         message = 'TeamPlay:MultiKill:'
@@ -133,6 +145,7 @@ class _TeamManager(object):
         )
 
     def send_level_up_message(self, old_level):
+        """Send the team's level-up message."""
         current_level = self.level
         other_level = team_dictionary[5 - self.team_number].level
         message = 'TeamPlay:Level:'
@@ -152,6 +165,7 @@ class _TeamManager(object):
         )
 
     def send_current_level_message(self):
+        """Send a message about the team's current level."""
         message = 'TeamPlay:Round'
         if self.multi_kill:
             message += ':MultiKill'

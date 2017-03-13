@@ -67,6 +67,7 @@ def load_all_configs():
                     plugin_name=plugin_name,
                 )
             )
+        # pylint: disable=broad-except
         except Exception:
             warn(
                 'Unable to import configuration for {plugin} due to error:'
