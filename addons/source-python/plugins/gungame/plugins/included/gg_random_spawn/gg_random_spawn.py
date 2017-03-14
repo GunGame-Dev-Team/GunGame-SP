@@ -11,6 +11,7 @@ from warnings import warn
 # Source.Python
 from engines.server import global_vars
 from listeners import OnLevelInit, OnLevelEnd
+from listeners.tick import Delay
 from mathlib import Vector
 
 # GunGame
@@ -38,8 +39,6 @@ def load():
 
 def unload():
     """Reset to the old spawn points on unload."""
-    for class_name in spawn_entities:
-        remove_locations(class_name)
     spawn_point_backups.clear(restore=True)
 
 
@@ -48,12 +47,10 @@ def unload():
 # =============================================================================
 @OnLevelInit
 def _level_init(map_name):
-    if map_name is None:
-        return
+    Delay(0, _create_spawn_points, (map_name, ))
 
-    if spawn_point_backups:
-        return
 
+def _create_spawn_points(map_name):
     spawn_points_file = SPAWN_POINT_PATH / map_name + '.txt'
     if not spawn_points_file.isfile():
         warn(
