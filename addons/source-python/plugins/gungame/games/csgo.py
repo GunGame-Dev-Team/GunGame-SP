@@ -43,10 +43,11 @@ class _NoMessage(object):
             )
         )
 
-# Set the overrides
-message_manager.hud_message = _NoMessage('HudMsg')._message_hook
+# CS:GO doesn't support any Dialog menus/messages
 message_manager.top_message = _NoMessage('DialogMsg')._message_hook
+# CS:GO Center and KeyHint message are in same location as HintText
 message_manager.center_message = message_manager.hint_message
+message_manager.keyhint_message = message_manager.hint_message
 
 
 @Event('player_death')
