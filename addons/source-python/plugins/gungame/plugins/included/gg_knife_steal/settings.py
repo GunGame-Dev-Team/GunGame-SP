@@ -6,23 +6,25 @@
 # >> IMPORTS
 # =============================================================================
 # GunGame
+from gungame.core.rules.strings import rules_translations
 from gungame.core.settings import gungame_player_settings
+from gungame.core.settings.strings import settings_translations
 
 # Plugin
-from .configuration import auto_switch_default
+from .configuration import no_switch_default
+from .info import info
 
 
 # =============================================================================
 # >> SETTINGS
 # =============================================================================
-# TODO: add 2nd argument and translations
-knife_steal_settings = gungame_player_settings.add_section('knife_steal')
+knife_steal_settings = gungame_player_settings.add_section(
+    name='knife_steal',
+    text=rules_translations[info.name],
+)
 
-# TODO: add 3rd argument and translations
-# TODO: revert this and make it a bool once SP is updated
-# auto_switch = knife_steal_settings.add_bool_setting(
-#     'auto_switch', auto_switch_default.get_bool(),
-# )
-auto_switch = knife_steal_settings.add_int_setting(
-    'auto_switch', int(auto_switch_default.get_bool()),
+no_switch = knife_steal_settings.add_bool_setting(
+    name='no_switch',
+    default=no_switch_default.get_bool(),
+    text=settings_translations[info.name + ':no_switch'],
 )

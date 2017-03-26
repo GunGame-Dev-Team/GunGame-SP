@@ -22,7 +22,7 @@ from .configuration import (
     skip_nade,
 )
 from .custom_events import GG_Knife_Steal
-from .settings import auto_switch
+from .settings import no_switch
 
 
 # =============================================================================
@@ -130,7 +130,7 @@ def _steal_level(game_event):
 @Event('gg_knife_steal')
 def _on_knife_steal(game_event):
     attacker = player_dictionary[game_event['leveler']]
-    if auto_switch.get_setting(attacker.index):
+    if no_switch.get_setting(attacker.index):
         Delay(0, _set_back_to_knife, (attacker.userid, ))
 
 
