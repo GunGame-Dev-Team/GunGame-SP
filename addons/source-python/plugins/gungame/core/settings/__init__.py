@@ -1,4 +1,4 @@
-# ../gungame/core/settings.py
+# ../gungame/core/settings/__init__.py
 
 """Provides player settings for GunGame."""
 
@@ -12,9 +12,9 @@ from importlib import import_module
 from settings.player import PlayerSettings
 
 # GunGame
+from ..paths import GUNGAME_PLUGINS_PATH
+from ..plugins.valid import valid_plugins
 from gungame.info import info
-from gungame.core.paths import GUNGAME_PLUGINS_PATH
-from gungame.core.plugins.valid import valid_plugins
 
 
 # =============================================================================
@@ -29,7 +29,7 @@ __all__ = (
 # =============================================================================
 # >> SETTINGS
 # =============================================================================
-gungame_player_settings = PlayerSettings(info.name, 'gg')
+gungame_player_settings = PlayerSettings(info.name, 'gg', info.verbose_name)
 
 
 # =============================================================================
