@@ -27,7 +27,6 @@ from ..plugins.valid import valid_plugins
 # =============================================================================
 # Store the core sounds with their defaults
 # TODO: create sounds specific to this new version of GunGame
-# TODO: sounds in the ../hl2/ vpk files are not working (count_down/winner)
 _core_sounds = {
     'welcome': 'source-python/gungame/default/gg5_welcome.mp3',
     'multi_kill': 'common/stuck1.wav',

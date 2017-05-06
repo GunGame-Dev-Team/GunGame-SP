@@ -7,7 +7,6 @@
 # =============================================================================
 # Source.Python
 from menus import PagedMenu
-from players.helpers import userid_from_index
 
 # GunGame
 from . import menu_strings
@@ -38,7 +37,7 @@ def send_weapons_menu(index):
     elif GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         menu.append(menu_strings['Inactive'])
     else:
-        player = player_dictionary[userid_from_index(index)]
+        player = player_dictionary.from_index(index)
         for level, instance in weapon_order_manager.active.items():
             menu.append(
                 ListOption(

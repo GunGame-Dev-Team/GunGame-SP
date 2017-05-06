@@ -7,7 +7,6 @@
 # =============================================================================
 # Source.Python
 from menus import SimpleMenu, SimpleOption, Text
-from players.helpers import userid_from_index
 
 # GunGame
 from . import menu_strings
@@ -34,7 +33,7 @@ __all__ = (
 def send_level_menu(index):
     """Send the level menu to the player."""
     menu = SimpleMenu()
-    player = player_dictionary[userid_from_index(index)]
+    player = player_dictionary.from_index(index)
     menu.append(
         SimpleOption(
             1,

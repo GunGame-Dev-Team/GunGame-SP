@@ -7,7 +7,6 @@
 # =============================================================================
 # Source.Python
 from listeners.tick import Delay
-from players.helpers import userid_from_index
 
 # GunGame
 from gungame.core.players.attributes import AttributePostHook
@@ -34,10 +33,9 @@ def _post_level_change(player, attribute, new_value, old_value):
 
 def _give_level_weapon(index):
     try:
-        userid = userid_from_index(index)
+        player = player_dictionary.from_index(index)
     except ValueError:
         return
-    player = player_dictionary[userid]
     player.strip_weapons(
         not_filters={'grenade'},
         remove_incendiary=player.level_weapon in incendiary_weapons,
