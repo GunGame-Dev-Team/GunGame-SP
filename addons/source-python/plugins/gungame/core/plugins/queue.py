@@ -112,7 +112,7 @@ class _PluginQueue(dict):
             # Check for conflicts
             with suppress(KeyError):
                 conflict = False
-                for other in plugin_info.conflicts:
+                for other in plugin_info.get('conflicts', []):
                     if other in self.manager:
                         warn(
                             'Loaded plugin "{other}" conflicts with plugin '
@@ -127,7 +127,7 @@ class _PluginQueue(dict):
 
             # Check for requirements
             with suppress(KeyError):
-                for other in plugin_info.required:
+                for other in plugin_info.get('required', []):
                     if other not in self.manager and other not in self['load']:
                         warn(
                             'Plugin "{other}" is required by "{plugin_name}". '

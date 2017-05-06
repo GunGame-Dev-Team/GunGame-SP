@@ -10,6 +10,9 @@ from collections import defaultdict
 from importlib import import_module
 from warnings import warn
 
+# Site-package
+from configobj import ConfigObj
+
 # Source.Python
 from plugins.info import PluginInfo
 
@@ -101,10 +104,11 @@ class _ValidPlugins(object):
                 continue
 
             # Does the info file not exist?
-            if not plugin.joinpath('info.py').isfile():
+            info_file = plugin / 'info.ini'
+            if not info_file.isfile():
                 warn(
                     '{plugin_type} plugin "{plugin_name}" is missing '
-                    'info.py file.'.format(
+                    'info.ini file.'.format(
                         plugin_type=plugin_type.title(),
                         plugin_name=plugin.namebase,
                     )
@@ -120,30 +124,12 @@ class _ValidPlugins(object):
             ).__doc__
 
             # Get the plugin's info
-            info = import_module(
-                'gungame.plugins.{plugin_type}.{plugin_name}.info'.format(
-                    plugin_type=plugin_type,
-                    plugin_name=plugin.namebase,
-                )
-            )
-
-            # Does the info have an info attribute?
-            if not (
-                hasattr(info, 'info') and isinstance(info.info, PluginInfo)
-            ):
-                warn(
-                    '{plugin_type} plugin "{plugin_name}" info.py does not '
-                    'contain a PluginInfo object.'.format(
-                        plugin_type=plugin_type.title(),
-                        plugin_name=plugin,
-                    )
-                )
-                continue
+            info = ConfigObj(info_file)
 
             # Add the plugin to the dictionary
-            plugins[str(plugin.namebase)] = ValidPlugin(info.info, description)
+            plugins[str(plugin.namebase)] = ValidPlugin(info, description)
 
-            required = info.info.get('required', [])
+            required = info.get('required', [])
 
             for other in required:
                 plugin_requirements[other].append(str(plugin.namebase))
