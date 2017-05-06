@@ -21,16 +21,18 @@ from ..paths import GUNGAME_PLUGINS_PATH
 class GunGamePluginInfo(PluginInfo):
     """Class used to store plugin info for GunGame sub-plugins."""
 
-    def __init__(self, module):
+    def __init__(self, info_module):
         """Override __init__ to get the proper info."""
-        path = module.split('.')
+        path = info_module.split('.')
         if (
-            not module.startswith('gungame.plugins.') or
+            not info_module.startswith('gungame.plugins.') or
             path[2] not in ('included', 'custom') or
             len(path) != 5
         ):
             raise ValueError(
-                'Invalid plugin path given: {module}'.format(module=module)
+                'Invalid plugin path given: {module}'.format(
+                    module=info_module,
+                )
             )
         name = path[3]
         ini_file = GUNGAME_PLUGINS_PATH / path[2] / name / 'info.ini'

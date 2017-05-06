@@ -36,9 +36,9 @@ class _RegisteredCommand(object):
         """Store the commands to be registered."""
         self.name = self.commands = name
         self.callback = callback
-        module = self.callback.__module__
-        if module.startswith('gungame.plugins'):
-            plugin_commands[module.split('.')[3]].append(self.name)
+        callback_module = self.callback.__module__
+        if callback_module.startswith('gungame.plugins'):
+            plugin_commands[callback_module.split('.')[3]].append(self.name)
         if self.name in commands_ini_file:
             self.commands = commands_ini_file[self.name].split(',')
             return

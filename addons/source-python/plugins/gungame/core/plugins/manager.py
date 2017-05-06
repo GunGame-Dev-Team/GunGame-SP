@@ -122,13 +122,13 @@ class _GGPluginManager(PluginManager):
         super()._remove_modules(plugin_name)
 
     @staticmethod
-    def _is_related_module(base_name, module):
+    def _is_related_module(base_name, module_to_check):
         """Check if a plugin's base name is related to a module name."""
-        if module.split('.')[~0] in (
+        if module_to_check.split('.')[~0] in (
             'commands', 'configuration', 'custom_events', 'info', 'rules',
             'settings',
         ):
             return False
-        return PluginManager._is_related_module(base_name, module)
+        return PluginManager._is_related_module(base_name, module_to_check)
 
 gg_plugin_manager = _GGPluginManager('gungame')
