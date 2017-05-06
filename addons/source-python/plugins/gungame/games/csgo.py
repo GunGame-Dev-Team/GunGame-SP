@@ -33,7 +33,7 @@ class _NoMessage(object):
         """Store the message type."""
         self.message_type = message_type
 
-    def _message_hook(self, *args, **kwargs):
+    def message_hook(self, *args, **kwargs):
         """Override for messages that do not work."""
         warn(
             'Message type "{message_type}" not supported for '
@@ -44,7 +44,7 @@ class _NoMessage(object):
         )
 
 # CS:GO doesn't support any Dialog menus/messages
-message_manager.top_message = _NoMessage('DialogMsg')._message_hook
+message_manager.top_message = _NoMessage('DialogMsg').message_hook
 # CS:GO Center and KeyHint message are in same location as HintText
 message_manager.center_message = message_manager.hint_message
 message_manager.keyhint_message = message_manager.hint_message
@@ -90,7 +90,7 @@ def _player_death(game_event):
     # Did the killer kill using their level's weapon?
     try:
         weapon = weapon_manager[game_event['weapon']].basename
-    except:
+    except KeyError:
         return
 
     if weapon != 'molotov':
