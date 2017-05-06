@@ -29,23 +29,33 @@ __all__ = (
 # >> CONFIGURATION
 # =============================================================================
 with GunGameConfigManager(info.name) as _config:
-    with _config.cvar('limit') as limit:
+    with _config.cvar(
+        name='limit',
+    ) as limit:
         limit.add_text()
 
-    with _config.cvar('skip_nade') as skip_nade:
+    with _config.cvar(
+        name='skip_nade',
+    ) as skip_nade:
         skip_nade.add_text()
 
     with _config.cvar(
-        'level_victim_nade',
+        name='level_victim_nade',
         convar=skip_nade.name,
     ) as level_victim_nade:
         level_victim_nade.add_text()
 
-    with _config.cvar('level_down_knife_level') as level_down_knife_level:
+    with _config.cvar(
+        name='level_down_knife_level',
+    ) as level_down_knife_level:
         level_down_knife_level.add_text()
 
-    with _config.cvar('level_one_victim') as level_one_victim:
+    with _config.cvar(
+        name='level_one_victim',
+    ) as level_one_victim:
         level_one_victim.add_text()
 
-    with _config.cvar('no_switch_default') as no_switch_default:
+    with _config.cvar(
+        name='no_switch_default',
+    ) as no_switch_default:
         no_switch_default.add_text()

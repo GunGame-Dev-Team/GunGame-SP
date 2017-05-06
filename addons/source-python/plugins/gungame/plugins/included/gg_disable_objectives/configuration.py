@@ -25,5 +25,7 @@ __all__ = (
 # =============================================================================
 with GunGameConfigManager(info.name) as _config:
 
-    with _config.cvar('type') as disable_type:
+    with _config.cvar(
+        name='type',
+    ) as disable_type:
         disable_type.add_text()

@@ -31,35 +31,45 @@ __all__ = (
 # =============================================================================
 with GunGameConfigManager('weapon') as _config:
     with _config.cvar(
-        'order_file', 'default', flags=ConVarFlags.NOTIFY,
+        name='order_file',
+        default='default',
+        flags=ConVarFlags.NOTIFY,
     ) as order_file:
         order_file.add_text()
 
     # TODO: add in functionality
-    with _config.cvar('order_choose_random') as order_choose_random:
+    with _config.cvar(
+        name='order_choose_random',
+    ) as order_choose_random:
         order_choose_random.add_text()
 
     with _config.cvar(
-        'order_randomize', flags=ConVarFlags.NOTIFY,
+        name='order_randomize',
+        flags=ConVarFlags.NOTIFY,
     ) as order_randomize:
         order_randomize.add_text()
 
     # TODO: add in functionality
     with _config.cvar(
-        'randomize_per_player', flags=ConVarFlags.NOTIFY,
+        name='randomize_per_player',
+        flags=ConVarFlags.NOTIFY,
     ) as randomize_per_player:
         randomize_per_player.add_text()
 
     # TODO: add in functionality
     with _config.cvar(
-        'random_weapon_each_time', flags=ConVarFlags.NOTIFY,
+        name='random_weapon_each_time',
+        flags=ConVarFlags.NOTIFY,
     ) as random_weapon_each_time:
         random_weapon_each_time.add_text()
 
     with _config.cvar(
-        'multi_kill_override', flags=ConVarFlags.NOTIFY,
+        name='multi_kill_override',
+        flags=ConVarFlags.NOTIFY,
     ) as multi_kill_override:
         multi_kill_override.add_text()
 
-    with _config.cvar('prop_physics') as prop_physics:
+    with _config.cvar(
+        name='prop_physics',
+    ) as prop_physics:
         prop_physics.add_text()

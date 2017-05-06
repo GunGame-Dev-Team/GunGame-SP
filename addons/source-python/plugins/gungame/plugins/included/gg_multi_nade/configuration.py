@@ -24,5 +24,7 @@ __all__ = (
 # >> CONFIGURATION
 # =============================================================================
 with GunGameConfigManager(info.name) as _config:
-    with _config.cvar('max_nades') as max_nades:
+    with _config.cvar(
+        name='max_nades',
+    ) as max_nades:
         max_nades.add_text()

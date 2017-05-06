@@ -26,8 +26,12 @@ __all__ = (
 # =============================================================================
 with GunGameConfigManager(info.name) as _config:
 
-    with _config.cvar('quick_switch') as quick_switch:
+    with _config.cvar(
+        name='quick_switch',
+    ) as quick_switch:
         quick_switch.add_text()
 
-    with _config.cvar('multiple_kills') as multiple_kills:
+    with _config.cvar(
+        name='multiple_kills',
+    ) as multiple_kills:
         multiple_kills.add_text()

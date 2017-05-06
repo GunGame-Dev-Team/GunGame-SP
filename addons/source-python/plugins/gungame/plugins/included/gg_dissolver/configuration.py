@@ -30,7 +30,9 @@ __all__ = (
 # =============================================================================
 with GunGameConfigManager(info.name) as _config:
 
-    with _config.cvar('type') as dissolver_type:
+    with _config.cvar(
+        name='type',
+    ) as dissolver_type:
 
         for _name in DissolveType.__members__:
             dissolver_type.Options.append(
@@ -46,8 +48,13 @@ with GunGameConfigManager(info.name) as _config:
             remove=_num_dissolve_types + 1,
         )
 
-    with _config.cvar('magnitude', 2) as magnitude:
+    with _config.cvar(
+        name='magnitude',
+        default=2,
+    ) as magnitude:
         magnitude.add_text()
 
-    with _config.cvar('delay') as dissolver_delay:
+    with _config.cvar(
+        name='delay',
+    ) as dissolver_delay:
         dissolver_delay.add_text()

@@ -25,5 +25,7 @@ __all__ = (
 # =============================================================================
 with GunGameConfigManager(info.name) as _config:
 
-    with _config.cvar('auto_switch_default') as auto_switch_default:
+    with _config.cvar(
+        name='auto_switch_default',
+    ) as auto_switch_default:
         auto_switch_default.add_text()

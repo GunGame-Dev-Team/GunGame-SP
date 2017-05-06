@@ -25,5 +25,7 @@ __all__ = (
 # =============================================================================
 with GunGameConfigManager(info.name) as _config:
 
-    with _config.cvar('join_team_level') as join_team_level:
+    with _config.cvar(
+        name='join_team_level',
+    ) as join_team_level:
         join_team_level.add_text()

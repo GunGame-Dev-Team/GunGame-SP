@@ -32,37 +32,60 @@ __all__ = (
 with GunGameConfigManager('misc') as _config:
     _config._cvar_prefix = 'gg_'
 
-    with _config.cvar('allow_kills_after_round') as allow_kills_after_round:
+    with _config.cvar(
+        name='allow_kills_after_round',
+    ) as allow_kills_after_round:
         allow_kills_after_round.add_text()
 
-    with _config.cvar('dynamic_chat_time') as dynamic_chat_time:
+    with _config.cvar(
+        name='dynamic_chat_time',
+    ) as dynamic_chat_time:
         dynamic_chat_time.add_text()
 
-    with _config.cvar('spawn_protection') as spawn_protection:
+    with _config.cvar(
+        name='spawn_protection',
+    ) as spawn_protection:
         spawn_protection.add_text()
 
-    with _config.cvar('spawn_protection_cancel_on_fire') as cancel_on_fire:
+    with _config.cvar(
+        name='spawn_protection_cancel_on_fire',
+    ) as cancel_on_fire:
         cancel_on_fire.add_text()
 
-    with _config.cvar('spawn_protection_can_level_up') as level_on_protect:
+    with _config.cvar(
+        name='spawn_protection_can_level_up',
+    ) as level_on_protect:
         level_on_protect.add_text()
 
-    with _config.cvar('give_armor') as give_armor:
+    with _config.cvar(
+        name='give_armor',
+    ) as give_armor:
         give_armor.add_text()
 
-    with _config.cvar('give_defusers') as give_defusers:
+    with _config.cvar(
+        name='give_defusers',
+    ) as give_defusers:
         give_defusers.add_text()
 
     # TODO: add in functionality
-    with _config.cvar('map_strip_exceptions') as map_strip_exceptions:
+    with _config.cvar(
+        name='map_strip_exceptions',
+    ) as map_strip_exceptions:
         map_strip_exceptions.add_text()
 
     # TODO: add in functionality
-    with _config.cvar('prune_database') as prune_database:
+    with _config.cvar(
+        name='prune_database',
+    ) as prune_database:
         prune_database.add_text()
 
-    with _config.cvar('sound_pack', 'default') as sound_pack:
+    with _config.cvar(
+        name='sound_pack',
+        default='default',
+    ) as sound_pack:
         sound_pack.add_text()
 
-    with _config.cvar('send_rules_each_map') as send_rules_each_map:
+    with _config.cvar(
+        name='send_rules_each_map',
+    ) as send_rules_each_map:
         send_rules_each_map.add_text()

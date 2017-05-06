@@ -25,5 +25,7 @@ __all__ = (
 # =============================================================================
 with GunGameConfigManager(info.name) as _config:
 
-    with _config.cvar('spawn_joiners') as spawn_joiners:
+    with _config.cvar(
+        name='spawn_joiners',
+    ) as spawn_joiners:
         spawn_joiners.add_text()

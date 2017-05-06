@@ -24,5 +24,8 @@ __all__ = (
 # >> CONFIGURATION
 # =============================================================================
 with GunGameConfigManager(info.name) as _config:
-    with _config.cvar('delay', 2) as delay:
+    with _config.cvar(
+        name='delay',
+        default=2,
+    ) as delay:
         delay.add_text()

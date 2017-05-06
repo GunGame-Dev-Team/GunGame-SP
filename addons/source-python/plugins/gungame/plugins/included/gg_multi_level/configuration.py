@@ -28,17 +28,30 @@ __all__ = (
 # >> CONFIGURATION
 # =============================================================================
 with GunGameConfigManager(info.name) as _config:
-    with _config.cvar('levels', 3) as levels:
+    with _config.cvar(
+        name='levels',
+        default=3,
+    ) as levels:
         levels.add_text()
 
-    with _config.cvar('speed', 150) as speed:
+    with _config.cvar(
+        name='speed',
+        default=150,
+    ) as speed:
         speed.add_text()
 
-    with _config.cvar('gravity', 100) as gravity:
+    with _config.cvar(
+        name='gravity',
+        default=100,
+    ) as gravity:
         gravity.add_text()
 
-    with _config.cvar('tk_attacker_reset') as tk_attacker_reset:
+    with _config.cvar(
+        name='tk_attacker_reset',
+    ) as tk_attacker_reset:
         tk_attacker_reset.add_text()
 
-    with _config.cvar('tk_victim_reset') as tk_victim_reset:
+    with _config.cvar(
+        name='tk_victim_reset',
+    ) as tk_victim_reset:
         tk_victim_reset.add_text()

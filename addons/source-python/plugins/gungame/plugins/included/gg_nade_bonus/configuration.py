@@ -53,8 +53,12 @@ with GunGameConfigManager(info.name) as _config:
             weapon_list=_weapon_list,
         )
 
-    with _config.cvar('mode') as bonus_mode:
+    with _config.cvar(
+        name='mode',
+    ) as bonus_mode:
         bonus_mode.add_text(convar=bonus_weapon.name)
 
-    with _config.cvar('reset') as bonus_reset:
+    with _config.cvar(
+        name='reset',
+    ) as bonus_reset:
         bonus_reset.add_text(convar=bonus_weapon.name)
