@@ -15,6 +15,7 @@ resource/source-python/translations/gungame/commands/custom_plugins/
 resource/source-python/translations/gungame/messages/custom_plugins/
 resource/source-python/translations/gungame/config/custom_plugins/
 resource/source-python/translations/gungame/rules/custom_plugins/
+resource/source-python/translations/gungame/settings/custom_plugins/
 
 # Server-specific configuration files
 cfg/source-python/gungame/*.ini
