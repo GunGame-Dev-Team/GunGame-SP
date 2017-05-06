@@ -20,11 +20,17 @@ _config_strings = LangStrings('gungame/config/logger')
 # This cannot be done with GunGameConfigManager as it causes circular imports.
 with ConfigManager('gungame/logging_settings', 'gg_logging_') as _config:
 
-    with _config.cvar('level', 0, _config_strings['Level']) as _level:
-        pass
+    _level = _config.cvar(
+        name='level',
+        default=0,
+        description=_config_strings['Level'],
+    )
 
-    with _config.cvar('areas', 1, _config_strings['Areas']) as _areas:
-        pass
+    _areas = _config.cvar(
+        name='areas',
+        default=1,
+        description=_config_strings['Areas'],
+    )
 
 # Get the GunGame logger
 gg_logger = LogManager(
