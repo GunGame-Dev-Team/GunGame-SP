@@ -12,9 +12,9 @@ from importlib import import_module
 from settings.player import PlayerSettings
 
 # GunGame
+from gungame.info import info
 from ..paths import GUNGAME_PLUGINS_PATH
 from ..plugins.valid import valid_plugins
-from gungame.info import info
 
 
 # =============================================================================

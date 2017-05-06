@@ -13,9 +13,6 @@ from warnings import warn
 # Site-package
 from configobj import ConfigObj
 
-# Source.Python
-from plugins.info import PluginInfo
-
 # GunGame
 from ..paths import GUNGAME_PLUGINS_PATH
 
