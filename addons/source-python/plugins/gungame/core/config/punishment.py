@@ -17,7 +17,6 @@ __all__ = (
     'afk_length',
     'afk_type',
     'level_one_team_kill',
-    'retry_punish',
     'suicide_punish',
     'team_kill_punish',
 )
@@ -43,13 +42,6 @@ with GunGameConfigManager('punishment') as _config:
         name='afk_length',
     ) as afk_length:
         afk_length.add_text()
-
-    # Retry
-    # TODO: add in functionality
-    with _config.cvar(
-        name='retry',
-    ) as retry_punish:
-        retry_punish.add_text()
 
     # Suicide
     with _config.cvar(
