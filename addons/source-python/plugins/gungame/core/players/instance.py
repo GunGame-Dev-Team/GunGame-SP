@@ -13,6 +13,9 @@ from players.entity import Player
 from weapons.entity import Weapon
 from weapons.manager import weapon_manager
 
+# Custom Package
+from idle_manager import is_client_idle
+
 # GunGame
 from .attributes import (
     attribute_post_hooks, attribute_pre_hooks, player_attributes,
@@ -86,6 +89,10 @@ class GunGamePlayer(Player):
     def unique_id(self):
         """Return the player's unique id."""
         return self.uniqueid
+
+    @property
+    def is_afk(self):
+        return is_client_idle(self.index)
 
     # =========================================================================
     # >> LEVEL FUNCTIONALITY

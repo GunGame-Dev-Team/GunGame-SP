@@ -65,8 +65,8 @@ def _steal_level(game_event):
         weapon = killer.level_weapon
         killer_level = killer.level
 
-    # TODO: AFK checks
-    # killer.chat_message('KnifeSteal:AFK')
+    if victim.is_afk:
+        killer.chat_message('KnifeSteal:AFK')
 
     victim_level = victim.level
 
