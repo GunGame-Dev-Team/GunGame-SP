@@ -9,7 +9,6 @@
 from warnings import warn
 
 # Source.Python
-from core import GAME_NAME
 from engines.server import global_vars
 from listeners import OnLevelInit, OnLevelEnd
 from listeners.tick import Delay
@@ -52,7 +51,7 @@ def _level_init(map_name):
 
 
 def _create_spawn_points(map_name):
-    spawn_points_file = SPAWN_POINT_PATH / GAME_NAME / map_name + '.txt'
+    spawn_points_file = SPAWN_POINT_PATH / map_name + '.txt'
     if not spawn_points_file.isfile():
         warn(
             'No spawn point file found for "{map_name}".'.format(
