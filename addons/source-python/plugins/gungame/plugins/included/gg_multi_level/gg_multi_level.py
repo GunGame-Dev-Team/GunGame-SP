@@ -121,10 +121,10 @@ class _MultiLevelManager(dict):
 
     def give_multi_level(self, userid):
         """Give the player multi-level effects."""
-        if not len(self):
-            on_tick_listener_manager.register_listener(self._tick)
         if userid in self:
             self.__delitem__(userid, reset_levels=False)
+        if not len(self):
+            on_tick_listener_manager.register_listener(self._tick)
         self[userid] = _MultiLevelPlayer.from_userid(userid)
         with GG_Multi_Level() as event:
             event.userid = userid

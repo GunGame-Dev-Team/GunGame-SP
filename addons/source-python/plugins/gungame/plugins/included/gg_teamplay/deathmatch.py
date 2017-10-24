@@ -7,6 +7,7 @@
 # =============================================================================
 # Source.Python
 from events import Event
+from weapons.manager import weapon_manager
 
 # GunGame
 from gungame.core.config.weapon import prop_physics
@@ -56,7 +57,7 @@ def _increment_team_multi_kill(game_event):
     if team is None:
         return
 
-    weapon = game_event['weapon']
+    weapon = weapon_manager[game_event['weapon']].basename
     if weapon != team.level_weapon:
         if weapon == 'prop_physics' and not prop_physics.get_int():
             return
