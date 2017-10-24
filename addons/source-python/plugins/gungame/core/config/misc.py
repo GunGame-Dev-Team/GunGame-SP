@@ -68,16 +68,16 @@ with GunGameConfigManager('misc') as _config:
         give_defusers.add_text()
 
     # TODO: add in functionality
-    with _config.cvar(
-        name='map_strip_exceptions',
-    ) as map_strip_exceptions:
-        map_strip_exceptions.add_text()
+    # with _config.cvar(
+    #     name='map_strip_exceptions',
+    # ) as map_strip_exceptions:
+    #     map_strip_exceptions.add_text()
 
     # TODO: add in functionality
-    with _config.cvar(
-        name='prune_database',
-    ) as prune_database:
-        prune_database.add_text()
+    # with _config.cvar(
+    #     name='prune_database',
+    # ) as prune_database:
+    #     prune_database.add_text()
 
     with _config.cvar(
         name='sound_pack',

@@ -38,10 +38,10 @@ with GunGameConfigManager('weapon') as _config:
         order_file.add_text()
 
     # TODO: add in functionality
-    with _config.cvar(
-        name='order_choose_random',
-    ) as order_choose_random:
-        order_choose_random.add_text()
+    # with _config.cvar(
+    #     name='order_choose_random',
+    # ) as order_choose_random:
+    #     order_choose_random.add_text()
 
     with _config.cvar(
         name='order_randomize',
@@ -50,18 +50,18 @@ with GunGameConfigManager('weapon') as _config:
         order_randomize.add_text()
 
     # TODO: add in functionality
-    with _config.cvar(
-        name='randomize_per_player',
-        flags=ConVarFlags.NOTIFY,
-    ) as randomize_per_player:
-        randomize_per_player.add_text()
+    # with _config.cvar(
+    #     name='randomize_per_player',
+    #     flags=ConVarFlags.NOTIFY,
+    # ) as randomize_per_player:
+    #     randomize_per_player.add_text()
 
     # TODO: add in functionality
-    with _config.cvar(
-        name='random_weapon_each_time',
-        flags=ConVarFlags.NOTIFY,
-    ) as random_weapon_each_time:
-        random_weapon_each_time.add_text()
+    # with _config.cvar(
+    #     name='random_weapon_each_time',
+    #     flags=ConVarFlags.NOTIFY,
+    # ) as random_weapon_each_time:
+    #     random_weapon_each_time.add_text()
 
     with _config.cvar(
         name='multi_kill_override',
