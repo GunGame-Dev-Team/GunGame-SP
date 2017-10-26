@@ -377,6 +377,9 @@ def _gg_win(game_event):
     entity = Entity.find_or_create('game_end')
     entity.end_game()
 
+    # Do not remove! This fixes a lot of console spam and hanging on map end.
+    queue_command_string('bot_kick')
+
 
 @Event('gg_map_end')
 def _gg_map_end(game_event):
