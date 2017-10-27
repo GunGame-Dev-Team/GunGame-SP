@@ -11,6 +11,7 @@ from collections import defaultdict
 # Source.Python
 from events import Event
 from listeners.tick import Delay
+from weapons.manager import weapon_manager
 
 # GunGame
 from gungame.core.players.dictionary import player_dictionary
@@ -35,7 +36,7 @@ def _delay_give_new_weapon(game_event):
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         return
 
-    weapon = game_event['weapon']
+    weapon = weapon_manager[game_event['weapon']].basename
     if weapon not in all_grenade_weapons:
         return
 
