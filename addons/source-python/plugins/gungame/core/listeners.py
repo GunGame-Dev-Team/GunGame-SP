@@ -132,6 +132,7 @@ def _player_spawn(game_event):
 
     # Skip bots
     if player.is_fake_client():
+        player.player_state = 0
         return
 
     # Send the player their level information
