@@ -6,7 +6,6 @@
 # >> IMPORTS
 # =============================================================================
 # Source.Python
-from core import GAME_NAME
 from events import Event
 from listeners.tick import Delay
 
@@ -14,7 +13,7 @@ from listeners.tick import Delay
 from gungame.core.players.attributes import AttributePreHook
 from gungame.core.players.dictionary import player_dictionary
 from gungame.core.status import GunGameMatchStatus, GunGameStatus
-from gungame.core.weapons.groups import all_grenade_weapons
+from gungame.core.weapons.groups import individual_weapons
 
 # Plugin
 from .settings import auto_switch
@@ -25,10 +24,6 @@ from .settings import auto_switch
 # =============================================================================
 # Store a dictionary to know when a player recently leveled from knife level
 _recently_off_nade = dict()
-
-_weapons_to_check = list(all_grenade_weapons)
-if GAME_NAME == 'csgo':
-    _weapons_to_check += ['taser']
 
 
 # =============================================================================
@@ -49,7 +44,7 @@ def _earn_nade(game_event):
     if victim.team == killer.team:
         return
 
-    if killer.level_weapon not in _weapons_to_check:
+    if killer.level_weapon not in individual_weapons:
         return
 
     if attacker in _recently_off_nade:
@@ -72,7 +67,7 @@ def _earn_nade(game_event):
 @AttributePreHook('level')
 def _pre_level_change(player, attribute, new_value):
     """Store players leveling off of nade level."""
-    if not player.level or player.level_weapon not in _weapons_to_check:
+    if not player.level or player.level_weapon not in individual_weapons:
         return
 
     _recently_off_nade[player.userid] = {

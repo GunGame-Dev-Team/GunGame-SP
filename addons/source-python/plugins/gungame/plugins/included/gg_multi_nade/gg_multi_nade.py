@@ -9,7 +9,6 @@
 from collections import defaultdict
 
 # Source.Python
-from core import GAME_NAME
 from events import Event
 from listeners.tick import Delay
 from weapons.manager import weapon_manager
@@ -17,7 +16,7 @@ from weapons.manager import weapon_manager
 # GunGame
 from gungame.core.players.dictionary import player_dictionary
 from gungame.core.status import GunGameMatchStatus, GunGameStatus
-from gungame.core.weapons.groups import all_grenade_weapons
+from gungame.core.weapons.groups import individual_weapons
 
 # Plugin
 from .configuration import max_nades
@@ -27,10 +26,6 @@ from .configuration import max_nades
 # >> GLOBAL VARIABLES
 # =============================================================================
 _nade_count = defaultdict(int)
-
-_weapons_to_check = list(all_grenade_weapons)
-if GAME_NAME == 'csgo':
-    _weapons_to_check += ['taser']
 
 
 # =============================================================================
@@ -42,7 +37,7 @@ def _delay_give_new_weapon(game_event):
         return
 
     weapon = weapon_manager[game_event['weapon']].basename
-    if weapon not in _weapons_to_check:
+    if weapon not in individual_weapons:
         return
 
     try:

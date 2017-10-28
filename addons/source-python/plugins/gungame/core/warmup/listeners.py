@@ -20,7 +20,7 @@ from weapons.manager import weapon_manager
 
 # GunGame
 from ..teams import team_names
-from ..weapons.groups import all_grenade_weapons
+from ..weapons.groups import individual_weapons
 
 
 # =============================================================================
@@ -78,8 +78,8 @@ def _player_death(game_event):
 
 def _weapon_fire(game_event):
     # Multi-Nade
-    weapon = game_event['weapon']
-    if weapon not in all_grenade_weapons:
+    weapon = weapon_manager[game_event['weapon']].basename
+    if weapon not in individual_weapons:
         return
     Delay(1, _give_weapon, (game_event['userid'], weapon))
 

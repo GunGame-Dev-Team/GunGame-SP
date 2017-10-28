@@ -70,6 +70,9 @@ melee_weapons = _weapon_sets['melee'] = set()
 # Other Weapon sets
 other_weapons = set()
 
+# Individual Fire Weapon sets
+individual_weapons = set()
+
 
 # =============================================================================
 # >> HELPER FUNCTIONS
@@ -104,3 +107,8 @@ if not len(all_weapons):
     raise NotImplementedError(
         'Game {game} not supported, no weapon data.'.format(game=GAME_NAME)
     )
+
+# Set the individual fire weapon sets
+individual_weapons.update(all_grenade_weapons)
+if GAME_NAME == 'csgo':
+    individual_weapons.add('taser')
