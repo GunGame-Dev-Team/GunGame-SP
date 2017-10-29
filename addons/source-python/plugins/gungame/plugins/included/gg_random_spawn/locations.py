@@ -6,9 +6,8 @@
 # >> IMPORTS
 # =============================================================================
 # Source.Python
-from core import GAME_NAME
-from entities.entity import BaseEntity, Entity
-from filters.entities import BaseEntityIter, EntityIter
+from entities.entity import BaseEntity
+from filters.entities import BaseEntityIter
 
 
 # =============================================================================
@@ -24,33 +23,20 @@ __all__ = (
 # =============================================================================
 # >> FUNCTIONS
 # =============================================================================
-if GAME_NAME == 'csgo':
-    def get_locations(class_name):
-        """Return all current spawn points for the given class name."""
-        for base_entity in BaseEntityIter(class_name):
-            yield (
-                base_entity.get_key_value_vector('origin'),
-                base_entity.get_key_value_vector('angles'),
-            )
-
-    def set_location(class_name, origin, angles):
-        """Create a spawn point at the given location."""
-        base_entity = BaseEntity.create(class_name)
-        base_entity.set_key_value_vector('origin', origin)
-        base_entity.set_key_value_vector('angles', angles)
+def get_locations(class_name):
+    """Return all current spawn points for the given class name."""
+    for base_entity in BaseEntityIter(class_name):
+        yield (
+            base_entity.get_key_value_vector('origin'),
+            base_entity.get_key_value_vector('angles'),
+        )
 
 
-else:
-    def get_locations(class_name):
-        """Return all current spawn points for the given class name."""
-        for entity in EntityIter(class_name):
-            yield entity.origin, entity.angles
-
-    def set_location(class_name, origin, angles):
-        """Create a spawn point at the given location."""
-        entity = Entity.create(class_name)
-        entity.origin = origin
-        entity.angles = angles
+def set_location(class_name, origin, angles):
+    """Create a spawn point at the given location."""
+    base_entity = BaseEntity.create(class_name)
+    base_entity.set_key_value_vector('origin', origin)
+    base_entity.set_key_value_vector('angles', angles)
 
 
 def remove_locations(class_name):

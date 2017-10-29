@@ -20,12 +20,15 @@ from gungame.core.players.dictionary import player_dictionary
 from gungame.core.status import (
     GunGameMatchStatus, GunGameRoundStatus, GunGameStatus,
 )
-from gungame.core.weapons.groups import incendiary_weapons
+from gungame.core.weapons.groups import incendiary_weapons, individual_weapons
 
 
 # =============================================================================
 # >> OVERRIDES
 # =============================================================================
+individual_weapons.add('taser')
+
+
 class _NoMessage(object):
     """Class used to hook non-supported message types."""
 

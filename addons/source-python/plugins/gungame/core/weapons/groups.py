@@ -110,5 +110,3 @@ if not len(all_weapons):
 
 # Set the individual fire weapon sets
 individual_weapons.update(all_grenade_weapons)
-if GAME_NAME == 'csgo':
-    individual_weapons.add('taser')
