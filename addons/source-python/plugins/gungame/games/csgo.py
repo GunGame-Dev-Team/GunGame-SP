@@ -10,6 +10,7 @@ from warnings import warn
 
 # Source.Python
 from core import GAME_NAME
+from entities.entity import Entity
 from events import Event
 from weapons.manager import weapon_manager
 
@@ -17,6 +18,7 @@ from weapons.manager import weapon_manager
 from gungame.core.config.misc import allow_kills_after_round, level_on_protect
 from gungame.core.messages import message_manager
 from gungame.core.players.dictionary import player_dictionary
+from gungame.core.players.instance import GunGamePlayer
 from gungame.core.status import (
     GunGameMatchStatus, GunGameRoundStatus, GunGameStatus,
 )
@@ -120,3 +122,18 @@ def _player_death(game_event):
         reason='kill',
         victim=userid,
     )
+
+
+def _give_level_weapon(player):
+    """Hook give_level_weapon to insure that the proper weapon is given."""
+    weapon = _old_give_level_weapon(player)
+    if weapon.classname == weapon.weapon_name:
+        return weapon
+    weapon.remove()
+    player.team_index = 5 - player.team
+    weapon = _old_give_level_weapon(player)
+    player.team_index = 5 - player.team_index
+    return weapon
+
+_old_give_level_weapon = GunGamePlayer.give_level_weapon
+GunGamePlayer.give_level_weapon = _give_level_weapon
