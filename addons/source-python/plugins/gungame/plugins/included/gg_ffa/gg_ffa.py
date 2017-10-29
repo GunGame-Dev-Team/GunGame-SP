@@ -48,7 +48,7 @@ def _pre_take_damage(stack_data):
     _take_damage_dict[address] = (victim.index, victim.team)
 
     # Change the player's team by using the m_iTeamNum property
-    victim.team = 5 - victim.team
+    victim.team_index = 5 - victim.team
 
 
 @EntityPostHook(EntityCondition.is_bot_player, 'on_take_damage')
@@ -60,4 +60,4 @@ def _post_take_damage(stack_data, return_value):
         return
 
     index, team = _take_damage_dict.pop(address)
-    Entity(index).team = team
+    Entity(index).team_index = team
