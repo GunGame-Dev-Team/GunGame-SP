@@ -38,17 +38,17 @@ def _pre_take_damage(stack_data):
         return
 
     victim = make_object(Entity, stack_data[0])
-    if victim.team != attacker.team:
+    if victim.team_index != attacker.team_index:
         return
 
     address = stack_data.registers.esp.address.address
     if address in _take_damage_dict:
         return
 
-    _take_damage_dict[address] = (victim.index, victim.team)
+    _take_damage_dict[address] = (victim.index, victim.team_index)
 
     # Change the player's team by using the m_iTeamNum property
-    victim.team_index = 5 - victim.team
+    victim.team_index = 5 - victim.team_index
 
 
 @EntityPostHook(EntityCondition.is_bot_player, 'on_take_damage')
