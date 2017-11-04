@@ -5,7 +5,12 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Python
+from contextlib import suppress
+from importlib import import_module
+
 # Source.Python
+from core import GAME_NAME
 from entities import TakeDamageInfo
 from entities.entity import Entity
 from entities.hooks import EntityCondition, EntityPostHook, EntityPreHook
@@ -13,6 +18,13 @@ from memory import make_object
 
 # GunGame
 from gungame.core.status import GunGameMatchStatus, GunGameStatus
+
+
+# =============================================================================
+# >> GAME SPECIFIC IMPORT
+# =============================================================================
+with suppress(ModuleNotFoundError):
+    import_module(f'gungame.plugins.included.gg_ffa.games.{GAME_NAME}')
 
 
 # =============================================================================
