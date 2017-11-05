@@ -49,9 +49,26 @@ class _PlayerAttributes(dict):
         """Store the attribute in the dictionary with its default value."""
         self[attribute] = default
 
+        # Add the attribute to existing players
+        try:
+            from .dictionary import player_dictionary
+        except ImportError:
+            return
+        for player in player_dictionary.values():
+            setattr(player, attribute, default)
+
     def unregister_attribute(self, attribute):
         """Remove the attribute from the dictionary."""
         del self[attribute]
+
+        # Remove the attribute from existing players
+        try:
+            from .dictionary import player_dictionary
+        except ImportError:
+            return
+
+        for player in player_dictionary.values():
+            delattr(player, attribute)
 
 # The singleton object of the _PlayerAttributes class.
 player_attributes = _PlayerAttributes()
