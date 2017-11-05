@@ -89,7 +89,7 @@ def _player_spawn(game_event):
         return
 
     # Verify that the player is on a team
-    if player.team < 2:
+    if player.team_index < 2:
         return
 
     if not player.level:
@@ -112,7 +112,7 @@ def _player_spawn(game_event):
     player.give_level_weapon()
 
     # Give CTs defusers, if need be
-    if player.team == 3 and give_defusers.get_bool():
+    if player.team_index == 3 and give_defusers.get_bool():
         player.has_defuser = True
 
     # Give player armor, if necessary
@@ -171,7 +171,7 @@ def _player_death(game_event):
     killer = player_dictionary[attacker]
 
     # Was this a team-kill?
-    if victim.team == killer.team:
+    if victim.team_index == killer.team_index:
         _punish_team_kill(killer)
         return
 
@@ -359,7 +359,7 @@ def _gg_win(game_event):
                 'winner': winner.name,
             }
         )
-    color = {2: RED, 3: BLUE}.get(winner.team, WHITE)
+    color = {2: RED, 3: BLUE}.get(winner.team_index, WHITE)
     message_manager.top_message(
         message='Winner:Short',
         color=color,

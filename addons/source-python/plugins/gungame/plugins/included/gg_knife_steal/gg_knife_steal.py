@@ -55,7 +55,7 @@ def _steal_level(game_event):
 
     killer = player_dictionary[attacker]
     victim = player_dictionary[userid]
-    if killer.team == victim.team:
+    if killer.team_index == victim.team_index:
         return
 
     if attacker in _recently_off_knife:

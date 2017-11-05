@@ -86,7 +86,7 @@ def _player_death(game_event):
     killer = player_dictionary[attacker]
 
     # Was this a team-kill?
-    if victim.team == killer.team:
+    if victim.team_index == killer.team_index:
         return
 
     if killer.in_spawn_protection and not level_on_protect.get_int():
@@ -130,7 +130,7 @@ def _give_level_weapon(player):
     if weapon.classname == weapon.weapon_name:
         return weapon
     weapon.remove()
-    player.team_index = 5 - player.team
+    player.team_index = 5 - player.team_index
     weapon = _old_give_level_weapon(player)
     player.team_index = 5 - player.team_index
     return weapon

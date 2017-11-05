@@ -32,7 +32,7 @@ def _reload_weapon(game_event):
         return
 
     killer = player_dictionary[attacker]
-    if killer.team == player_dictionary[userid].team:
+    if killer.team_index == player_dictionary[userid].team_index:
         return
 
     weapon_name = game_event['weapon']

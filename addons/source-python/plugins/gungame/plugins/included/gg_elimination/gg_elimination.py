@@ -47,7 +47,7 @@ def _player_death(game_event):
         victim.chat_message('Elimination:Suicide')
         return
     killer = player_dictionary[attacker]
-    if victim.team == killer.team:
+    if victim.team_index == killer.team_index:
         Delay(5, _respawn_player, args=(victim.userid, ))
         victim.chat_message('Elimination:TeamKill')
         return
@@ -90,7 +90,7 @@ def _respawn_victims(userid):
         player = player_dictionary.get(victim)
         if player is None:
             continue
-        if player.team == 1:
+        if player.team_index == 1:
             continue
         players.append(player)
         player.spawn()

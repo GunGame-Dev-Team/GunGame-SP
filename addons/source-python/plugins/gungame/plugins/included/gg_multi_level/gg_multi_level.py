@@ -167,7 +167,9 @@ def _reset_team_killers(game_event):
         return
 
     # Not team-kill?
-    if Player.from_userid(userid).team != Player.from_userid(attacker).team:
+    victim_team = player_dictionary[userid].team_index
+    killer_team = player_dictionary[attacker].team_index
+    if victim_team != killer_team:
         del multi_level_manager[userid]
         return
 

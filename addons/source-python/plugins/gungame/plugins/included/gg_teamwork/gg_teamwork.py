@@ -138,7 +138,7 @@ class _TeamManagement(object):
         if self.level is None:
             return
         for player in player_dictionary.values():
-            if player.team != self.number:
+            if player.team_index != self.number:
                 continue
             if player.level == self.level:
                 continue
@@ -156,7 +156,7 @@ class _TeamManagement(object):
         """Find the team's current leader."""
         team_players = {
             player.level: player for player in player_dictionary.values()
-            if player.team == self.number and player.level is not None
+            if player.team_index == self.number and player.level is not None
         }
         if not team_players:
             self.leader = None
@@ -260,7 +260,7 @@ def _clear_team_dictionary(game_event=None):
 @Event('gg_level_up')
 def _level_up(game_event):
     player = player_dictionary[game_event['leveler']]
-    team = teamwork_manager[player.team]
+    team = teamwork_manager[player.team_index]
     if (
         team.leader_userid in (None, player.userid) or
         team.leader_level < game_event['new_level']
@@ -271,7 +271,7 @@ def _level_up(game_event):
 @Event('gg_level_down')
 def _check_team_decrease(game_event):
     player = player_dictionary[game_event['leveler']]
-    team = teamwork_manager[player.team]
+    team = teamwork_manager[player.team_index]
     if team.leader.userid == player.userid:
         team.find_team_leader(player, game_event['old_level'])
 
@@ -330,7 +330,7 @@ def _end_match(game_event):
 # =============================================================================
 @PreEvent('gg_win')
 def _pre_gg_win(game_event):
-    team_number = player_dictionary[game_event['winner']].team
+    team_number = player_dictionary[game_event['winner']].team_index
     Delay(
         delay=0,
         callback=_fire_win_event,

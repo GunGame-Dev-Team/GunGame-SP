@@ -243,7 +243,7 @@ def _increment_multi_kill(game_event):
 
     killer = nade_bonus_dictionary[attacker]
     victim = nade_bonus_dictionary[userid]
-    if killer.player.team == victim.player.team:
+    if killer.player.team_index == victim.player.team_index:
         return
 
     killer.increment_multi_kill(game_event['weapon'])

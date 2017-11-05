@@ -50,7 +50,7 @@ def send_score_menu(index):
                     choice_index=team_levels[team],
                     text=team_names[team],
                     value=team,
-                    highlight=team == player.team,
+                    highlight=team == player.team_index,
                     selectable=False,
                 )
             )

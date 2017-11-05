@@ -61,7 +61,7 @@ class _TeamManager(object):
     def index(self):
         """Return an index of a player on the team."""
         for player in player_dictionary.values():
-            if player.team == self.team_number:
+            if player.team_index == self.team_number:
                 return player.index
         return 0
 
@@ -86,7 +86,7 @@ class _TeamManager(object):
         # TODO: add melee/nade conditionals
 
         return len(
-            [x for x in player_dictionary if x.team == self.team_number]
+            [x for x in player_dictionary if x.team_index == self.team_number]
         )
 
     def increase_multi_kill(self):
@@ -190,7 +190,7 @@ def _send_level_info(game_event):
         return
 
     player = player_dictionary[game_event['userid']]
-    team = team_dictionary.get(player.team)
+    team = team_dictionary.get(player.team_index)
     if team is None:
         return
     if player.level != team.level:
@@ -258,7 +258,7 @@ def _handle_team_win(game_event):
 # =============================================================================
 @AttributePreHook('level')
 def _level_hook(player, attribute, new_value):
-    team = team_dictionary.get(player.team)
+    team = team_dictionary.get(player.team_index)
     if team is None:
         return
     if team.level != new_value:

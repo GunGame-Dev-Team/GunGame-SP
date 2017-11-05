@@ -47,10 +47,10 @@ def send_level_menu(index):
     elif GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         menu.append(menu_strings['Inactive'])
     elif gg_plugin_manager.is_team_game:
-        if player.team not in team_levels:
+        if player.team_index not in team_levels:
             menu.append(Text(menu_strings['Level:Inactive']))
         else:
-            team_level = team_levels[player.team]
+            team_level = team_levels[player.team_index]
             leader_level = max(team_levels.values())
             teams = [
                 team_names[num] for num, level in team_levels.items()
@@ -92,7 +92,7 @@ def send_level_menu(index):
                     teams=', '.join(teams)
                 )
                 menu.append(message)
-    elif player.team < 2:
+    elif player.team_index < 2:
         menu.append(Text(menu_strings['Level:Inactive']))
     else:
         menu.append(

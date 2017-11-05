@@ -88,7 +88,7 @@ def _player_spawn(game_event):
     player = _get_player(game_event['userid'])
     if player is None:
         return
-    if player.team not in team_names:
+    if player.team_index not in team_names:
         return
     _give_warmup_weapon(player)
 

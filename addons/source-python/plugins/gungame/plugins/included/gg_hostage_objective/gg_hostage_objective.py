@@ -87,7 +87,7 @@ def _player_death(game_event):
     if not attacker:
         return
     player = player_dictionary[attacker]
-    if player.team == victim.team:
+    if player.team_index == victim.team_index:
         return
     player.hostage_stops += hostages
     required = stopped_count.get_int()

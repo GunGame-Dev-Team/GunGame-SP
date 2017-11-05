@@ -41,7 +41,7 @@ def _earn_nade(game_event):
 
     victim = player_dictionary[userid]
     killer = player_dictionary[attacker]
-    if victim.team == killer.team:
+    if victim.team_index == killer.team_index:
         return
 
     if killer.level_weapon not in individual_weapons:

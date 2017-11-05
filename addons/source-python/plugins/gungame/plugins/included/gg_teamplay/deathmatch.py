@@ -50,10 +50,10 @@ def _increment_team_multi_kill(game_event):
         return
 
     victim = player_dictionary[game_event['userid']]
-    if victim.team == attacker.team:
+    if victim.team_index == attacker.team_index:
         return
 
-    team = team_dictionary.get(attacker.team)
+    team = team_dictionary.get(attacker.team_index)
     if team is None:
         return
 
