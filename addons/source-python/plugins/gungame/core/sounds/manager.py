@@ -41,7 +41,7 @@ class RandomSounds(list):
 
     def __init__(self, *values):
         """Store all of the sounds in the list."""
-        super().__init__(Sound(x) for x in values)
+        super().__init__(Sound(x, download=True) for x in values)
         self._current = None
         self._remaining = list()
 
@@ -168,7 +168,7 @@ class _SoundManager(defaultdict):
                 elif self.is_allowed_sound_extension(extension):
 
                     # Add the sound to the sound type
-                    self[file.namebase][item] = Sound(value)
+                    self[file.namebase][item] = Sound(value, download=True)
 
                 # Was an invalid extension given?
                 else:
