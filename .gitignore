@@ -1,6 +1,9 @@
 # Python precached files
 __pycache__
 
+# Temp files created by server
+*.ztmp
+
 # Plugin created files
 *.cfg
 *.res
