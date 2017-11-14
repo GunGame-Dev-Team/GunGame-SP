@@ -39,7 +39,9 @@ def load():
 
 def unload():
     """Reset to the old spawn points on unload."""
-    spawn_point_backups.clear(restore=True)
+    spawn_points_file = SPAWN_POINT_PATH / global_vars.map_name + '.txt'
+    if spawn_points_file.isfile():
+        spawn_point_backups.clear(restore=True)
 
 
 # =============================================================================
