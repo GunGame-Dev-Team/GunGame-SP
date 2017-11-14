@@ -154,7 +154,7 @@ class _TeamManager(object):
             message += 'Increase'
         elif other_level > current_level:
             message += 'Trailing'
-        elif old_level == current_level:
+        elif other_level == current_level:
             message += 'Tied'
         else:
             message += 'TakeLead'
