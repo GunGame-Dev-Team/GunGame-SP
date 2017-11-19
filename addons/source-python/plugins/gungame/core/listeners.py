@@ -45,6 +45,7 @@ from .sounds.manager import sound_manager
 from .status import GunGameMatchStatus, GunGameRoundStatus, GunGameStatus
 from .warmup.manager import warmup_manager
 from .weapons.groups import incendiary_weapons, melee_weapons
+from .weapons.helpers import remove_idle_weapons
 from .weapons.manager import weapon_order_manager
 
 
@@ -290,6 +291,8 @@ def _round_start(game_event):
     GunGameStatus.ROUND = GunGameRoundStatus.ACTIVE
     for entity in EntityIter('func_buyzone'):
         entity.disable()
+
+    remove_idle_weapons()
 
 
 @Event('round_end')
