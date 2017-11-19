@@ -84,10 +84,10 @@ class _GGPluginManager(PluginManager):
             event.plugin = plugin_name
             event.plugin_type = valid_plugins.get_plugin_type(plugin_name)
 
-    def unload(self, plugin_name):
+    def unload(self, plugin_name, indent=0):
         """Unload the given plugin."""
         self.logger.log_message(
-            self.prefix + self.translations[
+            ' ' * indent + self.prefix + self.translations[
                 'Unloading'
             ].get_string(plugin=plugin_name)
         )
@@ -96,7 +96,7 @@ class _GGPluginManager(PluginManager):
             return
 
         self.logger.log_message(
-            self.prefix + self.translations[
+            ' ' * indent + self.prefix + self.translations[
                 'Successful Unload'
             ].get_string(plugin=plugin_name)
         )

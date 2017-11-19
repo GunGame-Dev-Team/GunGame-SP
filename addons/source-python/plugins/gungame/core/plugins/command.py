@@ -276,7 +276,7 @@ class _GGSubCommandManager(SubCommandManager):
     def unload_all_plugins(self):
         """Unload all plugins when GunGame is unloading."""
         for plugin_name in list(self.manager):
-            del self.manager[plugin_name]
+            self.manager.unload(plugin_name, indent=8)
 
 # Get the "gg" command instance
 gg_command_manager = _GGSubCommandManager(
