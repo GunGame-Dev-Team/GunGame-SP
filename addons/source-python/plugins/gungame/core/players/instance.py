@@ -269,6 +269,7 @@ class GunGamePlayer(Player):
             delay=delay,
             callback=self.remove_spawn_protection,
             kwargs={'from_delay': True},
+            cancel_on_level_end=True,
         )
 
     def remove_spawn_protection(self, from_delay=False):
