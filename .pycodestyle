@@ -1,0 +1,4 @@
+[pycodestyle]
+count = True
+ignore = E305
+statistics = True
