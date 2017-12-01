@@ -55,11 +55,7 @@ def _level_init(map_name):
 def _create_spawn_points(map_name):
     spawn_points_file = SPAWN_POINT_PATH / map_name + '.txt'
     if not spawn_points_file.isfile():
-        warn(
-            'No spawn point file found for "{map_name}".'.format(
-                map_name=map_name,
-            )
-        )
+        warn(f'No spawn point file found for "{map_name}".')
         return
 
     spawn_point_backups.store_backups()
@@ -78,21 +74,13 @@ def _create_spawn_points(map_name):
                 )
             except ValueError:
                 warn(
-                    'Line {num} in spawn point file "{map_name}" is '
-                    'invalid.'.format(
-                        num=num,
-                        map_name=map_name,
-                    )
+                    f'Line {num} in spawn point file "{map_name}" is invalid.'
                 )
                 continue
 
             if len(values) != 6:
                 warn(
-                    'Line {num} in spawn point file "{map_name}" is '
-                    'invalid.'.format(
-                        num=num,
-                        map_name=map_name,
-                    )
+                    f'Line {num} in spawn point file "{map_name}" is invalid.'
                 )
                 continue
 

@@ -46,12 +46,7 @@ def dissolve_player_ragdoll(game_event):
     if current_type < 0 or current_type > _num_dissolve_types + 2:
 
         # Raise a warning
-        warn(
-            'Invalid value for {cvar} cvar "{value}".'.format(
-                cvar=dissolver_type.name,
-                value=current_type
-            )
-        )
+        warn(f'Invalid value for {dissolver_type.name} cvar "{current_type}".')
 
         # Use the remove setting
         current_type = _num_dissolve_types + 2
@@ -85,7 +80,7 @@ def dissolve_ragdoll(userid, current_type):
         return
 
     # Set the target name for the player's ragdoll
-    entity.target_name = 'ragdoll_{userid}'.format(userid=userid)
+    entity.target_name = f'ragdoll_{userid}'
 
     # Get the dissolver entity
     dissolver_entity = Entity.find_or_create('env_entity_dissolver')
@@ -101,4 +96,4 @@ def dissolve_ragdoll(userid, current_type):
     dissolver_entity.dissolve_type = current_type
 
     # Dissolve the ragdoll
-    dissolver_entity.dissolve('ragdoll_{userid}'.format(userid=userid))
+    dissolver_entity.dissolve(f'ragdoll_{userid}')

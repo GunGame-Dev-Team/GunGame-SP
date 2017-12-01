@@ -88,7 +88,7 @@ class _WarmupManager(object):
                     ','
                 ) if weapon in _possible_weapons
             ]
-            if len(weapons):
+            if weapons:
                 self.weapon_cycle = cycle(weapons)
                 return
 

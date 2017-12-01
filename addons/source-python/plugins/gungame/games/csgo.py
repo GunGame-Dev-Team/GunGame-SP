@@ -10,7 +10,6 @@ from warnings import warn
 
 # Source.Python
 from core import GAME_NAME
-from entities.entity import Entity
 from events import Event
 from weapons.manager import weapon_manager
 
@@ -41,11 +40,8 @@ class _NoMessage(object):
     def message_hook(self, *args, **kwargs):
         """Override for messages that do not work."""
         warn(
-            'Message type "{message_type}" not supported for '
-            'game "{game_name}".'.format(
-                message_type=self.message_type,
-                game_name=GAME_NAME,
-            )
+            f'Message type "{self.message_type}" not supported for '
+            f'game "{GAME_NAME}".'
         )
 
 # CS:GO doesn't support any Dialog menus/messages

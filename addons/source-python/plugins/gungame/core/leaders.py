@@ -94,9 +94,8 @@ class _LeaderManager(dict):
                 event.old_leaders = old_leaders
                 event.leaders = new_leaders
                 event.leader_level = new_level
-            message = 'Leader:Tied:{tied_type}'.format(
-                tied_type='Singular' if count == 2 else 'Plural'
-            )
+            tied_type = 'Singular' if count == 2 else 'Plural'
+            message = f'Leader:Tied:{tied_type}'
             message_manager.chat_message(
                 message,
                 player.index,

@@ -98,11 +98,7 @@ class _RegisteredCommand(object):
 def register_command_callback(name, text):
     """Decorator used to register/unregister commands."""
     if name in command_dictionary:
-        raise ValueError(
-            'Command type "{name}" is already registered.'.format(
-                name=name,
-            )
-        )
+        raise ValueError(f'Command type "{name}" is already registered.')
 
     def inner(function):
         """Register the command to the given function."""

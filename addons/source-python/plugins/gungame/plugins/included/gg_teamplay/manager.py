@@ -102,11 +102,7 @@ class _TeamManager(object):
     def increase_level(self, levels=1):
         """Increase the team's level."""
         if not isinstance(levels, int) or levels < 1:
-            raise ValueError(
-                'Invalid value given for levels "{levels}".'.format(
-                    levels=levels,
-                )
-            )
+            raise ValueError(f'Invalid value given for levels "{levels}".')
         self.multi_kill = 0
         current_level = self.level
         self.level += levels

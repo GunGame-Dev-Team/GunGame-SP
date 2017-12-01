@@ -33,7 +33,7 @@ teamplay_rules.register_convar_token(
     convar=end_on_first_kill,
 )
 for _key, _value in rules_translations.items():
-    if _key.startswith('{title}:Base:'.format(title=info.name)):
+    if _key.startswith(f'{info.name}:Base:'):
         teamplay_rules.register_rule(
             name=_key,
             value=_value,

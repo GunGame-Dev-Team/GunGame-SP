@@ -69,9 +69,7 @@ def send_leaders_menu(index):
                 level=leader_level,
                 weapon=weapon,
             )
-            message += '\n\t* {teams}'.format(
-                teams=', '.join(teams)
-            )
+            message += f'\n\t* {", ".join(teams)}'
         else:
             message = menu_strings['Leader:Team:Current'].get_string(
                 language=language,

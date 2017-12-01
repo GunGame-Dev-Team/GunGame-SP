@@ -36,10 +36,7 @@ with GunGameConfigManager(info.name) as _config:
 
         for _name in DissolveType.__members__:
             dissolver_type.Options.append(
-                '{value} = {name}'.format(
-                    value=getattr(DissolveType, _name).real,
-                    name=_name,
-                )
+                f'{getattr(DissolveType, _name).real} = {_name}'
             )
 
         _num_dissolve_types = len(DissolveType.__members__)

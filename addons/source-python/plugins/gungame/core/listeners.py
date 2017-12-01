@@ -122,11 +122,9 @@ def _player_spawn(game_event):
         for entity in EntityIter('game_player_equip'):
             entity.remove()
         equip = Entity.create('game_player_equip')
-        equip.add_output('{weapon} 1'.format(weapon=_melee_weapon))
+        equip.add_output(f'{_melee_weapon} 1')
         equip.add_output(
-            'item_{armor_type} 1'.format(
-                armor_type=armor_type
-            ),
+            f'item_{armor_type} 1',
             caller=player,
             activator=player,
         )

@@ -27,7 +27,7 @@ _flashed_players = {}
 # =============================================================================
 @Event('player_blind')
 def _player_blind(game_event):
-    """"""
+    """Add the player to a dictionary of flashed players to not remove HUD."""
     userid = game_event['userid']
     player = Player.from_userid(userid)
     _cancel_delay(userid)
@@ -40,7 +40,7 @@ def _player_blind(game_event):
 
 @Event('player_disconnect')
 def _player_disconnect(game_event):
-    """"""
+    """Cancel the player's Delay (if it is on-going)."""
     _cancel_delay(game_event['userid'])
 
 
@@ -49,7 +49,7 @@ def _player_disconnect(game_event):
 # =============================================================================
 @Repeat
 def _remove_radar():
-    """"""
+    """Remove the radar from all players every half second."""
     for player in PlayerIter('alive'):
         if player.userid not in _flashed_players:
             _remove_radar_from_player(player.userid)
@@ -58,7 +58,7 @@ _remove_radar.start(0.5, execute_on_start=True)
 
 
 def _remove_radar_from_player(userid):
-    """"""
+    """Remove the player's radar."""
     with suppress(KeyError):
         del _flashed_players[userid]
     player = Player.from_userid(userid)
@@ -67,7 +67,7 @@ def _remove_radar_from_player(userid):
 
 
 def _cancel_delay(userid):
-    """"""
+    """Cancel the given player's Delay."""
     delay = _flashed_players.pop(userid, None)
     if delay is not None:
         delay.cancel()

@@ -46,11 +46,7 @@ class _PluginQueue(dict):
     def __missing__(self, item):
         """Add the item to its queue and loop through queues after 1 tick."""
         if item not in ('load', 'unload', 'reload'):
-            raise ValueError(
-                'Invalid plugin type "{queue_name}"'.format(
-                    queue_name=item,
-                )
-            )
+            raise ValueError(f'Invalid plugin type "{item}"')
         if not self:
             Delay(0, self._loop_through_queues)
         value = self[item] = set()
@@ -78,12 +74,9 @@ class _PluginQueue(dict):
                 for other in plugin_requirements[plugin_name]:
                     if other in self.manager and other not in self['unload']:
                         warn(
-                            'Plugin "{plugin_name}" is required by "{other}". '
-                            'Please unload "{other}" or load {plugin_name} '
-                            'again to avoid issues.'.format(
-                                plugin_name=plugin_name,
-                                other=other,
-                            )
+                            f'Plugin "{plugin_name}" is required by "{other}".'
+                            f' Please unload "{other}" or load {plugin_name} '
+                            'again to avoid issues.'
                         )
 
             # Unload the plugin
@@ -101,11 +94,7 @@ class _PluginQueue(dict):
             try:
                 plugin_type = valid_plugins.get_plugin_type(plugin_name)
             except ValueError:
-                warn(
-                    'Plugin "{plugin_name}" is invalid.'.format(
-                        plugin_name=plugin_name,
-                    )
-                )
+                warn(f'Plugin "{plugin_name}" is invalid.')
                 continue
             plugin_info = getattr(valid_plugins, plugin_type)[plugin_name].info
 
@@ -115,11 +104,8 @@ class _PluginQueue(dict):
                 for other in plugin_info.get('conflicts', []):
                     if other in self.manager:
                         warn(
-                            'Loaded plugin "{other}" conflicts with plugin '
-                            '"{plugin_name}". Unable to load.'.format(
-                                other=other,
-                                plugin_name=plugin_name,
-                            )
+                            f'Loaded plugin "{other}" conflicts with plugin '
+                            f'"{plugin_name}". Unable to load.'
                         )
                         conflict = True
                 if conflict:
@@ -130,11 +116,8 @@ class _PluginQueue(dict):
                 for other in plugin_info.get('required', []):
                     if other not in self.manager and other not in self['load']:
                         warn(
-                            'Plugin "{other}" is required by "{plugin_name}". '
-                            'Please load "{other}" to avoid issues.'.format(
-                                other=other,
-                                plugin_name=plugin_name,
-                            )
+                            f'Plugin "{other}" is required by "{plugin_name}".'
+                            f' Please load "{other}" to avoid issues.'
                         )
 
             # Load the plugin and get its instance

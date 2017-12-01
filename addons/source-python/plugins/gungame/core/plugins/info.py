@@ -29,16 +29,10 @@ class GunGamePluginInfo(PluginInfo):
             path[2] not in ('included', 'custom') or
             len(path) != 5
         ):
-            raise ValueError(
-                'Invalid plugin path given: {module}'.format(
-                    module=info_module,
-                )
-            )
+            raise ValueError(f'Invalid plugin path given: {info_module}')
         name = path[3]
         ini_file = GUNGAME_PLUGINS_PATH / path[2] / name / 'info.ini'
         if not ini_file.isfile():
-            raise ValueError(
-                'No info.ini file found for plugin {name}'.format(name=name)
-            )
+            raise ValueError(f'No info.ini file found for plugin {name}')
         ini = ConfigObj(ini_file)
         super().__init__(name, **ini)

@@ -40,9 +40,7 @@ def _bomb_event(game_event):
         reason=event_name,
     )
     player.chat_message(
-        message='BombingObjective:Leveled:{event_name}'.format(
-            event_name=event_name
-        ),
+        message=f'BombingObjective:Leveled:{event_name}',
         levels=levels,
     )
 
@@ -61,9 +59,7 @@ def _get_levels_to_increase(player, event_name):
         skip_nade = detonated_skip_nade.get_int()
         skip_knife = detonated_skip_knife.get_int()
     else:
-        raise ValueError(
-            'Invalid reason given "{reason}".'.format(reason=event_name)
-        )
+        raise ValueError(f'Invalid reason given "{event_name}".')
 
     if base_levels <= 0:
         return 0
@@ -80,9 +76,7 @@ def _get_levels_to_increase(player, event_name):
             (skip_weapon in melee_weapons and not skip_knife)
         ):
             player.chat_message(
-                'BombingObjective:NoSkip:{reason}'.format(
-                    reason=event_name,
-                ),
+                f'BombingObjective:NoSkip:{event_name}',
                 weapon=skip_weapon,
             )
             return level_increase - 1

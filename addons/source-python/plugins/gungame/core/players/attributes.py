@@ -36,11 +36,7 @@ class _PlayerAttributes(dict):
         if item in self:
 
             # If not, raise an error
-            raise ValueError(
-                'Given attribute "{attribute}" is already registered'.format(
-                    attribute=item,
-                )
-            )
+            raise ValueError(f'Given attribute "{item}" is already registered')
 
         # Add the item to the dictionary
         super().__setitem__(item, value)
@@ -145,11 +141,7 @@ class _AttributeHooks(dict):
         """Verify the attribute before removing the callback."""
         # Is the attribute hooked?
         if attribute not in self:
-            raise ValueError(
-                'Attribute "{attribute}" is not hooked.'.format(
-                    attribute=attribute,
-                )
-            )
+            raise ValueError(f'Attribute "{attribute}" is not hooked.')
 
         # Remove the callback from the attribute's list
         self[attribute].remove(callback)

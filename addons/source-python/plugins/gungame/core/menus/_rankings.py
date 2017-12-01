@@ -45,10 +45,7 @@ def get_winners_menu(player):
         menu.append(
             ListOption(
                 choice_index=rank,
-                text='{name} [{wins}]'.format(
-                    name=instance.name,
-                    wins=instance.wins
-                ),
+                text=f'{instance.name} [{instance.wins}]',
                 value=unique_id,
                 highlight=player.uniqueid == unique_id,
                 selectable=False,

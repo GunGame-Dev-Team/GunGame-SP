@@ -47,11 +47,7 @@ def load_all_configs():
     for file in Path(__file__).parent.files('*.py'):
         if file.namebase in ('__init__', Path(__file__).namebase):
             continue
-        import_module(
-            'gungame.core.config.{file_name}'.format(
-                file_name=file.namebase,
-            )
-        )
+        import_module(f'gungame.core.config.{file.namebase}')
     for plugin_name in valid_plugins.all:
         plugin_type = valid_plugins.get_plugin_type(plugin_name)
         if not GUNGAME_PLUGINS_PATH.joinpath(
@@ -61,20 +57,13 @@ def load_all_configs():
 
         try:
             import_module(
-                'gungame.plugins.{plugin_type}.{plugin_name}.'
-                'configuration'.format(
-                    plugin_type=plugin_type,
-                    plugin_name=plugin_name,
-                )
+                f'gungame.plugins.{plugin_type}.{plugin_name}.configuration'
             )
         # pylint: disable=broad-except
         except Exception:
             warn(
-                'Unable to import configuration for {plugin} due to error:'
-                '\n\n\t{error}'.format(
-                    plugin=plugin_name,
-                    error=sys.exc_info()[1]
-                )
+                f'Unable to import configuration for {plugin_name} due to '
+                f'error:\n\n\t{sys.exc_info()[1]}'
             )
 
     always_loaded = GUNGAME_CFG_PATH / 'gg_plugins.cfg'
@@ -108,4 +97,4 @@ def load_all_configs():
     exec_path = always_loaded.replace(
         always_loaded.parent.parent.parent, '',
     )[1:~3].replace('\\', '/')
-    queue_command_string('exec {config}'.format(config=exec_path))
+    queue_command_string(f'exec {exec_path}')

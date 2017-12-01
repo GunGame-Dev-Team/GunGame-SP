@@ -170,57 +170,51 @@ class _GGSubCommandManager(SubCommandManager):
         for plugin_name in sorted(self.manager):
             plugin_info = self.manager[plugin_name].info
 
-            message += '{plugin_name} ({plugin_type}):\n'.format(
-                plugin_name=plugin_name,
-                plugin_type=valid_plugins.get_plugin_type(plugin_name),
-            )
+            plugin_type = valid_plugins.get_plugin_type(plugin_name)
+            message += f'{plugin_name} ({plugin_type}):\n'
 
-            message += '   title:               {plugin_info.verbose_name}\n'
+            message += f'   title:               {plugin_info.verbose_name}\n'
 
             if plugin_info.author is not None:
-                message += '   author:              {plugin_info.author}\n'
+                message += f'   author:              {plugin_info.author}\n'
 
             if plugin_info.description is not None:
                 description = wrapper.wrap(
-                    '   description:         {plugin_info.description}'.format(
-                        plugin_info=plugin_info,
-                    )
+                    f'   description:         {plugin_info.description}'
                 )
                 message += '\n'.join(description) + '\n'
 
             if plugin_info.version != 'unversioned':
-                message += '   version:             {plugin_info.version}\n'
+                message += f'   version:             {plugin_info.version}\n'
 
             if plugin_info.url is not None:
-                message += '   url:                 {plugin_info.url}\n'
+                message += f'   url:                 {plugin_info.url}\n'
 
             if plugin_info.public_convar:
                 message += (
                     '   public convar:       '
-                    '{plugin_info.public_convar.name}\n'
+                    f'{plugin_info.public_convar.name}\n'
                 )
 
             with suppress(KeyError):
-                message += '   required plugins:    {required}\n'.format(
-                    required='\n                        '.join(
-                        plugin_info.required
-                    ),
+                required = '\n                        '.join(
+                    plugin_info.required
                 )
+                message += f'   required plugins:    {required}\n'
 
             with suppress(KeyError):
-                message += '   plugin conflicts:    {conflicts}\n'.format(
-                    conflicts='\n                        '.join(
-                        plugin_info.conflicts,
-                    ),
+                conflicts = '\n                        '.join(
+                    plugin_info.conflicts,
                 )
+                message += f'   plugin conflicts:    {conflicts}\n'
 
             for attr in plugin_info.display_in_listing:
                 message += (
-                    '   {name}:'.format(name=attr).ljust(20) +
+                    f'   {attr}:'.ljust(20) +
                     str(getattr(plugin_info, attr)) + '\n'
                 )
 
-            message = message.format(plugin_info=plugin_info) + '\n'
+            message += '\n'
 
         # Print the message
         self._send_message(message, index)

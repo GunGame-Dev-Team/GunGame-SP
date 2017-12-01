@@ -154,9 +154,7 @@ def _get_levels_to_increase(player, reason):
         skip_nade = stopped_skip_nade.get_int()
         skip_knife = stopped_skip_knife.get_int()
     else:
-        raise ValueError(
-            'Invalid reason given "{reason}".'.format(reason=reason)
-        )
+        raise ValueError(f'Invalid reason given "{reason}".')
 
     if base_levels <= 0:
         return 0
@@ -173,9 +171,7 @@ def _get_levels_to_increase(player, reason):
             (skip_weapon in melee_weapons and not skip_knife)
         ):
             player.chat_message(
-                'HostageObjective:NoSkip:{reason}'.format(
-                    reason=reason.title()
-                ),
+                f'HostageObjective:NoSkip:{reason.title()}',
                 weapon=skip_weapon,
             )
             return level_increase - 1

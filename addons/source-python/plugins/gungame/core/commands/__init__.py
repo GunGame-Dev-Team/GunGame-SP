@@ -43,11 +43,7 @@ if not commands_ini_file:
 for file in GUNGAME_BASE_PATH.joinpath('core', 'menus').files():
     if file.namebase.startswith('_'):
         continue
-    import_module(
-        'gungame.core.menus.{name}'.format(
-            name=file.namebase,
-        )
-    )
+    import_module(f'gungame.core.menus.{file.namebase}')
 
 import_module('gungame.core.rules.command')
 
@@ -56,11 +52,6 @@ for plugin_name in valid_plugins.all:
     if GUNGAME_PLUGINS_PATH.joinpath(
         plugin_type, plugin_name, 'commands.py',
     ).isfile():
-        import_module(
-            'gungame.plugins.{plugin_type}.{plugin_name}.commands'.format(
-                plugin_type=plugin_type,
-                plugin_name=plugin_name,
-            )
-        )
+        import_module(f'gungame.plugins.{plugin_type}.{plugin_name}.commands')
 
 commands_ini_file.write()

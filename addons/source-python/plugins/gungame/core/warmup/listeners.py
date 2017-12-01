@@ -66,11 +66,11 @@ def _player_death(game_event):
     if inthandle == INVALID_ENTITY_INTHANDLE:
         return
     entity = Entity(index_from_inthandle(inthandle))
-    entity.target_name = 'ragdoll_{userid}'.format(userid=victim)
+    entity.target_name = f'ragdoll_{victim}'
     dissolver_entity = Entity.find_or_create('env_entity_dissolver')
     dissolver_entity.magnitude = 2
     dissolver_entity.dissolve_type = 0
-    dissolver_entity.dissolve('ragdoll_{userid}'.format(userid=victim))
+    dissolver_entity.dissolve(f'ragdoll_{victim}')
 
     # DeathMatch
     Delay(2, _respawn_player, (victim, ))

@@ -54,17 +54,13 @@ class GunGameConfigManager(ConfigManager):
         except ValueError:
             folder = None
             file_path = base_path / name + '_settings'
-            cvar_prefix = 'gg_{plugin_name}_'.format(
-                plugin_name=name,
-            )
+            cvar_prefix = f'gg_{name}_'
 
         try:
             # Add the translations
+            plugin_type = folder + '/' if folder is not None else ''
             self.translations = LangStrings(
-                'gungame/config/{plugin_type}{plugin_name}'.format(
-                    plugin_type=folder + '/' if folder is not None else '',
-                    plugin_name=name,
-                )
+                f'gungame/config/{plugin_type}{name}'
             )
 
         except FileNotFoundError:
@@ -111,17 +107,13 @@ class _GunGameCvarManager(_CvarManager):
         """Add all other text for the ConVar."""
         if self._base_item is None:
             raise ValueError(
-                'No translations set for instance ({cvar_name}).'.format(
-                    cvar_name=self.name
-                )
+                f'No translations set for instance ({self.name}).'
             )
         for item in sorted(self.translations):
             if not item.startswith(self._base_item):
                 continue
             if item.count(':') < 2:
-                raise ValueError(
-                    'Invalid item ({item}).'.format(item=item)
-                )
+                raise ValueError(f'Invalid item ({item}).')
             attribute = item.replace(self._base_item, '', 1).split(':')[0]
             getattr(self, attribute).append(
                 self.translations[item].get_string(**tokens)

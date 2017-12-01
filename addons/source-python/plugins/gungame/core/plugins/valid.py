@@ -57,10 +57,8 @@ class _ValidPlugins(object):
             if plugin in self.included:
                 del self.custom[plugin]
                 warn(
-                    'Custom plugin "{plugin_name}" is invalid, as there is '
-                    'already an included plugin of the same name.'.format(
-                        plugin_name=plugin,
-                    )
+                    f'Custom plugin "{plugin}" is invalid, as there is '
+                    'already an included plugin of the same name.'
                 )
         self.all = dict(self.included)
         self.all.update(self.custom)
@@ -70,11 +68,7 @@ class _ValidPlugins(object):
         for plugin_type in ('included', 'custom'):
             if plugin_name in getattr(self, plugin_type):
                 return plugin_type
-        raise ValueError(
-            'No such plugin "{plugin_name}".'.format(
-                plugin_name=plugin_name,
-            )
-        )
+        raise ValueError(f'No such plugin "{plugin_name}".')
 
     @staticmethod
     def _get_plugins_by_type(plugin_type):
@@ -92,11 +86,8 @@ class _ValidPlugins(object):
             # Does the primary file not exist?
             if not plugin.joinpath(plugin.namebase + '.py').isfile():
                 warn(
-                    '{plugin_type} plugin "{plugin_name}" is missing its '
-                    'base file.'.format(
-                        plugin_type=plugin_type.title(),
-                        plugin_name=plugin.namebase,
-                    )
+                    f'{plugin_type.title()} plugin "{plugin.namebase}" '
+                    'is missing its base file.'
                 )
                 continue
 
@@ -104,20 +95,14 @@ class _ValidPlugins(object):
             info_file = plugin / 'info.ini'
             if not info_file.isfile():
                 warn(
-                    '{plugin_type} plugin "{plugin_name}" is missing '
-                    'info.ini file.'.format(
-                        plugin_type=plugin_type.title(),
-                        plugin_name=plugin.namebase,
-                    )
+                    f'{plugin_type.title()} plugin "{plugin.namebase}" '
+                    'is missing info.ini file.'
                 )
                 continue
 
             # Get the plugin's description
             description = import_module(
-                'gungame.plugins.{plugin_type}.{plugin_name}'.format(
-                    plugin_type=plugin_type,
-                    plugin_name=plugin.namebase,
-                )
+                f'gungame.plugins.{plugin_type}.{plugin.namebase}'
             ).__doc__
 
             # Get the plugin's info

@@ -46,9 +46,7 @@ class _GGPluginManager(PluginManager):
         """Set the base import for other functionality."""
         if value not in ('included', 'custom'):
             raise ValueError(
-                'Value must be "included" or "custom" not "{value}".'.format(
-                    value=value,
-                )
+                f'Value must be "included" or "custom" not "{value}".'
             )
         self._base_import = self._base_import_prefix + value + '.'
 
@@ -109,11 +107,7 @@ class _GGPluginManager(PluginManager):
     def _remove_modules(self, plugin_name):
         """Remove a plugin and all its modules."""
         if plugin_name not in valid_plugins.all:
-            raise ValueError(
-                'Invalid plugin_name "{plugin_name}".'.format(
-                    plugin_name=plugin_name,
-                )
-            )
+            raise ValueError(f'Invalid plugin_name "{plugin_name}".')
         if plugin_name not in self:
             return
         plugin_type = valid_plugins.get_plugin_type(plugin_name)

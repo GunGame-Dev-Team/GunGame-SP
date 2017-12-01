@@ -42,10 +42,7 @@ def send_weapons_menu(index):
             menu.append(
                 ListOption(
                     choice_index=level,
-                    text='{weapon} [{multi_kill}]'.format(
-                        weapon=instance.weapon,
-                        multi_kill=instance.multi_kill,
-                    ),
+                    text=f'{instance.weapon} [{instance.multi_kill}]',
                     value=level,
                     highlight=level == player.level,
                     selectable=False,

@@ -143,11 +143,7 @@ def load():
     )
     current += 1
     with suppress(ImportError):
-        import_module(
-            'gungame.games.{game_name}'.format(
-                game_name=GAME_NAME,
-            )
-        )
+        import_module(f'gungame.games.{GAME_NAME}')
 
     # Add gungame to sv_tags
     gg_logger.log_message(

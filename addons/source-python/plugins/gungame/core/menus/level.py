@@ -88,9 +88,7 @@ def send_level_menu(index):
                 message = menu_strings['Level:Team:Multiple'].get_string(
                     language=language,
                 )
-                message += '\n\t* {teams}'.format(
-                    teams=', '.join(teams)
-                )
+                message += f'\n\t* {", ".join(teams)}'
                 menu.append(message)
     elif player.team_index < 2:
         menu.append(Text(menu_strings['Level:Inactive']))

@@ -23,9 +23,7 @@ from ..plugins.valid import valid_plugins
 for event_file in Path(__file__).parent.joinpath('included').files():
     if event_file.namebase != '__init__':
         import_module(
-            'gungame.core.events.included.{module}'.format(
-                module=event_file.namebase
-            )
+            f'gungame.core.events.included.{event_file.namebase}'
         )
 
 
@@ -38,8 +36,5 @@ for plugin_name in valid_plugins.all:
         plugin_type, plugin_name, 'custom_events.py',
     ).isfile():
         import_module(
-            'gungame.plugins.{plugin_type}.{plugin_name}.custom_events'.format(
-                plugin_type=plugin_type,
-                plugin_name=plugin_name,
-            )
+            f'gungame.plugins.{plugin_type}.{plugin_name}.custom_events'
         )

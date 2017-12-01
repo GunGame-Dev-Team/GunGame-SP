@@ -43,8 +43,5 @@ def register_player_settings():
             plugin_type, plugin_name, 'settings.py',
         ).isfile():
             import_module(
-                'gungame.plugins.{plugin_type}.{plugin_name}.settings'.format(
-                    plugin_type=plugin_type,
-                    plugin_name=plugin_name,
-                )
+                f'gungame.plugins.{plugin_type}.{plugin_name}.settings'
             )

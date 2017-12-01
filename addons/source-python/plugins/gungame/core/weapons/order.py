@@ -62,31 +62,22 @@ class WeaponOrder(dict):
                     multi_kill = 1
                 else:
                     warn(
-                        'Invalid line "{line}" in weapon order file: '
-                        '{file_name}'.format(
-                            line=line,
-                            file_name=file_path.namebase,
-                        )
+                        f'Invalid line "{line}" in weapon order file: '
+                        f'{file_path.namebase}'
                     )
                     continue
                 try:
                     multi_kill = int(multi_kill)
                 except ValueError:
                     warn(
-                        'Invalid multi-kill value "{multi_kill}" in weapon '
-                        'order file: {file_name}'.format(
-                            multi_kill=multi_kill,
-                            file_name=file_path.namebase,
-                        )
+                        f'Invalid multi-kill value "{multi_kill}" in weapon '
+                        f'order file: {file_path.namebase}'
                     )
                     continue
                 if weapon not in all_weapons:
                     warn(
-                        'Invalid weapon "{weapon}" in weapon order file: '
-                        '{file_name}'.format(
-                            weapon=weapon,
-                            file_name=file_path.namebase,
-                        )
+                        f'Invalid weapon "{weapon}" in weapon order file: '
+                        f'{file_path.namebase}'
                     )
                     continue
                 level += 1
@@ -94,9 +85,7 @@ class WeaponOrder(dict):
         if not level:
             raise WeaponOrderError(
                 'No valid lines found in weapon order file '
-                '"{file_name}".'.format(
-                    file_name=file_path.namebase,
-                )
+                f'"{file_path.namebase}".'
             )
         self.file_path = file_path
         self.name = self.file_path.namebase

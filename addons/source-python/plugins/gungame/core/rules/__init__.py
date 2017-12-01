@@ -81,19 +81,10 @@ def define_all_rules():
             continue
 
         try:
-            import_module(
-                'gungame.plugins.{plugin_type}.{plugin_name}.'
-                'rules'.format(
-                    plugin_type=plugin_type,
-                    plugin_name=plugin_name,
-                )
-            )
+            import_module(f'gungame.plugins.{plugin_type}.{plugin_name}.rules')
         # pylint: disable=broad-except
         except Exception:
             warn(
-                'Unable to import rules for {plugin} due to error:'
-                '\n\n\t{error}'.format(
-                    plugin=plugin_name,
-                    error=sys.exc_info()[1]
-                )
+                f'Unable to import rules for {plugin_name} due to error:'
+                f'\n\n\t{sys.exc_info()[1]}'
             )

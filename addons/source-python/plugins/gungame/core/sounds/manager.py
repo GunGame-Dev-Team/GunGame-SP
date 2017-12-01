@@ -80,11 +80,8 @@ class _SoundManager(defaultdict):
                 # Is the current sound a valid sound type?
                 if item not in self.defaults:
                     warn(
-                        'Sound "{sound}" in file "{file_name}" is not '
-                        'registered.'.format(
-                            sound=item,
-                            file_name=file.name,
-                        )
+                        f'Sound "{item}" in file "{file.name}" is not '
+                        f'registered.'
                     )
                     continue
 
@@ -99,12 +96,8 @@ class _SoundManager(defaultdict):
                     if not txt.isfile():
                         warn(
                             'Invalid random sound text file given '
-                            '"{text_file}" for sound "{sound}" in file '
-                            '"{file_name}".'.format(
-                                text_file=value,
-                                sound=item,
-                                file_name=file.name,
-                            )
+                            f'"{value}" for sound "{item}" in file '
+                            f'"{file.name}".'
                         )
                         continue
 
@@ -126,25 +119,19 @@ class _SoundManager(defaultdict):
                             # Is this a valid extension for the game?
                             if not self.is_allowed_sound_extension(extension):
                                 warn(
-                                    'Invalid sound extension "{extension}" '
-                                    'found in random sound file '
-                                    '"{sound_file}".'.format(
-                                        extension=extension,
-                                        sound_file=txt.name,
-                                    )
+                                    f'Invalid sound extension "{extension}" '
+                                    f'found in random sound file "{txt.name}".'
                                 )
                                 continue
 
                             # Does the sound exist?
                             if not (
                                 SOUND_PATH.joinpath(line).isfile() or
-                                is_vpk_file('sound/{path}'.format(path=line))
+                                is_vpk_file(f'sound/{line}')
                             ):
                                 warn(
-                                    'Invalid sound "{sound}", sound '
-                                    'does not exist'.format(
-                                        sound=line,
-                                    )
+                                    f'Invalid sound "{line}", sound '
+                                    'does not exist'
                                 )
                                 continue
 
@@ -155,9 +142,7 @@ class _SoundManager(defaultdict):
                     if not sounds:
                         warn(
                             'No sounds found in random sound file '
-                            '"{text_file}".'.format(
-                                text_file=txt.name,
-                            )
+                            f'"{txt.name}".'
                         )
                         continue
 
@@ -173,12 +158,8 @@ class _SoundManager(defaultdict):
                 # Was an invalid extension given?
                 else:
                     warn(
-                        'Invalid sound extension "{extension}" for sound '
-                        '"{sound}" in file "{file_name}".'.format(
-                            extension=extension,
-                            sound=item,
-                            file_name=file.name,
-                        )
+                        f'Invalid sound extension "{extension}" for sound '
+                        f'"{item}" in file "{file.name}".'
                     )
                     continue
 
@@ -186,11 +167,8 @@ class _SoundManager(defaultdict):
             #   not represented in the current sound pack
             for missing in set(self.defaults).difference(self[file.namebase]):
                 warn(
-                    'Sound "{sound}" missing in "{sound_pack}" '
-                    'sound pack.'.format(
-                        sound=missing,
-                        sound_pack=file.namebase,
-                    )
+                    f'Sound "{missing}" missing in "{file.namebase}" '
+                    'sound pack.'
                 )
 
     @staticmethod
@@ -210,11 +188,7 @@ class _SoundManager(defaultdict):
         """
         # Was the sound type already registered?
         if sound_name in self.defaults:
-            warn(
-                'Sound "{sound}" already registered!'.format(
-                    sound=sound_name,
-                )
-            )
+            warn(f'Sound "{sound_name}" already registered!')
             return
 
         # Was a valid extension type given?
@@ -224,11 +198,8 @@ class _SoundManager(defaultdict):
             extension != 'txt'
         ):
             warn(
-                'Invalid extension "{extension}".  Sound "{sound}" '
-                'not registered.'.format(
-                    extension=extension,
-                    sound=sound_name,
-                )
+                f'Invalid extension "{extension}".  Sound "{sound_name}" '
+                'not registered.'
             )
             return
 
@@ -242,11 +213,8 @@ class _SoundManager(defaultdict):
             callback in self._sound_hooks[sound_name]
         ):
             raise ValueError(
-                'Hook "{callback}" already registered for '
-                'sound name "{sound_name}".'.format(
-                    callback=callback,
-                    sound_name=sound_name,
-                )
+                f'Hook "{callback}" already registered for '
+                f'sound name "{sound_name}".'
             )
         self._sound_hooks[sound_name].append(callback)
 
@@ -254,17 +222,12 @@ class _SoundManager(defaultdict):
         """Unregister a hook from the given sound name."""
         if sound_name not in self._sound_hooks:
             raise ValueError(
-                'No hooks registered for sound name "{sound_name}".'.format(
-                    sound_name=sound_name,
-                )
+                f'No hooks registered for sound name "{sound_name}".'
             )
         if callback not in self._sound_hooks[sound_name]:
             raise ValueError(
-                'Hook "{callback}" is not registered for '
-                'sound name "{sound_name}".'.format(
-                    callback=callback,
-                    sound_name=sound_name,
-                )
+                f'Hook "{callback}" is not registered for '
+                f'sound name "{sound_name}".'
             )
         self._sound_hooks[sound_name].remove(callback)
         if not self._sound_hooks[sound_name]:
@@ -279,20 +242,15 @@ class _SoundManager(defaultdict):
         # Was an invalid sound type given?
         if sound_name not in self.defaults:
             raise ValueError(
-                'Invalid sound name "{sound}".  Sound not registered.'.format(
-                    sound=sound_name,
-                )
+                f'Invalid sound name "{sound_name}".  Sound not registered.'
             )
 
         # Is the sound pack ConVar a valid value?
         pack = sound_pack.get_string()
         if pack not in self:
             raise ValueError(
-                'Invalid sound pack "{sound_pack}".  Change "{cvar_name}" '
-                'to a valid sound pack name.'.format(
-                    sound_pack=pack,
-                    cvar_name=sound_pack.name,
-                )
+                f'Invalid sound pack "{sound_pack}".  Change '
+                f'"{sound_pack.name}" to a valid sound pack name.'
             )
 
         if sound_name in self._sound_hooks:
@@ -314,11 +272,7 @@ class _SoundManager(defaultdict):
         # If the sound is not in either the chosen sound
         #   pack or the default one, raise an error
         raise ValueError(
-            'Sound "{sound}" cannot be found for sound pack '
-            '"{sound_pack}".'.format(
-                sound=sound_name,
-                sound_pack=pack,
-            )
+            f'Sound "{sound_name}" cannot be found for sound pack "{pack}".'
         )
 
     @staticmethod

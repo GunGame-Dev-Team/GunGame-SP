@@ -32,8 +32,4 @@ __all__ = (
 _class_name_file = GUNGAME_DATA_PATH / info.name + '.ini'
 spawn_entities = ConfigObj(_class_name_file).get(GAME_NAME)
 if not spawn_entities:
-    raise NotImplementedError(
-        'Game "{name}" is not supported.'.format(
-            name=GAME_NAME,
-        )
-    )
+    raise NotImplementedError(f'Game "{GAME_NAME}" is not supported.')

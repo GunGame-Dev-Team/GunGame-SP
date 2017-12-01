@@ -63,20 +63,13 @@ def register_all_sounds():
 
         try:
             import_module(
-                'gungame.plugins.{plugin_type}.{plugin_name}.'
-                'sounds'.format(
-                    plugin_type=plugin_type,
-                    plugin_name=plugin_name,
-                )
+                f'gungame.plugins.{plugin_type}.{plugin_name}.sounds'
             )
         # pylint: disable=broad-except
         except Exception:
             warn(
-                'Unable to import sounds for {plugin} due to error:'
-                '\n\n\t{error}'.format(
-                    plugin=plugin_name,
-                    error=sys.exc_info()[1]
-                )
+                f'Unable to import sounds for {plugin_name} due to error:'
+                f'\n\n\t{sys.exc_info()[1]}'
             )
 
     # Create the default files, if necessary
@@ -119,27 +112,12 @@ def _create_default_winner_sounds():
     with file.open('w') as open_file:
 
         # Add the header
-        open_file.write(
-            '// {breaker}\n'.format(
-                breaker='-' * 76,
-            )
-        )
+        breaker = '-' * 76
+        open_file.write(f'// {breaker}\n')
         for line in _sound_strings['Random'].get_string().splitlines():
-            open_file.write(
-                '// {line}\n'.format(
-                    line=line,
-                )
-            )
-        open_file.write(
-            '// {breaker}\n\n\n'.format(
-                breaker='-' * 76,
-            )
-        )
+            open_file.write(f'// {line}\n')
+        open_file.write(f'// {breaker}\n\n\n')
 
         # Add in the default winner sounds
         for name in ('14', '15', '23_SuitSong3', '31'):
-            open_file.write(
-                'music/HL2_song{name}.mp3\n'.format(
-                    name=name,
-                )
-            )
+            open_file.write(f'music/HL2_song{name}.mp3\n')

@@ -56,7 +56,7 @@ def _earn_nade(game_event):
     weapon = killer.give_level_weapon()
     if auto_switch.get_setting(killer.index):
         killer.client_command(
-            command='use {weapon}'.format(weapon=weapon.classname),
+            command=f'use {weapon.classname}',
             server_side=True,
         )
 

@@ -58,7 +58,7 @@ class-attribute-rgx=([A-Za-z_][A-Za-z0-9_]{2,30}|(__.*__))$
 inlinevar-rgx=[A-Za-z_][A-Za-z0-9_]*$
 
 # Variable names that are always ok
-good-names=x,y
+good-names=x,y,game_event
 
 
 [DESIGN]

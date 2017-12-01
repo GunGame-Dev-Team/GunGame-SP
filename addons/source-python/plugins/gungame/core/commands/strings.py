@@ -47,12 +47,7 @@ class _CommandsTranslations(dict):
         )
         for key, value in instance.items():
             if key in self:
-                warn(
-                    'Translation key "{translation_key}" '
-                    'already registered.'.format(
-                        translation_key=key,
-                    )
-                )
+                warn(f'Translation key "{key}" already registered.')
                 continue
             self[key] = value
 

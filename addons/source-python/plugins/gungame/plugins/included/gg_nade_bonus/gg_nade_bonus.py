@@ -71,16 +71,10 @@ class _NadeBonusDictionary(dict):
         given_weapons = [x for x in weapon.split(',')]
         valid_weapons = [x for x in given_weapons if x in all_weapons]
         if not valid_weapons:
-            warn(
-                'No valid weapons found in "{weapon}".'.format(weapon=weapon)
-            )
+            warn(f'No valid weapons found in "{weapon}".')
             return valid_weapons
         for invalid_weapon in set(given_weapons).difference(valid_weapons):
-            warn(
-                'Invalid weapon given: {invalid_weapon}'.format(
-                    invalid_weapon=invalid_weapon,
-                )
-            )
+            warn(f'Invalid weapon given: {invalid_weapon}')
         primary = None
         secondary = None
         extra_primary = set()
@@ -100,15 +94,12 @@ class _NadeBonusDictionary(dict):
             all_valid_weapons.add(valid_weapon)
         if extra_primary:
             warn(
-                'Too many primary weapons given: "{weapons}"'.format(
-                    weapons=','.join(extra_primary),
-                )
+                f'Too many primary weapons given: "{",".join(extra_primary)}"'
             )
         if extra_secondary:
             warn(
-                'Too many secondary weapons given: "{weapons}"'.format(
-                    weapons=','.join(extra_secondary),
-                )
+                'Too many secondary weapons given: '
+                f'"{",".join(extra_secondary)}"'
             )
         return all_valid_weapons
 

@@ -65,9 +65,7 @@ class _TeamplayManager(object):
                 'deathmatch' if 'gg_deathmatch' in gg_plugin_manager
                 else 'rounds'
             )
-        module_path = 'gungame.plugins.included.gg_teamplay.{module}'.format(
-            module=module,
-        )
+        module_path = f'gungame.plugins.included.gg_teamplay.{module}'
         import_module(module_path)
         self.current_module = module_path
 

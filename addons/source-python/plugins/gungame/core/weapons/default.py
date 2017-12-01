@@ -74,15 +74,10 @@ def _create_default_order():
     default_order = GUNGAME_WEAPON_ORDER_PATH / 'default.txt'
     if default_order.isfile():
         return
+    weapons = '\n'.join(chain.from_iterable(_weapon_groups.values()))
     with default_order.open('w') as open_file:
         open_file.write(_default_header)
-        open_file.write(
-            '{weapons}\n'.format(
-                weapons='\n'.join(
-                    chain.from_iterable(_weapon_groups.values())
-                )
-            )
-        )
+        open_file.write(f'{weapons}\n')
 
 
 def _create_short_order():
@@ -93,11 +88,7 @@ def _create_short_order():
     with short_order.open('w') as open_file:
         open_file.write(_default_header)
         for weapon in sorted(pistol_weapons) + sorted(other_secondary_weapons):
-            open_file.write(
-                '{weapon}\n'.format(
-                    weapon=weapon,
-                )
-            )
+            open_file.write(f'{weapon}\n')
 
 
 def _create_random_order():
@@ -114,18 +105,9 @@ def _create_random_order():
             if not multi_kill:
                 continue
             if multi_kill == 1:
-                open_file.write(
-                    '{weapon}\n'.format(
-                        weapon=weapon,
-                    )
-                )
+                open_file.write(f'{weapon}\n')
             else:
-                open_file.write(
-                    '{weapon} {multi_kill}\n'.format(
-                        weapon=weapon,
-                        multi_kill=multi_kill,
-                    )
-                )
+                open_file.write(f'{weapon} {multi_kill}\n')
 
 
 def _create_nade_bonus_order():
@@ -139,11 +121,7 @@ def _create_nade_bonus_order():
     with nade_bonus.open('w') as open_file:
         open_file.write(_default_header)
         for weapon in weapon_copy:
-            open_file.write(
-                '{weapon} 2\n'.format(
-                    weapon=weapon,
-                )
-            )
+            open_file.write(f'{weapon} 2\n')
 
 
 def _get_header():
@@ -154,15 +132,12 @@ def _get_header():
         ).splitlines()
     )
     for group, weapons in _weapon_groups.items():
-        if not len(weapons):
+        if not weapons:
             continue
-        header += '\n\n// {group}:\n// '.format(group=group)
+        header += f'\n\n// {group}:\n// '
         header += '\n// '.join([
-            '  {one}{two}{three}'.format(
-                one=one.ljust(longest),
-                two=two.ljust(longest) if two else '',
-                three=three
-            ) for one, two, three in _split_group(weapons)
+            f'  {one.ljust(longest)}{two.ljust(longest) if two else ""}{three}'
+            for one, two, three in _split_group(weapons)
         ])
 
     return header + '\n\n'

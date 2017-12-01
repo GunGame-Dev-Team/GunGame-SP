@@ -105,7 +105,7 @@ _get_weapon_sets()
 
 if not len(all_weapons):
     raise NotImplementedError(
-        'Game {game} not supported, no weapon data.'.format(game=GAME_NAME)
+        f'Game {GAME_NAME} not supported, no weapon data.'
     )
 
 # Set the individual fire weapon sets

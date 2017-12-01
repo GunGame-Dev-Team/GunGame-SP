@@ -92,6 +92,7 @@ class GunGamePlayer(Player):
 
     @property
     def is_afk(self):
+        """Return whether the player is AFK."""
         return is_client_idle(self.index)
 
     # =========================================================================
@@ -102,11 +103,7 @@ class GunGamePlayer(Player):
         if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
             return
         if not isinstance(levels, int) or levels < 1:
-            raise ValueError(
-                'Invalid value given for levels "{levels}".'.format(
-                    levels=levels,
-                )
-            )
+            raise ValueError(f'Invalid value given for levels "{levels}".')
         old_level = self.level
         new_level = old_level + levels
         if new_level > weapon_order_manager.max_levels:
@@ -134,11 +131,7 @@ class GunGamePlayer(Player):
         if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
             return
         if not isinstance(levels, int) or levels < 1:
-            raise ValueError(
-                'Invalid value given for levels "{levels}".'.format(
-                    levels=levels,
-                )
-            )
+            raise ValueError(f'Invalid value given for levels "{levels}".')
         old_level = self.level
         new_level = max(old_level - levels, 1)
         if self.level == new_level:
