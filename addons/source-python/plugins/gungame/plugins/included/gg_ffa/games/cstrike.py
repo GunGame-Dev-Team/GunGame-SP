@@ -54,8 +54,6 @@ def _remove_radar():
         if player.userid not in _flashed_players:
             _remove_radar_from_player(player.userid)
 
-_remove_radar.start(0.5, execute_on_start=True)
-
 
 def _remove_radar_from_player(userid):
     """Remove the player's radar."""
@@ -71,3 +69,5 @@ def _cancel_delay(userid):
     delay = _flashed_players.pop(userid, None)
     if delay is not None:
         delay.cancel()
+
+_remove_radar.start(0.5, execute_on_start=True)
