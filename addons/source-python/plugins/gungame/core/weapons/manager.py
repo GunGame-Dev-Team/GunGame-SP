@@ -49,7 +49,8 @@ class _WeaponOrderManager(dict):
         self._active = None
         self._order = None
         self.randomize = False
-        self._delay = None
+        self._restart_delay = None
+        self._print_delay = None
 
         # Create the default files
         create_default_weapon_orders()
@@ -112,6 +113,12 @@ class _WeaponOrderManager(dict):
         if GunGameStatus.MATCH != GunGameMatchStatus.ACTIVE:
             return
 
+        if self._print_delay is not None:
+            self._print_delay.cancel()
+        self._print_delay = Delay(.1, self._print_order)
+
+    def _print_order(self):
+        """Print the current weapon order."""
         # Set the prefix
         prefix = '[GunGame]'
 
@@ -157,13 +164,13 @@ class _WeaponOrderManager(dict):
 
     def restart_game(self):
         """Restart the match."""
-        if self._delay is not None:
-            self._delay.cancel()
-        self._delay = Delay(1, self._restart_game)
+        if self._restart_delay is not None:
+            self._restart_delay.cancel()
+        self._restart_delay = Delay(1, self._restart_game)
 
     def _restart_game(self):
         """Restart the match."""
-        self._delay = None
+        self._restart_delay = None
 
         GunGameStatus.MATCH = GunGameMatchStatus.INACTIVE
 
