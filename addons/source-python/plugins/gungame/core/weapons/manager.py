@@ -119,6 +119,8 @@ class _WeaponOrderManager(dict):
 
     def _print_order(self):
         """Print the current weapon order."""
+        self._print_delay = None
+
         # Set the prefix
         prefix = '[GunGame]'
 
