@@ -7,10 +7,13 @@
 # =============================================================================
 # Python
 from collections import defaultdict
+from contextlib import suppress
+from itertools import chain
 from sqlite3 import connect, DatabaseError
 from time import time
 
 # GunGame
+from ..config.misc import prune_database
 from ..paths import GUNGAME_DATA_PATH
 
 
@@ -53,9 +56,16 @@ class _WinsDatabase(defaultdict):
 
         # Create the gungame_winners table if it does not already exist
         self.cursor.execute(
-            'CREATE TABLE IF NOT EXISTS gungame_winners(unique_id varchar(20),'
-            ' name varchar(31), wins varchar(10) DEFAULT 0, time_stamp '
-            'varchar(31), last_win varchar(31), PRIMARY KEY(unique_id DESC))'
+            '''
+            CREATE TABLE IF NOT EXISTS gungame_winners(
+              unique_id VARCHAR(20),
+              name VARCHAR(31),
+              wins VARCHAR(10) DEFAULT 0,
+              time_stamp VARCHAR(31),
+              last_win VARCHAR(31),
+              PRIMARY KEY(unique_id DESC)
+            )
+            '''
         )
         self.cursor.execute('PRAGMA auto_vacuum = 1')
 
@@ -67,8 +77,10 @@ class _WinsDatabase(defaultdict):
 
         # Gather all data from the table
         data = self.cursor.execute(
-            'SELECT unique_id, name, wins, time_stamp, '
-            'last_win FROM gungame_winners'
+            '''
+            SELECT unique_id, name, wins, time_stamp, last_win
+              FROM gungame_winners
+            '''
         )
         data = data.fetchall()
 
@@ -96,8 +108,11 @@ class _WinsDatabase(defaultdict):
 
             # Add the new winner to the database
             self.cursor.execute(
-                'INSERT INTO gungame_winners (name, unique_id, wins, '
-                'time_stamp, last_win) VALUES(?, ?, ?, ?, ?)',
+                '''
+                INSERT INTO gungame_winners (
+                  name, unique_id, wins, time_stamp, last_win
+                ) VALUES(?, ?, ?, ?, ?)
+                ''',
                 (player.name, player.unique_id, 0, time_stamp, time_stamp)
             )
 
@@ -112,10 +127,17 @@ class _WinsDatabase(defaultdict):
 
         # Update the winner's values in the database
         self.cursor.execute(
-            'UPDATE gungame_winners SET name=?, time_stamp=?, '
-            'wins=?, last_win=? WHERE unique_id=?', (
-                player.name, instance.time_stamp, instance.wins,
-                instance.last_win, player.unique_id,
+            '''
+            UPDATE gungame_winners
+              SET name=?, time_stamp=?, wins=?, last_win=?
+              WHERE unique_id=?
+             ''',
+            (
+                player.name,
+                instance.time_stamp,
+                instance.wins,
+                instance.last_win,
+                player.unique_id,
             )
         )
 
@@ -142,13 +164,46 @@ class _WinsDatabase(defaultdict):
 
         # Update the player's name and time stamp in the database
         self.cursor.execute(
-            'UPDATE gungame_winners SET name=?, time_stamp=? WHERE '
-            'unique_id=?',
+            '''
+            UPDATE gungame_winners
+              SET name=?, time_stamp=?
+              WHERE unique_id=?
+            ''',
             (player.name, instance.time_stamp, player.unique_id)
         )
 
         # Commit the changes to the database
         self.connection.commit()
+
+    def prune_database(self):
+        """Remove players from the database who haven't played in a while."""
+        # Retrieve all the unique ids to prune from the database
+        self.cursor.execute(
+            '''
+            SELECT unique_id
+              FROM gungame_winners
+              WHERE time_stamp < strftime("%s", "now", "-%s days")
+            ''' % ('%s', abs(prune_database.get_int()))
+        )
+        unique_ids = list(chain.from_iterable(self.cursor.fetchall()))
+
+        # Are there any to prune?
+        if not len(unique_ids):
+            return
+
+        # Remove the users from the database
+        self.cursor.execute(
+            '''
+            DELETE FROM gungame_winners
+              WHERE unique_id IN ("%s")
+            ''' % ('","'.join(unique_ids))
+        )
+        self.connection.commit()
+
+        # Remove the users from the dictionary
+        for unique_id in unique_ids:
+            with suppress(KeyError):
+                del self[unique_id]
 
 # The singleton object for the _WinsDatabase class.
 winners_database = _WinsDatabase(_PlayerDatabase)

@@ -39,6 +39,7 @@ from .events.included.match import GG_Map_End, GG_Start
 from .leaders import leader_manager
 from .messages import message_manager
 from .players.attributes import AttributePostHook
+from .players.database import winners_database
 from .players.dictionary import player_dictionary
 from .rules.command import send_rules
 from .sounds.manager import sound_manager
@@ -232,6 +233,7 @@ def _player_activate(game_event):
     if player.wins:
         message = 'Player:Join:Ranked' if player.rank else 'Player:Join:Wins'
         message_manager.chat_message(message, player=player)
+        player.update_time_stamp()
 
     # Print a message if the joining player is in the credits
     for credit_type in gungame_credits:
@@ -426,6 +428,9 @@ def _level_init(map_name):
 
     # Set the match status
     GunGameStatus.MATCH = GunGameMatchStatus.INACTIVE
+
+    # Prune the database
+    winners_database.prune_database()
 
     # Start match (or warmup)
     start_match()
