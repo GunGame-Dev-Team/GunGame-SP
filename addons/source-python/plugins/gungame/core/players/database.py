@@ -177,13 +177,18 @@ class _WinsDatabase(defaultdict):
 
     def prune_database(self):
         """Remove players from the database who haven't played in a while."""
+        # 0 = do not prune
+        days = abs(prune_database.get_int())
+        if not days:
+            return
+
         # Retrieve all the unique ids to prune from the database
         self.cursor.execute(
             '''
             SELECT unique_id
               FROM gungame_winners
               WHERE time_stamp < strftime("%s", "now", "-%s days")
-            ''' % ('%s', abs(prune_database.get_int()))
+            ''' % ('%s', days)
         )
         unique_ids = list(chain.from_iterable(self.cursor.fetchall()))
 
