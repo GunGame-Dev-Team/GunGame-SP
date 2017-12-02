@@ -76,6 +76,7 @@ with GunGameConfigManager('misc') as _config:
 
     with _config.cvar(
         name='prune_database',
+        default=60,
     ) as prune_database:
         prune_database.add_text()
 
