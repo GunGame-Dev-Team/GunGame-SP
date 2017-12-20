@@ -26,22 +26,20 @@ __all__ = (
 # >> CONFIGURATION
 # =============================================================================
 with GunGameConfigManager('punishment') as _config:
-    _config._cvar_prefix = 'gg_'
 
     # AFK
-    # TODO: add in functionality
-    # with _config.cvar(
-    #     name='afk',
-    # ) as afk_punish:
-    #     afk_punish.add_text()
-    # with _config.cvar(
-    #     name='afk_type',
-    # ) as afk_type:
-    #     afk_type.add_text()
-    # with _config.cvar(
-    #     name='afk_length',
-    # ) as afk_length:
-    #     afk_length.add_text()
+    with _config.cvar(
+        name='afk',
+    ) as afk_punish:
+        afk_punish.add_text()
+    with _config.cvar(
+        name='afk_type',
+    ) as afk_type:
+        afk_type.add_text()
+    with _config.cvar(
+        name='afk_length',
+    ) as afk_length:
+        afk_length.add_text()
 
     # Suicide
     with _config.cvar(
