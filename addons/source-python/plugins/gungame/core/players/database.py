@@ -193,7 +193,7 @@ class _WinsDatabase(defaultdict):
         unique_ids = list(chain.from_iterable(self.cursor.fetchall()))
 
         # Are there any to prune?
-        if not len(unique_ids):
+        if not unique_ids:
             return
 
         # Remove the users from the database

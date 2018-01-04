@@ -199,7 +199,8 @@ class _NadeBonusPlayer(object):
         Delay(
             delay=self.delay_time,
             callback=self._give_weapons,
-            args=(weapons, ),
+            args=(weapons,),
+            cancel_on_level_end=True,
         )
 
     def _give_weapons(self, weapons):

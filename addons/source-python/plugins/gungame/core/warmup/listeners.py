@@ -73,7 +73,12 @@ def _player_death(game_event):
     dissolver_entity.dissolve(f'ragdoll_{victim}')
 
     # DeathMatch
-    Delay(2, _respawn_player, (victim, ))
+    Delay(
+        delay=2,
+        callback=_respawn_player,
+        args=(victim,),
+        cancel_on_level_end=True,
+    )
 
 
 def _weapon_fire(game_event):
@@ -81,7 +86,12 @@ def _weapon_fire(game_event):
     weapon = weapon_manager[game_event['weapon']].basename
     if weapon not in individual_weapons:
         return
-    Delay(1, _give_weapon, (game_event['userid'], weapon))
+    Delay(
+        delay=1,
+        callback=_give_weapon,
+        args=(game_event['userid'], weapon),
+        cancel_on_level_end=True,
+    )
 
 
 def _player_spawn(game_event):
@@ -97,7 +107,12 @@ def _player_spawn(game_event):
 # >> LISTENERS
 # =============================================================================
 def _join_class(command, index):
-    Delay(2, _respawn_player, (userid_from_index(index), ))
+    Delay(
+        delay=2,
+        callback=_respawn_player,
+        args=(userid_from_index(index),),
+        cancel_on_level_end=True,
+    )
 
 
 # =============================================================================

@@ -131,7 +131,11 @@ def _steal_level(game_event):
 def _on_knife_steal(game_event):
     attacker = player_dictionary[game_event['leveler']]
     if no_switch.get_setting(attacker.index):
-        Delay(0, _set_back_to_knife, (attacker.userid, ))
+        Delay(
+            delay=0,
+            callback=_set_back_to_knife,
+            args=(attacker.userid,),
+        )
 
 
 # =============================================================================
@@ -147,7 +151,11 @@ def _pre_level_change(player, attribute, new_value):
         'level': player.level,
         'weapon': player.level_weapon
     }
-    Delay(0, _recently_off_knife.__delitem__, args=(player.userid, ))
+    Delay(
+        delay=0,
+        callback=_recently_off_knife.__delitem__,
+        args=(player.userid,),
+    )
 
 
 # =============================================================================

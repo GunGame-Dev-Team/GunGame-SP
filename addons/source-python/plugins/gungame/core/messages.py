@@ -100,7 +100,7 @@ class _MessageManager(dict):
 
         # Convert user index to a tuple
         if isinstance(users, int):
-            users = (users, )
+            users = (users,)
 
         # Get a new instance for the message
         TextMsg(message).send(*users, **tokens)
@@ -116,7 +116,7 @@ class _MessageManager(dict):
 
         # Convert user index to a tuple
         if isinstance(users, int):
-            users = (users, )
+            users = (users,)
 
         # Send the message to the users
         SayText2(message, index).send(*users, **tokens)
@@ -132,7 +132,7 @@ class _MessageManager(dict):
 
         # Convert user index to a tuple
         if isinstance(users, int):
-            users = (users, )
+            users = (users,)
 
         # Send the message to the users
         TextMsg(message, HudDestination.CONSOLE).send(*users, **tokens)
@@ -148,7 +148,7 @@ class _MessageManager(dict):
 
         # Convert user index to a tuple
         if isinstance(users, int):
-            users = (users, )
+            users = (users,)
 
         # Send the message to the users
         HintText(message).send(*users, **tokens)
@@ -169,7 +169,7 @@ class _MessageManager(dict):
 
         # Convert user index to a tuple
         if isinstance(users, int):
-            users = (users, )
+            users = (users,)
 
         # Send the message to the users
         HudMsg(
@@ -188,7 +188,7 @@ class _MessageManager(dict):
 
         # Convert user index to a tuple
         if isinstance(users, int):
-            users = (users, )
+            users = (users,)
 
         # Send the message to the users
         KeyHintText(message).send(*users, **tokens)
@@ -207,7 +207,7 @@ class _MessageManager(dict):
 
         # Convert user index to a tuple
         if isinstance(users, int):
-            users = (users, )
+            users = (users,)
 
         # Set the sub keys values
         sub_keys = {'title': title, 'type': str(panel_type), 'msg': message}
@@ -228,7 +228,7 @@ class _MessageManager(dict):
 
         # Convert user index to a tuple
         if isinstance(users, int):
-            users = (users, )
+            users = (users,)
 
         # Send the message to the users
         DialogMsg(message, color, time).send(*users, **tokens)

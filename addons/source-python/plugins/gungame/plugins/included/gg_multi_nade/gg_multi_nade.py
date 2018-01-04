@@ -51,7 +51,12 @@ def _delay_give_new_weapon(game_event):
     _nade_count[player.userid] += 1
     value = max_nades.get_int()
     if not value or _nade_count[player.userid] < value:
-        Delay(1, _give_new_weapon, (player.userid, weapon))
+        Delay(
+            delay=1,
+            callback=_give_new_weapon,
+            args=(player.userid, weapon),
+            cancel_on_level_end=True,
+        )
 
 
 @Event('player_spawn', 'gg_level_up')

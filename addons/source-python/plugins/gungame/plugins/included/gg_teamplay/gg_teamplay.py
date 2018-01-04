@@ -101,7 +101,10 @@ class _TeamplayManager(object):
                 except_hooks.print_exception()
 
 _teamplay_manager = _TeamplayManager()
-Delay(0, _teamplay_manager.initialize)
+Delay(
+    delay=0,
+    callback=_teamplay_manager.initialize,
+)
 
 
 # =============================================================================

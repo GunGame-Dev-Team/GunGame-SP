@@ -76,7 +76,7 @@ class _WeaponOrderManager(dict):
                 # TODO: make this gungame specific
                 except_hooks.print_exception()
 
-        if not len(self):
+        if not self:
             raise ValueError('No valid weapon order files found.')
 
     def set_start_convars(self):
@@ -115,7 +115,10 @@ class _WeaponOrderManager(dict):
 
         if self._print_delay is not None:
             self._print_delay.cancel()
-        self._print_delay = Delay(.1, self._print_order)
+        self._print_delay = Delay(
+            delay=0.1,
+            callback=self._print_order,
+        )
 
     def _print_order(self):
         """Print the current weapon order."""
@@ -168,7 +171,10 @@ class _WeaponOrderManager(dict):
         """Restart the match."""
         if self._restart_delay is not None:
             self._restart_delay.cancel()
-        self._restart_delay = Delay(1, self._restart_game)
+        self._restart_delay = Delay(
+            delay=1,
+            callback=self._restart_game,
+        )
 
     def _restart_game(self):
         """Restart the match."""

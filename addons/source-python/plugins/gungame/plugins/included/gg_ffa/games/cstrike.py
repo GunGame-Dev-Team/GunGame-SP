@@ -12,6 +12,7 @@ from time import time
 # Source.Python
 from events import Event
 from filters.players import PlayerIter
+from listeners import OnLevelShutdown
 from listeners.tick import Delay, Repeat
 from players.entity import Player
 
@@ -32,9 +33,10 @@ def _player_blind(game_event):
     player = Player.from_userid(userid)
     _cancel_delay(userid)
     _flashed_players[userid] = Delay(
-        player.flash_duration,
-        _remove_radar_from_player,
-        (userid,),
+        delay=player.flash_duration,
+        callback=_remove_radar_from_player,
+        args=(userid,),
+        cancel_on_level_end=True,
     )
 
 
@@ -42,6 +44,15 @@ def _player_blind(game_event):
 def _player_disconnect(game_event):
     """Cancel the player's Delay (if it is on-going)."""
     _cancel_delay(game_event['userid'])
+
+
+# =============================================================================
+# >> LISTENERS
+# =============================================================================
+@OnLevelShutdown
+def _level_shutdown():
+    """Clear the flash dictionary."""
+    _flashed_players.clear()
 
 
 # =============================================================================

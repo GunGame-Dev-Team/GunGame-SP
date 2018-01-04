@@ -62,7 +62,7 @@ class _MultiLevelPlayer(Player):
         self.delay = Delay(
             delay=duration,
             callback=multi_level_manager.__delitem__,
-            args=(self.userid, ),
+            args=(self.userid,),
         )
 
     def give_spark_entity(self):
@@ -104,7 +104,7 @@ class _MultiLevelManager(dict):
             return
         self[userid].remove_multi_level()
         super(_MultiLevelManager, self).__delitem__(userid)
-        if not len(self):
+        if not self:
             on_tick_listener_manager.unregister_listener(self._tick)
 
     def clear(self, silent=False):
@@ -123,7 +123,7 @@ class _MultiLevelManager(dict):
         """Give the player multi-level effects."""
         if userid in self:
             self.__delitem__(userid, reset_levels=False)
-        if not len(self):
+        if not self:
             on_tick_listener_manager.register_listener(self._tick)
         self[userid] = _MultiLevelPlayer.from_userid(userid)
         with GG_Multi_Level() as event:

@@ -53,9 +53,10 @@ def dissolve_player_ragdoll(game_event):
 
     # Delay the dissolving
     Delay(
-        max(0, dissolver_delay.get_int()),
-        dissolve_ragdoll,
-        (game_event['userid'], current_type),
+        delay=max(0, dissolver_delay.get_int()),
+        callback=dissolve_ragdoll,
+        args=(game_event['userid'], current_type),
+        cancel_on_level_end=True,
     )
 
 

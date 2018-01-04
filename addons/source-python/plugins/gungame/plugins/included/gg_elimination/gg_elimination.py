@@ -40,15 +40,29 @@ def _player_death(game_event):
         return
 
     victim = player_dictionary[game_event['userid']]
-    Delay(0, _respawn_victims, args=(victim.userid, ))
+    Delay(
+        delay=0,
+        callback=_respawn_victims,
+        args=(victim.userid,),
+    )
     attacker = game_event['attacker']
     if attacker in (victim.userid, 0):
-        Delay(5, _respawn_player, args=(victim.userid, ))
+        Delay(
+            delay=5,
+            callback=_respawn_player,
+            args=(victim.userid,),
+            cancel_on_level_end=True,
+        )
         victim.chat_message('Elimination:Suicide')
         return
     killer = player_dictionary[attacker]
     if victim.team_index == killer.team_index:
-        Delay(5, _respawn_player, args=(victim.userid, ))
+        Delay(
+            delay=5,
+            callback=_respawn_player,
+            args=(victim.userid,),
+            cancel_on_level_end=True,
+        )
         victim.chat_message('Elimination:TeamKill')
         return
     # TODO: Test reconnecting to see if players are not respawned
@@ -81,7 +95,7 @@ def _round_end(game_event):
 def _respawn_victims(userid):
     """Respawn all victim's of the given userid."""
     victims = eliminated_players.pop(userid, [])
-    if not len(victims):
+    if not victims:
         return
     if GunGameStatus.ROUND is GunGameRoundStatus.INACTIVE:
         return

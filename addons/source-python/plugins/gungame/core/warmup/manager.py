@@ -52,7 +52,7 @@ class _WarmupManager(object):
 
     def __init__(self):
         """Store the base attributes."""
-        self.repeat = Repeat(self.countdown)
+        self.repeat = Repeat(self.countdown, cancel_on_level_end=True)
         self.extensions = 0
         self.warmup_time = 0
         self.weapon = None

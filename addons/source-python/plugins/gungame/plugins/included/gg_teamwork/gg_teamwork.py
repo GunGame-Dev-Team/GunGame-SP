@@ -245,7 +245,10 @@ def _sync_player_levels(game_event):
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         return
 
-    Delay(0, _set_player_levels)
+    Delay(
+        delay=0,
+        callback=_set_player_levels,
+    )
 
 
 # =============================================================================
@@ -292,12 +295,13 @@ def _end_match(game_event):
     )
     for second in range(4):
         Delay(
-            second,
-            message_manager.center_message,
+            delay=second,
+            callback=message_manager.center_message,
             kwargs={
                 'message': 'TeamWork:Winner:Short',
                 'team_name': winning_team.name,
-            }
+            },
+            cancel_on_level_end=True,
         )
     color = {2: RED, 3: BLUE}.get(winning_team, WHITE)
     message_manager.top_message(
