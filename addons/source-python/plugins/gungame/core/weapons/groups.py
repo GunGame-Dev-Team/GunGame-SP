@@ -103,7 +103,7 @@ def _get_weapon_sets():
 
 _get_weapon_sets()
 
-if not len(all_weapons):
+if not all_weapons:
     raise NotImplementedError(
         f'Game {GAME_NAME} not supported, no weapon data.'
     )

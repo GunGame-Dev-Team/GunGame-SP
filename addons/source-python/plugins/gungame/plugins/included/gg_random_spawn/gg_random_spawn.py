@@ -49,7 +49,11 @@ def unload():
 # =============================================================================
 @OnLevelInit
 def _level_init(map_name):
-    Delay(0, _create_spawn_points, (map_name, ))
+    Delay(
+        delay=0,
+        callback=_create_spawn_points,
+        args=(map_name,),
+    )
 
 
 def _create_spawn_points(map_name):

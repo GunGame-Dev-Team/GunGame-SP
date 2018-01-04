@@ -74,7 +74,11 @@ def _pre_level_change(player, attribute, new_value):
         'level': player.level,
         'weapon': player.level_weapon
     }
-    Delay(0, _safe_remove, args=(player.userid, ))
+    Delay(
+        delay=0,
+        callback=_safe_remove,
+        args=(player.userid,),
+    )
 
 
 # =============================================================================

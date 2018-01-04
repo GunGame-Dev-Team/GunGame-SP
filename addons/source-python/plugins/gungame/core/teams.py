@@ -46,4 +46,7 @@ def _retrieve_team_data():
 
 _retrieve_team_data()
 if not team_names:
-    Delay(0, _retrieve_team_data)
+    Delay(
+        delay=0,
+        callback=_retrieve_team_data,
+    )

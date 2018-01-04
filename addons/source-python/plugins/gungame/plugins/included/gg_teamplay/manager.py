@@ -173,7 +173,7 @@ class _TeamManager(object):
         )
 
 team_dictionary = {
-    team_number: _TeamManager(team_number) for team_number in team_names.keys()
+    team_number: _TeamManager(team_number) for team_number in team_names
 }
 
 
@@ -219,12 +219,13 @@ def _handle_team_win(game_event):
     )
     for second in range(4):
         Delay(
-            second,
-            message_manager.center_message,
+            delay=second,
+            callback=message_manager.center_message,
             kwargs={
                 'message': 'TeamPlay:Winner:Short',
                 'team': winning_team,
-            }
+            },
+            cancel_on_level_end=True,
         )
     color = {2: RED, 3: BLUE}.get(winning_team.team_number, WHITE)
     message_manager.top_message(

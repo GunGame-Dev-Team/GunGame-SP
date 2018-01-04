@@ -169,7 +169,10 @@ def load():
     # Import the listeners/events/commands/menus
     from .core.listeners import start_match
 
-    Delay(0, start_match)
+    Delay(
+        delay=0,
+        callback=start_match,
+    )
 
 
 def unload():

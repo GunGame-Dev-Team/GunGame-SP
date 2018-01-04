@@ -101,7 +101,11 @@ def _player_spawn(game_event):
         return
 
     _spawning_users.add(player.userid)
-    Delay(0, _spawning_users.remove, (player.userid, ))
+    Delay(
+        delay=0,
+        callback=_spawning_users.remove,
+        args=(player.userid,),
+    )
 
     # Spawn protection
     player.give_spawn_protection()
@@ -263,7 +267,11 @@ def _player_team(game_event):
     if userid in _team_changers:
         return
     _team_changers.add(userid)
-    Delay(0.2, _team_changers.remove, (userid, ))
+    Delay(
+        delay=0.2,
+        callback=_team_changers.remove,
+        args=(userid,),
+    )
 
 
 @Event('weapon_fire')
@@ -355,12 +363,13 @@ def _gg_win(game_event):
     )
     for second in range(4):
         Delay(
-            second,
-            message_manager.center_message,
+            delay=second,
+            callback=message_manager.center_message,
             kwargs={
                 'message': 'Winner:Short',
                 'winner': winner.name,
-            }
+            },
+            cancel_on_level_end=True,
         )
     color = {2: RED, 3: BLUE}.get(winner.team_index, WHITE)
     message_manager.top_message(

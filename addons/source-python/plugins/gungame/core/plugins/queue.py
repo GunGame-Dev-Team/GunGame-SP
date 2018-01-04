@@ -48,7 +48,10 @@ class _PluginQueue(dict):
         if item not in ('load', 'unload', 'reload'):
             raise ValueError(f'Invalid plugin type "{item}"')
         if not self:
-            Delay(0, self._loop_through_queues)
+            Delay(
+                delay=0,
+                callback=self._loop_through_queues,
+            )
         value = self[item] = set()
         return value
 
