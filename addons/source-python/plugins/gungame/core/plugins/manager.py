@@ -40,6 +40,7 @@ class _GGPluginManager(PluginManager):
     prefix = ''
     logger = gg_plugins_manager_logger
     _base_import_prefix = 'gungame.plugins.'
+    _base_import = ''
     translations = None
 
     def set_base_import(self, value):
@@ -112,7 +113,6 @@ class _GGPluginManager(PluginManager):
             return
         plugin_type = valid_plugins.get_plugin_type(plugin_name)
         self._base_import = self._base_import_prefix + plugin_type + '.'
-        self._current_plugin = plugin_name
         super()._remove_modules(plugin_name)
 
     @staticmethod

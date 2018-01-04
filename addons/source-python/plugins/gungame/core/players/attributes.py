@@ -165,6 +165,7 @@ class _AttributeBase(AutoUnload):
     def __init__(self, attribute):
         """Store the attribute."""
         self.attribute = attribute
+        self.callback = None
 
     def __call__(self, callback):
         """Store the callback and register it to the attribute."""
