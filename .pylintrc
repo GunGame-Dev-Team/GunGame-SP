@@ -8,19 +8,19 @@ ignore=
 # For a list of error codes, see:
 #   http://pylint-messages.wikidot.com/all-codes
 disable=
-    add 4 spaces,
     attribute-defined-outside-init,
     bad-continuation,
+    cyclic-import,
     duplicate-code,
     fixme,
     import-error,
-    locally-disabled,
-    no-member,
+    inconsistent-return-statements,
+    keyword-arg-before-vararg,
     no-name-in-module,
     protected-access,
     too-few-public-methods,
-    too-many-branches,
-    too-many-public-methods,
+    unused-argument,
+    undefined-all-variable,
 
 
 [BASIC]
@@ -58,7 +58,7 @@ class-attribute-rgx=([A-Za-z_][A-Za-z0-9_]{2,30}|(__.*__))$
 inlinevar-rgx=[A-Za-z_][A-Za-z0-9_]*$
 
 # Variable names that are always ok
-good-names=x,y,game_event
+good-names=x,y
 
 
 [DESIGN]
