@@ -74,7 +74,11 @@ def _create_default_order():
     default_order = GUNGAME_WEAPON_ORDER_PATH / 'default.txt'
     if default_order.isfile():
         return
-    weapons = '\n'.join(chain.from_iterable(_weapon_groups.values()))
+    default_weapons = [
+        weapon for weapon in chain.from_iterable(_weapon_groups.values())
+        if weapon not in grenade_weapons
+    ]
+    weapons = '\n'.join(default_weapons)
     with default_order.open('w') as open_file:
         open_file.write(_default_header)
         open_file.write(f'{weapons}\n')
@@ -96,11 +100,13 @@ def _create_random_order():
     random_order = GUNGAME_WEAPON_ORDER_PATH / 'random.txt'
     if random_order.isfile():
         return
-    all_weapon_copy = list(all_weapons)
-    shuffle(all_weapon_copy)
+    shuffle_weapons = [
+        weapon for weapon in all_weapons if weapon not in grenade_weapons
+    ]
+    shuffle(shuffle_weapons)
     with random_order.open('w') as open_file:
         open_file.write(_default_header)
-        for weapon in all_weapon_copy:
+        for weapon in shuffle_weapons:
             multi_kill = randint(0, 3)
             if not multi_kill:
                 continue
