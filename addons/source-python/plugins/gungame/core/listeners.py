@@ -6,6 +6,7 @@
 # >> IMPORTS
 # =============================================================================
 # Python
+from collections import defaultdict
 from contextlib import suppress
 
 # Source.Python
@@ -15,12 +16,19 @@ from engines.server import queue_command_string
 from entities.entity import Entity
 from events import Event
 from filters.entities import EntityIter
+from filters.players import PlayerIter
 from listeners import OnLevelInit, OnLevelEnd
 from listeners.tick import Delay
+from players.teams import teams_by_name
 from weapons.manager import weapon_manager
 
 # Site-package
 from mutagen import MutagenError
+
+# Custom Package
+from idle_manager import (
+    OnClientBack, OnClientIdle, get_client_idle_time, is_client_idle
+)
 
 # GunGame
 from .config.misc import (
@@ -28,7 +36,8 @@ from .config.misc import (
     give_defusers, level_on_protect, send_rules_each_map
 )
 from .config.punishment import (
-    level_one_team_kill, suicide_punish, team_kill_punish,
+    afk_length, afk_punish, afk_type, level_one_team_kill, suicide_punish,
+    team_kill_punish
 )
 from .config.warmup import enabled as warmup_enabled, warmup_weapon
 from .config.weapon import (
@@ -72,6 +81,9 @@ _melee_weapon = weapon_manager[
 ].name
 
 _spawning_users = set()
+_afk_player_delays = {}
+_afk_player_rounds = defaultdict(int)
+_spec_team = teams_by_name.get('spec')
 
 
 # =============================================================================
@@ -257,12 +269,15 @@ def _player_activate(game_event):
 def _player_disconnect(game_event):
     """Store the disconnecting player's values and remove from dictionary."""
     userid = game_event['userid']
+    index = player_dictionary[userid].index
     player_dictionary.safe_remove(userid)
     leader_manager.check_disconnect(userid)
+    _remove_index_from_afk_dicts(index)
 
 
 @Event('player_team')
 def _player_team(game_event):
+    """Track team changes for use with suicide punishment."""
     userid = game_event['userid']
     if userid in _team_changers:
         return
@@ -276,6 +291,7 @@ def _player_team(game_event):
 
 @Event('weapon_fire')
 def _weapon_fire(game_event):
+    """Remove spawn protection, if necessary."""
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         return
 
@@ -301,6 +317,21 @@ def _round_start(game_event):
         entity.disable()
 
     remove_idle_weapons()
+
+    if afk_type.get_bool():
+        return
+
+    for player in PlayerIter(
+        is_filters='alive',
+        not_filters=['spec', 'un']
+    ):
+        index = player.index
+        if not is_client_idle(index):
+            continue
+
+        _afk_player_rounds[index] += 1
+        if _afk_player_rounds[index] >= afk_length.get_int():
+            _punish_afk(index)
 
 
 @Event('round_end')
@@ -431,6 +462,9 @@ def _gg_level_down(game_event):
 @OnLevelInit
 def _level_init(map_name):
     """Set match status to INACTIVE when a new map is started."""
+    _afk_player_rounds.clear()
+    _afk_player_delays.clear()
+
     # Is GunGame still loading?
     if GunGameStatus.MATCH is GunGameMatchStatus.LOADING:
         return
@@ -476,6 +510,32 @@ def _post_multi_kill(player, attribute, new_value, old_value):
         total=multi_kill,
     )
     player.play_sound('multi_kill')
+
+
+# =============================================================================
+# >> AFK LISTENERS
+# =============================================================================
+@OnClientIdle
+def _client_idle(index):
+    """Start tracking afk for punishment."""
+    if not afk_type.get_bool():
+        return
+
+    _afk_player_delays[index] = Delay(
+        delay=afk_length.get_float(),
+        callback=_punish_afk,
+        args=(index,),
+        cancel_on_level_end=True,
+    )
+
+
+@OnClientBack
+def _remove_index_from_afk_dicts(index):
+    """Remove the player's index from the afk dictionaries."""
+    _afk_player_rounds.pop(index, None)
+    delay = _afk_player_delays.pop(index, None)
+    if delay is not None:
+        delay.cancel()
 
 
 # =============================================================================
@@ -565,6 +625,7 @@ def _send_level_info(player):
 
 
 def _punish_suicide(userid):
+    """Punish the player for suiciding."""
     levels = suicide_punish.get_int()
     if not levels:
         return
@@ -590,6 +651,7 @@ def _punish_suicide(userid):
 
 
 def _punish_team_kill(player):
+    """Punish the player for team killing."""
     levels = team_kill_punish.get_int()
     if not levels:
         return
@@ -610,3 +672,22 @@ def _punish_team_kill(player):
         message='Punishment:TeamKill:Level',
         player=player,
     )
+
+
+def _punish_afk(index):
+    """Punish the player for being afk."""
+    punishment = afk_punish.get_int()
+    if not punishment:
+        return
+
+    player = player_dictionary.from_index(index)
+    if punishment == 1:
+        player.kick(
+            message=message_manager['Punishment:AFK:Kick'].get_string(
+                language=player.language,
+            ),
+        )
+
+    else:
+        if _spec_team is not None:
+            player.team = _spec_team
