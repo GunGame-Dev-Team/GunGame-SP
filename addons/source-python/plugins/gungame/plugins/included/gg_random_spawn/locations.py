@@ -26,17 +26,14 @@ __all__ = (
 def get_locations(class_name):
     """Return all current spawn points for the given class name."""
     for base_entity in BaseEntityIter(class_name):
-        yield (
-            base_entity.get_key_value_vector('origin'),
-            base_entity.get_key_value_vector('angles'),
-        )
+        yield base_entity.origin, base_entity.angle
 
 
 def set_location(class_name, origin, angles):
     """Create a spawn point at the given location."""
     base_entity = BaseEntity.create(class_name)
-    base_entity.set_key_value_vector('origin', origin)
-    base_entity.set_key_value_vector('angles', angles)
+    base_entity.origin = origin
+    base_entity.angle = angles
 
 
 def remove_locations(class_name):
