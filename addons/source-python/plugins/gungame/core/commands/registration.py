@@ -20,6 +20,17 @@ from .strings import commands_translations
 
 
 # =============================================================================
+# >> ALL DECLARATION
+# =============================================================================
+__all__ = (
+    '_RegisteredCommand',
+    'command_dictionary',
+    'plugin_commands',
+    'register_command_callback',
+)
+
+
+# =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
 command_dictionary = dict()
@@ -52,6 +63,7 @@ class _RegisteredCommand(object):
     def register_commands(self):
         """Register the public, private, and client commands."""
         for command in self.commands:
+
             # Register the public commands
             say_command_manager.register_commands(
                 (command, '!' + command),
@@ -100,10 +112,10 @@ def register_command_callback(name, text):
     if name in command_dictionary:
         raise ValueError(f'Command type "{name}" is already registered.')
 
-    def inner(function):
+    def inner(func):
         """Register the command to the given function."""
-        command_dictionary[name] = _RegisteredCommand(name, text, function)
-        return function
+        command_dictionary[name] = _RegisteredCommand(name, text, func)
+        return func
     return inner
 
 

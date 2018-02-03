@@ -20,6 +20,7 @@ from gungame.core.paths import GUNGAME_TRANSLATION_PATH
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
+    '_CommandsTranslations',
     'commands_translations',
 )
 

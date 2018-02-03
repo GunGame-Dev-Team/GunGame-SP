@@ -79,10 +79,12 @@ class GG_Leader_Disconnect(CustomEvent):
 
     userid = ShortVariable('The userid of the leader that disconnected')
     old_leaders = StringVariable(
-        'String of the old leaders separated by "," e.g. "2,7,9"')
+        'String of the old leaders separated by "," e.g. "2,7,9"'
+    )
     old_level = ByteVariable('The old leader level')
     leaders = StringVariable(
-        'String of current leaders separated by "," e.g. "2,7,9"')
+        'String of current leaders separated by "," e.g. "2,7,9"'
+    )
     leader_level = ByteVariable("The current leader's level")
 
 
@@ -90,6 +92,6 @@ class GG_Leader_Disconnect(CustomEvent):
 # >> RESOURCE FILE
 # =============================================================================
 GGResourceFile(
-    'leaders', GG_New_Leader, GG_Tied_Leader,
-    GG_Leader_Lost_Level, GG_Leader_Disconnect,
+    'leaders', GG_New_Leader, GG_Tied_Leader, GG_Leader_Lost_Level,
+    GG_Leader_Disconnect,
 )

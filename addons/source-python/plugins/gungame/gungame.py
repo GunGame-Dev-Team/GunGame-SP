@@ -71,6 +71,7 @@ def load():
         )
     )
     current += 1
+    gg_resource_list.register_all_events()
     gg_resource_list.load_all_events()
 
     # Initialize GunGame commands/menus
@@ -81,8 +82,9 @@ def load():
         )
     )
     current += 1
-    from .core.commands.commands import register_all_commands
-    register_all_commands()
+    from .core.commands.commands import find_all_commands, load_all_commands
+    find_all_commands()
+    load_all_commands()
 
     # Initialize GunGame sounds
     gg_logger.log_message(
@@ -213,8 +215,8 @@ def unload():
         )
     )
     current += 1
-    from .core.commands.commands import unregister_all_commands
-    unregister_all_commands()
+    from .core.commands.commands import unload_all_commands
+    unload_all_commands()
 
     # Re-enable buyzones
     gg_logger.log_message(
