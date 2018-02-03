@@ -18,7 +18,7 @@ from translations.strings import LangStrings
 
 # GunGame
 from .manager import sound_manager
-from ..paths import GUNGAME_PLUGINS_PATH, GUNGAME_SOUND_PACK_PATH
+from ..paths import GUNGAME_SOUND_PACK_PATH
 from ..plugins.valid import valid_plugins
 
 
@@ -55,10 +55,10 @@ def register_all_sounds():
 
     # Loop through all plugins
     for plugin_name in valid_plugins.all:
-        plugin_type = valid_plugins.get_plugin_type(plugin_name)
-        if not GUNGAME_PLUGINS_PATH.joinpath(
-            plugin_type, plugin_name, 'sounds.py',
-        ).isfile():
+        plugin_path = valid_plugins.get_plugin_path(plugin_name)
+        plugin_type = str(plugin_path.parent.namebase)
+        sound_path = plugin_path / 'sounds.py'
+        if not sound_path.isfile():
             continue
 
         try:

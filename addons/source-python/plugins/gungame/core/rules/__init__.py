@@ -13,7 +13,6 @@ from warnings import warn
 
 # GunGame
 from .strings import rules_translations
-from ..paths import GUNGAME_PLUGINS_PATH
 from ..plugins.manager import gg_plugin_manager
 from ..plugins.valid import valid_plugins
 
@@ -74,10 +73,10 @@ def define_all_rules():
     """Find and store all rules."""
     # Loop through all plugins
     for plugin_name in valid_plugins.all:
-        plugin_type = valid_plugins.get_plugin_type(plugin_name)
-        if not GUNGAME_PLUGINS_PATH.joinpath(
-            plugin_type, plugin_name, 'rules.py',
-        ).isfile():
+        plugin_path = valid_plugins.get_plugin_path(plugin_name)
+        plugin_type = str(plugin_path.parent.namebase)
+        rules_path = plugin_path / 'rules.py'
+        if not rules_path.isfile():
             continue
 
         try:

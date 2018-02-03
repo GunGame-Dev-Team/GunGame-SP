@@ -20,7 +20,7 @@ from translations.strings import LangStrings
 
 # GunGame
 from .. import gg_core_logger
-from ..paths import GUNGAME_PLUGINS_PATH, GUNGAME_CFG_PATH
+from ..paths import GUNGAME_CFG_PATH
 from ..plugins.valid import valid_plugins
 
 
@@ -49,10 +49,10 @@ def load_all_configs():
             continue
         import_module(f'gungame.core.config.{file.namebase}')
     for plugin_name in valid_plugins.all:
-        plugin_type = valid_plugins.get_plugin_type(plugin_name)
-        if not GUNGAME_PLUGINS_PATH.joinpath(
-            plugin_type, plugin_name, 'configuration.py',
-        ).isfile():
+        plugin_path = valid_plugins.get_plugin_path(plugin_name)
+        plugin_type = str(plugin_path.parent.namebase)
+        config_path = plugin_path / 'configuration.py'
+        if not config_path.isfile():
             continue
 
         try:

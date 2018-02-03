@@ -70,6 +70,11 @@ class _ValidPlugins(object):
                 return plugin_type
         raise ValueError(f'No such plugin "{plugin_name}".')
 
+    def get_plugin_path(self, plugin_name):
+        """Return the path for the sub-plugin."""
+        plugin_type = self.get_plugin_type(plugin_name)
+        return GUNGAME_PLUGINS_PATH / plugin_type / plugin_name
+
     @staticmethod
     def _get_plugins_by_type(plugin_type):
         """Store each plugin for the given type."""
@@ -77,14 +82,16 @@ class _ValidPlugins(object):
         plugins = dict()
 
         # Loop through all plugins
-        for plugin in GUNGAME_PLUGINS_PATH.joinpath(plugin_type).dirs():
+        type_path = GUNGAME_PLUGINS_PATH / plugin_type
+        for plugin in type_path.dirs():
 
             # Skip the compiled files
             if plugin.namebase == '__pycache__':
                 continue
 
             # Does the primary file not exist?
-            if not plugin.joinpath(plugin.namebase + '.py').isfile():
+            plugin_path = plugin / plugin.namebase + '.py'
+            if not plugin_path.isfile():
                 warn(
                     f'{plugin_type.title()} plugin "{plugin.namebase}" '
                     'is missing its base file.'

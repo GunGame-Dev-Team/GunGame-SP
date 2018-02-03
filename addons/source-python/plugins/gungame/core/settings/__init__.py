@@ -13,7 +13,6 @@ from settings.player import PlayerSettings
 
 # GunGame
 from gungame.info import info
-from ..paths import GUNGAME_PLUGINS_PATH
 from ..plugins.valid import valid_plugins
 
 
@@ -38,10 +37,10 @@ gungame_player_settings = PlayerSettings(info.name, 'gg', info.verbose_name)
 def register_player_settings():
     """Register all player settings."""
     for plugin_name in valid_plugins.all:
-        plugin_type = valid_plugins.get_plugin_type(plugin_name)
-        if GUNGAME_PLUGINS_PATH.joinpath(
-            plugin_type, plugin_name, 'settings.py',
-        ).isfile():
+        plugin_path = valid_plugins.get_plugin_path(plugin_name)
+        plugin_type = str(plugin_path.parent.namebase)
+        settings_path = plugin_path / 'settings.py'
+        if settings_path.isfile():
             import_module(
                 f'gungame.plugins.{plugin_type}.{plugin_name}.settings'
             )
