@@ -22,6 +22,7 @@ __all__ = (
     'level_on_protect',
     'map_strip_exceptions',
     'prune_database',
+    'send_rules_each_map',
     'sound_pack',
     'spawn_protection',
 )

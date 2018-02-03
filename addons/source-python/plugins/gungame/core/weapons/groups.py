@@ -24,6 +24,7 @@ __all__ = (
     'explosive_weapons',
     'grenade_weapons',
     'incendiary_weapons',
+    'individual_weapons',
     'machine_gun_weapons',
     'melee_weapons',
     'other_primary_weapons',

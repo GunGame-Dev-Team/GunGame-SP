@@ -26,9 +26,7 @@ from weapons.manager import weapon_manager
 from mutagen import MutagenError
 
 # Custom Package
-from idle_manager import (
-    OnClientBack, OnClientIdle, get_client_idle_time, is_client_idle
-)
+from idle_manager import OnClientBack, OnClientIdle, is_client_idle
 
 # GunGame
 from .config.misc import (

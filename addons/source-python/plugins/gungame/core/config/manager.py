@@ -22,6 +22,7 @@ from ..plugins.valid import valid_plugins
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
+    '_GunGameCvarManager',
     'GunGameConfigManager',
     'gg_config_manager_logger',
 )

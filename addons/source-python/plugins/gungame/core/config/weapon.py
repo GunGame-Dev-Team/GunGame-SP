@@ -17,12 +17,12 @@ from ..config.manager import GunGameConfigManager
 # =============================================================================
 __all__ = (
     'multi_kill_override',
-    'order_choose_random',
+    # 'order_choose_random',
     'order_file',
     'order_randomize',
     'prop_physics',
-    'random_weapon_each_time',
-    'randomize_per_player',
+    # 'random_weapon_each_time',
+    # 'randomize_per_player',
 )
 
 
