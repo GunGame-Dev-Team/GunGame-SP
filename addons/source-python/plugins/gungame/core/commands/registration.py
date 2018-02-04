@@ -125,7 +125,7 @@ def register_command_callback(name, text):
 def _send_command_menu(command, index, team_only=None):
     """Send the menu to the player."""
     # Store the block value
-    block = False
+    block = team_only is not None
 
     # Get the command used
     name = command[0]
@@ -134,7 +134,7 @@ def _send_command_menu(command, index, team_only=None):
     if name.startswith(('!', '/')):
 
         # Get the block value
-        block = name.startswith('/')
+        block = not name.startswith('/')
 
         # Get the actual command name
         name = name[1:]
