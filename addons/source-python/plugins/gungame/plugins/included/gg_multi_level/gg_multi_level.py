@@ -11,7 +11,7 @@ from events import Event
 from filters.players import PlayerIter
 from listeners import OnLevelEnd, on_tick_listener_manager
 from listeners.tick import Delay
-from mathlib import Vector
+from mathlib import QAngle
 from players.entity import Player
 
 # GunGame
@@ -69,7 +69,7 @@ class _MultiLevelPlayer(Player):
         """Give the player an env_spark effect."""
         entity = self.spark_entity = Entity.create('env_spark')
         entity.spawn_flags = 896
-        entity.angle = Vector(-90, 0, 0)
+        entity.angles = QAngle(-90, 0, 0)
         entity.magnitude = 8
         entity.trail_length = 3
         entity.set_parent(self, -1)
