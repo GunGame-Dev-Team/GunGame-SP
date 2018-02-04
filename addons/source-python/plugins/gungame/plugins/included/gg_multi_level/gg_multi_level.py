@@ -69,7 +69,7 @@ class _MultiLevelPlayer(Player):
         """Give the player an env_spark effect."""
         entity = self.spark_entity = Entity.create('env_spark')
         entity.spawn_flags = 896
-        entity.angles = Vector(-90, 0, 0)
+        entity.angle = Vector(-90, 0, 0)
         entity.magnitude = 8
         entity.trail_length = 3
         entity.set_parent(self, -1)
@@ -144,7 +144,7 @@ multi_level_manager = _MultiLevelManager()
 # =============================================================================
 @Event('gg_level_up')
 def _player_level_up(game_event):
-    if GunGameStatus.ROUND != GunGameRoundStatus.ACTIVE:
+    if GunGameStatus.ROUND is not GunGameRoundStatus.ACTIVE:
         return
     player = player_dictionary[game_event['leveler']]
     player.multi_levels += 1

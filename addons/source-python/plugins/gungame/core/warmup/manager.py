@@ -97,7 +97,7 @@ class _WarmupManager(object):
 
     def start_warmup(self):
         """Start warmup round."""
-        if GunGameStatus.MATCH == GunGameMatchStatus.WARMUP:
+        if GunGameStatus.MATCH is GunGameMatchStatus.WARMUP:
             return
         self.extensions = 0
         self.warmup_time = warmup_time.get_int()

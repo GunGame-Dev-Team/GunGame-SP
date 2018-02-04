@@ -110,7 +110,7 @@ class _WeaponOrderManager(dict):
 
     def print_order(self):
         """Print the current weapon order."""
-        if GunGameStatus.MATCH != GunGameMatchStatus.ACTIVE:
+        if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
             return
 
         if self._print_delay is not None:

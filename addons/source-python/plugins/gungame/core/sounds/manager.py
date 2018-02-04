@@ -125,8 +125,9 @@ class _SoundManager(defaultdict):
                                 continue
 
                             # Does the sound exist?
+                            sound_file = SOUND_PATH / line
                             if not (
-                                SOUND_PATH.joinpath(line).isfile() or
+                                sound_file.isfile() or
                                 is_vpk_file(f'sound/{line}')
                             ):
                                 warn(
