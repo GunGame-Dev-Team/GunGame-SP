@@ -64,42 +64,31 @@ class _RegisteredCommand(object):
         """Register the public, private, and client commands."""
         for command in self.commands:
 
-            # Register the public commands
-            say_command_manager.register_commands(
-                (command, '!' + command),
-                _send_command_menu,
-            )
-
-            # Register the private command
-            say_command_manager.register_commands(
-                '/' + command,
-                _send_command_menu,
-            )
+            # Register the say commands
+            for prefix in ('', '!', '/'):
+                name = prefix + command
+                say_command_manager._get_command(name).add_callback(
+                    _send_command_menu,
+                )
 
             # Register the client command
-            client_command_manager.register_commands(
-                command,
+            client_command_manager._get_command(command).add_callback(
                 _send_command_menu,
             )
 
     def unregister_commands(self):
         """Unregister the public, private, and client commands."""
         for command in self.commands:
-            # Unregister the public commands
-            say_command_manager.unregister_commands(
-                (command, '!' + command),
-                _send_command_menu,
-            )
 
-            # Unregister the private command
-            say_command_manager.unregister_commands(
-                '/' + command,
-                _send_command_menu,
-            )
+            # Unregister the say commands
+            for prefix in ('', '!', '/'):
+                name = prefix + command
+                say_command_manager._get_command(name).remove_callback(
+                    _send_command_menu,
+                )
 
             # Unregister the client command
-            client_command_manager.unregister_commands(
-                command,
+            client_command_manager._get_command(command).remove_callback(
                 _send_command_menu,
             )
 
