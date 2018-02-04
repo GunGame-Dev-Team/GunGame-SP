@@ -34,7 +34,7 @@ def set_location(class_name, origin, angles):
     """Create a spawn point at the given location."""
     base_entity = BaseEntity.create(class_name)
     base_entity.origin = origin
-    base_entity.angles = QAngle(*angles)
+    base_entity.angles = angles
 
 
 def remove_locations(class_name):

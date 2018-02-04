@@ -12,7 +12,7 @@ from warnings import warn
 from engines.server import global_vars
 from listeners import OnLevelInit, OnLevelEnd
 from listeners.tick import Delay
-from mathlib import Vector
+from mathlib import QAngle, Vector
 
 # GunGame
 from gungame.core.paths import GUNGAME_DATA_PATH
@@ -89,7 +89,7 @@ def _create_spawn_points(map_name):
                 continue
 
             origin = Vector(*values[:3])
-            angles = Vector(*values[3:])
+            angles = QAngle(*values[3:])
             for class_name in spawn_entities:
                 set_location(class_name, origin, angles)
 
