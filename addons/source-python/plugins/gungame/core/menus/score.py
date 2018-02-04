@@ -7,7 +7,6 @@
 # =============================================================================
 # Source.Python
 from menus import PagedMenu
-from players.entity import Player
 
 # GunGame
 from . import menu_strings
@@ -34,7 +33,7 @@ __all__ = (
 def send_score_menu(index):
     """Send the score menu to the player."""
     menu = PagedMenu(title=menu_strings['Score:Title'])
-    player = Player(index)
+    player = player_dictionary.from_index(index)
     if GunGameStatus.MATCH is GunGameMatchStatus.WARMUP:
         menu.append(menu_strings['Warmup'])
     elif GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
