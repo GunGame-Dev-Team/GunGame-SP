@@ -42,6 +42,11 @@ class _LeaderManager(dict):
             # Add the player to the level dictionary
             self[userid] = player_dictionary[userid].level
 
+    def __delitem__(self, userid):
+        """Validate that the userid is in the dictionary before deletion."""
+        if userid in self:
+            super().__delitem__(userid)
+
     @property
     def leader_level(self):
         """Return the level of the leader."""
