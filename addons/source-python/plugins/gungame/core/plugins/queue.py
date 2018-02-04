@@ -45,7 +45,7 @@ class _PluginQueue(dict):
 
     def __missing__(self, item):
         """Add the item to its queue and loop through queues after 1 tick."""
-        if item not in ('load', 'unload', 'reload'):
+        if item not in ('load', 'unload'):
             raise ValueError(f'Invalid plugin type "{item}"')
         if not self:
             Delay(
@@ -60,13 +60,10 @@ class _PluginQueue(dict):
         if 'unload' in self:
             self._unload_plugins()
             del self['unload']
-        if 'load' in self:
-            self._load_plugins()
-            del self['load']
-        if 'reload' not in self:
+        if 'load' not in self:
             return
-        self['load'] = set(self['reload'])
-        del self['reload']
+        self._load_plugins()
+        del self['load']
 
     def _unload_plugins(self):
         """Unload all plugins in the unload queue."""

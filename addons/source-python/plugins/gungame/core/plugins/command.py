@@ -152,7 +152,7 @@ class _GGSubCommandManager(SubCommandManager):
         plugin_queue['unload'].add(plugin_name)
 
         # Add the plugin to the reload queue
-        plugin_queue['reload'].add(plugin_name)
+        plugin_queue['load'].add(plugin_name)
 
     def print_plugins(self, index=None):
         """List all currently loaded plugins."""
