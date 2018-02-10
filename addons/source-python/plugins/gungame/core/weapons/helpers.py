@@ -25,15 +25,15 @@ __all__ = (
 # =============================================================================
 # >> HELPER FUNCTIONS
 # =============================================================================
-def remove_idle_weapons():
+def remove_idle_weapons(status=GunGameMatchStatus.ACTIVE):
     """Remove all idle weapons from the map."""
-    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+    if GunGameStatus.MATCH is not status:
         return
 
     for weapon in WeaponIter(
-        not_filters=(
+        not_filters=[
             tag for tag in ('tool', 'objective') if tag in weapon_manager.tags
-        )
+        ]
     ):
         # Is the weapon currently owned by a player?
         if weapon.owner is not None:
