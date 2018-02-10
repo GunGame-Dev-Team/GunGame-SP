@@ -12,15 +12,16 @@ from entities.entity import Entity
 from entities.helpers import index_from_inthandle
 from events.manager import event_manager
 from filters.players import PlayerIter
-from filters.weapons import WeaponIter
 from listeners.tick import Delay
 from players.entity import Player
 from players.helpers import userid_from_index
 from weapons.manager import weapon_manager
 
 # GunGame
+from ..status import GunGameMatchStatus
 from ..teams import team_names
 from ..weapons.groups import individual_weapons
+from ..weapons.helpers import remove_idle_weapons
 
 
 # =============================================================================
@@ -49,13 +50,7 @@ def unload():
 # =============================================================================
 def _player_death(game_event):
     # Dead Strip
-    for weapon in WeaponIter(
-        not_filters=(
-            tag for tag in ('tool', 'objective') if tag in weapon_manager.tags
-        )
-    ):
-        if weapon.owner is None:
-            weapon.remove()
+    remove_idle_weapons(status=GunGameMatchStatus.WARMUP)
 
     # Dissolver
     victim = game_event['userid']
