@@ -34,3 +34,6 @@ cfg/source-python/gungame/weapon_orders/
 
 # Do not ignore any readme files
 !readme.md
+
+# Ignore sound files unless explicitly added
+sound/
