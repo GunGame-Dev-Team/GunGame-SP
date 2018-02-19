@@ -32,6 +32,7 @@ class _CommandsTranslations(dict):
     """Class used to store commands translations."""
 
     def __init__(self):
+        """Store all commands."""
         super().__init__()
 
         commands_path = GUNGAME_TRANSLATION_PATH / 'commands'
@@ -43,6 +44,7 @@ class _CommandsTranslations(dict):
                     self._add_contents(file)
 
     def _add_contents(self, file):
+        """Store the given file's commands."""
         instance = LangStrings(
             file.replace(TRANSLATION_PATH, '')[1:~3]
         )

@@ -147,6 +147,9 @@ def _player_level_up(game_event):
     if GunGameStatus.ROUND is not GunGameRoundStatus.ACTIVE:
         return
     player = player_dictionary[game_event['leveler']]
+    if player.dead:
+        return
+
     player.multi_levels += 1
     if player.multi_levels >= levels.get_int():
         # Give or increase multi-level

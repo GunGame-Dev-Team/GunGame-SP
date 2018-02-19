@@ -8,7 +8,6 @@
 # Source.Python
 from entities.entity import BaseEntity
 from filters.entities import BaseEntityIter
-from mathlib import QAngle
 
 
 # =============================================================================
