@@ -1,6 +1,6 @@
 # ../gungame/core/sounds/manager.py
 
-"""Provides a class used to ."""
+"""Provides sound management capabilities."""
 
 # =============================================================================
 # >> IMPORTS
@@ -211,6 +211,7 @@ class _SoundManager(defaultdict):
         """Register a hook for the given sound name."""
         if (
             sound_name in self._sound_hooks and
+            callback is not None and
             callback in self._sound_hooks[sound_name]
         ):
             raise ValueError(
@@ -257,7 +258,7 @@ class _SoundManager(defaultdict):
         if sound_name in self._sound_hooks:
             block_sound = False
             for callback in self._sound_hooks[sound_name]:
-                if callback() is False:
+                if callback(sound_name) is False:
                     block_sound = True
             if block_sound:
                 return

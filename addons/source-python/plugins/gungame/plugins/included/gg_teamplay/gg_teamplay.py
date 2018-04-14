@@ -19,6 +19,7 @@ from listeners.tick import Delay
 # GunGame
 from gungame.core.messages.hooks import MessagePrefixHook
 from gungame.core.plugins.manager import gg_plugin_manager
+from gungame.core.sounds.hooks import SoundHook
 from gungame.core.teams import team_levels
 from gungame.core.weapons.manager import weapon_order_manager
 
@@ -139,4 +140,13 @@ def _block_level_up(game_event):
 @MessagePrefixHook('LevelInfo:')
 def _level_info_hook(message_name, message_prefix):
     """Hook the LevelInfo messages so that the team messages can be sent."""
+    return False
+
+
+# =============================================================================
+# >> SOUND HOOKS
+# =============================================================================
+@SoundHook('multi_kill')
+def _suppress_multi_kill_sound(sound_name):
+    """Stop the multi-kill sound from spamming."""
     return False
