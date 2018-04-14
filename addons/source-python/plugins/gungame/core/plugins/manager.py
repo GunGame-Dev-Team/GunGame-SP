@@ -123,6 +123,8 @@ class _GGPluginManager(PluginManager):
             'settings',
         ):
             return False
+        if base_name == module_to_check:
+            return False
         return PluginManager._is_related_module(base_name, module_to_check)
 
 gg_plugin_manager = _GGPluginManager('gungame')
