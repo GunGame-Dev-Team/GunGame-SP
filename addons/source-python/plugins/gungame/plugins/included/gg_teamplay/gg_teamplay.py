@@ -17,7 +17,7 @@ from hooks.exceptions import except_hooks
 from listeners.tick import Delay
 
 # GunGame
-from gungame.core.messages import message_manager
+from gungame.core.messages.hooks import MessagePrefixHook
 from gungame.core.plugins.manager import gg_plugin_manager
 from gungame.core.teams import team_levels
 from gungame.core.weapons.manager import weapon_order_manager
@@ -26,14 +26,8 @@ from gungame.core.weapons.manager import weapon_order_manager
 # =============================================================================
 # >> LOAD & UNLOAD
 # =============================================================================
-def load():
-    """Hook the LevelInfo messages so that the team messages can be sent."""
-    message_manager.hook_prefix('LevelInfo:')
-
-
 def unload():
-    """Unhook the LevelInfo messages and clear the team level dictionary."""
-    message_manager.unhook_prefix('LevelInfo:')
+    """Clear the team level dictionary."""
     team_levels.clear()
 
 
@@ -137,3 +131,12 @@ def _swap_style(game_event):
 @PreEvent('gg_level_up', 'gg_win')
 def _block_level_up(game_event):
     return EventAction.BLOCK
+
+
+# =============================================================================
+# >> MESSAGE HOOKS
+# =============================================================================
+@MessagePrefixHook('LevelInfo:')
+def _level_info_hook(message_name, message_prefix):
+    """Hook the LevelInfo messages so that the team messages can be sent."""
+    return False

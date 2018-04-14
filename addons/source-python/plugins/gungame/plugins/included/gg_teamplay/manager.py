@@ -24,7 +24,7 @@ from mutagen import MutagenError
 
 # GunGame
 from gungame.core.config.misc import dynamic_chat_time
-from gungame.core.messages import message_manager
+from gungame.core.messages.manager import message_manager
 from gungame.core.players.attributes import AttributePreHook
 from gungame.core.players.dictionary import player_dictionary
 from gungame.core.sounds.manager import sound_manager

@@ -19,7 +19,7 @@ from . import listeners
 from ..config.warmup import (
     warmup_weapon, warmup_time, min_players, max_extensions, players_reached,
 )
-from ..messages import message_manager
+from ..messages.manager import message_manager
 from ..sounds.manager import sound_manager
 from ..status import GunGameMatchStatus, GunGameStatus
 from ..weapons.groups import all_weapons, melee_weapons

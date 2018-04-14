@@ -44,7 +44,7 @@ from .config.weapon import (
 from .credits import gungame_credits
 from .events.included.match import GG_Map_End, GG_Start
 from .leaders import leader_manager
-from .messages import message_manager
+from .messages.manager import message_manager
 from .players.attributes import AttributePostHook
 from .players.database import winners_database
 from .players.dictionary import player_dictionary

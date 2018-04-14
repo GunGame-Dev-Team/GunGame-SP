@@ -15,7 +15,7 @@ from weapons.manager import weapon_manager
 
 # GunGame
 from gungame.core.config.misc import allow_kills_after_round, level_on_protect
-from gungame.core.messages import message_manager
+from gungame.core.messages.manager import message_manager
 from gungame.core.players.dictionary import player_dictionary
 from gungame.core.players.instance import GunGamePlayer
 from gungame.core.status import (

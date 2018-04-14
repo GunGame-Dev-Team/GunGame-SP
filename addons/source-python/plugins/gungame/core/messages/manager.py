@@ -19,7 +19,7 @@ from paths import TRANSLATION_PATH
 from translations.strings import LangStrings, TranslationStrings
 
 # GunGame
-from .paths import GUNGAME_TRANSLATION_PATH
+from ..paths import GUNGAME_TRANSLATION_PATH
 
 
 # =============================================================================
@@ -43,8 +43,8 @@ class _MessageManager(dict):
         super().__init__()
 
         # Create base dictionaries to store message hooks
-        self._hooked_messages = defaultdict(int)
-        self._hooked_prefixes = defaultdict(int)
+        self._hooked_messages = defaultdict(list)
+        self._hooked_prefixes = defaultdict(list)
 
         # Loop through all message translation files
         message_path = GUNGAME_TRANSLATION_PATH / 'messages'
@@ -69,23 +69,69 @@ class _MessageManager(dict):
                 # Add the translations to the dictionary
                 self[key] = value
 
-    def hook_message(self, message_name):
-        """Add a hook to the given message's refcount."""
-        self._hooked_messages[message_name] += 1
+    def hook_message(self, message_name, callback):
+        """Add a hook to the given message's callback list."""
+        if not callable(callback):
+            raise ValueError('Callback is not callable')
 
-    def unhook_message(self, message_name):
-        """Decrement the given message's refcount."""
-        self._hooked_messages[message_name] -= 1
+        if (
+            message_name in self._hooked_messages and
+            callback in self._hooked_messages[message_name]
+        ):
+            raise ValueError(
+                f'Hook "{callback}" already registered for '
+                f'message "{message_name}".'
+            )
+
+        self._hooked_messages[message_name].append(callback)
+
+    def unhook_message(self, message_name, callback):
+        """Remove callback from the given message's list."""
+        if message_name not in self._hooked_messages:
+            raise ValueError(f'Message "{message_name}" is not hooked.')
+
+        if callback not in self._hooked_messages[message_name]:
+            raise ValueError(
+                f'Hook "{callback}" is not registered for '
+                f'message "{message_name}".'
+            )
+
+        self._hooked_messages[message_name].remove(callback)
+
         if not self._hooked_messages[message_name]:
             del self._hooked_messages[message_name]
 
-    def hook_prefix(self, message_prefix):
-        """Add a hook to the given prefix's refcount."""
-        self._hooked_prefixes[message_prefix] += 1
+    def hook_prefix(self, message_prefix, callback):
+        """Add a hook to the given message prefix's callback list."""
+        if not callable(callback):
+            raise ValueError('Callback is not callable')
 
-    def unhook_prefix(self, message_prefix):
-        """Decrement the given prefix's refcount."""
-        self._hooked_prefixes[message_prefix] -= 1
+        if (
+            message_prefix in self._hooked_prefixes and
+            callback in self._hooked_prefixes[message_prefix]
+        ):
+            raise ValueError(
+                f'Hook "{callback}" already registered for '
+                f'message prefix "{message_prefix}".'
+            )
+
+        self._hooked_prefixes[message_prefix].append(callback)
+
+    def unhook_prefix(self, message_prefix, callback):
+        """Remove callback from the given message prefix's list."""
+        if message_prefix not in self._hooked_prefixes:
+            raise ValueError(
+                f'Message prefix "{message_prefix}" is not hooked.'
+            )
+
+        if callback not in self._hooked_prefixes[message_prefix]:
+            raise ValueError(
+                f'Hook "{callback}" is not registered for '
+                f'message prefix "{message_prefix}".'
+            )
+
+        self._hooked_prefixes[message_prefix].remove(callback)
+
         if not self._hooked_prefixes[message_prefix]:
             del self._hooked_prefixes[message_prefix]
 
@@ -233,23 +279,25 @@ class _MessageManager(dict):
         # Send the message to the users
         DialogMsg(message, color, time).send(*users, **tokens)
 
-    def _get_message(self, message):
+    def _get_message(self, message_name):
         """Get the message to send."""
         # Is the message a set of translations?
-        if isinstance(message, TranslationStrings):
-            return message
+        if isinstance(message_name, TranslationStrings):
+            return message_name
 
-        # Is the message a registered GunGame translation?
-        if message in self:
-            if message in self._hooked_messages:
+        if message_name not in self:
+            return message_name
+
+        for callback in self._hooked_messages.get(message_name, []):
+            if callback(message_name) is False:
                 return None
-            for prefix in self._hooked_prefixes:
-                if message.startswith(prefix):
+        for message_prefix in self._hooked_prefixes:
+            if not message_name.startswith(message_prefix):
+                continue
+            for callback in self._hooked_prefixes[message_prefix]:
+                if callback(message_name, message_prefix) is False:
                     return None
-            return self[message]
-
-        # Return the string message
-        return message
+        return self[message_name]
 
 # Get the _MessageManager instance
 message_manager = _MessageManager()

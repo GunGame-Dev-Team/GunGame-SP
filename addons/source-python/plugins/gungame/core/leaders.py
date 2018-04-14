@@ -12,7 +12,7 @@ from filters.players import PlayerIter
 from .events.included.leaders import (
     GG_Leader_Disconnect, GG_Leader_Lost_Level, GG_New_Leader, GG_Tied_Leader,
 )
-from .messages import message_manager
+from .messages.manager import message_manager
 from .players.dictionary import player_dictionary
 
 

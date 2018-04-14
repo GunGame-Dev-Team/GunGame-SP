@@ -24,7 +24,8 @@ from mutagen import MutagenError
 
 # GunGame
 from gungame.core.config.misc import dynamic_chat_time
-from gungame.core.messages import message_manager
+from gungame.core.messages.hooks import MessagePrefixHook
+from gungame.core.messages.manager import message_manager
 from gungame.core.players.dictionary import player_dictionary
 from gungame.core.sounds.manager import sound_manager
 from gungame.core.status import GunGameMatchStatus, GunGameStatus
@@ -39,14 +40,8 @@ from .custom_events import GG_Team_Win
 # =============================================================================
 # >> LOAD & UNLOAD
 # =============================================================================
-def load():
-    """Register the Leader message hook."""
-    message_manager.hook_prefix('Leader:')
-
-
 def unload():
-    """Unregister the Leader message hook."""
-    message_manager.unhook_prefix('Leader:')
+    """Clear the team level dictionary."""
     team_levels.clear()
 
 
@@ -65,6 +60,10 @@ class _TeamManager(dict):
         team_levels.clear()
         for team in self.values():
             team.reset_values()
+
+    def set_player_levels(self):
+        for team in self.values():
+            team.set_team_player_levels()
 
 
 class _TeamManagement(object):
@@ -201,7 +200,6 @@ class _TeamManagement(object):
         self._leader = None
         self.level = 1
 
-
 teamwork_manager = _TeamManager()
 
 
@@ -247,7 +245,7 @@ def _sync_player_levels(game_event):
 
     Delay(
         delay=0,
-        callback=_set_player_levels,
+        callback=teamwork_manager.set_player_levels,
     )
 
 
@@ -338,21 +336,23 @@ def _pre_gg_win(game_event):
     Delay(
         delay=0,
         callback=_fire_win_event,
-        args=(
-            team_number,
-        ),
+        args=(team_number,),
     )
     return EventAction.BLOCK
 
 
 # =============================================================================
+# >> MESSAGE HOOKS
+# =============================================================================
+@MessagePrefixHook('Leader:')
+def _level_info_hook(message_name, message_prefix):
+    """Hook the LevelInfo messages so that the team messages can be sent."""
+    return False
+
+
+# =============================================================================
 # >> HELPER FUNCTIONS
 # =============================================================================
-def _set_player_levels():
-    for team in teamwork_manager.values():
-        team.set_team_player_levels()
-
-
 def _fire_win_event(team_number):
     with GG_Team_Win() as event:
         event.winner = team_number

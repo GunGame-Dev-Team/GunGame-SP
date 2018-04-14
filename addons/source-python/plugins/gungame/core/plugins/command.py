@@ -20,7 +20,7 @@ from .manager import gg_plugin_manager
 from .queue import plugin_queue
 from .valid import valid_plugins
 from ..credits import gungame_credits
-from ..messages import message_manager
+from ..messages.manager import message_manager
 from ..weapons.manager import weapon_order_manager
 
 
