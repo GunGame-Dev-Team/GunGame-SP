@@ -14,6 +14,7 @@ from cvars import ConVar
 from engines.server import queue_command_string
 from entities.entity import Entity
 from events import Event
+from events.hooks import PreEvent
 from filters.players import PlayerIter
 from listeners import OnLevelEnd
 from listeners.tick import Delay
@@ -180,7 +181,7 @@ team_dictionary = {
 # =============================================================================
 # >> GAME EVENTS
 # =============================================================================
-@Event('player_spawn')
+@PreEvent('player_spawn')
 def _send_level_info(game_event):
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         return
