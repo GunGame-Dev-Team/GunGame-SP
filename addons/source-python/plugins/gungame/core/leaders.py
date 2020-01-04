@@ -160,7 +160,10 @@ class _LeaderManager(dict):
             return
         level = self.leader_level
         if len(current) == 1:
-            player = player_dictionary[current[0]]
+            try:
+                player = player_dictionary[current[0]]
+            except ValueError:
+                return
             message_manager.chat_message(
                 'Leader:New:Singular',
                 player.index,
