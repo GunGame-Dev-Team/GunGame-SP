@@ -11,7 +11,6 @@ from contextlib import suppress
 # Source.Python
 from colors import BLUE, RED, WHITE
 from cvars import ConVar
-from engines.server import queue_command_string
 from entities.entity import Entity
 from events import Event
 from events.hooks import EventAction, PreEvent
@@ -319,9 +318,6 @@ def _end_match(game_event):
     # End the match to move to the next map
     entity = Entity.find_or_create('game_end')
     entity.end_game()
-
-    # Do not remove! This fixes a lot of console spam and hanging on map end.
-    queue_command_string('bot_kick')
 
     # Reset the teams
     _clear_team_dictionary()

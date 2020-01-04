@@ -21,8 +21,8 @@ from ..plugins.valid import valid_plugins
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'load_all_commands',
     'find_all_commands',
+    'load_all_commands',
     'unload_all_commands',
 )
 

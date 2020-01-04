@@ -267,10 +267,11 @@ def _player_activate(game_event):
 def _player_disconnect(game_event):
     """Store the disconnecting player's values and remove from dictionary."""
     userid = game_event['userid']
-    index = player_dictionary[userid].index
     player_dictionary.safe_remove(userid)
     leader_manager.check_disconnect(userid)
-    _remove_index_from_afk_dicts(index)
+    player = player_dictionary.get(userid)
+    if player is not None:
+        _remove_index_from_afk_dicts(player.index)
 
 
 @Event('player_team')
@@ -418,9 +419,6 @@ def _gg_win(game_event):
     # End the match to move to the next map
     entity = Entity.find_or_create('game_end')
     entity.end_game()
-
-    # Do not remove! This fixes a lot of console spam and hanging on map end.
-    queue_command_string('bot_kick')
 
 
 @Event('gg_map_end')
