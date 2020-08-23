@@ -39,7 +39,13 @@ def _reload_weapon(game_event):
     if weapon_name in _non_reload_weapons:
         return
 
-    weapon_instance = weapon_manager[weapon_name]
+    weapon_instance = weapon_manager.get(weapon_name)
+    if weapon_instance is None:
+        return
+
     weapon = killer.get_weapon(weapon_instance.name)
+    if weapon is None:
+        return
+
     weapon.clip = weapon_instance.clip
     weapon.ammo = weapon_instance.maxammo
