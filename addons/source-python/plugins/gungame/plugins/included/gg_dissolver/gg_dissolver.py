@@ -73,7 +73,12 @@ def dissolve_ragdoll(userid, current_type):
 
     if inthandle == INVALID_ENTITY_INTHANDLE:
         return
-    entity = Entity(index_from_inthandle(inthandle))
+
+    # TODO: Temporary fix till INVALID_ENTITY_INTHANDLE question is resolved
+    try:
+        entity = Entity(index_from_inthandle(inthandle))
+    except OverflowError:
+        return
 
     # Should the ragdoll just be removed?
     if current_type == _num_dissolve_types + 2:
