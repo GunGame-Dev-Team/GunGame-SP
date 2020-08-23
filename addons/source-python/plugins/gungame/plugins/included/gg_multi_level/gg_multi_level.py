@@ -132,9 +132,9 @@ class _MultiLevelManager(dict):
 
     def _tick(self):
         """Reset multi-level players' gravity each tick."""
-        current_gravity = gravity.get_int()
+        current_gravity = gravity.get_int() / 100
         for player in self.values():
-            player.gravity = current_gravity / 100
+            player.gravity = current_gravity
 
 multi_level_manager = _MultiLevelManager()
 
