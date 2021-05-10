@@ -244,6 +244,9 @@ def _player_activate(game_event):
     # Add the userid to the joined players set
     _joined_players.add(userid)
 
+    # Play the welcome sound to the player
+    player.play_sound('welcome')
+
     if player.wins:
         message = 'Player:Join:Ranked' if player.rank else 'Player:Join:Wins'
         message_manager.chat_message(message, player=player)
