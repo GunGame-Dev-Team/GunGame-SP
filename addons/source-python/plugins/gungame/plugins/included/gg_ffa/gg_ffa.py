@@ -15,6 +15,7 @@ from entities import TakeDamageInfo
 from entities.entity import Entity
 from entities.hooks import EntityCondition, EntityPostHook, EntityPreHook
 from memory import make_object
+from memory.hooks import use_pre_registers
 
 # GunGame
 from gungame.core.status import GunGameMatchStatus, GunGameStatus
@@ -31,7 +32,7 @@ with suppress(ModuleNotFoundError):
 # >> GLOBAL VARIABLES
 # =============================================================================
 # Store a variable to know whether to revert the team or not
-_take_damage_dict = dict()
+_take_damage_dict = {}
 
 
 # =============================================================================
@@ -53,7 +54,7 @@ def _pre_take_damage(stack_data):
     if victim.team_index != attacker.team_index:
         return
 
-    address = stack_data.registers.esp.address.address
+    address = stack_data[0].address
     if address in _take_damage_dict:
         return
 
@@ -67,7 +68,9 @@ def _pre_take_damage(stack_data):
 @EntityPostHook(EntityCondition.is_human_player, 'on_take_damage')
 def _post_take_damage(stack_data, return_value):
     """Revert the victim's team if necessary."""
-    address = stack_data.registers.esp.address.address
+    with use_pre_registers(stack_data):
+        address = stack_data[0].address
+
     if address not in _take_damage_dict:
         return
 
