@@ -98,7 +98,7 @@ class _WeaponOrderManager(dict):
         self.print_order()
 
     def set_randomize(self, value):
-        """Set the randomize value and randomize the weapon order."""
+        """Set the randomized value and randomize the weapon order."""
         if not isinstance(value, bool):
             value = bool(int(value))
         if self.randomize == value:
@@ -131,9 +131,9 @@ class _WeaponOrderManager(dict):
         gg_weapons_manager_logger.log_message(
             f'{prefix} Weapon order: {self.active.title}\n'
         )
-        levels = list()
-        multi_kills = list()
-        weapons = list()
+        levels = []
+        multi_kills = []
+        weapons = []
         for level in self.active:
             levels.append(level)
             multi_kills.append(self.active[level].multi_kill)
@@ -188,5 +188,6 @@ class _WeaponOrderManager(dict):
 
         # Restart the match
         queue_command_string('mp_restartgame 1')
+
 
 weapon_order_manager = _WeaponOrderManager()

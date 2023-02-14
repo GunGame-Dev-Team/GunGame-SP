@@ -66,7 +66,7 @@ class _PlayerAttributes(dict):
         for player in player_dictionary.values():
             delattr(player, attribute)
 
-# The singleton object of the _PlayerAttributes class.
+
 player_attributes = _PlayerAttributes()
 
 # Register the core attributes
@@ -152,10 +152,8 @@ class _AttributeHooks(dict):
             # If no more callbacks, remove the attribute from the dictionary
             del self[attribute]
 
-# The singleton object for pre hooks using the _AttributeHooks class.
-attribute_pre_hooks = _AttributeHooks()
 
-# The singleton object for post hooks using the _AttributeHooks class.
+attribute_pre_hooks = _AttributeHooks()
 attribute_post_hooks = _AttributeHooks()
 
 
@@ -177,7 +175,7 @@ class _AttributeBase(AutoUnload):
 
     @property
     def hook_instance(self):
-        """All sub-classes must define this method."""
+        """All subclasses must define this method."""
         raise NotImplementedError('hook_instance not defined for class.')
 
     def _unload_instance(self):

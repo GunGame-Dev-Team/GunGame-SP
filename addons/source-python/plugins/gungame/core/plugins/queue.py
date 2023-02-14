@@ -124,5 +124,5 @@ class _PluginQueue(dict):
             self.manager.set_base_import(plugin_type)
             self.manager.load(plugin_name)
 
-# Get the _PluginQueue instance
+
 plugin_queue = _PluginQueue()

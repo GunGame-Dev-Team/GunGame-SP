@@ -54,4 +54,5 @@ class _CommandsTranslations(dict):
                 continue
             self[key] = value
 
+
 commands_translations = _CommandsTranslations()

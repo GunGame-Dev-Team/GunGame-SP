@@ -299,5 +299,5 @@ class _MessageManager(dict):
                     return None
         return self[message_name]
 
-# Get the _MessageManager instance
+
 message_manager = _MessageManager()

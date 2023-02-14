@@ -40,10 +40,10 @@ class RandomSounds(list):
     """Class used to shuffle through random sounds."""
 
     def __init__(self, *values):
-        """Store all of the sounds in the list."""
+        """Store all sounds in the list."""
         super().__init__(Sound(x, download=True) for x in values)
         self._current = None
-        self._remaining = list()
+        self._remaining = []
 
     def next(self):
         """Return the next sound in the list.
@@ -63,7 +63,7 @@ class _SoundManager(defaultdict):
     def __init__(self, default_factory):
         """Store all default core sounds."""
         super().__init__(default_factory)
-        self.defaults = dict()
+        self.defaults = {}
         self._sound_hooks = defaultdict(list)
 
     def load_sounds(self):
@@ -102,7 +102,7 @@ class _SoundManager(defaultdict):
                         continue
 
                     # Open the random sound file
-                    sounds = list()
+                    sounds = []
                     with txt.open() as open_file:
 
                         # Loop through all values in the random sound file
@@ -319,5 +319,5 @@ class _SoundManager(defaultdict):
         sound.play(*users)
         return sound
 
-# Get the _SoundManager instance
+
 sound_manager = _SoundManager(dict)

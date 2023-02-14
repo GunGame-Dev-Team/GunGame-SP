@@ -59,7 +59,7 @@ _weapon_groups = OrderedDict([
 # >> FUNCTIONS
 # =============================================================================
 def create_default_weapon_orders():
-    """Create all of the default weapon orders."""
+    """Create all default weapon orders."""
     _create_default_order()
     _create_short_order()
     _create_random_order()
@@ -155,5 +155,6 @@ def _split_group(group):
         if len(current) != 3:
             current += [''] * (3 - len(current))
         yield current
+
 
 _default_header = _get_header()

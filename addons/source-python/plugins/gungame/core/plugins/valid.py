@@ -37,7 +37,7 @@ plugin_requirements = defaultdict(list)
 # =============================================================================
 # >> CLASSES
 # =============================================================================
-class ValidPlugin(object):
+class ValidPlugin:
     """Stores a valid plugin with its information."""
 
     def __init__(self, info, description):
@@ -46,7 +46,7 @@ class ValidPlugin(object):
         self.description = description
 
 
-class _ValidPlugins(object):
+class _ValidPlugins:
     """Class used to store valid included and custom plugins."""
 
     def __init__(self):
@@ -79,7 +79,7 @@ class _ValidPlugins(object):
     def _get_plugins_by_type(plugin_type):
         """Store each plugin for the given type."""
         # Create a dictionary to store plugins by name
-        plugins = dict()
+        plugins = {}
 
         # Loop through all plugins
         type_path = GUNGAME_PLUGINS_PATH / plugin_type
@@ -126,5 +126,5 @@ class _ValidPlugins(object):
         # Return the dictionary
         return plugins
 
-# Get the _ValidPlugins instance
+
 valid_plugins = _ValidPlugins()

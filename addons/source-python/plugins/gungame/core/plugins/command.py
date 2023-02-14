@@ -272,6 +272,7 @@ class _GGSubCommandManager(SubCommandManager):
         for plugin_name in list(self.manager):
             self.manager.unload(plugin_name, indent=8)
 
+
 # Get the "gg" command instance
 gg_command_manager = _GGSubCommandManager(
     manager=gg_plugin_manager,

@@ -47,7 +47,7 @@ _human_no_spec = PlayerIter('human', ['spec', 'un'])
 # =============================================================================
 # >> CLASSES
 # =============================================================================
-class _WarmupManager(object):
+class _WarmupManager:
     """Class used to provide warmup functionality."""
 
     def __init__(self):
@@ -192,5 +192,5 @@ class _WarmupManager(object):
         if remaining <= 5:
             sound_manager.play_sound('count_down')
 
-# Get the _WarmupManager instance
+
 warmup_manager = _WarmupManager()

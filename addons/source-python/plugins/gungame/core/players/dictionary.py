@@ -34,7 +34,7 @@ class _PlayerDictionary(dict):
     _removed_players = defaultdict(dict)
 
     def __missing__(self, userid):
-        """Called when a userid is not in the dictionary."""
+        """Add a player to the dictionary."""
         # Get the GunGamePlayer instance for the userid
         player = self[userid] = GunGamePlayer.from_userid(userid)
 
@@ -105,5 +105,5 @@ class _PlayerDictionary(dict):
         self._removed_players.clear()
         super().clear()
 
-# Get the _PlayerDictionary instance
+
 player_dictionary = _PlayerDictionary()

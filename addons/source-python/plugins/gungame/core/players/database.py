@@ -28,8 +28,8 @@ __all__ = (
 # =============================================================================
 # >> CLASSES
 # =============================================================================
-class _PlayerDatabase(object):
-    """Class used to hold values for a player in the winners database."""
+class _PlayerDatabase:
+    """Class used to hold values for a player in the winner database."""
 
     def __init__(self):
         """Store the base values on creation."""
@@ -44,7 +44,6 @@ class _WinsDatabase(defaultdict):
 
     def __init__(self, default_factory):
         """Create the dictionary and gather any stored values."""
-        # Create the defaultdict instance
         super().__init__(default_factory)
 
         # Establish the SQL connection
@@ -210,5 +209,5 @@ class _WinsDatabase(defaultdict):
             with suppress(KeyError):
                 del self[unique_id]
 
-# The singleton object for the _WinsDatabase class.
+
 winners_database = _WinsDatabase(_PlayerDatabase)

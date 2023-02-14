@@ -63,6 +63,7 @@ class _GunGameRulesDictionary(OrderedDict):
             message = rules_translations['Rules:Empty'].get_string(language)
         return self.header.get_string(language) + ':\n\n' + message
 
+
 all_gungame_rules = _GunGameRulesDictionary()
 
 

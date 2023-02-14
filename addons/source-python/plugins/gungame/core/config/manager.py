@@ -65,7 +65,7 @@ class GunGameConfigManager(ConfigManager):
             )
 
         except FileNotFoundError:
-            self.translations = dict()
+            self.translations = {}
 
         # Initialize the config
         super().__init__(file_path, cvar_prefix)

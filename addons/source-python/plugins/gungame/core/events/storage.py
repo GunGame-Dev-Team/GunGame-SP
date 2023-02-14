@@ -60,5 +60,5 @@ class _GGResourceList(list):
                 f'gungame.plugins.{plugin_type}.{plugin_name}.custom_events'
             )
 
-# The singleton object of the _GGResourceList class.
+
 gg_resource_list = _GGResourceList()

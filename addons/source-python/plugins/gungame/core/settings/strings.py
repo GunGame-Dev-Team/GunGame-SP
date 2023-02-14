@@ -50,4 +50,5 @@ class _SettingsTranslations(dict):
                 continue
             self[key] = value
 
+
 settings_translations = _SettingsTranslations()

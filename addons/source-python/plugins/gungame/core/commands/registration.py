@@ -33,14 +33,14 @@ __all__ = (
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
-command_dictionary = dict()
+command_dictionary = {}
 plugin_commands = defaultdict(list)
 
 
 # =============================================================================
 # >> CLASSES
 # =============================================================================
-class _RegisteredCommand(object):
+class _RegisteredCommand:
     """Class that handles registering of commands."""
 
     def __init__(self, name, text, callback):
@@ -97,7 +97,7 @@ class _RegisteredCommand(object):
 # >> DECORATOR FUNCTIONS
 # =============================================================================
 def register_command_callback(name, text):
-    """Decorator used to register/unregister commands."""
+    """Create a decorator to register/unregister commands."""
     if name in command_dictionary:
         raise ValueError(f'Command type "{name}" is already registered.')
 

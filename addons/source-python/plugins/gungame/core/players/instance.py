@@ -330,7 +330,7 @@ class GunGamePlayer(Player):
         wins = self.wins
 
         # Create a list to store players tied with this player
-        tied_players = list()
+        tied_players = []
 
         # Loop through all players in the database
         for unique_id in winners_database:

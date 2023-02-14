@@ -51,4 +51,5 @@ class _RulesTranslations(dict):
                 continue
             self[key] = value
 
+
 rules_translations = _RulesTranslations()

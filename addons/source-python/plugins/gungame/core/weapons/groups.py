@@ -102,6 +102,7 @@ def _get_weapon_sets():
             all_grenade_weapons.add(weapon.basename)
         all_weapons.add(weapon.basename)
 
+
 _get_weapon_sets()
 
 if not all_weapons:

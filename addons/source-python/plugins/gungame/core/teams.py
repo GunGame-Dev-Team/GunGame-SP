@@ -28,25 +28,23 @@ class _TeamLevels(dict):
         for x in self:
             self[x] = 1
 
+    def retrieve_team_data(self):
+        for class_name in team_managers:
+            for entity in EntityIter(class_name):
+                if teams_by_number.get(entity.team, 'un') in ('un', 'spec'):
+                    continue
+                team_names[entity.team] = entity.team_name
+                self[entity.team] = 0
+
 
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
-team_names = dict()
+team_names = {}
 team_levels = _TeamLevels()
-
-
-def _retrieve_team_data():
-    for _class_name in team_managers:
-        for _entity in EntityIter(_class_name):
-            if teams_by_number.get(_entity.team, 'un') in ('un', 'spec'):
-                continue
-            team_names[_entity.team] = _entity.team_name
-            team_levels[_entity.team] = 0
-
-_retrieve_team_data()
+team_levels.retrieve_team_data()
 if not team_names:
     Delay(
         delay=0,
-        callback=_retrieve_team_data,
+        callback=team_levels.retrieve_team_data,
     )

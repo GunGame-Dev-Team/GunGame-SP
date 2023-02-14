@@ -54,6 +54,7 @@ class GG_Load(CustomEvent):
 class GG_Unload(CustomEvent):
     """Called when GunGame is unloading."""
 
+
 # =============================================================================
 # >> RESOURCE FILE
 # =============================================================================

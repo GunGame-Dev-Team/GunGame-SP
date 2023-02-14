@@ -53,7 +53,7 @@ class _GGPluginManager(PluginManager):
 
     @property
     def is_team_game(self):
-        """Return whether or not the current match is a team game."""
+        """Return whether the current match is a team game."""
         return any(team_levels.values())
 
     def load(self, plugin_name):
@@ -126,5 +126,6 @@ class _GGPluginManager(PluginManager):
         if base_name == module_to_check:
             return False
         return PluginManager._is_related_module(base_name, module_to_check)
+
 
 gg_plugin_manager = _GGPluginManager('gungame')

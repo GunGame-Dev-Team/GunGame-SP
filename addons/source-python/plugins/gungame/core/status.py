@@ -57,7 +57,7 @@ class GunGameRoundStatus(IntEnum):
     ACTIVE = 1
 
 
-class GunGameStatus(object):
+class GunGameStatus:
     """Stores statuses for GunGame."""
 
     # Set the base attributes to their start values

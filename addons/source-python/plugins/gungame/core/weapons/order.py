@@ -101,9 +101,9 @@ class WeaponOrder(dict):
 
     def randomize_order(self):
         """Get a randomized weapon order based on the instance."""
-        self.random_order = dict()
+        self.random_order = {}
         randomize_weapons = list(self.values())
-        keep_at_end = list()
+        keep_at_end = []
         for weapon in reversed(randomize_weapons):
             if weapon.weapon in _multi_kill_weapons:
                 break
@@ -117,7 +117,7 @@ class WeaponOrder(dict):
             self.random_order[level] = value
 
 
-class _LevelWeapon(object):
+class _LevelWeapon:
     """Class used to store level specific values."""
 
     def __init__(self, weapon, multi_kill):
