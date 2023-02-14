@@ -35,7 +35,7 @@ def unload():
 # =============================================================================
 # >> CLASSES
 # =============================================================================
-class _TeamplayManager(object):
+class _TeamplayManager:
     """Class used to load the proper teamplay gamemode."""
 
     finished_initial_load = False
@@ -95,6 +95,7 @@ class _TeamplayManager(object):
                 # TODO: make this gungame specific
                 except_hooks.print_exception()
 
+
 _teamplay_manager = _TeamplayManager()
 Delay(
     delay=0,
@@ -139,7 +140,7 @@ def _block_level_up(game_event):
 # =============================================================================
 @MessagePrefixHook('LevelInfo:')
 def _level_info_hook(message_name, message_prefix):
-    """Hook the LevelInfo messages so that the team messages can be sent."""
+    """Hooks the LevelInfo messages so that the team messages can be sent."""
     return False
 
 

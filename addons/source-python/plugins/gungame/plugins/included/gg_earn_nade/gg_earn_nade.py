@@ -23,7 +23,7 @@ from .settings import auto_switch
 # >> GLOBAL VARIABLES
 # =============================================================================
 # Store a dictionary to know when a player recently leveled from knife level
-_recently_off_nade = dict()
+_recently_off_nade = {}
 
 
 # =============================================================================

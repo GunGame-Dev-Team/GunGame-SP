@@ -99,7 +99,7 @@ def _respawn_victims(userid):
         return
     if GunGameStatus.ROUND is GunGameRoundStatus.INACTIVE:
         return
-    players = list()
+    players = []
     for victim in victims:
         player = player_dictionary.get(victim)
         if player is None:

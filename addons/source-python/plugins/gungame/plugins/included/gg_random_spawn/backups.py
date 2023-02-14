@@ -21,7 +21,7 @@ __all__ = (
 # =============================================================================
 # >> CLASSES
 # =============================================================================
-class _OldSpawnPoint(object):
+class _OldSpawnPoint:
     """Stores an old spawn point location."""
 
     def __init__(self, class_name, origin, angles):
@@ -58,5 +58,6 @@ class _SpawnPointBackups(list):
                         angles=angles,
                     )
                 )
+
 
 spawn_point_backups = _SpawnPointBackups()

@@ -40,7 +40,7 @@ from .gg_teamplay import _teamplay_manager
 # =============================================================================
 # >> CLASSES
 # =============================================================================
-class _TeamManager(object):
+class _TeamManager:
     """Class used to store team based information."""
 
     def __init__(self, team_number):
@@ -171,6 +171,7 @@ class _TeamManager(object):
             index=self.index,
             team=self,
         )
+
 
 team_dictionary = {
     team_number: _TeamManager(team_number) for team_number in team_names

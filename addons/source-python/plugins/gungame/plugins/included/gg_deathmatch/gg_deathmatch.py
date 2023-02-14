@@ -79,10 +79,7 @@ class _DeathMatchPlayers(dict):
 
     def __missing__(self, userid):
         """Return a DMPlayer instance for the given userid."""
-        # Store the userid's value as a DMPlayer instance
         value = self[userid] = DMPlayer.from_userid(userid)
-
-        # Return the DMPlayer instance
         return value
 
     def __delitem__(self, userid):
@@ -102,7 +99,7 @@ class _DeathMatchPlayers(dict):
         for userid in list(self):
             del self[userid]
 
-# Get the _DeathMatchPlayers instance
+
 deathmatch_players = _DeathMatchPlayers()
 
 
@@ -142,7 +139,7 @@ def _jointeam(command, index):
 
 @ClientCommand('joinclass')
 def _joinclass(command, index):
-    """Hook joinclass to start a player's repeat."""
+    """Hooks joinclass to start a player's repeat."""
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         return
 

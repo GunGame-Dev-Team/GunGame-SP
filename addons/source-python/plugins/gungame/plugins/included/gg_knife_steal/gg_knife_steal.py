@@ -29,7 +29,7 @@ from .settings import no_switch
 # >> GLOBAL VARIABLES
 # =============================================================================
 # Store a dictionary to know when a player recently leveled from knife level
-_recently_off_knife = dict()
+_recently_off_knife = {}
 _knife_classnames = {
     x.name for x in weapon_manager.values() if x.basename in melee_weapons
 }

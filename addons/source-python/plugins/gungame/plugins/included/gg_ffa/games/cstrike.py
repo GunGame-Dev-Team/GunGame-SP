@@ -42,7 +42,7 @@ def _player_blind(game_event):
 
 @Event('player_disconnect')
 def _player_disconnect(game_event):
-    """Cancel the player's Delay (if it is on-going)."""
+    """Cancel the player's Delay (if it is ongoing)."""
     _cancel_delay(game_event['userid'])
 
 
@@ -80,5 +80,6 @@ def _cancel_delay(userid):
     delay = _flashed_players.pop(userid, None)
     if delay is not None:
         delay.cancel()
+
 
 _remove_radar.start(0.5, execute_on_start=True)

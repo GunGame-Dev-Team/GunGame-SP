@@ -65,11 +65,11 @@ class _TeamManager(dict):
             team.set_team_player_levels()
 
 
-class _TeamManagement(object):
+class _TeamManagement:
     """Class used to interact with a specific team and its information."""
 
     def __init__(self, number):
-        """Store all of the team information."""
+        """Store all team information."""
         self.number = number
         self.alias = teams_by_number[self.number]
         self.level = 1
@@ -198,6 +198,7 @@ class _TeamManagement(object):
         """Reset the team's values."""
         self._leader = None
         self.level = 1
+
 
 teamwork_manager = _TeamManager()
 
@@ -342,7 +343,7 @@ def _pre_gg_win(game_event):
 # =============================================================================
 @MessagePrefixHook('Leader:')
 def _level_info_hook(message_name, message_prefix):
-    """Hook the LevelInfo messages so that the team messages can be sent."""
+    """Hooks the LevelInfo messages so that the team messages can be sent."""
     return False
 
 

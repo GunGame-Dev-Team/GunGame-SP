@@ -51,7 +51,7 @@ class _MultiLevelPlayer(Player):
 
     def __init__(self, index):
         """Give the player multi-level."""
-        super(_MultiLevelPlayer, self).__init__(index)
+        super().__init__(index)
         self.sound = sound_manager.emit_sound('multi_level', index)
         self.start_gravity = self.gravity
         self.start_speed = self.speed
@@ -103,7 +103,7 @@ class _MultiLevelManager(dict):
         if userid not in self:
             return
         self[userid].remove_multi_level()
-        super(_MultiLevelManager, self).__delitem__(userid)
+        super().__delitem__(userid)
         if not self:
             on_tick_listener_manager.unregister_listener(self._tick)
 
@@ -135,6 +135,7 @@ class _MultiLevelManager(dict):
         current_gravity = gravity.get_int() / 100
         for player in self.values():
             player.gravity = current_gravity
+
 
 multi_level_manager = _MultiLevelManager()
 

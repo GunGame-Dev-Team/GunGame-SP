@@ -68,7 +68,7 @@ class _NadeBonusDictionary(dict):
         if weapon in weapon_order_manager:
             return weapon
 
-        given_weapons = [x for x in weapon.split(',')]
+        given_weapons = weapon.split(',')
         valid_weapons = [x for x in given_weapons if x in all_weapons]
         if not valid_weapons:
             warn(f'No valid weapons found in "{weapon}".')
@@ -103,10 +103,11 @@ class _NadeBonusDictionary(dict):
             )
         return all_valid_weapons
 
+
 nade_bonus_dictionary = _NadeBonusDictionary()
 
 
-class _NadeBonusPlayer(object):
+class _NadeBonusPlayer:
     """Stores a player with their bonus weapon."""
 
     def __init__(self, userid):
@@ -122,7 +123,7 @@ class _NadeBonusPlayer(object):
 
     @property
     def is_in_bonus(self):
-        """Return whether or not the player is on a nade level."""
+        """Return whether the player is on a nade level."""
         try:
             return self.player.level_weapon in all_grenade_weapons
         except KeyError:
