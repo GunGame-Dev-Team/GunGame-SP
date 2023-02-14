@@ -22,6 +22,7 @@ class Weapon_Fire(CustomEvent):
     userid = ShortVariable('The userid of the player that fired the weapon.')
     weapon = StringVariable('The type of weapon that was fired.')
 
+
 resource_file = ResourceFile('gungame_hl2mp', Weapon_Fire)
 resource_file.write()
 resource_file.load_events()

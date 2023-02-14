@@ -30,7 +30,7 @@ from gungame.core.weapons.groups import incendiary_weapons, individual_weapons
 individual_weapons.add('taser')
 
 
-class _NoMessage(object):
+class _NoMessage:
     """Class used to hook non-supported message types."""
 
     def __init__(self, message_type):
@@ -43,6 +43,7 @@ class _NoMessage(object):
             f'Message type "{self.message_type}" not supported for '
             f'game "{GAME_NAME}".'
         )
+
 
 # CS:GO doesn't support any Dialog menus/messages
 message_manager.top_message = _NoMessage('DialogMsg').message_hook
@@ -121,7 +122,7 @@ def _player_death(game_event):
 
 
 def _give_level_weapon(player):
-    """Hook give_level_weapon to insure that the proper weapon is given."""
+    """Hooks give_level_weapon to ensure that the proper weapon is given."""
     weapon = _old_give_level_weapon(player)
     if weapon.classname == weapon.weapon_name:
         return weapon
@@ -130,6 +131,7 @@ def _give_level_weapon(player):
     weapon = _old_give_level_weapon(player)
     player.team_index = 5 - player.team_index
     return weapon
+
 
 _old_give_level_weapon = GunGamePlayer.give_level_weapon
 GunGamePlayer.give_level_weapon = _give_level_weapon
