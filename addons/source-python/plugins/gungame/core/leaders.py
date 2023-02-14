@@ -5,8 +5,12 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Python
+from contextlib import suppress
+
 # Source.Python
 from filters.players import PlayerIter
+from players.helpers import index_from_userid
 
 # GunGame
 from .events.included.leaders import (
@@ -70,7 +74,13 @@ class _LeaderManager(dict):
             return None
 
         # Return a list of players on the leader level
-        return [userid for userid in self if self[userid] == level]
+        leaders = []
+        for userid in self:
+            if self[userid] == level:
+                with suppress(ValueError):
+                    index_from_userid(userid)
+                    leaders.append(userid)
+        return leaders
 
     def is_leading(self, userid):
         """Return whether the given player is a leader or not."""
@@ -183,5 +193,6 @@ class _LeaderManager(dict):
         if leaders is None:
             return ''
         return ','.join(map(str, leaders))
+
 
 leader_manager = _LeaderManager()
