@@ -6,6 +6,7 @@
 # >> IMPORTS
 # =============================================================================
 # Python
+from contextlib import suppress
 from warnings import warn
 
 # Source.Python
@@ -34,7 +35,7 @@ SPAWN_POINT_PATH = GUNGAME_DATA_PATH / 'spawn_points'
 # =============================================================================
 def load():
     """Store old spawn points and create the new ones on load."""
-    _level_init(global_vars.map_name)
+    _level_init()
 
 
 def unload():
@@ -45,53 +46,77 @@ def unload():
 
 
 # =============================================================================
+# >> CLASSES
+# =============================================================================
+class SpawnPointManager:
+    """Manager for spawn point creation."""
+
+    spawn_point_delay = None
+
+    def level_init(self):
+        """Wait 1 tick then try to create the new spawn points."""
+        if self.spawn_point_delay is not None:
+            with suppress(ValueError):
+                self.spawn_point_delay.cancel()
+
+        self.spawn_point_delay = Delay(
+            delay=0,
+            callback=self.create_spawn_points,
+        )
+
+    def create_spawn_points(self):
+        """Store backups and create the new spawn points from file."""
+        self.spawn_point_delay = None
+
+        map_name = global_vars.map_name
+        spawn_points_file = SPAWN_POINT_PATH / map_name + '.txt'
+        if not spawn_points_file.isfile():
+            warn(f'No spawn point file found for "{map_name}".')
+            return
+
+        spawn_point_backups.store_backups()
+
+        for class_name in spawn_entities:
+            remove_locations(class_name)
+
+        with spawn_points_file.open() as open_file:
+            for num, line in enumerate(open_file.read().splitlines(), start=1):
+                try:
+                    values = list(
+                        map(
+                            float,
+                            line.split(),
+                        )
+                    )
+                except ValueError:
+                    warn(
+                        f'Line {num} in spawn point file "{map_name}" is '
+                        f'invalid.'
+                    )
+                    continue
+
+                if len(values) != 6:
+                    warn(
+                        f'Line {num} in spawn point file "{map_name}" is '
+                        f'invalid.'
+                    )
+                    continue
+
+                origin = Vector(*values[:3])
+                angles = QAngle(*values[3:])
+                for class_name in spawn_entities:
+                    set_location(class_name, origin, angles)
+
+
+spawn_point_manager = SpawnPointManager()
+
+
+# =============================================================================
 # >> LISTENERS
 # =============================================================================
 @OnLevelInit
-def _level_init(map_name):
-    Delay(
-        delay=0,
-        callback=_create_spawn_points,
-        args=(map_name,),
-    )
-
-
-def _create_spawn_points(map_name):
-    spawn_points_file = SPAWN_POINT_PATH / map_name + '.txt'
-    if not spawn_points_file.isfile():
-        warn(f'No spawn point file found for "{map_name}".')
-        return
-
-    spawn_point_backups.store_backups()
-
-    for class_name in spawn_entities:
-        remove_locations(class_name)
-
-    with spawn_points_file.open() as open_file:
-        for num, line in enumerate(open_file.read().splitlines(), start=1):
-            try:
-                values = list(
-                    map(
-                        float,
-                        line.split(),
-                    )
-                )
-            except ValueError:
-                warn(
-                    f'Line {num} in spawn point file "{map_name}" is invalid.'
-                )
-                continue
-
-            if len(values) != 6:
-                warn(
-                    f'Line {num} in spawn point file "{map_name}" is invalid.'
-                )
-                continue
-
-            origin = Vector(*values[:3])
-            angles = QAngle(*values[3:])
-            for class_name in spawn_entities:
-                set_location(class_name, origin, angles)
+def _level_init(map_name=None):
+    spawn_point_manager.level_init()
 
 
 @OnLevelEnd
