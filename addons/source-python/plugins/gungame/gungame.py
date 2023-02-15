@@ -82,6 +82,7 @@ def load():
         )
     )
     current += 1
+    # pylint: disable=import-outside-toplevel
     from .core.commands.commands import find_all_commands, load_all_commands
     find_all_commands()
     load_all_commands()
@@ -169,6 +170,7 @@ def load():
     GunGameStatus.MATCH = GunGameMatchStatus.INACTIVE
 
     # Import the listeners/events/commands/menus
+    # pylint: disable=import-outside-toplevel
     from .core.listeners import start_match
 
     Delay(
@@ -215,6 +217,7 @@ def unload():
         )
     )
     current += 1
+    # pylint: disable=import-outside-toplevel
     from .core.commands.commands import unload_all_commands
     unload_all_commands()
 

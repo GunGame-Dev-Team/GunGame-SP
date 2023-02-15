@@ -45,7 +45,7 @@ gg_config_logger = gg_core_logger.config
 def load_all_configs():
     """Load all GunGame configs."""
     for file in Path(__file__).parent.files('*.py'):
-        if file.namebase in ('__init__', Path(__file__).namebase):
+        if file.namebase == '__init__':
             continue
         import_module(f'gungame.core.config.{file.namebase}')
     for plugin_name in valid_plugins.all:

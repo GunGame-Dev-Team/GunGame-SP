@@ -1,4 +1,5 @@
 # ../gungame/core/players/database.py
+# pylint: disable=consider-using-f-string
 
 """Stores winner information for all players."""
 
@@ -103,7 +104,7 @@ class _WinsDatabase(defaultdict):
         time_stamp = time()
 
         # Is this a new winner?
-        if player.unique_id not in self:
+        if player.uniqueid not in self:
 
             # Add the new winner to the database
             self.cursor.execute(
@@ -112,11 +113,11 @@ class _WinsDatabase(defaultdict):
                   name, unique_id, wins, time_stamp, last_win
                 ) VALUES(?, ?, ?, ?, ?)
                 ''',
-                (player.name, player.unique_id, 0, time_stamp, time_stamp)
+                (player.name, player.uniqueid, 0, time_stamp, time_stamp)
             )
 
         # Get the winner's instance
-        instance = self[player.unique_id]
+        instance = self[player.uniqueid]
 
         # Set the values for the instance
         instance.name = player.name
@@ -136,7 +137,7 @@ class _WinsDatabase(defaultdict):
                 instance.time_stamp,
                 instance.wins,
                 instance.last_win,
-                player.unique_id,
+                player.uniqueid,
             )
         )
 
@@ -149,11 +150,11 @@ class _WinsDatabase(defaultdict):
         This occurs on player_activate and is stored for pruning purposes.
         """
         # Is the player not in the database?
-        if player.unique_id not in self:
+        if player.uniqueid not in self:
             raise KeyError('Player not in database.')
 
         # Get the player's instance
-        instance = self[player.unique_id]
+        instance = self[player.uniqueid]
 
         # Store the player's current name
         instance.name = player.name
@@ -168,7 +169,7 @@ class _WinsDatabase(defaultdict):
               SET name=?, time_stamp=?
               WHERE unique_id=?
             ''',
-            (player.name, instance.time_stamp, player.unique_id)
+            (player.name, instance.time_stamp, player.uniqueid)
         )
 
         # Commit the changes to the database

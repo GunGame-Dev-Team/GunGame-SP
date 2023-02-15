@@ -129,6 +129,7 @@ class _WarmupManager:
     def end_warmup():
         """End warmup and start the match."""
         listeners.unload()
+        # pylint: disable=import-outside-toplevel
         from ..listeners import start_match
         GunGameStatus.MATCH = GunGameMatchStatus.INACTIVE
         start_match(ending_warmup=True)

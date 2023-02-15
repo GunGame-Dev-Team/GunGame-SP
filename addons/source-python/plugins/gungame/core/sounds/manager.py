@@ -101,43 +101,7 @@ class _SoundManager(defaultdict):
                         )
                         continue
 
-                    # Open the random sound file
-                    sounds = []
-                    with txt.open() as open_file:
-
-                        # Loop through all values in the random sound file
-                        for line in open_file.readlines():
-                            line = line.strip()
-
-                            # Skip all comments or empty lines
-                            if line.startswith('/') or not line:
-                                continue
-
-                            # Get the extension of the current sound
-                            extension = line.rsplit('.', 1)[1]
-
-                            # Is this a valid extension for the game?
-                            if not self.is_allowed_sound_extension(extension):
-                                warn(
-                                    f'Invalid sound extension "{extension}" '
-                                    f'found in random sound file "{txt.name}".'
-                                )
-                                continue
-
-                            # Does the sound exist?
-                            sound_file = SOUND_PATH / line
-                            if not (
-                                sound_file.isfile() or
-                                is_vpk_file(f'sound/{line}')
-                            ):
-                                warn(
-                                    f'Invalid sound "{line}", sound '
-                                    'does not exist'
-                                )
-                                continue
-
-                            # Add the sound to the list
-                            sounds.append(line)
+                    sounds = self.get_sounds_from_file(txt)
 
                     # Were no valid sounds found?
                     if not sounds:
@@ -171,6 +135,47 @@ class _SoundManager(defaultdict):
                     f'Sound "{missing}" missing in "{file.namebase}" '
                     'sound pack.'
                 )
+
+    def get_sounds_from_file(self, txt):
+        """Get a list of all sounds from the file."""
+        sounds = []
+        with txt.open() as open_file:
+
+            # Loop through all values in the random sound file
+            for line in open_file.readlines():
+                line = line.strip()
+
+                # Skip all comments or empty lines
+                if line.startswith('/') or not line:
+                    continue
+
+                # Get the extension of the current sound
+                extension = line.rsplit('.', 1)[1]
+
+                # Is this a valid extension for the game?
+                if not self.is_allowed_sound_extension(extension):
+                    warn(
+                        f'Invalid sound extension "{extension}" '
+                        f'found in random sound file "{txt.name}".'
+                    )
+                    continue
+
+                # Does the sound exist?
+                sound_file = SOUND_PATH / line
+                if not (
+                        sound_file.isfile() or
+                        is_vpk_file(f'sound/{line}')
+                ):
+                    warn(
+                        f'Invalid sound "{line}", sound '
+                        'does not exist'
+                    )
+                    continue
+
+                # Add the sound to the list
+                sounds.append(line)
+
+        return sounds
 
     @staticmethod
     def is_allowed_sound_extension(extension):

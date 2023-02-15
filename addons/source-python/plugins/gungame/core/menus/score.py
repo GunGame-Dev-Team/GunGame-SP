@@ -64,8 +64,8 @@ def send_score_menu(index):
                 ListOption(
                     choice_index=current_player.level,
                     text=current_player.name,
-                    value=current_player.unique_id,
-                    highlight=current_player.unique_id == player.unique_id,
+                    value=current_player.uniqueid,
+                    highlight=current_player.uniqueid == player.uniqueid,
                     selectable=False,
                 )
             )

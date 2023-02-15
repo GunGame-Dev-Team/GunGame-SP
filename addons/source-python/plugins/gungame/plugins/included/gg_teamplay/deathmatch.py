@@ -62,10 +62,10 @@ def _increment_team_multi_kill(game_event):
         if weapon == 'prop_physics' and not prop_physics.get_int():
             return
 
-        elif weapon in melee_weapons and not count_melee_kills.get_int():
+        if weapon in melee_weapons and not count_melee_kills.get_int():
             return
 
-        elif weapon in grenade_weapons and not count_grenade_kills.get_int():
+        if weapon in grenade_weapons and not count_grenade_kills.get_int():
             return
 
     team.increase_multi_kill()

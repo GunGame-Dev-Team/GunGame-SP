@@ -137,6 +137,7 @@ def _get_player(userid):
 
 
 def _give_warmup_weapon(player):
+    # pylint: disable=import-outside-toplevel
     from .manager import warmup_manager
     _strip_player(player)
     player.give_named_item(weapon_manager[warmup_manager.weapon].name)

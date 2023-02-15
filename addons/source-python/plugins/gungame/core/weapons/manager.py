@@ -150,20 +150,18 @@ class _WeaponOrderManager(dict):
             f'{"-" * weapon_length}+'
         )
         gg_weapons_manager_logger.log_message(joint)
-        level_title = 'Level'.center(level_length)
-        multi_kill_title = 'multi_kill'.center(multi_kill_length)
-        weapon_title = 'Weapon'.center(weapon_length)
         gg_weapons_manager_logger.log_message(
-            f'{prefix} |{level_title}|{multi_kill_title}|{weapon_title}|'
+            f'{prefix} |{"Level".center(level_length)}|'
+            f'{"multi_kill".center(multi_kill_length)}|'
+            f'{"Weapon".center(weapon_length)}|'
         )
         gg_weapons_manager_logger.log_message(joint)
         for level in self.active:
             current = self.active[level]
-            level_display = str(level).center(level_length)
-            multi_kill = str(current.multi_kill).center(multi_kill_length)
-            weapon = current.weapon.rjust(weapon_length - 1)
             gg_weapons_manager_logger.log_message(
-                f'{prefix} |{level_display}|{multi_kill}|{weapon} |'
+                f'{prefix} |{str(level).center(level_length)}|'
+                f'{str(current.multi_kill).center(multi_kill_length)}|'
+                f'{current.weapon.rjust(weapon_length - 1)} |'
             )
         gg_weapons_manager_logger.log_message(joint)
 
@@ -183,6 +181,7 @@ class _WeaponOrderManager(dict):
         GunGameStatus.MATCH = GunGameMatchStatus.INACTIVE
 
         # Clear the player dictionary
+        # pylint: disable=import-outside-toplevel
         from ..players.dictionary import player_dictionary
         player_dictionary.clear()
 

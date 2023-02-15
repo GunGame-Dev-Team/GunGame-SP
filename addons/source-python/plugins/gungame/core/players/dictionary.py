@@ -42,7 +42,7 @@ class _PlayerDictionary(dict):
         for unique_id in self._removed_players:
 
             # Does the current unique_id equal the given player's unique_id?
-            if unique_id == player.unique_id:
+            if unique_id == player.uniqueid:
 
                 # Break the loop
                 break
@@ -90,7 +90,7 @@ class _PlayerDictionary(dict):
         """Store the player's values in case they rejoin."""
         if userid not in self:
             return
-        unique_id = self[userid].unique_id
+        unique_id = self[userid].uniqueid
         for attribute in player_attributes:
             self._removed_players[unique_id][attribute] = getattr(
                 self[userid],

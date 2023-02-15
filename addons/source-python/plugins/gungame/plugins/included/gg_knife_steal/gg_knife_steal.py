@@ -58,15 +58,24 @@ def _steal_level(game_event):
     if killer.team_index == victim.team_index:
         return
 
-    if attacker in _recently_off_knife:
-        weapon = _recently_off_knife[attacker]['weapon']
-        killer_level = _recently_off_knife[attacker]['level']
+    if victim.is_afk:
+        killer.chat_message('KnifeSteal:AFK')
+
+    update_levels(
+        killer=killer,
+        victim=victim,
+        event_weapon=event_weapon,
+    )
+
+
+def update_levels(killer, victim, event_weapon):
+    """Update the levels of the victim and attacker accordingly."""
+    if killer.userid in _recently_off_knife:
+        weapon = _recently_off_knife[killer.userid]['weapon']
+        killer_level = _recently_off_knife[killer.userid]['level']
     else:
         weapon = killer.level_weapon
         killer_level = killer.level
-
-    if victim.is_afk:
-        killer.chat_message('KnifeSteal:AFK')
 
     victim_level = victim.level
 
@@ -87,7 +96,7 @@ def _steal_level(game_event):
             victim.decrease_level(
                 levels=1,
                 reason='steal',
-                attacker=attacker,
+                attacker=killer.userid,
                 sound_name='knife_stolen',
             )
         return
@@ -97,7 +106,7 @@ def _steal_level(game_event):
             victim.decrease_level(
                 levels=1,
                 reason='steal',
-                attacker=attacker,
+                attacker=killer.userid,
                 sound_name='knife_stolen',
             )
         return
@@ -105,13 +114,13 @@ def _steal_level(game_event):
     victim.decrease_level(
         levels=1,
         reason='steal',
-        attacker=attacker,
+        attacker=killer.userid,
         sound_name='knife_stolen',
     )
     killer.increase_level(
         levels=1,
         reason='steal',
-        victim=userid,
+        victim=victim.userid,
         sound_name='knife_steal',
     )
 

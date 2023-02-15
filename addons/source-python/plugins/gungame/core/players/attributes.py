@@ -47,6 +47,7 @@ class _PlayerAttributes(dict):
 
         # Add the attribute to existing players
         try:
+            # pylint: disable=import-outside-toplevel
             from .dictionary import player_dictionary
         except ImportError:
             return
@@ -59,6 +60,7 @@ class _PlayerAttributes(dict):
 
         # Remove the attribute from existing players
         try:
+            # pylint: disable=import-outside-toplevel
             from .dictionary import player_dictionary
         except ImportError:
             return

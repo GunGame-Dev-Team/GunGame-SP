@@ -82,13 +82,8 @@ class GunGamePlayer(Player):
         # Set the attribute's value
         super().__setattr__(attr, value)
 
-        # Call all of the attribute's post-hooks
+        # Call the attribute's post-hooks
         attribute_post_hooks[attr].call_callbacks(self, value, old_value)
-
-    @property
-    def unique_id(self):
-        """Return the player's unique id."""
-        return self.uniqueid
 
     @property
     def is_afk(self):
@@ -115,7 +110,7 @@ class GunGamePlayer(Player):
         if self.level != new_level:
             return
         self.multi_kill = 0
-        self.play_sound(sound_name)
+        self.play_gg_sound(sound_name)
 
         with GG_Level_Up() as event:
             event.attacker = event.leveler = self.userid
@@ -140,7 +135,7 @@ class GunGamePlayer(Player):
         if self.level != new_level:
             return
         self.multi_kill = 0
-        self.play_sound(sound_name)
+        self.play_gg_sound(sound_name)
 
         with GG_Level_Down() as event:
             event.attacker = attacker
@@ -185,7 +180,7 @@ class GunGamePlayer(Player):
             weapon.remove()
 
     def has_level_weapon(self):
-        """Return whether or not the player has their level weapon."""
+        """Return whether the player has their level weapon."""
         for weapon in self.weapons():
             if weapon.classname == self.level_weapon_classname:
                 return True
@@ -283,31 +278,27 @@ class GunGamePlayer(Player):
     # =========================================================================
     # >> SOUND FUNCTIONALITY
     # =========================================================================
-    def play_sound(self, sound):
+    def play_gg_sound(self, sound):
         """Play the sound to the player."""
         sound_manager.play_sound(sound, self.index)
 
-    def emit_sound(self, sound):
+    def emit_gg_sound(self, sound):
         """Emit the sound from the player."""
         sound_manager.emit_sound(sound, self.index)
-
-    def stop_sound(self, sound):
-        """Stop the sound from emitting from the player."""
-        sound_manager.stop_sound(sound, self.index)
 
     # =========================================================================
     # >> DATABASE FUNCTIONALITY
     # =========================================================================
     def update_time_stamp(self):
         """Update the player's time stamp."""
-        if self.unique_id in winners_database:
+        if self.uniqueid in winners_database:
             winners_database.update_player_time_stamp(self)
 
     @property
     def wins(self):
         """Return the number of wins for the player."""
-        if self.unique_id in winners_database:
-            return winners_database[self.unique_id].wins
+        if self.uniqueid in winners_database:
+            return winners_database[self.uniqueid].wins
         return 0
 
     @wins.setter
@@ -320,7 +311,7 @@ class GunGamePlayer(Player):
     def rank(self):
         """Return the player's rank on the server."""
         # If the player is not in the database, they have no wins
-        if self.unique_id not in winners_database:
+        if self.uniqueid not in winners_database:
             return 0
 
         # Start with the base rank
@@ -356,7 +347,7 @@ class GunGamePlayer(Player):
             )
 
             # Get the final rank of the player
-            rank += sorted_ties.index(self.unique_id)
+            rank += sorted_ties.index(self.uniqueid)
 
         # Return the player's rank
         return rank
