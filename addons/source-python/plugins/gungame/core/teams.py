@@ -24,11 +24,12 @@ __all__ = (
 # >> CLASSES
 # =============================================================================
 class _TeamLevels(dict):
-    def clear(self):
-        for x in self:
-            self[x] = 1
+    def clear(self, value=0):
+        for team in self:
+            self[team] = value
 
     def retrieve_team_data(self):
+        """Get the team names."""
         for class_name in team_managers:
             for entity in EntityIter(class_name):
                 if teams_by_number.get(entity.team, 'un') in ('un', 'spec'):

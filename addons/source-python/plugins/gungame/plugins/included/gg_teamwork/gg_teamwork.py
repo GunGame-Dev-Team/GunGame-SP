@@ -56,11 +56,12 @@ class _TeamManager(dict):
             self[number] = _TeamManagement(number)
 
     def clear(self):
-        team_levels.clear()
+        team_levels.clear(value=1)
         for team in self.values():
             team.reset_values()
 
     def set_player_levels(self):
+        """Set all player levels to their team's level."""
         for team in self.values():
             team.set_team_player_levels()
 

@@ -167,10 +167,7 @@ def _player_death(game_event):
     ):
         return
 
-    # Get the victim
     userid = game_event['userid']
-
-    # Get the attacker
     attacker = game_event['attacker']
 
     # Was this a suicide?
@@ -178,10 +175,7 @@ def _player_death(game_event):
         _punish_suicide(userid)
         return
 
-    # Get the victim's instance
     victim = player_dictionary[userid]
-
-    # Get the attacker's instance
     killer = player_dictionary[attacker]
 
     # Was this a team-kill?
@@ -205,8 +199,6 @@ def _player_death(game_event):
 
     # Does the player need leveled up?
     if killer.multi_kill < killer.level_multi_kill:
-
-        # If not, no need to go further
         return
 
     # Level the player up
@@ -220,13 +212,11 @@ def _player_death(game_event):
 @Event('player_activate')
 def _player_activate(game_event):
     """Add player to leaders and send join message."""
-    # Get the player's userid
     userid = game_event['userid']
 
     # Add the player to the leader dictionary
     leader_manager.add_player(userid)
 
-    # Get the player's instance
     player = player_dictionary[userid]
 
     # Is the player a bot?
@@ -241,11 +231,8 @@ def _player_activate(game_event):
     if userid in _joined_players:
         return
 
-    # Add the userid to the joined players set
     _joined_players.add(userid)
-
-    # Play the welcome sound to the player
-    player.play_sound('welcome')
+    player.play_gg_sound('welcome')
 
     if player.wins:
         message = 'Player:Join:Ranked' if player.rank else 'Player:Join:Wins'
@@ -482,6 +469,7 @@ def _level_init(map_name):
 def _level_end():
     """Clear the player dictionary on map change."""
     player_dictionary.clear()
+    leader_manager.clear()
 
     if GunGameStatus.MATCH is not GunGameMatchStatus.POST:
         GG_Map_End().fire()
@@ -508,7 +496,7 @@ def _post_multi_kill(player, attribute, new_value, old_value):
         kills=new_value,
         total=multi_kill,
     )
-    player.play_sound('multi_kill')
+    player.play_gg_sound('multi_kill')
 
 
 # =============================================================================

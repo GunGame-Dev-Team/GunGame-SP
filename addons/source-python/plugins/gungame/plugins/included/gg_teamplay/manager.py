@@ -265,6 +265,6 @@ def _level_hook(player, attribute, new_value):
 # =============================================================================
 @OnLevelEnd
 def _reset_team_levels():
-    team_levels.clear()
+    team_levels.clear(value=1)
     for instance in team_dictionary.values():
         instance.level = 1
