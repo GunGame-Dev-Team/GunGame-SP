@@ -96,10 +96,10 @@ class _TeamplayManager:
                 except_hooks.print_exception()
 
 
-_teamplay_manager = _TeamplayManager()
+teamplay_manager = _TeamplayManager()
 Delay(
     delay=0,
-    callback=_teamplay_manager.initialize,
+    callback=teamplay_manager.initialize,
 )
 
 
@@ -111,18 +111,18 @@ def _swap_style(game_event):
     if game_event['plugin'] != 'gg_deathmatch':
         return
 
-    if not _teamplay_manager.finished_initial_load:
+    if not teamplay_manager.finished_initial_load:
         return
 
-    if _teamplay_manager.deathmatch_only_game:
+    if teamplay_manager.deathmatch_only_game:
         return
 
-    _teamplay_manager.unload_current_module()
+    teamplay_manager.unload_current_module()
 
     module = (
         'deathmatch' if game_event.name == 'gg_plugin_loaded' else 'rounds'
     )
-    _teamplay_manager.load_module(module)
+    teamplay_manager.load_module(module)
 
     weapon_order_manager.restart_game()
 

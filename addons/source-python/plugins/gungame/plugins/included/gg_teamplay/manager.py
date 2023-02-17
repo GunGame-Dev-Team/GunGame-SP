@@ -34,7 +34,7 @@ from gungame.core.weapons.manager import weapon_order_manager
 
 # Plugin
 from .custom_events import GG_Team_Level_Up, GG_Team_Win
-from .gg_teamplay import _teamplay_manager
+from .gg_teamplay import teamplay_manager
 
 
 # =============================================================================
@@ -80,7 +80,7 @@ class _TeamManager:
 
     def _get_multi_kill_multiplier(self):
         """Return the multi-kill multiplier for the team's current level."""
-        if _teamplay_manager.current_module != 'deathmatch':
+        if teamplay_manager.current_module != 'deathmatch':
             return 1
 
         # TODO: add melee/nade conditionals
@@ -113,14 +113,14 @@ class _TeamManager:
             event.team = self.team_number
             event.old_level = current_level
             event.new_level = self.level
-            event.style = _teamplay_manager.current_module
+            event.style = teamplay_manager.current_module
 
     def declare_winner(self):
         """Call the team win event."""
         with GG_Team_Win() as event:
             event.winner = self.team_number
             event.loser = 5 - self.team_number
-            event.style = _teamplay_manager.current_module
+            event.style = teamplay_manager.current_module
 
     def send_multi_kill_message(self):
         """Send the team's current level/multi-kill message."""
