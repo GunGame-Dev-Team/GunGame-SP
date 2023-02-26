@@ -9,7 +9,6 @@ ignore=
 #   http://pylint-messages.wikidot.com/all-codes
 disable=
     attribute-defined-outside-init,
-    bad-continuation,
     cyclic-import,
     duplicate-code,
     fixme,
@@ -24,9 +23,6 @@ disable=
 
 
 [BASIC]
-# List of bad builtin function names
-bad-functions=eval,exec,__import__
-
 # Module name regex
 module-rgx=[a-z_][a-z0-9_]{2,30}$
 

@@ -117,11 +117,13 @@ class _MultiLevelManager(dict):
 
     def delete_disconnecting_player(self, userid):
         """Remove the disconnecting player from the dictionary."""
+        # pylint: disable=unnecessary-dunder-call
         self.__delitem__(userid, reset_levels=False)
 
     def give_multi_level(self, userid):
         """Give the player multi-level effects."""
         if userid in self:
+            # pylint: disable=unnecessary-dunder-call
             self.__delitem__(userid, reset_levels=False)
         if not self:
             on_tick_listener_manager.register_listener(self._tick)

@@ -306,7 +306,7 @@ def _gg_plugin_list(command_info):
 
 
 @gg_command_manager.server_sub_command(['version'])
-@gg_command_manager.client_sub_command(['version'], 'gungame.list')
+@gg_command_manager.client_sub_command(['version'], 'gungame.version')
 def _gg_version(command_info):
     gg_command_manager.print_version(command_info.index)
 
