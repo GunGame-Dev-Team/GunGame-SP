@@ -75,9 +75,9 @@ def define_all_rules():
     # Loop through all plugins
     for plugin_name in valid_plugins.all:
         plugin_path = valid_plugins.get_plugin_path(plugin_name)
-        plugin_type = str(plugin_path.parent.namebase)
+        plugin_type = str(plugin_path.parent.stem)
         rules_path = plugin_path / 'rules.py'
-        if not rules_path.isfile():
+        if not rules_path.is_file():
             continue
 
         try:

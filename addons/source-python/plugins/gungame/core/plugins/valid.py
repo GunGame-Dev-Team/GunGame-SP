@@ -86,42 +86,42 @@ class _ValidPlugins:
         for plugin in type_path.dirs():
 
             # Skip the compiled files
-            if plugin.namebase == '__pycache__':
+            if plugin.stem == '__pycache__':
                 continue
 
             # Does the primary file not exist?
-            plugin_path = plugin / plugin.namebase + '.py'
-            if not plugin_path.isfile():
+            plugin_path = plugin / plugin.stem + '.py'
+            if not plugin_path.is_file():
                 warn(
-                    f'{plugin_type.title()} plugin "{plugin.namebase}" '
+                    f'{plugin_type.title()} plugin "{plugin.stem}" '
                     'is missing its base file.'
                 )
                 continue
 
             # Does the info file not exist?
             info_file = plugin / 'info.ini'
-            if not info_file.isfile():
+            if not info_file.is_file():
                 warn(
-                    f'{plugin_type.title()} plugin "{plugin.namebase}" '
+                    f'{plugin_type.title()} plugin "{plugin.stem}" '
                     'is missing info.ini file.'
                 )
                 continue
 
             # Get the plugin's description
             description = import_module(
-                f'gungame.plugins.{plugin_type}.{plugin.namebase}'
+                f'gungame.plugins.{plugin_type}.{plugin.stem}'
             ).__doc__
 
             # Get the plugin's info
             info = ConfigObj(info_file)
 
             # Add the plugin to the dictionary
-            plugins[str(plugin.namebase)] = ValidPlugin(info, description)
+            plugins[str(plugin.stem)] = ValidPlugin(info, description)
 
             required = info.get('required', [])
 
             for other in required:
-                plugin_requirements[other].append(str(plugin.namebase))
+                plugin_requirements[other].append(str(plugin.stem))
 
         # Return the dictionary
         return plugins

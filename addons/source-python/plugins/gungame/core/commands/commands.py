@@ -38,17 +38,17 @@ def find_all_commands():
         )
     menus_path = GUNGAME_BASE_PATH / 'core' / 'menus'
     for file_path in menus_path.files():
-        if file_path.namebase.startswith('_'):
+        if file_path.stem.startswith('_'):
             continue
-        import_module(f'gungame.core.menus.{file_path.namebase}')
+        import_module(f'gungame.core.menus.{file_path.stem}')
 
     import_module('gungame.core.rules.command')
 
     for plugin_name in valid_plugins.all:
         plugin_path = valid_plugins.get_plugin_path(plugin_name)
-        plugin_type = str(plugin_path.parent.namebase)
+        plugin_type = str(plugin_path.parent.stem)
         commands_path = plugin_path / 'commands.py'
-        if commands_path.isfile():
+        if commands_path.is_file():
             import_module(
                 f'gungame.plugins.{plugin_type}.{plugin_name}.commands'
             )

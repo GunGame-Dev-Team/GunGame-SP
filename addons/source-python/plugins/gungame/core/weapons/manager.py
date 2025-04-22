@@ -71,7 +71,7 @@ class _WeaponOrderManager(dict):
         """Retrieve all weapon orders and store them in the dictionary."""
         for file in GUNGAME_WEAPON_ORDER_PATH.files('*.txt'):
             try:
-                self[file.namebase] = WeaponOrder(file)
+                self[file.stem] = WeaponOrder(file)
             except WeaponOrderError:
                 # TODO: make this gungame specific
                 except_hooks.print_exception()

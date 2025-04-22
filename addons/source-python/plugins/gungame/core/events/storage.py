@@ -45,16 +45,16 @@ class _GGResourceList(list):
         """Register all included and sub-plugin events."""
         included_path = Path(__file__).parent / 'included'
         for event_file in included_path.files():
-            if event_file.namebase != '__init__':
+            if event_file.stem != '__init__':
                 import_module(
-                    f'gungame.core.events.included.{event_file.namebase}'
+                    f'gungame.core.events.included.{event_file.stem}'
                 )
 
         for plugin_name in valid_plugins.all:
             plugin_path = valid_plugins.get_plugin_path(plugin_name)
-            plugin_type = str(plugin_path.parent.namebase)
+            plugin_type = str(plugin_path.parent.stem)
             event_path = plugin_path / 'custom_events.py'
-            if not event_path.isfile():
+            if not event_path.is_file():
                 continue
             import_module(
                 f'gungame.plugins.{plugin_type}.{plugin_name}.custom_events'

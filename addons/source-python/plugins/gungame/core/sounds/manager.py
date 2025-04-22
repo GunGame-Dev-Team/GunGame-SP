@@ -93,7 +93,7 @@ class _SoundManager(defaultdict):
 
                     # Does the random sound file exist?
                     txt = GUNGAME_SOUND_PACK_PATH / 'random_sounds' / value
-                    if not txt.isfile():
+                    if not txt.is_file():
                         warn(
                             'Invalid random sound text file given '
                             f'"{value}" for sound "{item}" in file '
@@ -112,13 +112,13 @@ class _SoundManager(defaultdict):
                         continue
 
                     # Add the sounds for the sound type
-                    self[file.namebase][item] = RandomSounds(*sounds)
+                    self[file.stem][item] = RandomSounds(*sounds)
 
                 # Is the file extension valid for the game?
                 elif self.is_allowed_sound_extension(extension):
 
                     # Add the sound to the sound type
-                    self[file.namebase][item] = Sound(value, download=True)
+                    self[file.stem][item] = Sound(value, download=True)
 
                 # Was an invalid extension given?
                 else:
@@ -130,9 +130,9 @@ class _SoundManager(defaultdict):
 
             # Loop through all known sound types that were
             #   not represented in the current sound pack
-            for missing in set(self.defaults).difference(self[file.namebase]):
+            for missing in set(self.defaults).difference(self[file.stem]):
                 warn(
-                    f'Sound "{missing}" missing in "{file.namebase}" '
+                    f'Sound "{missing}" missing in "{file.stem}" '
                     'sound pack.'
                 )
 
@@ -163,7 +163,7 @@ class _SoundManager(defaultdict):
                 # Does the sound exist?
                 sound_file = SOUND_PATH / line
                 if not (
-                        sound_file.isfile() or
+                        sound_file.is_file() or
                         is_vpk_file(f'sound/{line}')
                 ):
                     warn(
