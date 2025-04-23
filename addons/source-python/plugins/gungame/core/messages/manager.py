@@ -50,7 +50,7 @@ class _MessageManager(dict):
         message_path = GUNGAME_TRANSLATION_PATH / 'messages'
         for file in message_path.walkfiles('*.ini'):
             # Skip all server-specific files
-            if file.namebase.endswith('_server'):
+            if file.stem.endswith('_server'):
                 continue
 
             # Get the current translations

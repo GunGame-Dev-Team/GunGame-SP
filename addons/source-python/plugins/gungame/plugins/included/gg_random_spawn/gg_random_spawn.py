@@ -41,7 +41,7 @@ def load():
 def unload():
     """Reset to the old spawn points on unload."""
     spawn_points_file = SPAWN_POINT_PATH / global_vars.map_name + '.txt'
-    if spawn_points_file.isfile():
+    if spawn_points_file.is_file():
         spawn_point_backups.clear(restore=True)
 
 
@@ -70,7 +70,7 @@ class SpawnPointManager:
 
         map_name = global_vars.map_name
         spawn_points_file = SPAWN_POINT_PATH / map_name + '.txt'
-        if not spawn_points_file.isfile():
+        if not spawn_points_file.is_file():
             warn(f'No spawn point file found for "{map_name}".')
             return
 

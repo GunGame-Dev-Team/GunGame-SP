@@ -56,9 +56,9 @@ def register_all_sounds():
     # Loop through all plugins
     for plugin_name in valid_plugins.all:
         plugin_path = valid_plugins.get_plugin_path(plugin_name)
-        plugin_type = str(plugin_path.parent.namebase)
+        plugin_type = str(plugin_path.parent.stem)
         sound_path = plugin_path / 'sounds.py'
-        if not sound_path.isfile():
+        if not sound_path.is_file():
             continue
 
         try:
@@ -105,7 +105,7 @@ def _create_default_winner_sounds():
     file = GUNGAME_SOUND_PACK_PATH / 'random_sounds' / 'winner_sounds.txt'
 
     # If the file already exists, no need to create it
-    if file.isfile():
+    if file.is_file():
         return
 
     # Create the winner_sounds file

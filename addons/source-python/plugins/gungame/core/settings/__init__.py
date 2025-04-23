@@ -38,9 +38,9 @@ def register_player_settings():
     """Register all player settings."""
     for plugin_name in valid_plugins.all:
         plugin_path = valid_plugins.get_plugin_path(plugin_name)
-        plugin_type = str(plugin_path.parent.namebase)
+        plugin_type = str(plugin_path.parent.stem)
         settings_path = plugin_path / 'settings.py'
-        if settings_path.isfile():
+        if settings_path.is_file():
             import_module(
                 f'gungame.plugins.{plugin_type}.{plugin_name}.settings'
             )

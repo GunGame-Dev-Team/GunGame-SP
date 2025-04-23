@@ -65,7 +65,7 @@ class WeaponOrder(dict):
             else:
                 warn(
                     f'Invalid line "{line}" in weapon order file: '
-                    f'{file_path.namebase}'
+                    f'{file_path.stem}'
                 )
                 continue
             try:
@@ -73,13 +73,13 @@ class WeaponOrder(dict):
             except ValueError:
                 warn(
                     f'Invalid multi-kill value "{multi_kill}" in weapon '
-                    f'order file: {file_path.namebase}'
+                    f'order file: {file_path.stem}'
                 )
                 continue
             if weapon not in all_weapons:
                 warn(
                     f'Invalid weapon "{weapon}" in weapon order file: '
-                    f'{file_path.namebase}'
+                    f'{file_path.stem}'
                 )
                 continue
             level += 1
@@ -87,10 +87,10 @@ class WeaponOrder(dict):
         if not level:
             raise WeaponOrderError(
                 'No valid lines found in weapon order file '
-                f'"{file_path.namebase}".'
+                f'"{file_path.stem}".'
             )
         self.file_path = file_path
-        self.name = self.file_path.namebase
+        self.name = self.file_path.stem
         self.title = self.name.replace('_', ' ').title()
         self.random_order = None
 

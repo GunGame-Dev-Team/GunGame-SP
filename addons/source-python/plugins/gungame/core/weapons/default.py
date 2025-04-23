@@ -72,7 +72,7 @@ def create_default_weapon_orders():
 def _create_default_order():
     """Create the default weapon order file, if necessary."""
     default_order = GUNGAME_WEAPON_ORDER_PATH / 'default.txt'
-    if default_order.isfile():
+    if default_order.is_file():
         return
     default_weapons = [
         weapon for weapon in chain.from_iterable(_weapon_groups.values())
@@ -87,7 +87,7 @@ def _create_default_order():
 def _create_short_order():
     """Create the short weapon order file, if necessary."""
     short_order = GUNGAME_WEAPON_ORDER_PATH / 'short.txt'
-    if short_order.isfile():
+    if short_order.is_file():
         return
     with short_order.open('w') as open_file:
         open_file.write(_default_header)
@@ -98,7 +98,7 @@ def _create_short_order():
 def _create_random_order():
     """Create the random weapon order file, if necessary."""
     random_order = GUNGAME_WEAPON_ORDER_PATH / 'random.txt'
-    if random_order.isfile():
+    if random_order.is_file():
         return
     shuffle_weapons = [
         weapon for weapon in all_weapons if weapon not in grenade_weapons
@@ -119,7 +119,7 @@ def _create_random_order():
 def _create_nade_bonus_order():
     """Create the nade bonus weapon order file, if necessary."""
     nade_bonus = GUNGAME_WEAPON_ORDER_PATH / 'nade_bonus.txt'
-    if nade_bonus.isfile():
+    if nade_bonus.is_file():
         return
     weapon_copy = sorted(all_secondary_weapons)
     if not weapon_copy:
