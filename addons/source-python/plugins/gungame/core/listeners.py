@@ -95,9 +95,8 @@ def _player_spawn(game_event):
         return
 
     # Use try/except to get the player's instance
-    try:
-        player = player_dictionary[game_event['userid']]
-    except ValueError:
+    player = player_dictionary.get(game_event['userid'])
+    if player is None:
         return
 
     # Verify that the player is on a team

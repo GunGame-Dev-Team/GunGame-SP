@@ -40,7 +40,7 @@ class _CommandsTranslations(dict):
 
         for directory in commands_path.dirs():
             for file in directory.files('*.ini'):
-                if not file.namebase.endswith('_server'):
+                if not file.stem.endswith('_server'):
                     self._add_contents(file)
 
     def _add_contents(self, file):

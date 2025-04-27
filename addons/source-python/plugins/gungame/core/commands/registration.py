@@ -68,12 +68,12 @@ class _RegisteredCommand:
             for prefix in ('', '!', '/'):
                 name = prefix + command
                 say_command_manager._get_command(name).add_callback(
-                    _send_command_menu,
+                    _call_callbacks,
                 )
 
             # Register the client command
             client_command_manager._get_command(command).add_callback(
-                _send_command_menu,
+                _call_callbacks,
             )
 
     def unregister_commands(self):
@@ -84,12 +84,12 @@ class _RegisteredCommand:
             for prefix in ('', '!', '/'):
                 name = prefix + command
                 say_command_manager._get_command(name).remove_callback(
-                    _send_command_menu,
+                    _call_callbacks,
                 )
 
             # Unregister the client command
             client_command_manager._get_command(command).remove_callback(
-                _send_command_menu,
+                _call_callbacks,
             )
 
 
@@ -111,8 +111,8 @@ def register_command_callback(name, text):
 # =============================================================================
 # >> CALLBACKS
 # =============================================================================
-def _send_command_menu(command, index, team_only=None):
-    """Send the menu to the player."""
+def _call_callbacks(command, index, team_only=None):
+    """Call the registered callbacks for the command."""
     # Store the block value
     block = team_only is not None
 

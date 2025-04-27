@@ -48,4 +48,14 @@ def send_weapons_menu(index):
                     selectable=False,
                 )
             )
+
+        page_index = get_level_page(menu=menu, level=player.level)
+        menu.set_player_page(player_index=index, page_index=page_index)
     menu.send(index)
+
+
+def get_level_page(menu, level):
+    """Return the page of the player's current level."""
+    for n in range(0, menu.last_page_index + 1):
+        if level in [item.choice_index for item in menu._get_options(n)]:
+            return n

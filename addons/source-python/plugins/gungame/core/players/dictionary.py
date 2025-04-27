@@ -35,8 +35,11 @@ class _PlayerDictionary(dict):
 
     def __missing__(self, userid):
         """Add a player to the dictionary."""
-        # Get the GunGamePlayer instance for the userid
-        player = self[userid] = GunGamePlayer.from_userid(userid)
+        try:
+            # Get the GunGamePlayer instance for the userid
+            player = self[userid] = GunGamePlayer.from_userid(userid)
+        except OverflowError:
+            return None
 
         # Loop through all items in the dictionary
         for unique_id in self._removed_players:
