@@ -12,6 +12,7 @@ from enum import IntEnum
 from events import Event
 from filters.entities import EntityIter
 from filters.weapons import WeaponIter
+from listeners.tick import Delay
 
 # Plugin
 from .configuration import disable_type
@@ -54,7 +55,11 @@ def unload():
 # >> GAME EVENTS
 # =============================================================================
 @Event('round_start', 'round_freeze_end')
-def _disable_objectives(game_event=None):
+def _disable_objectives_on_round(game_event=None):
+    Delay(.1, _disable_objectives)
+
+
+def _disable_objectives():
     """Disable objectives each round."""
     objectives = disable_type.get_int()
 

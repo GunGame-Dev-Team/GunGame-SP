@@ -32,9 +32,13 @@ def _bomb_event(game_event):
 
     event_name = game_event.name
     player = player_dictionary[game_event['userid']]
+    if player is None:
+        return
+
     levels = _get_levels_to_increase(player, event_name)
     if not levels:
         return
+
     player.increase_level(
         levels=levels,
         reason=event_name,
