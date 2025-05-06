@@ -19,13 +19,12 @@ from ..config.weapon import order_file, order_randomize
 from ..paths import GUNGAME_WEAPON_ORDER_PATH
 from ..status import GunGameMatchStatus, GunGameStatus
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    '_WeaponOrderManager',
-    'weapon_order_manager',
+    "_WeaponOrderManager",
+    "weapon_order_manager",
 )
 
 
@@ -69,15 +68,15 @@ class _WeaponOrderManager(dict):
 
     def get_weapon_orders(self):
         """Retrieve all weapon orders and store them in the dictionary."""
-        for file in GUNGAME_WEAPON_ORDER_PATH.files('*.txt'):
+        for file in GUNGAME_WEAPON_ORDER_PATH.files("*.txt"):
             try:
                 self[file.stem] = WeaponOrder(file)
             except WeaponOrderError:
-                # TODO: make this gungame specific
                 except_hooks.print_exception()
 
         if not self:
-            raise ValueError('No valid weapon order files found.')
+            msg = "No valid weapon order files found."
+            raise ValueError(msg)
 
     def set_start_convars(self):
         """Set all base ConVars on load."""
@@ -86,10 +85,11 @@ class _WeaponOrderManager(dict):
 
     def set_active_weapon_order(self, value):
         """Set the weapon order to the given value."""
-        if value == '0':
+        if value == "0":
             return
         if value not in self:
-            raise ValueError(f'Invalid weapon order "{value}".')
+            msg = f'Invalid weapon order "{value}".'
+            raise ValueError(msg)
         if self._active == value:
             return
         self._active = value
@@ -125,11 +125,11 @@ class _WeaponOrderManager(dict):
         self._print_delay = None
 
         # Set the prefix
-        prefix = '[GunGame]'
+        prefix = "[GunGame]"
 
         # Log the weapon order name
         gg_weapons_manager_logger.log_message(
-            f'{prefix} Weapon order: {self.active.title}\n'
+            f"{prefix} Weapon order: {self.active.title}\n",
         )
         levels = []
         multi_kills = []
@@ -138,12 +138,12 @@ class _WeaponOrderManager(dict):
             levels.append(level)
             multi_kills.append(self.active[level].multi_kill)
             weapons.append(self.active[level].weapon)
-        level_length = max(len(str(max(levels))), len('Level')) + 2
+        level_length = max(len(str(max(levels))), len("Level")) + 2
         multi_kill_length = max(
-            len(str(max(multi_kills))), len('multi_kill')
+            len(str(max(multi_kills))), len("multi_kill"),
         ) + 2
         weapon_length = max(
-            [len(weapon) for weapon in weapons] + [len('Weapon')]
+            [len(weapon) for weapon in weapons] + [len("Weapon")],
         ) + 4
         joint = (
             f'{prefix} +{"-" * level_length}+{"-" * multi_kill_length}+'
@@ -153,15 +153,15 @@ class _WeaponOrderManager(dict):
         gg_weapons_manager_logger.log_message(
             f'{prefix} |{"Level".center(level_length)}|'
             f'{"multi_kill".center(multi_kill_length)}|'
-            f'{"Weapon".center(weapon_length)}|'
+            f'{"Weapon".center(weapon_length)}|',
         )
         gg_weapons_manager_logger.log_message(joint)
         for level in self.active:
             current = self.active[level]
             gg_weapons_manager_logger.log_message(
-                f'{prefix} |{str(level).center(level_length)}|'
-                f'{str(current.multi_kill).center(multi_kill_length)}|'
-                f'{current.weapon.rjust(weapon_length - 1)} |'
+                f"{prefix} |{str(level).center(level_length)}|"
+                f"{str(current.multi_kill).center(multi_kill_length)}|"
+                f"{current.weapon.rjust(weapon_length - 1)} |",
             )
         gg_weapons_manager_logger.log_message(joint)
 
@@ -181,12 +181,11 @@ class _WeaponOrderManager(dict):
         GunGameStatus.MATCH = GunGameMatchStatus.INACTIVE
 
         # Clear the player dictionary
-        # pylint: disable=import-outside-toplevel
         from ..players.dictionary import player_dictionary
         player_dictionary.clear()
 
         # Restart the match
-        queue_command_string('mp_restartgame 1')
+        queue_command_string("mp_restartgame 1")
 
 
 weapon_order_manager = _WeaponOrderManager()

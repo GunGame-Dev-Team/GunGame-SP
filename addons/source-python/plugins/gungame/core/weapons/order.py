@@ -12,18 +12,24 @@ from warnings import warn
 # GunGame
 from .errors import WeaponOrderError
 from .groups import (
-    all_weapons, machine_gun_weapons, other_primary_weapons,
-    other_secondary_weapons, other_weapons, pistol_weapons, rifle_weapons,
-    shotgun_weapons, smg_weapons, sniper_weapons,
+    all_weapons,
+    machine_gun_weapons,
+    other_primary_weapons,
+    other_secondary_weapons,
+    other_weapons,
+    pistol_weapons,
+    rifle_weapons,
+    shotgun_weapons,
+    smg_weapons,
+    sniper_weapons,
 )
 from ..config.weapon import multi_kill_override
-
 
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'WeaponOrder',
+    "WeaponOrder",
 )
 
 
@@ -50,48 +56,50 @@ class WeaponOrder(dict):
         with file_path.open() as open_file:
             contents = open_file.read()
 
-        for line in contents.splitlines():
-            line = line.strip()
+        for _line in contents.splitlines():
+            line = _line.strip()
             if not line:
                 continue
-            if line.startswith('//'):
+            if line.startswith("//"):
                 continue
             values = line.split()
-            if len(values) == 2:
-                weapon, multi_kill = values
-            elif len(values) == 1:
-                weapon = values[0]
-                multi_kill = 1
-            else:
+            if not values or len(values) > 2:  # noqa: PLR2004
                 warn(
                     f'Invalid line "{line}" in weapon order file: '
-                    f'{file_path.stem}'
+                    f'{file_path.stem}',
+                    stacklevel=2,
                 )
-                continue
+            try:
+                weapon, multi_kill = values
+            except ValueError:
+                weapon = values[0]
+                multi_kill = 1
             try:
                 multi_kill = int(multi_kill)
             except ValueError:
                 warn(
                     f'Invalid multi-kill value "{multi_kill}" in weapon '
-                    f'order file: {file_path.stem}'
+                    f'order file: {file_path.stem}',
+                    stacklevel=2,
                 )
                 continue
             if weapon not in all_weapons:
                 warn(
                     f'Invalid weapon "{weapon}" in weapon order file: '
-                    f'{file_path.stem}'
+                    f'{file_path.stem}',
+                    stacklevel=2,
                 )
                 continue
             level += 1
             self[level] = _LevelWeapon(weapon, multi_kill)
         if not level:
-            raise WeaponOrderError(
-                'No valid lines found in weapon order file '
-                f'"{file_path.stem}".'
+            msg = (
+                f'No valid lines found in weapon order file "{file_path.stem}".'
             )
+            raise WeaponOrderError(msg)
         self.file_path = file_path
         self.name = self.file_path.stem
-        self.title = self.name.replace('_', ' ').title()
+        self.title = self.name.replace("_", " ").title()
         self.random_order = None
 
     @property

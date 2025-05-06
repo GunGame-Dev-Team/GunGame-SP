@@ -7,7 +7,7 @@
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'WeaponOrderError',
+    "WeaponOrderError",
 )
 
 

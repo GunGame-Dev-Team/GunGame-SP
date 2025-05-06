@@ -13,12 +13,11 @@ from weapons.manager import weapon_manager
 from gungame.core.config.misc import map_strip_exceptions
 from gungame.core.status import GunGameMatchStatus, GunGameStatus
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'remove_idle_weapons',
+    "remove_idle_weapons",
 )
 
 
@@ -32,8 +31,8 @@ def remove_idle_weapons(status=GunGameMatchStatus.ACTIVE):
 
     for weapon in WeaponIter(
         not_filters=[
-            tag for tag in ('tool', 'objective') if tag in weapon_manager.tags
-        ]
+            tag for tag in ("tool", "objective") if tag in weapon_manager.tags
+        ],
     ):
         # Is the weapon currently owned by a player?
         if weapon.owner is not None:
