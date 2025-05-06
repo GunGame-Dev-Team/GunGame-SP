@@ -18,15 +18,14 @@ from translations.strings import TranslationStrings
 from . import commands_ini_file
 from .strings import commands_translations
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    '_RegisteredCommand',
-    'command_dictionary',
-    'plugin_commands',
-    'register_command_callback',
+    "_RegisteredCommand",
+    "command_dictionary",
+    "plugin_commands",
+    "register_command_callback",
 )
 
 
@@ -40,6 +39,7 @@ plugin_commands = defaultdict(list)
 # =============================================================================
 # >> CLASSES
 # =============================================================================
+# ruff: noqa: SLF001
 class _RegisteredCommand:
     """Class that handles registering of commands."""
 
@@ -48,24 +48,24 @@ class _RegisteredCommand:
         self.name = self.commands = name
         self.callback = callback
         callback_module = self.callback.__module__
-        if callback_module.startswith('gungame.plugins'):
-            plugin_commands[callback_module.split('.')[3]].append(self.name)
+        if callback_module.startswith("gungame.plugins"):
+            plugin_commands[callback_module.split(".")[3]].append(self.name)
         if self.name in commands_ini_file:
-            self.commands = commands_ini_file[self.name].split(',')
+            self.commands = commands_ini_file[self.name].split(",")
             return
         commands_ini_file[self.name] = self.name
         if text in commands_translations:
             text = commands_translations[text]
         if isinstance(text, TranslationStrings):
             text = text.get_string()
-        commands_ini_file.comments[self.name] = [''] + text.splitlines()
+        commands_ini_file.comments[self.name] = ["", *text.splitlines()]
 
     def register_commands(self):
         """Register the public, private, and client commands."""
         for command in self.commands:
 
             # Register the say commands
-            for prefix in ('', '!', '/'):
+            for prefix in ("", "!", "/"):
                 name = prefix + command
                 say_command_manager._get_command(name).add_callback(
                     _call_callbacks,
@@ -81,7 +81,7 @@ class _RegisteredCommand:
         for command in self.commands:
 
             # Unregister the say commands
-            for prefix in ('', '!', '/'):
+            for prefix in ("", "!", "/"):
                 name = prefix + command
                 say_command_manager._get_command(name).remove_callback(
                     _call_callbacks,
@@ -99,7 +99,8 @@ class _RegisteredCommand:
 def register_command_callback(name, text):
     """Create a decorator to register/unregister commands."""
     if name in command_dictionary:
-        raise ValueError(f'Command type "{name}" is already registered.')
+        msg = f'Command type "{name}" is already registered.'
+        raise ValueError(msg)
 
     def inner(func):
         """Register the command to the given function."""
@@ -120,10 +121,10 @@ def _call_callbacks(command, index, team_only=None):
     name = command[0]
 
     # Does the command have a prefix?
-    if name.startswith(('!', '/')):
+    if name.startswith(("!", "/")):
 
         # Get the block value
-        block = not name.startswith('/')
+        block = not name.startswith("/")
 
         # Get the actual command name
         name = name[1:]
@@ -138,20 +139,20 @@ def _call_callbacks(command, index, team_only=None):
 # =============================================================================
 # >> EVENTS
 # =============================================================================
-@Event('gg_plugin_loaded')
+@Event("gg_plugin_loaded")
 def _register_commands(game_event):
     """Register commands for the loaded plugin."""
-    plugin = game_event['plugin']
+    plugin = game_event["plugin"]
     if plugin not in plugin_commands:
         return
     for name in plugin_commands[plugin]:
         command_dictionary[name].register_commands()
 
 
-@Event('gg_plugin_unloaded')
+@Event("gg_plugin_unloaded")
 def _unregister_commands(game_event):
     """Unregister commands for the unloaded plugin."""
-    plugin = game_event['plugin']
+    plugin = game_event["plugin"]
     if plugin not in plugin_commands:
         return
     for name in plugin_commands[plugin]:

@@ -16,14 +16,13 @@ from .strings import commands_translations
 from ..paths import GUNGAME_BASE_PATH
 from ..plugins.valid import valid_plugins
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'find_all_commands',
-    'load_all_commands',
-    'unload_all_commands',
+    "find_all_commands",
+    "load_all_commands",
+    "unload_all_commands",
 )
 
 
@@ -34,23 +33,23 @@ def find_all_commands():
     """Find all included and plugin commands."""
     if not commands_ini_file:
         commands_ini_file.initial_comment = (
-            commands_translations['Commands:Header'].get_string().splitlines()
+            commands_translations["Commands:Header"].get_string().splitlines()
         )
-    menus_path = GUNGAME_BASE_PATH / 'core' / 'menus'
+    menus_path = GUNGAME_BASE_PATH / "core" / "menus"
     for file_path in menus_path.files():
-        if file_path.stem.startswith('_'):
+        if file_path.stem.startswith("_"):
             continue
-        import_module(f'gungame.core.menus.{file_path.stem}')
+        import_module(f"gungame.core.menus.{file_path.stem}")
 
-    import_module('gungame.core.rules.command')
+    import_module("gungame.core.rules.command")
 
     for plugin_name in valid_plugins.all:
         plugin_path = valid_plugins.get_plugin_path(plugin_name)
         plugin_type = str(plugin_path.parent.stem)
-        commands_path = plugin_path / 'commands.py'
+        commands_path = plugin_path / "commands.py"
         if commands_path.is_file():
             import_module(
-                f'gungame.plugins.{plugin_type}.{plugin_name}.commands'
+                f"gungame.plugins.{plugin_type}.{plugin_name}.commands",
             )
 
     commands_ini_file.write()
