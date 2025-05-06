@@ -19,13 +19,15 @@ from gungame.core.players.dictionary import player_dictionary
 from gungame.core.plugins.manager import gg_plugin_manager
 from gungame.core.status import GunGameMatchStatus, GunGameStatus
 from gungame.core.weapons.groups import (
-    all_grenade_weapons, all_primary_weapons, all_secondary_weapons,
+    all_grenade_weapons,
+    all_primary_weapons,
+    all_secondary_weapons,
     all_weapons,
 )
 from gungame.core.weapons.manager import weapon_order_manager
 
 # Plugin
-from .configuration import bonus_mode, bonus_reset, bonus_weapon
+from .configuration import BonusMode, bonus_mode, bonus_reset, bonus_weapon
 
 
 # =============================================================================
@@ -37,7 +39,7 @@ class _NadeBonusDictionary(dict):
     def __init__(self):
         """Store the nade bonus weapon(s)."""
         super().__init__()
-        self._weapon = self._validate_weapon()
+        self._weapon = self._get_weapon()
 
     def __missing__(self, userid):
         """Store the player in the dictionary."""
@@ -53,7 +55,7 @@ class _NadeBonusDictionary(dict):
     def weapon(self, value):
         """Set the bonus weapon using the convar and not the given value."""
         old_value = self._weapon
-        new_value = self._validate_weapon()
+        new_value = self._get_weapon()
         if not new_value:
             return
         self._weapon = new_value
@@ -61,45 +63,56 @@ class _NadeBonusDictionary(dict):
             for instance in self.values():
                 instance.reset_level()
 
-    @staticmethod
-    def _validate_weapon():
+    def _get_weapon(self):
         """Return the validated bonus weapon(s)."""
         weapon = bonus_weapon.get_string()
         if weapon in weapon_order_manager:
             return weapon
 
-        given_weapons = weapon.split(',')
-        valid_weapons = [x for x in given_weapons if x in all_weapons]
-        if not valid_weapons:
-            warn(f'No valid weapons found in "{weapon}".')
-            return valid_weapons
-        for invalid_weapon in set(given_weapons).difference(valid_weapons):
-            warn(f'Invalid weapon given: {invalid_weapon}')
+        given_weapons = weapon.split(",")
+        weapons = [x for x in given_weapons if x in all_weapons]
+        if not weapons:
+            warn(
+                f'No valid weapons found in "{weapon}".',
+                stacklevel=2,
+            )
+            return weapons
+        for invalid_weapon in set(given_weapons).difference(weapons):
+            warn(
+                f"Invalid weapon given: {invalid_weapon}",
+                stacklevel=2,
+            )
+        return self._get_valid_weapons(weapons)
+
+    @staticmethod
+    def _get_valid_weapons(weapons):
         primary = None
         secondary = None
         extra_primary = set()
         extra_secondary = set()
         all_valid_weapons = set()
-        for valid_weapon in valid_weapons:
-            if valid_weapon in all_primary_weapons and primary is not None:
-                extra_primary.add(valid_weapon)
-                continue
+        for valid_weapon in weapons:
             if valid_weapon in all_primary_weapons:
+                if primary is not None:
+                    extra_primary.add(valid_weapon)
+                    continue
                 primary = valid_weapon
-            if valid_weapon in all_secondary_weapons and secondary is not None:
-                extra_secondary.add(valid_weapon)
-                continue
             if valid_weapon in all_secondary_weapons:
+                if secondary is not None:
+                    extra_secondary.add(valid_weapon)
+                    continue
                 secondary = valid_weapon
             all_valid_weapons.add(valid_weapon)
         if extra_primary:
             warn(
-                f'Too many primary weapons given: "{",".join(extra_primary)}"'
+                f'Too many primary weapons given: "{",".join(extra_primary)}"',
+                stacklevel=2,
             )
         if extra_secondary:
             warn(
                 'Too many secondary weapons given: '
-                f'"{",".join(extra_secondary)}"'
+                f'"{",".join(extra_secondary)}"',
+                stacklevel=2,
             )
         return all_valid_weapons
 
@@ -160,17 +173,17 @@ class _NadeBonusPlayer:
             return
 
         self.multi_kill += 1
-        if self.multi_kill < level._multi_kill:
+        if self.multi_kill < level._multi_kill:  # noqa: SLF001
             return
         if self.level == order.max_levels:
             mode = bonus_mode.get_int()
-            if mode == 1:
+            if mode == BonusMode.RESTART_LIST:
                 self.reset_level()
                 self.check_turbo(weapon)
-            elif mode == 2:
+            elif mode == BonusMode.LEVEL_PLAYER_UP:
                 self.player.increase_level(
                     levels=1,
-                    reason='nade_bonus',
+                    reason="nade_bonus",
                 )
         else:
             self.multi_kill = 0
@@ -179,7 +192,7 @@ class _NadeBonusPlayer:
 
     def check_turbo(self, old_weapon):
         """Verify turbo is running and give the player their weapon now."""
-        if 'gg_turbo' not in gg_plugin_manager:
+        if "gg_turbo" not in gg_plugin_manager:
             return
 
         weapon_name = weapon_manager[old_weapon].name
@@ -215,21 +228,21 @@ class _NadeBonusPlayer:
 # =============================================================================
 # >> GAME EVENTS
 # =============================================================================
-@Event('player_spawn')
+@Event("player_spawn")
 def _give_current_weapon(game_event):
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         return
 
-    nade_bonus_dictionary[game_event['userid']].check_on_spawn()
+    nade_bonus_dictionary[game_event["userid"]].check_on_spawn()
 
 
-@Event('player_death')
+@Event("player_death")
 def _increment_multi_kill(game_event):
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         return
 
-    userid = game_event['userid']
-    attacker = game_event['attacker']
+    userid = game_event["userid"]
+    attacker = game_event["attacker"]
 
     if attacker in (0, userid):
         return
@@ -239,26 +252,26 @@ def _increment_multi_kill(game_event):
     if killer.player.team_index == victim.player.team_index:
         return
 
-    killer.increment_multi_kill(game_event['weapon'])
+    killer.increment_multi_kill(game_event["weapon"])
 
     if bonus_reset.get_int():
         victim.reset_level()
 
 
-@Event('server_cvar')
+@Event("server_cvar")
 def _update_weapon(game_event):
-    if game_event['cvarname'] != bonus_weapon.name:
+    if game_event["cvarname"] != bonus_weapon.name:
         return
 
-    nade_bonus_dictionary.weapon = game_event['cvarvalue']
+    nade_bonus_dictionary.weapon = game_event["cvarvalue"]
 
 
 # =============================================================================
 # >> GUNGAME EVENTS
 # =============================================================================
-@Event('gg_level_up', 'gg_level_down')
+@Event("gg_level_up", "gg_level_down")
 def _check_level(game_event):
-    nade_bonus_dictionary[game_event['leveler']].check_new_level()
+    nade_bonus_dictionary[game_event["leveler"]].check_new_level()
 
 
 # =============================================================================
