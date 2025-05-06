@@ -16,10 +16,10 @@ from events import Event
 from events.hooks import EventAction, PreEvent
 from listeners import OnLevelInit
 from listeners.tick import Delay
+from players.teams import teams_by_number
 
 # Site-package
 from mutagen import MutagenError
-from players.teams import teams_by_number
 
 # GunGame
 from gungame.core.config.misc import dynamic_chat_time
