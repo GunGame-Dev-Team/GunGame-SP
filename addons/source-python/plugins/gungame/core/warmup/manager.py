@@ -17,7 +17,11 @@ from listeners.tick import Repeat
 # GunGame
 from . import listeners
 from ..config.warmup import (
-    warmup_weapon, warmup_time, min_players, max_extensions, players_reached,
+    max_extensions,
+    min_players,
+    players_reached,
+    warmup_time,
+    warmup_weapon,
 )
 from ..messages.manager import message_manager
 from ..sounds.manager import sound_manager
@@ -25,13 +29,12 @@ from ..status import GunGameMatchStatus, GunGameStatus
 from ..weapons.groups import all_weapons, melee_weapons
 from ..weapons.manager import weapon_order_manager
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    '_WarmupManager',
-    'warmup_manager',
+    "_WarmupManager",
+    "warmup_manager",
 )
 
 # =============================================================================
@@ -41,7 +44,10 @@ __all__ = (
 _possible_weapons = all_weapons - melee_weapons
 
 # Get a generator for human players
-_human_no_spec = PlayerIter('human', ['spec', 'un'])
+_human_no_spec = PlayerIter("human", ["spec", "un"])
+
+COUNTDOWN_THRESHOLD = 5
+MINIMUM_PLAYERS = 2
 
 
 # =============================================================================
@@ -71,7 +77,7 @@ class _WarmupManager:
             return
 
         # Are all weapons supposed to be used at random?
-        if current == 'random':
+        if current == "random":
 
             # Set the weapon cycle to a randomized list of all weapons
             weapons = list(_possible_weapons)
@@ -80,12 +86,12 @@ class _WarmupManager:
             return
 
         # Is the value a list of weapons?
-        if ',' in current:
+        if "," in current:
 
             # Store the weapons from the given list to the weapon cycle
             weapons = [
                 weapon for weapon in current.split(
-                    ','
+                    ",",
                 ) if weapon in _possible_weapons
             ]
             if weapons:
@@ -106,7 +112,8 @@ class _WarmupManager:
         if self.warmup_time <= 0:
             warn(
                 '"gg_warmup_time" is set to an invalid number.'
-                '  Skipping warmup round.'
+                '  Skipping warmup round.',
+                stacklevel=2,
             )
             self.end_warmup()
             return
@@ -129,7 +136,6 @@ class _WarmupManager:
     def end_warmup():
         """End warmup and start the match."""
         listeners.unload()
-        # pylint: disable=import-outside-toplevel
         from ..listeners import start_match
         GunGameStatus.MATCH = GunGameMatchStatus.INACTIVE
         start_match(ending_warmup=True)
@@ -158,40 +164,34 @@ class _WarmupManager:
 
             # Should warmup end?
             if (
-                current == 2 or
+                current == MINIMUM_PLAYERS or
                 (self.extensions and current == 1)
             ):
 
                 message_manager.center_message(
-                    message='Warmup:Reduce',
+                    message="Warmup:Reduce",
                 )
 
                 # Cause warmup to end in 1 second
                 self.repeat.reduce(self.repeat.loops_remaining - 1)
                 return
 
-        # Is there just one second remaining in warmup?
-        if remaining == 1:
-
-            # Should warmup be extended?
-            if self.extensions < max_extensions.get_int():
-
-                message_manager.center_message(
-                    message='Warmup:Extend',
-                )
-
-                # Extend the warmup round
-                self.extensions += 1
-                self.repeat.extend(self.warmup_time)
-                return
+        # Should warmup be extended?
+        if remaining == 1 and self.extensions < max_extensions.get_int():
+            message_manager.center_message(
+                message="Warmup:Extend",
+            )
+            self.extensions += 1
+            self.repeat.extend(self.warmup_time)
+            return
 
         message_manager.center_message(
-            message='Warmup:Countdown',
+            message="Warmup:Countdown",
             seconds=remaining,
         )
 
-        if remaining <= 5:
-            sound_manager.play_sound('count_down')
+        if remaining <= COUNTDOWN_THRESHOLD:
+            sound_manager.play_sound("count_down")
 
 
 warmup_manager = _WarmupManager()
