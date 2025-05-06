@@ -15,29 +15,29 @@ from gungame.core.events.resource import GGResourceFile
 # Plugin
 from .info import info
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'GG_Knife_Steal',
+    "GG_Knife_Steal",
 )
 
 
 # =============================================================================
 # >> CLASSES
 # =============================================================================
+# ruff: noqa: N801
 class GG_Knife_Steal(CustomEvent):
     """Called when a player steals a level by knifing."""
 
     attacker = leveler = ShortVariable(
-        'The userid of the player that stole the level'
+        "The userid of the player that stole the level",
     )
-    attacker_level = ByteVariable('The new level of the attacker')
+    attacker_level = ByteVariable("The new level of the attacker")
     userid = victim = ShortVariable(
-        'The userid of the player that had a level stolen'
+        "The userid of the player that had a level stolen",
     )
-    victim_level = ByteVariable('The new level of the victim')
+    victim_level = ByteVariable("The new level of the victim")
 
 
 # =============================================================================
