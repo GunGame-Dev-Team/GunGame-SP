@@ -16,22 +16,26 @@ from gungame.core.weapons.manager import weapon_order_manager
 
 # Plugin
 from .configuration import (
-    defused_levels, defused_skip_knife, defused_skip_nade, detonated_levels,
-    detonated_skip_knife, detonated_skip_nade,
+    defused_levels,
+    defused_skip_knife,
+    defused_skip_nade,
+    detonated_levels,
+    detonated_skip_knife,
+    detonated_skip_nade,
 )
 
 
 # =============================================================================
 # >> GAME EVENTS
 # =============================================================================
-@Event('bomb_defused', 'bomb_exploded')
+@Event("bomb_defused", "bomb_exploded")
 def _bomb_event(game_event):
     """Level the defuser/detonator up."""
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         return
 
     event_name = game_event.name
-    player = player_dictionary[game_event['userid']]
+    player = player_dictionary[game_event["userid"]]
     if player is None:
         return
 
@@ -44,7 +48,7 @@ def _bomb_event(game_event):
         reason=event_name,
     )
     player.chat_message(
-        message=f'BombingObjective:Leveled:{event_name}',
+        message=f"BombingObjective:Leveled:{event_name}",
         levels=levels,
     )
 
@@ -54,16 +58,17 @@ def _bomb_event(game_event):
 # =============================================================================
 def _get_levels_to_increase(player, event_name):
     """Return the number of levels to increase the player."""
-    if event_name == 'bomb_defused':
+    if event_name == "bomb_defused":
         base_levels = defused_levels.get_int()
         skip_nade = defused_skip_nade.get_int()
         skip_knife = defused_skip_knife.get_int()
-    elif event_name == 'bomb_exploded':
+    elif event_name == "bomb_exploded":
         base_levels = detonated_levels.get_int()
         skip_nade = detonated_skip_nade.get_int()
         skip_knife = detonated_skip_knife.get_int()
     else:
-        raise ValueError(f'Invalid reason given "{event_name}".')
+        msg = f'Invalid reason given "{event_name}".'
+        raise ValueError(msg)
 
     if base_levels <= 0:
         return 0
@@ -80,7 +85,7 @@ def _get_levels_to_increase(player, event_name):
             (skip_weapon in melee_weapons and not skip_knife)
         ):
             player.chat_message(
-                f'BombingObjective:NoSkip:{event_name}',
+                f"BombingObjective:NoSkip:{event_name}",
                 weapon=skip_weapon,
             )
             return level_increase - 1
