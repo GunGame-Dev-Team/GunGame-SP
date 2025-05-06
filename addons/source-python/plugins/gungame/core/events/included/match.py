@@ -12,30 +12,30 @@ from events.variable import ShortVariable
 # GunGame
 from ..resource import GGResourceFile
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'GG_Load',
-    'GG_Map_End',
-    'GG_Start',
-    'GG_Unload',
-    'GG_Win',
+    "GG_Load",
+    "GG_Map_End",
+    "GG_Start",
+    "GG_Unload",
+    "GG_Win",
 )
 
 
 # =============================================================================
 # >> CLASSES
 # =============================================================================
+# ruff: noqa: N801
 class GG_Win(CustomEvent):
     """Called when a player wins the match."""
 
     attacker = winner = ShortVariable(
-        'The userid of the player that won the match'
+        "The userid of the player that won the match",
     )
     userid = loser = ShortVariable(
-        'The userid of that player that caused the winner to win the match'
+        "The userid of that player that caused the winner to win the match",
     )
 
 
@@ -58,4 +58,4 @@ class GG_Unload(CustomEvent):
 # =============================================================================
 # >> RESOURCE FILE
 # =============================================================================
-GGResourceFile('match', GG_Win, GG_Start, GG_Map_End, GG_Load, GG_Unload)
+GGResourceFile("match", GG_Win, GG_Start, GG_Map_End, GG_Load, GG_Unload)
