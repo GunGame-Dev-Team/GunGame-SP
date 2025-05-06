@@ -22,7 +22,11 @@ from gungame.core.status import GunGameRoundStatus, GunGameStatus
 
 # Plugin
 from .configuration import (
-    gravity, levels, speed, tk_attacker_reset, tk_victim_reset,
+    gravity,
+    levels,
+    speed,
+    tk_attacker_reset,
+    tk_victim_reset,
 )
 from .custom_events import GG_Multi_Level
 
@@ -32,12 +36,12 @@ from .custom_events import GG_Multi_Level
 # =============================================================================
 def load():
     """Register the multi-level attribute for players."""
-    player_attributes.register_attribute('multi_levels', 0)
+    player_attributes.register_attribute("multi_levels", 0)
 
 
 def unload():
     """Unregister the multi-level attribute."""
-    player_attributes.unregister_attribute('multi_levels')
+    player_attributes.unregister_attribute("multi_levels")
 
 
 # =============================================================================
@@ -52,7 +56,7 @@ class _MultiLevelPlayer(Player):
     def __init__(self, index):
         """Give the player multi-level."""
         super().__init__(index)
-        self.sound = sound_manager.emit_sound('multi_level', index)
+        self.sound = sound_manager.emit_sound("multi_level", index)
         self.start_gravity = self.gravity
         self.start_speed = self.speed
         self.gravity = gravity.get_int() / 100
@@ -67,7 +71,7 @@ class _MultiLevelPlayer(Player):
 
     def give_spark_entity(self):
         """Give the player an env_spark effect."""
-        entity = self.spark_entity = Entity.create('env_spark')
+        entity = self.spark_entity = Entity.create("env_spark")
         entity.spawn_flags = 896
         entity.angles = QAngle(-90, 0, 0)
         entity.magnitude = 8
@@ -117,13 +121,11 @@ class _MultiLevelManager(dict):
 
     def delete_disconnecting_player(self, userid):
         """Remove the disconnecting player from the dictionary."""
-        # pylint: disable=unnecessary-dunder-call
         self.__delitem__(userid, reset_levels=False)
 
     def give_multi_level(self, userid):
         """Give the player multi-level effects."""
         if userid in self:
-            # pylint: disable=unnecessary-dunder-call
             self.__delitem__(userid, reset_levels=False)
         if not self:
             on_tick_listener_manager.register_listener(self._tick)
@@ -145,11 +147,11 @@ multi_level_manager = _MultiLevelManager()
 # =============================================================================
 # >> GUNGAME EVENTS
 # =============================================================================
-@Event('gg_level_up')
+@Event("gg_level_up")
 def _player_level_up(game_event):
     if GunGameStatus.ROUND is not GunGameRoundStatus.ACTIVE:
         return
-    player = player_dictionary[game_event['leveler']]
+    player = player_dictionary[game_event["leveler"]]
     if player.dead:
         return
 
@@ -162,10 +164,10 @@ def _player_level_up(game_event):
 # =============================================================================
 # >> GAME EVENTS
 # =============================================================================
-@Event('player_death')
+@Event("player_death")
 def _reset_team_killers(game_event):
-    userid = game_event['userid']
-    attacker = game_event['attacker']
+    userid = game_event["userid"]
+    attacker = game_event["attacker"]
 
     # Suicide?
     if attacker in (0, userid):
@@ -188,12 +190,12 @@ def _reset_team_killers(game_event):
         del multi_level_manager[attacker]
 
 
-@Event('player_disconnect')
+@Event("player_disconnect")
 def _remove_disconnecting_player(game_event):
-    multi_level_manager.delete_disconnecting_player(game_event['userid'])
+    multi_level_manager.delete_disconnecting_player(game_event["userid"])
 
 
-@Event('round_end')
+@Event("round_end")
 def _reset_multi_level(game_event):
     multi_level_manager.clear()
     for player in PlayerIter():

@@ -15,23 +15,23 @@ from gungame.core.events.resource import GGResourceFile
 # Plugin
 from .info import info
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'GG_Multi_Level',
+    "GG_Multi_Level",
 )
 
 
 # =============================================================================
 # >> CLASSES
 # =============================================================================
+# ruff: noqa: N801
 class GG_Multi_Level(CustomEvent):
     """Called when a player achieves a multi-level bonus."""
 
     userid = leveler = ShortVariable(
-        'The userid of the player that multi-leveled')
+        "The userid of the player that multi-leveled")
 
 
 # =============================================================================

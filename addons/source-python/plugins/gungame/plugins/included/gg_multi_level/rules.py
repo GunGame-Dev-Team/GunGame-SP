@@ -12,13 +12,12 @@ from gungame.core.rules.instance import GunGameRules
 from .configuration import levels
 from .info import info
 
-
 # =============================================================================
 # >> RULES
 # =============================================================================
 multi_level_rules = GunGameRules(info.name)
 multi_level_rules.register_convar_token(
-    token_name='levels',
+    token_name="levels",
     convar=levels,
 )
 multi_level_rules.register_all_rules()
