@@ -20,11 +20,11 @@ from ..plugins.manager import gg_plugin_manager
 # =============================================================================
 # >> FUNCTIONS
 # =============================================================================
-@register_command_callback('rules', 'Rules:Text')
+@register_command_callback("rules", "Rules:Text")
 def send_rules(index):
     """Send the rules menu to the player."""
     menu = PagedMenu(
-        title=rules_translations['Rules:Header'],
+        title=rules_translations["Rules:Header"],
         select_callback=_send_plugin_rules,
     )
     loaded_plugins = [
@@ -32,7 +32,7 @@ def send_rules(index):
         if plugin_name in gg_plugin_manager
     ]
     if not loaded_plugins:
-        menu.append(rules_translations['Rules:Empty'])
+        menu.append(rules_translations["Rules:Empty"])
         menu.send(index)
         return
 
@@ -47,7 +47,7 @@ def _send_plugin_rules(parent_menu, index, choice):
     menu.parent_menu = parent_menu
     rules = all_gungame_rules[plugin_name]
     tokens = {
-        key: getattr(value['convar'], 'get_' + value['type'])()
+        key: getattr(value["convar"], "get_" + value["type"])()
         for key, value in rules.convar_tokens.items()
     }
     for rule in rules:
@@ -55,8 +55,8 @@ def _send_plugin_rules(parent_menu, index, choice):
             StarOption(
                 rules[rule].get_string(
                     language=Player(index).language,
-                    **tokens
-                )
-            )
+                    **tokens,
+                ),
+            ),
         )
     menu.send(index)
