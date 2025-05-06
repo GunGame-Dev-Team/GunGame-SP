@@ -17,13 +17,12 @@ from . import gg_plugins_logger
 from .manager import gg_plugin_manager
 from .valid import plugin_requirements, valid_plugins
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    '_PluginQueue',
-    'plugin_queue',
+    "_PluginQueue",
+    "plugin_queue",
 )
 
 
@@ -45,8 +44,9 @@ class _PluginQueue(dict):
 
     def __missing__(self, item):
         """Add the item to its queue and loop through queues after 1 tick."""
-        if item not in ('load', 'unload'):
-            raise ValueError(f'Invalid plugin type "{item}"')
+        if item not in ("load", "unload"):
+            msg = f'Invalid plugin type "{item}"'
+            raise ValueError(msg)
         if not self:
             Delay(
                 delay=0,
@@ -57,55 +57,60 @@ class _PluginQueue(dict):
 
     def _loop_through_queues(self):
         """Loop through all queues to properly load/unload plugins."""
-        if 'unload' in self:
+        if "unload" in self:
             self._unload_plugins()
-            del self['unload']
-        if 'load' not in self:
+            del self["unload"]
+        if "load" not in self:
             return
         self._load_plugins()
-        del self['load']
+        del self["load"]
 
     def _unload_plugins(self):
         """Unload all plugins in the unload queue."""
         # Loop through all plugins to unload
-        for plugin_name in self['unload']:
+        for plugin_name in self["unload"]:
 
             if plugin_name in plugin_requirements:
                 for other in plugin_requirements[plugin_name]:
-                    if other in self.manager and other not in self['unload']:
+                    if other in self.manager and other not in self["unload"]:
                         warn(
                             f'Plugin "{plugin_name}" is required by "{other}".'
                             f' Please unload "{other}" or load {plugin_name} '
-                            'again to avoid issues.'
+                            'again to avoid issues.',
+                            stacklevel=2,
                         )
 
             # Unload the plugin
             self.manager.set_base_import(
-                value=valid_plugins.get_plugin_type(plugin_name)
+                value=valid_plugins.get_plugin_type(plugin_name),
             )
             self.manager.unload(plugin_name)
 
     def _load_plugins(self):
         """Load all plugins in the load queue."""
         # Loop through all plugins to load
-        for plugin_name in self['load']:
+        for plugin_name in self["load"]:
 
             # Retrieve the plugin's type
             try:
                 plugin_type = valid_plugins.get_plugin_type(plugin_name)
             except ValueError:
-                warn(f'Plugin "{plugin_name}" is invalid.')
+                warn(
+                    f'Plugin "{plugin_name}" is invalid.',
+                    stacklevel=2,
+                )
                 continue
             plugin_info = getattr(valid_plugins, plugin_type)[plugin_name].info
 
             # Check for conflicts
             with suppress(KeyError):
                 conflict = False
-                for other in plugin_info.get('conflicts', []):
+                for other in plugin_info.get("conflicts", []):
                     if other in self.manager:
                         warn(
                             f'Loaded plugin "{other}" conflicts with plugin '
-                            f'"{plugin_name}". Unable to load.'
+                            f'"{plugin_name}". Unable to load.',
+                            stacklevel=2,
                         )
                         conflict = True
                 if conflict:
@@ -113,11 +118,12 @@ class _PluginQueue(dict):
 
             # Check for requirements
             with suppress(KeyError):
-                for other in plugin_info.get('required', []):
-                    if other not in self.manager and other not in self['load']:
+                for other in plugin_info.get("required", []):
+                    if other not in self.manager and other not in self["load"]:
                         warn(
                             f'Plugin "{other}" is required by "{plugin_name}".'
-                            f' Please load "{other}" to avoid issues.'
+                            f' Please load "{other}" to avoid issues.',
+                            stacklevel=2,
                         )
 
             # Load the plugin and get its instance

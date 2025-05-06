@@ -16,15 +16,14 @@ from configobj import ConfigObj
 # GunGame
 from ..paths import GUNGAME_PLUGINS_PATH
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'ValidPlugin',
-    '_ValidPlugins',
-    'plugin_requirements',
-    'valid_plugins',
+    "ValidPlugin",
+    "_ValidPlugins",
+    "plugin_requirements",
+    "valid_plugins",
 )
 
 
@@ -51,24 +50,26 @@ class _ValidPlugins:
 
     def __init__(self):
         """Store all plugins by their type."""
-        self.included = self._get_plugins_by_type('included')
-        self.custom = self._get_plugins_by_type('custom')
+        self.included = self._get_plugins_by_type("included")
+        self.custom = self._get_plugins_by_type("custom")
         for plugin in list(self.custom):
             if plugin in self.included:
                 del self.custom[plugin]
                 warn(
                     f'Custom plugin "{plugin}" is invalid, as there is '
-                    'already an included plugin of the same name.'
+                    'already an included plugin of the same name.',
+                    stacklevel=2,
                 )
         self.all = dict(self.included)
         self.all.update(self.custom)
 
     def get_plugin_type(self, plugin_name):
         """Return the type (included or custom) for the given plugin."""
-        for plugin_type in ('included', 'custom'):
+        for plugin_type in ("included", "custom"):
             if plugin_name in getattr(self, plugin_type):
                 return plugin_type
-        raise ValueError(f'No such plugin "{plugin_name}".')
+        msg = f'No such plugin "{plugin_name}".'
+        raise ValueError(msg)
 
     def get_plugin_path(self, plugin_name):
         """Return the path for the sub-plugin."""
@@ -86,30 +87,32 @@ class _ValidPlugins:
         for plugin in type_path.dirs():
 
             # Skip the compiled files
-            if plugin.stem == '__pycache__':
+            if plugin.stem == "__pycache__":
                 continue
 
             # Does the primary file not exist?
-            plugin_path = plugin / plugin.stem + '.py'
+            plugin_path = plugin / plugin.stem + ".py"
             if not plugin_path.is_file():
                 warn(
                     f'{plugin_type.title()} plugin "{plugin.stem}" '
-                    'is missing its base file.'
+                    'is missing its base file.',
+                    stacklevel=2,
                 )
                 continue
 
             # Does the info file not exist?
-            info_file = plugin / 'info.ini'
+            info_file = plugin / "info.ini"
             if not info_file.is_file():
                 warn(
                     f'{plugin_type.title()} plugin "{plugin.stem}" '
-                    'is missing info.ini file.'
+                    'is missing info.ini file.',
+                    stacklevel=2,
                 )
                 continue
 
             # Get the plugin's description
             description = import_module(
-                f'gungame.plugins.{plugin_type}.{plugin.stem}'
+                f"gungame.plugins.{plugin_type}.{plugin.stem}",
             ).__doc__
 
             # Get the plugin's info
@@ -118,7 +121,7 @@ class _ValidPlugins:
             # Add the plugin to the dictionary
             plugins[str(plugin.stem)] = ValidPlugin(info, description)
 
-            required = info.get('required', [])
+            required = info.get("required", [])
 
             for other in required:
                 plugin_requirements[other].append(str(plugin.stem))

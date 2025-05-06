@@ -11,13 +11,12 @@ from translations.strings import LangStrings
 # GunGame
 from .. import gg_core_logger
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'gg_plugins_logger',
-    'plugin_strings',
+    "gg_plugins_logger",
+    "plugin_strings",
 )
 
 
@@ -25,4 +24,4 @@ __all__ = (
 # >> GLOBAL VARIABLES
 # =============================================================================
 gg_plugins_logger = gg_core_logger.plugins
-plugin_strings = LangStrings('_core/plugin_strings')
+plugin_strings = LangStrings("_core/plugin_strings")

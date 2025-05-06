@@ -11,12 +11,11 @@ from translations.strings import LangStrings
 # GunGame
 from .valid import valid_plugins
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'PluginStrings',
+    "PluginStrings",
 )
 
 
@@ -29,5 +28,5 @@ class PluginStrings(LangStrings):
     def __init__(self, name):
         """Add 'gungame' and the plugin type to the path."""
         super().__init__(
-            f'gungame/{valid_plugins.get_plugin_type(name)}_plugins/{name}'
+            f"gungame/{valid_plugins.get_plugin_type(name)}_plugins/{name}",
         )
