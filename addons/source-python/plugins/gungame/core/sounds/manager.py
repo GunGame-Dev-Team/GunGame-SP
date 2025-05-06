@@ -10,26 +10,25 @@ from collections import defaultdict
 from random import shuffle
 from warnings import warn
 
-# Site-Package
-from configobj import ConfigObj
-
 # Source.Python
 from engines.sound import Sound
 from filesystem import is_vpk_file
 from paths import SOUND_PATH
 
+# Site-package
+from configobj import ConfigObj
+
 # GunGame
 from ..config.misc import sound_pack
 from ..paths import GUNGAME_SOUND_PACK_PATH
-
 
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'RandomSounds',
-    '_SoundManager',
-    'sound_manager',
+    "RandomSounds",
+    "_SoundManager",
+    "sound_manager",
 )
 
 
@@ -46,7 +45,8 @@ class RandomSounds(list):
         self._remaining = []
 
     def next(self):
-        """Return the next sound in the list.
+        """
+        Return the next sound in the list.
 
         :rtype: Sound
         """
@@ -69,7 +69,7 @@ class _SoundManager(defaultdict):
     def load_sounds(self):
         """Load all sounds into the dictionary."""
         # Loop through all sound packs
-        for file in GUNGAME_SOUND_PACK_PATH.files('*.ini'):
+        for file in GUNGAME_SOUND_PACK_PATH.files("*.ini"):
 
             # Get the sound pack data
             ini = ConfigObj(file)
@@ -81,23 +81,25 @@ class _SoundManager(defaultdict):
                 if item not in self.defaults:
                     warn(
                         f'Sound "{item}" in file "{file.name}" is not '
-                        f'registered.'
+                        f'registered.',
+                        stacklevel=2,
                     )
                     continue
 
                 # Get the extension type of the current sound type value
-                extension = value.rsplit('.', 1)[1]
+                extension = value.rsplit(".", 1)[1]
 
                 # Is the value for a random sound file?
-                if extension == 'txt':
+                if extension == "txt":
 
                     # Does the random sound file exist?
-                    txt = GUNGAME_SOUND_PACK_PATH / 'random_sounds' / value
+                    txt = GUNGAME_SOUND_PACK_PATH / "random_sounds" / value
                     if not txt.is_file():
                         warn(
                             'Invalid random sound text file given '
                             f'"{value}" for sound "{item}" in file '
-                            f'"{file.name}".'
+                            f'"{file.name}".',
+                            stacklevel=2,
                         )
                         continue
 
@@ -107,7 +109,8 @@ class _SoundManager(defaultdict):
                     if not sounds:
                         warn(
                             'No sounds found in random sound file '
-                            f'"{txt.name}".'
+                            f'"{txt.name}".',
+                            stacklevel=2,
                         )
                         continue
 
@@ -124,7 +127,8 @@ class _SoundManager(defaultdict):
                 else:
                     warn(
                         f'Invalid sound extension "{extension}" for sound '
-                        f'"{item}" in file "{file.name}".'
+                        f'"{item}" in file "{file.name}".',
+                        stacklevel=2,
                     )
                     continue
 
@@ -133,7 +137,8 @@ class _SoundManager(defaultdict):
             for missing in set(self.defaults).difference(self[file.stem]):
                 warn(
                     f'Sound "{missing}" missing in "{file.stem}" '
-                    'sound pack.'
+                    'sound pack.',
+                    stacklevel=2,
                 )
 
     def get_sounds_from_file(self, txt):
@@ -142,21 +147,22 @@ class _SoundManager(defaultdict):
         with txt.open() as open_file:
 
             # Loop through all values in the random sound file
-            for line in open_file.readlines():
-                line = line.strip()
+            for _line in open_file.readlines():
+                line = _line.strip()
 
                 # Skip all comments or empty lines
-                if line.startswith('/') or not line:
+                if line.startswith("/") or not line:
                     continue
 
                 # Get the extension of the current sound
-                extension = line.rsplit('.', 1)[1]
+                extension = line.rsplit(".", 1)[1]
 
                 # Is this a valid extension for the game?
                 if not self.is_allowed_sound_extension(extension):
                     warn(
                         f'Invalid sound extension "{extension}" '
-                        f'found in random sound file "{txt.name}".'
+                        f'found in random sound file "{txt.name}".',
+                        stacklevel=2,
                     )
                     continue
 
@@ -164,11 +170,12 @@ class _SoundManager(defaultdict):
                 sound_file = SOUND_PATH / line
                 if not (
                         sound_file.is_file() or
-                        is_vpk_file(f'sound/{line}')
+                        is_vpk_file(f"sound/{line}")
                 ):
                     warn(
                         f'Invalid sound "{line}", sound '
-                        'does not exist'
+                        'does not exist',
+                        stacklevel=2,
                     )
                     continue
 
@@ -179,33 +186,39 @@ class _SoundManager(defaultdict):
 
     @staticmethod
     def is_allowed_sound_extension(extension):
-        """Return whether the extension is allowed for the game.
+        """
+        Return whether the extension is allowed for the game.
 
         :param str extension: The file extension to check if valid.
         :rtype: bool
         """
-        return extension in ('wav', 'mp3')
+        return extension in ("wav", "mp3")
 
     def register_sound(self, sound_name, default):
-        """Register the sound and add the default value to the defaults.
+        """
+        Register the sound and add the default value to the defaults.
 
         :param str sound_name: The type of sound to register.
         :param str default: The default value for the sound type.
         """
         # Was the sound type already registered?
         if sound_name in self.defaults:
-            warn(f'Sound "{sound_name}" already registered!')
+            warn(
+                f'Sound "{sound_name}" already registered!',
+                stacklevel=2,
+            )
             return
 
         # Was a valid extension type given?
-        extension = default.rsplit('.', 1)[1]
+        extension = default.rsplit(".", 1)[1]
         if (
             not self.is_allowed_sound_extension(extension) and
-            extension != 'txt'
+            extension != "txt"
         ):
             warn(
                 f'Invalid extension "{extension}".  Sound "{sound_name}" '
-                'not registered.'
+                'not registered.',
+                stacklevel=2,
             )
             return
 
@@ -219,46 +232,48 @@ class _SoundManager(defaultdict):
             callback is not None and
             callback in self._sound_hooks[sound_name]
         ):
-            raise ValueError(
+            msg = (
                 f'Hook "{callback}" already registered for '
                 f'sound name "{sound_name}".'
             )
+            raise ValueError(msg)
         self._sound_hooks[sound_name].append(callback)
 
     def unregister_hook(self, sound_name, callback):
         """Unregister a hook from the given sound name."""
         if sound_name not in self._sound_hooks:
-            raise ValueError(
-                f'No hooks registered for sound name "{sound_name}".'
-            )
+            msg = f'No hooks registered for sound name "{sound_name}".'
+            raise ValueError(msg)
         if callback not in self._sound_hooks[sound_name]:
-            raise ValueError(
+            msg = (
                 f'Hook "{callback}" is not registered for '
                 f'sound name "{sound_name}".'
             )
+            raise ValueError(msg)
         self._sound_hooks[sound_name].remove(callback)
         if not self._sound_hooks[sound_name]:
             del self._sound_hooks[sound_name]
 
     def get_sound(self, sound_name):
-        """Return the sound from the given name.
+        """
+        Return the sound from the given name.
 
         :param str sound_name: The type of sound to get the current value of.
         :rtype: Sound
         """
         # Was an invalid sound type given?
         if sound_name not in self.defaults:
-            raise ValueError(
-                f'Invalid sound name "{sound_name}".  Sound not registered.'
-            )
+            msg = f'Invalid sound name "{sound_name}".  Sound not registered.'
+            raise ValueError(msg)
 
         # Is the sound pack ConVar a valid value?
         pack = sound_pack.get_string()
         if pack not in self:
-            raise ValueError(
+            msg = (
                 f'Invalid sound pack "{sound_pack}".  Change '
                 f'"{sound_pack.name}" to a valid sound pack name.'
             )
+            raise ValueError(msg)
 
         if sound_name in self._sound_hooks:
             block_sound = False
@@ -266,25 +281,25 @@ class _SoundManager(defaultdict):
                 if callback(sound_name) is False:
                     block_sound = True
             if block_sound:
-                return
+                return None
 
         # Return the sound if its type is in the chosen sound pack
         if sound_name in self[pack]:
             return self._prep_sound(self[pack][sound_name])
 
         # Return the default sound value
-        if sound_name in self['default']:
-            return self._prep_sound(self['default'][sound_name])
+        if sound_name in self["default"]:
+            return self._prep_sound(self["default"][sound_name])
 
         # If the sound is not in either the chosen sound
         #   pack or the default one, raise an error
-        raise ValueError(
-            f'Sound "{sound_name}" cannot be found for sound pack "{pack}".'
-        )
+        msg = f'Sound "{sound_name}" cannot be found for sound pack "{pack}".'
+        raise ValueError(msg)
 
     @staticmethod
     def _prep_sound(sound):
-        """Return the sound to play.
+        """
+        Return the sound to play.
 
         :param Sound sound: The :class:`engines.sound.Sound` instance to play.
             Could also be a :class:`RandomSounds` object to get the next
@@ -299,19 +314,21 @@ class _SoundManager(defaultdict):
         return sound
 
     def play_sound(self, sound_name, *users):
-        """Play the sound to the given users.
+        """
+        Play the sound to the given users.
 
         :param str sound_name: The type of sound to play.
         :rtype: Sound
         """
         sound = self.get_sound(sound_name)
         if sound is None:
-            return
+            return None
         sound.play(*users)
         return sound
 
     def emit_sound(self, sound_name, index, *users):
-        """Emit the sound from the given index and play to the given users.
+        """
+        Emit the sound from the given index and play to the given users.
 
         :param str sound_name: The type of sound to play.
         :param int index: The index to emit the sound from.
@@ -319,7 +336,7 @@ class _SoundManager(defaultdict):
         """
         sound = self.get_sound(sound_name)
         if sound is None:
-            return
+            return None
         sound.index = index
         sound.play(*users)
         return sound
