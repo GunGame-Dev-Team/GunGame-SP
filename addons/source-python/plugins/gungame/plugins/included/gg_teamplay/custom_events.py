@@ -15,34 +15,34 @@ from gungame.core.events.resource import GGResourceFile
 # Plugin
 from .info import info
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'GG_Team_Level_Up',
-    'GG_Team_Win',
+    "GG_Team_Level_Up",
+    "GG_Team_Win",
 )
 
 
 # =============================================================================
 # >> CLASSES
 # =============================================================================
+# ruff: noqa: N801
 class GG_Team_Level_Up(CustomEvent):
     """Called during team-based play when a team levels up."""
 
-    team = ShortVariable('The team that leveled up')
-    old_level = ByteVariable('The old level of the team that leveled up')
-    new_level = ByteVariable('The new level of the team that leveled up')
-    style = StringVariable('The style of teamplay match')
+    team = ShortVariable("The team that leveled up")
+    old_level = ByteVariable("The old level of the team that leveled up")
+    new_level = ByteVariable("The new level of the team that leveled up")
+    style = StringVariable("The style of teamplay match")
 
 
 class GG_Team_Win(CustomEvent):
     """Called during team-based play when a team wins the match."""
 
-    winner = ShortVariable('The team that won the match')
-    loser = ShortVariable('The team that lost the match')
-    style = StringVariable('The style of teamplay match')
+    winner = ShortVariable("The team that won the match")
+    loser = ShortVariable("The team that lost the match")
+    style = StringVariable("The style of teamplay match")
 
 
 # =============================================================================

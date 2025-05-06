@@ -21,16 +21,15 @@ from .configuration import count_grenade_kills, count_melee_kills
 from .manager import team_dictionary
 from .rules import teamplay_rules
 
-
 # =============================================================================
 # >> RULES
 # =============================================================================
 for _item in list(teamplay_rules):
-    if _item.startswith('Teamplay:Rounds:'):
+    if _item.startswith("Teamplay:Rounds:"):
         teamplay_rules.unregister_rule(_item)
 
 for _key, _value in rules_translations.items():
-    if _key.startswith('Teamplay:Deathmatch:'):
+    if _key.startswith("Teamplay:Deathmatch:"):
         teamplay_rules.register_rule(
             name=_key,
             value=_value,
@@ -40,26 +39,23 @@ for _key, _value in rules_translations.items():
 # =============================================================================
 # >> GAME EVENTS
 # =============================================================================
-@Event('player_death')
+@Event("player_death")
 def _increment_team_multi_kill(game_event):
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         return
 
-    attacker = player_dictionary.get(game_event['attacker'])
-    if attacker is None:
-        return
-
-    victim = player_dictionary[game_event['userid']]
-    if victim.team_index == attacker.team_index:
+    attacker = player_dictionary.get(game_event["attacker"])
+    victim = player_dictionary[game_event["userid"]]
+    if attacker is None or victim.team_index == attacker.team_index:
         return
 
     team = team_dictionary.get(attacker.team_index)
     if team is None:
         return
 
-    weapon = weapon_manager[game_event['weapon']].basename
+    weapon = weapon_manager[game_event["weapon"]].basename
     if weapon != team.level_weapon:
-        if weapon == 'prop_physics' and not prop_physics.get_int():
+        if weapon == "prop_physics" and not prop_physics.get_int():
             return
 
         if weapon in melee_weapons and not count_melee_kills.get_int():

@@ -6,13 +6,13 @@
 # >> IMPORTS
 # =============================================================================
 # Python
-from importlib import import_module
 import sys
+from importlib import import_module
 
 # Source.Python
-from core import AutoUnload, GAME_NAME, WeakAutoUnload
+from core import GAME_NAME, AutoUnload, WeakAutoUnload
 from events import Event
-from events.hooks import PreEvent, EventAction
+from events.hooks import EventAction, PreEvent
 from hooks.exceptions import except_hooks
 from listeners.tick import Delay
 
@@ -39,7 +39,7 @@ class _TeamplayManager:
     """Class used to load the proper teamplay gamemode."""
 
     finished_initial_load = False
-    deathmatch_only_game = GAME_NAME in ('bms', 'hl2mp')
+    deathmatch_only_game = GAME_NAME in ("bms", "hl2mp")
     current_module = None
 
     def initialize(self):
@@ -50,36 +50,37 @@ class _TeamplayManager:
     def load_module(self, module=None):
         """Load the given gamemode."""
         if self.current_module is not None:
-            raise ValueError(
-                'A module is currently loaded, cannot load another.'
-            )
+            msg = "A module is currently loaded, cannot load another."
+            raise ValueError(msg)
         if self.deathmatch_only_game:
-            module = 'deathmatch'
+            module = "deathmatch"
         if module is None:
             module = (
-                'deathmatch' if 'gg_deathmatch' in gg_plugin_manager
-                else 'rounds'
+                "deathmatch" if "gg_deathmatch" in gg_plugin_manager
+                else "rounds"
             )
-        module_path = f'gungame.plugins.included.gg_teamplay.{module}'
+        module_path = f"gungame.plugins.included.gg_teamplay.{module}"
         import_module(module_path)
         self.current_module = module_path
 
     def unload_current_module(self):
         """Unload the current gamemode."""
         if self.current_module is None:
-            raise ValueError('No module is currently loaded.')
+            msg = "No module is currently loaded."
+            raise ValueError(msg)
 
         del sys.modules[self.current_module]
 
+        # ruff: noqa: SLF001
         if self.current_module in AutoUnload._module_instances:
             self._unload_auto_unload_instances(
-                AutoUnload._module_instances[self.current_module]
+                AutoUnload._module_instances[self.current_module],
             )
             del AutoUnload._module_instances[self.current_module]
 
         if self.current_module in WeakAutoUnload._module_instances:
             self._unload_auto_unload_instances(
-                WeakAutoUnload._module_instances[self.current_module]
+                WeakAutoUnload._module_instances[self.current_module],
             )
             del WeakAutoUnload._module_instances[self.current_module]
 
@@ -89,10 +90,10 @@ class _TeamplayManager:
     def _unload_auto_unload_instances(instances):
         for instance in instances:
             try:
+                # ruff: noqa: SLF001
                 instance._unload_instance()
-            # pylint: disable=broad-except
+            # ruff: noqa: BLE001
             except Exception:
-                # TODO: make this gungame specific
                 except_hooks.print_exception()
 
 
@@ -106,9 +107,9 @@ Delay(
 # =============================================================================
 # >> GUNGAME EVENTS
 # =============================================================================
-@Event('gg_plugin_loaded', 'gg_plugin_unloaded')
+@Event("gg_plugin_loaded", "gg_plugin_unloaded")
 def _swap_style(game_event):
-    if game_event['plugin'] != 'gg_deathmatch':
+    if game_event["plugin"] != "gg_deathmatch":
         return
 
     if not teamplay_manager.finished_initial_load:
@@ -120,7 +121,7 @@ def _swap_style(game_event):
     teamplay_manager.unload_current_module()
 
     module = (
-        'deathmatch' if game_event.name == 'gg_plugin_loaded' else 'rounds'
+        "deathmatch" if game_event.name == "gg_plugin_loaded" else "rounds"
     )
     teamplay_manager.load_module(module)
 
@@ -130,7 +131,7 @@ def _swap_style(game_event):
 # =============================================================================
 # >> EVENT HOOKS
 # =============================================================================
-@PreEvent('gg_level_up', 'gg_win')
+@PreEvent("gg_level_up", "gg_win")
 def _block_level_up(game_event):
     return EventAction.BLOCK
 
@@ -138,7 +139,7 @@ def _block_level_up(game_event):
 # =============================================================================
 # >> MESSAGE HOOKS
 # =============================================================================
-@MessagePrefixHook('LevelInfo:')
+@MessagePrefixHook("LevelInfo:")
 def _level_info_hook(message_name, message_prefix):
     """Hooks the LevelInfo messages so that the team messages can be sent."""
     return False
@@ -147,7 +148,7 @@ def _level_info_hook(message_name, message_prefix):
 # =============================================================================
 # >> SOUND HOOKS
 # =============================================================================
-@SoundHook('multi_kill')
+@SoundHook("multi_kill")
 def _suppress_multi_kill_sound(sound_name):
     """Stop the multi-kill sound from spamming."""
     return False
