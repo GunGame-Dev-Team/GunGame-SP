@@ -21,7 +21,6 @@ from gungame.core.weapons.groups import individual_weapons
 # Plugin
 from .configuration import max_nades
 
-
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
@@ -31,17 +30,17 @@ _nade_count = defaultdict(int)
 # =============================================================================
 # >> GAME EVENTS
 # =============================================================================
-@Event('weapon_fire')
+@Event("weapon_fire")
 def _delay_give_new_weapon(game_event):
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         return
 
-    weapon = weapon_manager[game_event['weapon']].basename
+    weapon = weapon_manager[game_event["weapon"]].basename
     if weapon not in individual_weapons:
         return
 
     try:
-        player = player_dictionary[game_event['userid']]
+        player = player_dictionary[game_event["userid"]]
     except ValueError:
         return
 
@@ -59,9 +58,9 @@ def _delay_give_new_weapon(game_event):
         )
 
 
-@Event('player_spawn', 'gg_level_up')
+@Event("player_spawn", "gg_level_up")
 def _reset_player_count(game_event):
-    userid = game_event['userid']
+    userid = game_event["userid"]
     if userid in _nade_count:
         del _nade_count[userid]
 

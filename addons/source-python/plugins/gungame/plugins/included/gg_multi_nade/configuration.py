@@ -11,20 +11,19 @@ from gungame.core.config.manager import GunGameConfigManager
 # Plugin
 from .info import info
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'max_nades',
+    "max_nades",
 )
 
 
 # =============================================================================
 # >> CONFIGURATION
 # =============================================================================
-with GunGameConfigManager(info.name) as _config:
-    with _config.cvar(
-        name='max_nades',
-    ) as max_nades:
-        max_nades.add_text()
+with (
+    GunGameConfigManager(info.name) as _config,
+    _config.cvar(name="max_nades") as max_nades,
+):
+    max_nades.add_text()
