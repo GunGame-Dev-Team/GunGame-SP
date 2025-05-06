@@ -12,14 +12,13 @@ from gungame.core.rules.instance import GunGameRules
 from .configuration import delay
 from .info import info
 
-
 # =============================================================================
 # >> RULES
 # =============================================================================
 deathmatch_rules = GunGameRules(info.name)
 deathmatch_rules.register_convar_token(
-    token_name='delay',
+    token_name="delay",
     convar=delay,
-    convar_type='float',
+    convar_type="float",
 )
 deathmatch_rules.register_all_rules()

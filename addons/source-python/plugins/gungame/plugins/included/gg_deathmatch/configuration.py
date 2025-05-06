@@ -11,21 +11,22 @@ from gungame.core.config.manager import GunGameConfigManager
 # Plugin
 from .info import info
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'delay',
+    "delay",
 )
 
 
 # =============================================================================
 # >> CONFIGURATION
 # =============================================================================
-with GunGameConfigManager(info.name) as _config:
-    with _config.cvar(
-        name='delay',
+with (
+    GunGameConfigManager(info.name) as _config,
+    _config.cvar(
+        name="delay",
         default=2,
-    ) as delay:
-        delay.add_text()
+    ) as delay,
+):
+    delay.add_text()

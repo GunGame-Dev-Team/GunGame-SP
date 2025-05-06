@@ -50,7 +50,7 @@ class DMPlayer(Player):
 
             # Message the player with the countdown
             player_dictionary[self.userid].hint_message(
-                'DeathMatch:CountDown',
+                "DeathMatch:CountDown",
                 seconds=self.repeat.loops_remaining,
             )
 
@@ -59,7 +59,7 @@ class DMPlayer(Player):
 
             # Message the player that they are respawning
             player_dictionary[self.userid].hint_message(
-                'DeathMatch:Respawning'
+                "DeathMatch:Respawning",
             )
 
             # Respawn the player
@@ -106,11 +106,11 @@ deathmatch_players = _DeathMatchPlayers()
 # =============================================================================
 # >> REGISTERED CALLBACK
 # =============================================================================
-@ClientCommand('jointeam')
+@ClientCommand("jointeam")
 def _jointeam(command, index):
     """Cancel a player's repeat if they join spectators."""
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
-        return
+        return None
 
     # Is the player joining spectators?
     if command[1] != 1:
@@ -128,7 +128,7 @@ def _jointeam(command, index):
     if player.is_repeat_active():
 
         # Message the player about cancelling their respawn
-        player_dictionary[userid].hint_message('DeathMatch:CancelTeam')
+        player_dictionary[userid].hint_message("DeathMatch:CancelTeam")
 
         # Stop the player's repeat
         player.stop_repeat()
@@ -137,11 +137,11 @@ def _jointeam(command, index):
     return CommandReturn.CONTINUE
 
 
-@ClientCommand('joinclass')
+@ClientCommand("joinclass")
 def _joinclass(command, index):
     """Hooks joinclass to start a player's repeat."""
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
-        return
+        return None
 
     # Get the player's userid
     userid = userid_from_index(index)
@@ -156,14 +156,14 @@ def _joinclass(command, index):
 # =============================================================================
 # >> EVENTS
 # =============================================================================
-@Event('player_spawn')
+@Event("player_spawn")
 def _player_spawn(game_event):
     """Start bot repeats in case they join mid round."""
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         return
 
     # Get the player's userid
-    userid = game_event['userid']
+    userid = game_event["userid"]
 
     # Get the player's DMPlayer instance
     player = deathmatch_players[userid]
@@ -175,23 +175,23 @@ def _player_spawn(game_event):
         player.start_repeat()
 
 
-@Event('player_death')
+@Event("player_death")
 def _player_death(game_event):
     """Start the player's repeat when they are killed."""
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         return
 
     # Get the player's userid
-    userid = game_event['userid']
+    userid = game_event["userid"]
 
     # Start the player's repeat
     deathmatch_players[userid].start_repeat()
 
 
-@Event('player_disconnect')
+@Event("player_disconnect")
 def _player_disconnect(game_event):
     """Remove the player from the dictionary."""
-    del deathmatch_players[game_event['userid']]
+    del deathmatch_players[game_event["userid"]]
 
 
 # =============================================================================
