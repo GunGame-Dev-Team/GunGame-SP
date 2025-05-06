@@ -11,7 +11,7 @@ from listeners.tick import Delay
 # GunGame
 from gungame.core.players.attributes import AttributePostHook
 from gungame.core.players.dictionary import player_dictionary
-from gungame.core.weapons.groups import incendiary_weapons
+from gungame.core.weapons.groups import incendiary_weapons, sniper_weapons
 
 # Plugin
 from .configuration import multiple_kills, quick_switch
@@ -20,7 +20,7 @@ from .configuration import multiple_kills, quick_switch
 # =============================================================================
 # >> ATTRIBUTE CALLBACKS
 # =============================================================================
-@AttributePostHook('level')
+@AttributePostHook("level")
 def _post_level_change(player, attribute, new_value, old_value):
     """Give the player their new weapon."""
     if not new_value or not old_value:
@@ -41,10 +41,9 @@ def _give_level_weapon(index):
     except ValueError:
         return
     player.strip_weapons(
-        not_filters={'grenade'},
+        not_filters={"grenade"},
         remove_incendiary=player.level_weapon in incendiary_weapons,
     )
     player.give_level_weapon()
     if quick_switch.get_bool():
-        # TODO: fix this for snipers
-        player.next_attack = 0
+        player.next_attack = 0.5 if player.level_weapon in sniper_weapons else 0
