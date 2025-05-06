@@ -39,13 +39,13 @@ def load():
 def unload():
     """Re-enable all objectives."""
     # Loop through all bomb targets
-    for entity in EntityIter('func_bomb_target'):
+    for entity in EntityIter("func_bomb_target"):
 
         # Enable the bomb target
         entity.enable()
 
     # Loop through all rescue zones
-    for entity in EntityIter('func_hostage_rescue'):
+    for entity in EntityIter("func_hostage_rescue"):
 
         # Enable the rescue zone
         entity.enable()
@@ -54,7 +54,7 @@ def unload():
 # =============================================================================
 # >> GAME EVENTS
 # =============================================================================
-@Event('round_start', 'round_freeze_end')
+@Event("round_start", "round_freeze_end")
 def _disable_objectives_on_round(game_event=None):
     Delay(.1, _disable_objectives)
 
@@ -67,20 +67,20 @@ def _disable_objectives():
     if objectives & ObjectiveType.BOMBING:
 
         # Disable bomb targets
-        for entity in EntityIter('func_bomb_target'):
+        for entity in EntityIter("func_bomb_target"):
             entity.disable()
 
         # Remove all c4 entities
-        for weapon in WeaponIter('objective'):
+        for weapon in WeaponIter("objective"):
             weapon.remove()
 
     # Do hostage objectives need removed?
     if objectives & ObjectiveType.HOSTAGE:
 
         # Disable hostage rescue zones
-        for entity in EntityIter('func_hostage_rescue'):
+        for entity in EntityIter("func_hostage_rescue"):
             entity.disable()
 
         # Remove all hostage entities
-        for entity in EntityIter('hostage_entity'):
+        for entity in EntityIter("hostage_entity"):
             entity.remove()
