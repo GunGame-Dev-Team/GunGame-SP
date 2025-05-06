@@ -17,9 +17,10 @@ from listeners.tick import Delay
 from gungame.core.messages.manager import message_manager
 from gungame.core.players.dictionary import player_dictionary
 from gungame.core.status import (
-    GunGameMatchStatus, GunGameRoundStatus, GunGameStatus,
+    GunGameMatchStatus,
+    GunGameRoundStatus,
+    GunGameStatus,
 )
-
 
 # =============================================================================
 # >> GLOBAL VARIABLES
@@ -30,7 +31,7 @@ eliminated_players = defaultdict(set)
 # =============================================================================
 # >> GAME EVENTS
 # =============================================================================
-@Event('player_death')
+@Event("player_death")
 def _player_death(game_event):
     """Respawn any players the victim killed."""
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
@@ -39,13 +40,13 @@ def _player_death(game_event):
     if GunGameStatus.ROUND is GunGameRoundStatus.INACTIVE:
         return
 
-    victim = player_dictionary[game_event['userid']]
+    victim = player_dictionary[game_event["userid"]]
     Delay(
         delay=0,
         callback=_respawn_victims,
         args=(victim.userid,),
     )
-    attacker = game_event['attacker']
+    attacker = game_event["attacker"]
     if attacker in (victim.userid, 0):
         Delay(
             delay=5,
@@ -53,7 +54,7 @@ def _player_death(game_event):
             args=(victim.userid,),
             cancel_on_level_end=True,
         )
-        victim.chat_message('Elimination:Suicide')
+        victim.chat_message("Elimination:Suicide")
         return
     killer = player_dictionary[attacker]
     if victim.team_index == killer.team_index:
@@ -63,27 +64,26 @@ def _player_death(game_event):
             args=(victim.userid,),
             cancel_on_level_end=True,
         )
-        victim.chat_message('Elimination:TeamKill')
+        victim.chat_message("Elimination:TeamKill")
         return
-    # TODO: Test reconnecting to see if players are not respawned
     eliminated_players[killer.userid].add(victim.userid)
     victim.chat_message(
-        'Elimination:Attacker',
+        "Elimination:Attacker",
         killer.index,
-        attacker=killer
+        attacker=killer,
     )
 
 
-@Event('round_start')
+@Event("round_start")
 def _round_start(game_event):
     """Send the elimination info message."""
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         return
 
-    message_manager.chat_message('Elimination:RoundInfo')
+    message_manager.chat_message("Elimination:RoundInfo")
 
 
-@Event('round_end')
+@Event("round_end")
 def _round_end(game_event):
     """Clear the dictionary."""
     eliminated_players.clear()
@@ -110,13 +110,13 @@ def _respawn_victims(userid):
         player.spawn()
     if players:
         message_manager.chat_message(
-            'Elimination:Respawning', players[0].index,
-            player='\x01, \x03'.join(
+            "Elimination:Respawning", players[0].index,
+            player="\x01, \x03".join(
                 map(
-                    attrgetter('name'),
-                    players
-                )
-            )
+                    attrgetter("name"),
+                    players,
+                ),
+            ),
         )
 
 
