@@ -14,7 +14,7 @@ from players.entity import Player
 # =============================================================================
 # >> GAME EVENTS
 # =============================================================================
-@Event('player_spawn')
+@Event("player_spawn")
 def _player_spawn(game_event):
     """Disable radar for the spawning player."""
-    Player.from_userid(game_event['userid']).hidden_huds |= HideHudFlags.RADAR
+    Player.from_userid(game_event["userid"]).hidden_huds |= HideHudFlags.RADAR

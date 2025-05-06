@@ -16,7 +16,6 @@ from listeners import OnLevelShutdown
 from listeners.tick import Delay, Repeat
 from players.entity import Player
 
-
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
@@ -26,10 +25,10 @@ _flashed_players = {}
 # =============================================================================
 # >> GAME EVENTS
 # =============================================================================
-@Event('player_blind')
+@Event("player_blind")
 def _player_blind(game_event):
     """Add the player to a dictionary of flashed players to not remove HUD."""
-    userid = game_event['userid']
+    userid = game_event["userid"]
     player = Player.from_userid(userid)
     _cancel_delay(userid)
     _flashed_players[userid] = Delay(
@@ -40,10 +39,10 @@ def _player_blind(game_event):
     )
 
 
-@Event('player_disconnect')
+@Event("player_disconnect")
 def _player_disconnect(game_event):
     """Cancel the player's Delay (if it is ongoing)."""
-    _cancel_delay(game_event['userid'])
+    _cancel_delay(game_event["userid"])
 
 
 # =============================================================================
@@ -61,7 +60,7 @@ def _level_shutdown():
 @Repeat
 def _remove_radar():
     """Remove the radar from all players every half second."""
-    for player in PlayerIter('alive'):
+    for player in PlayerIter("alive"):
         if player.userid not in _flashed_players:
             _remove_radar_from_player(player.userid)
 
