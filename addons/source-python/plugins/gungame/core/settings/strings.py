@@ -15,12 +15,11 @@ from translations.strings import LangStrings
 # GunGame
 from gungame.core.paths import GUNGAME_TRANSLATION_PATH
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'settings_translations',
+    "settings_translations",
 )
 
 
@@ -33,20 +32,23 @@ class _SettingsTranslations(dict):
     def __init__(self):
         super().__init__()
 
-        settings_path = GUNGAME_TRANSLATION_PATH / 'settings'
+        settings_path = GUNGAME_TRANSLATION_PATH / "settings"
 
         for directory in settings_path.dirs():
-            for file in directory.files('*.ini'):
-                if not file.stem.endswith('_server'):
+            for file in directory.files("*.ini"):
+                if not file.stem.endswith("_server"):
                     self._add_contents(file)
 
     def _add_contents(self, file):
         instance = LangStrings(
-            file.replace(TRANSLATION_PATH, '')[1:~3]
+            file.replace(TRANSLATION_PATH, "")[1:~3],
         )
         for key, value in instance.items():
             if key in self:
-                warn(f'Translation key "{key}" already registered.')
+                warn(
+                    f'Translation key "{key}" already registered.',
+                    stacklevel=2,
+                )
                 continue
             self[key] = value
 
