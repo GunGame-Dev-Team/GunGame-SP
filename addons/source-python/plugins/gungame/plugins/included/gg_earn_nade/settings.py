@@ -14,17 +14,16 @@ from gungame.core.settings.strings import settings_translations
 from .configuration import auto_switch_default
 from .info import info
 
-
 # =============================================================================
 # >> SETTINGS
 # =============================================================================
 earn_nade_settings = gungame_player_settings.add_section(
-    name='earn_nade_settings',
+    name="earn_nade_settings",
     text=rules_translations[info.name],
 )
 
 auto_switch = earn_nade_settings.add_bool_setting(
-    name='auto_switch',
+    name="auto_switch",
     default=auto_switch_default.get_bool(),
-    text=settings_translations[info.name + ':auto_switch'],
+    text=settings_translations[info.name + ":auto_switch"],
 )

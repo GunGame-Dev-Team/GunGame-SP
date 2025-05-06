@@ -18,7 +18,6 @@ from gungame.core.weapons.groups import individual_weapons
 # Plugin
 from .settings import auto_switch
 
-
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
@@ -29,13 +28,13 @@ _recently_off_nade = {}
 # =============================================================================
 # >> GAME EVENTS
 # =============================================================================
-@Event('player_death')
+@Event("player_death")
 def _earn_nade(game_event):
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         return
 
-    userid = game_event['userid']
-    attacker = game_event['attacker']
+    userid = game_event["userid"]
+    attacker = game_event["attacker"]
     if attacker in (userid, 0):
         return
 
@@ -56,7 +55,7 @@ def _earn_nade(game_event):
     weapon = killer.give_level_weapon()
     if auto_switch.get_setting(killer.index):
         killer.client_command(
-            command=f'use {weapon.classname}',
+            command=f"use {weapon.classname}",
             server_side=True,
         )
 
@@ -64,15 +63,15 @@ def _earn_nade(game_event):
 # =============================================================================
 # >> ATTRIBUTE CALLBACKS
 # =============================================================================
-@AttributePreHook('level')
+@AttributePreHook("level")
 def _pre_level_change(player, attribute, new_value):
     """Store players leveling off of nade level."""
     if not player.level or player.level_weapon not in individual_weapons:
         return
 
     _recently_off_nade[player.userid] = {
-        'level': player.level,
-        'weapon': player.level_weapon
+        "level": player.level,
+        "weapon": player.level_weapon,
     }
     Delay(
         delay=0,
@@ -85,5 +84,4 @@ def _pre_level_change(player, attribute, new_value):
 # >> HELPER FUNCTIONS
 # =============================================================================
 def _safe_remove(userid):
-    if userid in _recently_off_nade:
-        del _recently_off_nade[userid]
+    _recently_off_nade.pop(userid, None)
