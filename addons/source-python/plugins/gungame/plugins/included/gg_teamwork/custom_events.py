@@ -15,23 +15,23 @@ from gungame.core.events.resource import GGResourceFile
 # Plugin
 from .info import info
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'GG_Team_Win',
+    "GG_Team_Win",
 )
 
 
 # =============================================================================
 # >> CLASSES
 # =============================================================================
+# ruff: noqa: N801
 class GG_Team_Win(CustomEvent):
     """Called during team-based play when a team wins the match."""
 
-    winner = ShortVariable('The team that won the match')
-    loser = ShortVariable('The team that lost the match')
+    winner = ShortVariable("The team that won the match")
+    loser = ShortVariable("The team that lost the match")
 
 
 # =============================================================================

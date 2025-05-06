@@ -16,10 +16,10 @@ from events import Event
 from events.hooks import EventAction, PreEvent
 from listeners import OnLevelInit
 from listeners.tick import Delay
-from players.teams import teams_by_number
 
 # Site-package
 from mutagen import MutagenError
+from players.teams import teams_by_number
 
 # GunGame
 from gungame.core.config.misc import dynamic_chat_time
@@ -34,6 +34,11 @@ from gungame.core.weapons.manager import weapon_order_manager
 # Plugin
 from .configuration import join_team_level
 from .custom_events import GG_Team_Win
+
+# =============================================================================
+# >> GLOBAL VARIABLES
+# =============================================================================
+TEAM_COLORS = {2: RED, 3: BLUE}
 
 
 # =============================================================================
@@ -112,7 +117,7 @@ class _TeamManagement:
             ) and player.level < weapon_order_manager.max_levels
         ):
             message_manager.chat_message(
-                message='TeamWork:Leader:Increase',
+                message="TeamWork:Leader:Increase",
                 index=self.index,
                 player=player.name,
                 team_name=self.name,
@@ -127,7 +132,7 @@ class _TeamManagement:
     @property
     def color(self):
         """Return the team's color."""
-        return RED if self.number == 2 else BLUE
+        return TEAM_COLORS.get(self.number, BLUE)
 
     def set_team_player_levels(self):
         """Set the level for all players on the team."""
@@ -164,7 +169,7 @@ class _TeamManagement:
 
         if disconnect:
             message_manager.chat_message(
-                message='TeamWork:Leader:Disconnect',
+                message="TeamWork:Leader:Disconnect",
                 index=self.index,
                 team_name=self.name,
                 level=self.leader_level,
@@ -176,7 +181,7 @@ class _TeamManagement:
 
         if self.leader_level is not None and self.leader_level < old_level:
             message_manager.chat_message(
-                message='TeamWork:Leader:Decrease',
+                message="TeamWork:Leader:Decrease",
                 index=self.index,
                 player=leveler.name,
                 team_name=self.name,
@@ -188,7 +193,7 @@ class _TeamManagement:
         if self.leader_level is None:
             return
         message_manager.chat_message(
-            message='TeamWork:TeamLevel',
+            message="TeamWork:TeamLevel",
             index=self.index,
             team_name=self.name,
             level=self.leader_level,
@@ -207,19 +212,19 @@ teamwork_manager = _TeamManager()
 # =============================================================================
 # >> GAME EVENTS
 # =============================================================================
-@Event('player_team')
+@Event("player_team")
 def _check_team_leaders(game_event):
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         return
 
-    userid = game_event['userid']
-    old_team_number = game_event['oldteam']
+    userid = game_event["userid"]
+    old_team_number = game_event["oldteam"]
 
     old_team = teamwork_manager.get(old_team_number)
     if old_team and old_team.leader_userid == userid:
         old_team.find_team_leader(disconnect=True)
 
-    new_team = teamwork_manager.get(game_event['team'])
+    new_team = teamwork_manager.get(game_event["team"])
     if not new_team:
         return
 
@@ -230,7 +235,7 @@ def _check_team_leaders(game_event):
         new_team.find_team_leader()
 
 
-@Event('round_start')
+@Event("round_start")
 def _send_level_messages(game_event):
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         return
@@ -239,7 +244,7 @@ def _send_level_messages(game_event):
         team.send_level_message()
 
 
-@Event('round_end')
+@Event("round_end")
 def _sync_player_levels(game_event):
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         return
@@ -253,43 +258,43 @@ def _sync_player_levels(game_event):
 # =============================================================================
 # >> GUNGAME EVENTS
 # =============================================================================
-@Event('gg_start')
+@Event("gg_start")
 @OnLevelInit
 def _clear_team_dictionary(game_event=None):
     teamwork_manager.clear()
 
 
-@Event('gg_level_up')
+@Event("gg_level_up")
 def _level_up(game_event):
-    player = player_dictionary[game_event['leveler']]
+    player = player_dictionary[game_event["leveler"]]
     team = teamwork_manager[player.team_index]
     if (
         team.leader_userid in (None, player.userid) or
-        team.leader_level < game_event['new_level']
+        team.leader_level < game_event["new_level"]
     ):
         team.leader = player
 
 
-@Event('gg_level_down')
+@Event("gg_level_down")
 def _check_team_decrease(game_event):
-    player = player_dictionary[game_event['leveler']]
+    player = player_dictionary[game_event["leveler"]]
     team = teamwork_manager[player.team_index]
     if team.leader.userid == player.userid:
-        team.find_team_leader(player, game_event['old_level'])
+        team.find_team_leader(player, game_event["old_level"])
 
 
-@Event('gg_team_win')
+@Event("gg_team_win")
 def _end_match(game_event):
     # Set the match status
     GunGameStatus.MATCH = GunGameMatchStatus.POST
 
     # Get the winning team information
-    winning_team = teamwork_manager[game_event['winner']]
+    winning_team = teamwork_manager[game_event["winner"]]
 
     # Send the winner messages
     message_manager.chat_message(
         index=winning_team.index,
-        message='TeamWork:Winner:Long',
+        message="TeamWork:Winner:Long",
         team_name=winning_team.name,
     )
     for second in range(4):
@@ -297,28 +302,27 @@ def _end_match(game_event):
             delay=second,
             callback=message_manager.center_message,
             kwargs={
-                'message': 'TeamWork:Winner:Short',
-                'team_name': winning_team.name,
+                "message": "TeamWork:Winner:Short",
+                "team_name": winning_team.name,
             },
             cancel_on_level_end=True,
         )
-    color = {2: RED, 3: BLUE}.get(winning_team, WHITE)
     message_manager.top_message(
-        message='TeamWork:Winner:Short',
-        color=color,
+        message="TeamWork:Winner:Short",
+        color=TEAM_COLORS.get(winning_team, WHITE),
         team_name=winning_team.name,
     )
 
     # Play the winner sound
-    winner_sound = sound_manager.play_sound('winner')
+    winner_sound = sound_manager.play_sound("winner")
 
     # Set the dynamic chat time, if needed
     if dynamic_chat_time.get_bool() and winner_sound is not None:
         with suppress(MutagenError):
-            ConVar('mp_chattime').set_float(winner_sound.duration)
+            ConVar("mp_chattime").set_float(winner_sound.duration)
 
     # End the match to move to the next map
-    entity = Entity.find_or_create('game_end')
+    entity = Entity.find_or_create("game_end")
     entity.end_game()
 
     # Reset the teams
@@ -328,9 +332,9 @@ def _end_match(game_event):
 # =============================================================================
 # >> EVENT HOOKS
 # =============================================================================
-@PreEvent('gg_win')
+@PreEvent("gg_win")
 def _pre_gg_win(game_event):
-    team_number = player_dictionary[game_event['winner']].team_index
+    team_number = player_dictionary[game_event["winner"]].team_index
     Delay(
         delay=0,
         callback=_fire_win_event,
@@ -342,7 +346,7 @@ def _pre_gg_win(game_event):
 # =============================================================================
 # >> MESSAGE HOOKS
 # =============================================================================
-@MessagePrefixHook('Leader:')
+@MessagePrefixHook("Leader:")
 def _level_info_hook(message_name, message_prefix):
     """Hooks the LevelInfo messages so that the team messages can be sent."""
     return False
