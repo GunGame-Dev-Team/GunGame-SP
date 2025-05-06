@@ -9,14 +9,13 @@
 from entities.entity import BaseEntity
 from filters.entities import BaseEntityIter
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'get_locations',
-    'remove_locations',
-    'set_location',
+    "get_locations",
+    "remove_locations",
+    "set_location",
 )
 
 

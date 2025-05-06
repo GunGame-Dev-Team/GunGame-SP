@@ -11,7 +11,7 @@ from warnings import warn
 
 # Source.Python
 from engines.server import global_vars
-from listeners import OnLevelInit, OnLevelEnd
+from listeners import OnLevelEnd, OnLevelInit
 from listeners.tick import Delay
 from mathlib import QAngle, Vector
 
@@ -23,11 +23,10 @@ from .backups import spawn_point_backups
 from .entities import spawn_entities
 from .locations import remove_locations, set_location
 
-
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
-SPAWN_POINT_PATH = GUNGAME_DATA_PATH / 'spawn_points'
+SPAWN_POINT_PATH = GUNGAME_DATA_PATH / "spawn_points"
 
 
 # =============================================================================
@@ -40,7 +39,7 @@ def load():
 
 def unload():
     """Reset to the old spawn points on unload."""
-    spawn_points_file = SPAWN_POINT_PATH / global_vars.map_name + '.txt'
+    spawn_points_file = SPAWN_POINT_PATH / global_vars.map_name + ".txt"
     if spawn_points_file.is_file():
         spawn_point_backups.clear(restore=True)
 
@@ -69,9 +68,12 @@ class SpawnPointManager:
         self.spawn_point_delay = None
 
         map_name = global_vars.map_name
-        spawn_points_file = SPAWN_POINT_PATH / map_name + '.txt'
+        spawn_points_file = SPAWN_POINT_PATH / map_name + ".txt"
         if not spawn_points_file.is_file():
-            warn(f'No spawn point file found for "{map_name}".')
+            warn(
+                f'No spawn point file found for "{map_name}".',
+                stacklevel=2,
+            )
             return
 
         spawn_point_backups.store_backups()
@@ -86,19 +88,21 @@ class SpawnPointManager:
                         map(
                             float,
                             line.split(),
-                        )
+                        ),
                     )
                 except ValueError:
                     warn(
                         f'Line {num} in spawn point file "{map_name}" is '
-                        f'invalid.'
+                        f'invalid.',
+                        stacklevel=2,
                     )
                     continue
 
-                if len(values) != 6:
+                if len(values) != 6:  # noqa: PLR2004
                     warn(
                         f'Line {num} in spawn point file "{map_name}" is '
-                        f'invalid.'
+                        f'invalid.',
+                        stacklevel=2,
                     )
                     continue
 

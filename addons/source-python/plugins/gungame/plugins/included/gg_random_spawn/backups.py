@@ -9,12 +9,11 @@
 from .entities import spawn_entities
 from .locations import get_locations, remove_locations, set_location
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'spawn_point_backups',
+    "spawn_point_backups",
 )
 
 
@@ -56,7 +55,7 @@ class _SpawnPointBackups(list):
                         class_name=class_name,
                         origin=origin,
                         angles=angles,
-                    )
+                    ),
                 )
 
 

@@ -17,19 +17,19 @@ from gungame.core.paths import GUNGAME_DATA_PATH
 # Plugin
 from .info import info
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'spawn_entities',
+    "spawn_entities",
 )
 
 
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
-_class_name_file = GUNGAME_DATA_PATH / info.name + '.ini'
+_class_name_file = GUNGAME_DATA_PATH / info.name + ".ini"
 spawn_entities = ConfigObj(_class_name_file).get(GAME_NAME)
 if not spawn_entities:
-    raise NotImplementedError(f'Game "{GAME_NAME}" is not supported.')
+    msg = f'Game "{GAME_NAME}" is not supported.'
+    raise NotImplementedError(msg)
