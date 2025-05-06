@@ -13,7 +13,6 @@ from weapons.manager import weapon_manager
 from gungame.core.players.dictionary import player_dictionary
 from gungame.core.weapons.groups import all_grenade_weapons, melee_weapons
 
-
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
@@ -23,10 +22,10 @@ _non_reload_weapons = all_grenade_weapons | melee_weapons
 # =============================================================================
 # >> GAME EVENTS
 # =============================================================================
-@Event('player_death')
+@Event("player_death")
 def _reload_weapon(game_event):
-    attacker = game_event['attacker']
-    userid = game_event['userid']
+    attacker = game_event["attacker"]
+    userid = game_event["userid"]
 
     if attacker in (userid, 0):
         return
@@ -35,7 +34,7 @@ def _reload_weapon(game_event):
     if killer.team_index == player_dictionary[userid].team_index:
         return
 
-    weapon_name = game_event['weapon']
+    weapon_name = game_event["weapon"]
     if weapon_name in _non_reload_weapons:
         return
 
