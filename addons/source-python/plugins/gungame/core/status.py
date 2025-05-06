@@ -8,14 +8,13 @@
 # Python
 from enum import IntEnum
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'GunGameMatchStatus',
-    'GunGameRoundStatus',
-    'GunGameStatus',
+    "GunGameMatchStatus",
+    "GunGameRoundStatus",
+    "GunGameStatus",
 )
 
 

@@ -17,9 +17,9 @@ from entities.entity import Entity
 from events import Event
 from filters.entities import EntityIter
 from filters.players import PlayerIter
-from listeners import OnLevelInit, OnLevelEnd
+from listeners import OnLevelEnd, OnLevelInit
 from listeners.tick import Delay
-from players.teams import teams_by_name
+from players.teams import teams_by_name, teams_by_number
 from weapons.manager import weapon_manager
 
 # Site-package
@@ -30,16 +30,29 @@ from idle_manager import OnClientBack, OnClientIdle, is_client_idle
 
 # GunGame
 from .config.misc import (
-    allow_kills_after_round, cancel_on_fire, dynamic_chat_time, give_armor,
-    give_defusers, level_on_protect, send_rules_each_map
+    allow_kills_after_round,
+    cancel_on_fire,
+    dynamic_chat_time,
+    give_armor,
+    give_defusers,
+    level_on_protect,
+    send_rules_each_map,
 )
 from .config.punishment import (
-    afk_length, afk_punish, afk_type, level_one_team_kill, suicide_punish,
-    team_kill_punish
+    afk_length,
+    afk_punish,
+    afk_type,
+    level_one_team_kill,
+    suicide_punish,
+    team_kill_punish,
 )
-from .config.warmup import enabled as warmup_enabled, warmup_weapon
+from .config.warmup import enabled as warmup_enabled
+from .config.warmup import warmup_weapon
 from .config.weapon import (
-    order_file, order_randomize, multi_kill_override, prop_physics
+    multi_kill_override,
+    order_file,
+    order_randomize,
+    prop_physics,
 )
 from .credits import gungame_credits
 from .events.included.match import GG_Map_End, GG_Start
@@ -56,12 +69,11 @@ from .weapons.groups import incendiary_weapons, melee_weapons
 from .weapons.helpers import remove_idle_weapons
 from .weapons.manager import weapon_order_manager
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'start_match',
+    "start_match",
 )
 
 
@@ -75,19 +87,19 @@ _joined_players = set()
 _team_changers = set()
 
 _melee_weapon = weapon_manager[
-    'knife' if 'knife' in melee_weapons else list(melee_weapons)[0]
+    "knife" if "knife" in melee_weapons else next(iter(melee_weapons))
 ].name
 
 _spawning_users = set()
 _afk_player_delays = {}
 _afk_player_rounds = defaultdict(int)
-_spec_team = teams_by_name.get('spec')
+_spec_team = teams_by_name.get("spec")
 
 
 # =============================================================================
 # >> PLAYER GAME EVENTS
 # =============================================================================
-@Event('player_spawn')
+@Event("player_spawn")
 def _player_spawn(game_event):
     """Give the player their level weapon."""
     # Is GunGame active?
@@ -95,12 +107,12 @@ def _player_spawn(game_event):
         return
 
     # Use try/except to get the player's instance
-    player = player_dictionary.get(game_event['userid'])
+    player = player_dictionary.get(game_event["userid"])
     if player is None:
         return
 
     # Verify that the player is on a team
-    if player.team_index < 2:
+    if player.team_index < min(teams_by_number[i] for i in ("t", "ct")):
         return
 
     if not player.level:
@@ -121,24 +133,24 @@ def _player_spawn(game_event):
 
     # Give the player their new weapon
     player.strip_weapons(
-        not_filters={'grenade'},
+        not_filters={"grenade"},
         remove_incendiary=player.level_weapon in incendiary_weapons,
     )
     player.give_level_weapon()
 
     # Give CTs defusers, if need be
-    if player.team_index == 3 and give_defusers.get_bool():
+    if player.team_index == teams_by_number["ct"] and give_defusers.get_bool():
         player.has_defuser = True
 
     # Give player armor, if necessary
-    armor_type = {1: 'kevlar', 2: 'assaultsuit'}.get(give_armor.get_int())
+    armor_type = {1: "kevlar", 2: "assaultsuit"}.get(give_armor.get_int())
     if armor_type is not None:
-        for entity in EntityIter('game_player_equip'):
+        for entity in EntityIter("game_player_equip"):
             entity.remove()
-        equip = Entity.create('game_player_equip')
-        equip.add_output(f'{_melee_weapon} 1')
+        equip = Entity.create("game_player_equip")
+        equip.add_output(f"{_melee_weapon} 1")
         equip.add_output(
-            f'item_{armor_type} 1',
+            f"item_{armor_type} 1",
             caller=player,
             activator=player,
         )
@@ -152,22 +164,18 @@ def _player_spawn(game_event):
     _send_level_info(player)
 
 
-@Event('player_death')
+@Event("player_death")
 def _player_death(game_event):
     """Award the killer with a multi-kill increase or level increase."""
-    # Is GunGame active?
-    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
-        return
-
     # Is the round active or should kills after the round count?
-    if (
+    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE or (
         GunGameStatus.ROUND is GunGameRoundStatus.INACTIVE and
         not allow_kills_after_round.get_int()
     ):
         return
 
-    userid = game_event['userid']
-    attacker = game_event['attacker']
+    userid = game_event["userid"]
+    attacker = game_event["attacker"]
 
     # Was this a suicide?
     if attacker in (userid, 0):
@@ -186,8 +194,8 @@ def _player_death(game_event):
         return
 
     # Did the killer kill using their level's weapon?
-    weapon = game_event['weapon']
-    if weapon != 'prop_physics':
+    weapon = game_event["weapon"]
+    if weapon != "prop_physics":
         if weapon_manager[weapon].basename != killer.level_weapon:
             return
     elif not prop_physics.get_int():
@@ -203,15 +211,15 @@ def _player_death(game_event):
     # Level the player up
     killer.increase_level(
         levels=1,
-        reason='kill',
+        reason="kill",
         victim=userid,
     )
 
 
-@Event('player_activate')
+@Event("player_activate")
 def _player_activate(game_event):
     """Add player to leaders and send join message."""
-    userid = game_event['userid']
+    userid = game_event["userid"]
 
     # Add the player to the leader dictionary
     leader_manager.add_player(userid)
@@ -231,31 +239,31 @@ def _player_activate(game_event):
         return
 
     _joined_players.add(userid)
-    player.play_gg_sound('welcome')
+    player.play_gg_sound("welcome")
 
     if player.wins:
-        message = 'Player:Join:Ranked' if player.rank else 'Player:Join:Wins'
+        message = "Player:Join:Ranked" if player.rank else "Player:Join:Wins"
         message_manager.chat_message(message, player=player)
         player.update_time_stamp()
 
     # Print a message if the joining player is in the credits
     for credit_type in gungame_credits:
         for name in gungame_credits[credit_type]:
-            steam_id2 = gungame_credits[credit_type][name]['steam_id2']
-            steam_id3 = gungame_credits[credit_type][name]['steam_id3']
+            steam_id2 = gungame_credits[credit_type][name]["steam_id2"]
+            steam_id3 = gungame_credits[credit_type][name]["steam_id3"]
             if player.steamid in (steam_id2, steam_id3):
                 message_manager.chat_message(
-                    'Player:Join:Credits',
+                    "Player:Join:Credits",
                     player=player,
                     credit_type=credit_type,
                 )
                 return
 
 
-@Event('player_disconnect')
+@Event("player_disconnect")
 def _player_disconnect(game_event):
     """Store the disconnecting player's values and remove from dictionary."""
-    userid = game_event['userid']
+    userid = game_event["userid"]
     player_dictionary.safe_remove(userid)
     leader_manager.check_disconnect(userid)
     player = player_dictionary.get(userid)
@@ -263,10 +271,10 @@ def _player_disconnect(game_event):
         _remove_index_from_afk_dicts(player.index)
 
 
-@Event('player_team')
+@Event("player_team")
 def _player_team(game_event):
     """Track team changes for use with suicide punishment."""
-    userid = game_event['userid']
+    userid = game_event["userid"]
     if userid in _team_changers:
         return
     _team_changers.add(userid)
@@ -277,7 +285,7 @@ def _player_team(game_event):
     )
 
 
-@Event('weapon_fire')
+@Event("weapon_fire")
 def _weapon_fire(game_event):
     """Remove spawn protection, if necessary."""
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
@@ -286,7 +294,7 @@ def _weapon_fire(game_event):
     if not cancel_on_fire.get_int():
         return
 
-    player = player_dictionary[game_event['userid']]
+    player = player_dictionary[game_event["userid"]]
     if not player.in_spawn_protection:
         return
 
@@ -297,11 +305,11 @@ def _weapon_fire(game_event):
 # =============================================================================
 # >> ROUND GAME EVENTS
 # =============================================================================
-@Event('round_start')
+@Event("round_start")
 def _round_start(game_event):
     """Disable buyzones and set the round status to ACTIVE."""
     GunGameStatus.ROUND = GunGameRoundStatus.ACTIVE
-    for entity in EntityIter('func_buyzone'):
+    for entity in EntityIter("func_buyzone"):
         entity.disable()
 
     remove_idle_weapons()
@@ -310,8 +318,8 @@ def _round_start(game_event):
         return
 
     for player in PlayerIter(
-        is_filters='alive',
-        not_filters=['spec', 'un']
+        is_filters="alive",
+        not_filters=["spec", "un"],
     ):
         index = player.index
         if not is_client_idle(index):
@@ -322,7 +330,7 @@ def _round_start(game_event):
             _punish_afk(index)
 
 
-@Event('round_end')
+@Event("round_end")
 def _round_end(game_event):
     """Set the round status to INACTIVE since the round ended."""
     GunGameStatus.ROUND = GunGameRoundStatus.INACTIVE
@@ -331,15 +339,15 @@ def _round_end(game_event):
 # =============================================================================
 # >> MISC GAME EVENTS
 # =============================================================================
-@Event('server_cvar')
+@Event("server_cvar")
 def _server_cvar(game_event):
     """Set the weapon order value if the ConVar is for the weapon order."""
     if GunGameStatus.MATCH is GunGameMatchStatus.UNLOADING:
         return
 
     # Get the ConVar name and its new value
-    cvarname = game_event['cvarname']
-    cvarvalue = game_event['cvarvalue']
+    cvarname = game_event["cvarname"]
+    cvarvalue = game_event["cvarvalue"]
 
     # Did the weapon order change?
     if cvarname == order_file.name:
@@ -361,14 +369,14 @@ def _server_cvar(game_event):
 # =============================================================================
 # >> GUNGAME EVENTS
 # =============================================================================
-@Event('gg_win')
+@Event("gg_win")
 def _gg_win(game_event):
     """Increase the win total for the winner and end the map."""
     # Set the match status
     GunGameStatus.MATCH = GunGameMatchStatus.POST
 
     # Get the winner
-    winner = player_dictionary[game_event['winner']]
+    winner = player_dictionary[game_event["winner"]]
 
     # Increase the winner's win total if they are not a bot
     if not winner.is_fake_client():
@@ -376,7 +384,7 @@ def _gg_win(game_event):
 
     # Send the winner messages
     message_manager.chat_message(
-        message='Winner:Long',
+        message="Winner:Long",
         index=winner.index,
         winner=winner.name,
     )
@@ -385,38 +393,38 @@ def _gg_win(game_event):
             delay=second,
             callback=message_manager.center_message,
             kwargs={
-                'message': 'Winner:Short',
-                'winner': winner.name,
+                "message": "Winner:Short",
+                "winner": winner.name,
             },
             cancel_on_level_end=True,
         )
     color = {2: RED, 3: BLUE}.get(winner.team_index, WHITE)
     message_manager.top_message(
-        message='Winner:Short',
+        message="Winner:Short",
         color=color,
-        winner=winner.name
+        winner=winner.name,
     )
 
     # Play the winner sound
-    winner_sound = sound_manager.play_sound('winner')
+    winner_sound = sound_manager.play_sound("winner")
 
     # Set the dynamic chat time, if needed
     if dynamic_chat_time.get_bool() and winner_sound is not None:
         with suppress(MutagenError):
-            ConVar('mp_chattime').set_float(winner_sound.duration)
+            ConVar("mp_chattime").set_float(winner_sound.duration)
 
     # End the match to move to the next map
-    entity = Entity.find_or_create('game_end')
+    entity = Entity.find_or_create("game_end")
     entity.end_game()
 
 
-@Event('gg_map_end')
+@Event("gg_map_end")
 def _gg_map_end(game_event):
     """Set the match status to POST after the map has ended."""
     GunGameStatus.MATCH = GunGameMatchStatus.POST
 
 
-@Event('gg_start')
+@Event("gg_start")
 def _gg_start(game_event):
     """Set the match status to ACTIVE and post the weapon order."""
     # Set the match status
@@ -426,18 +434,18 @@ def _gg_start(game_event):
     weapon_order_manager.print_order()
 
 
-@Event('gg_level_up')
+@Event("gg_level_up")
 def _gg_level_up(game_event):
     """Increase the player leader level and send level info."""
-    userid = game_event['leveler']
+    userid = game_event["leveler"]
     leader_manager.player_level_up(userid)
     _send_level_info(player_dictionary[userid])
 
 
-@Event('gg_level_down')
+@Event("gg_level_down")
 def _gg_level_down(game_event):
     """Set the player's level in the leader dictionary."""
-    userid = game_event['leveler']
+    userid = game_event["leveler"]
     leader_manager.player_level_down(userid)
 
 
@@ -477,7 +485,7 @@ def _level_end():
 # =============================================================================
 # >> ATTRIBUTE LISTENERS
 # =============================================================================
-@AttributePostHook('multi_kill')
+@AttributePostHook("multi_kill")
 def _post_multi_kill(player, attribute, new_value, old_value):
     """Send multi_kill info message."""
     # Is the multi_kill being reset to 0?
@@ -491,11 +499,11 @@ def _post_multi_kill(player, attribute, new_value, old_value):
 
     # Send the multi_kill message
     player.hint_message(
-        message='LevelInfo:Current:Kills',
+        message="LevelInfo:Current:Kills",
         kills=new_value,
         total=multi_kill,
     )
-    player.play_gg_sound('multi_kill')
+    player.play_gg_sound("multi_kill")
 
 
 # =============================================================================
@@ -538,7 +546,7 @@ def start_match(ending_warmup=False):
     if GunGameStatus.MATCH is not GunGameMatchStatus.INACTIVE:
         return
 
-    queue_command_string('mp_restartgame 1')
+    queue_command_string("mp_restartgame 1")
     GG_Start().fire()
 
 
@@ -551,13 +559,13 @@ def _send_level_info(player):
     multi_kill = player.level_multi_kill
 
     # If the multi_kill value is not 1, add the multi_kill to the message
-    kills_text = ''
+    kills_text = ""
     if multi_kill > 1:
-        kills_text = message_manager['LevelInfo:Current:Kills'].get_string(
+        kills_text = message_manager["LevelInfo:Current:Kills"].get_string(
             language,
             kills=player.multi_kill,
             total=player.level_multi_kill,
-        ) + '\n'
+        ) + "\n"
 
     # Get the current leaders
     leaders = leader_manager.current_leaders
@@ -570,7 +578,7 @@ def _send_level_info(player):
 
         # Add the no leaders text to the message
         leaders_text = message_manager[
-            'LevelInfo:Leaders:None'
+            "LevelInfo:Leaders:None"
         ].get_string(language)
 
     # Is the player the only current leader?
@@ -578,7 +586,7 @@ def _send_level_info(player):
 
         # Add the current leader text to the message
         leaders_text = message_manager[
-            'LevelInfo:Leaders:Current'
+            "LevelInfo:Leaders:Current"
         ].get_string(language)
 
     # Is the player one of multiple current leaders?
@@ -586,14 +594,14 @@ def _send_level_info(player):
 
         # Add the amongst leaders text to the message
         leaders_text = message_manager[
-            'LevelInfo:Leaders:Among'
+            "LevelInfo:Leaders:Among"
         ].get_string(language)
 
     # Is the player not one of the current leaders?
     else:
 
         # Add the current leader text to the message
-        leaders_text = message_manager['LevelInfo:Leaders:Level'].get_string(
+        leaders_text = message_manager["LevelInfo:Leaders:Level"].get_string(
             language,
             level=leader_level,
             total=weapon_order_manager.max_levels,
@@ -602,7 +610,7 @@ def _send_level_info(player):
 
     # Send the player's level information message
     player.hint_message(
-        message='LevelInfo:Current',
+        message="LevelInfo:Current",
         player=player,
         total=weapon_order_manager.max_levels,
         kills=kills_text,
@@ -628,10 +636,10 @@ def _punish_suicide(userid):
 
     player.decrease_level(
         levels=levels,
-        reason='suicide'
+        reason="suicide",
     )
     player.chat_message(
-        message='Punishment:Suicide',
+        message="Punishment:Suicide",
         player=player,
     )
 
@@ -646,16 +654,16 @@ def _punish_team_kill(player):
         if level_one_team_kill.get_int():
             player.slay()
             player.chat_message(
-                message='Punishment:TeamKill:Slay',
+                message="Punishment:TeamKill:Slay",
             )
         return
 
     player.decrease_level(
         levels=levels,
-        reason='team-kill',
+        reason="team-kill",
     )
     player.chat_message(
-        message='Punishment:TeamKill:Level',
+        message="Punishment:TeamKill:Level",
         player=player,
     )
 
@@ -669,11 +677,10 @@ def _punish_afk(index):
     player = player_dictionary.from_index(index)
     if punishment == 1:
         player.kick(
-            message=message_manager['Punishment:AFK:Kick'].get_string(
+            message=message_manager["Punishment:AFK:Kick"].get_string(
                 language=player.language,
             ),
         )
 
-    else:
-        if _spec_team is not None:
-            player.team = _spec_team
+    elif _spec_team is not None:
+        player.team = _spec_team

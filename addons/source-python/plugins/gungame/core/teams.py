@@ -10,13 +10,12 @@ from filters.entities import EntityIter
 from listeners.tick import Delay
 from players.teams import team_managers, teams_by_number
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'team_levels',
-    'team_names',
+    "team_levels",
+    "team_names",
 )
 
 
@@ -32,7 +31,7 @@ class _TeamLevels(dict):
         """Get the team names."""
         for class_name in team_managers:
             for entity in EntityIter(class_name):
-                if teams_by_number.get(entity.team, 'un') in ('un', 'spec'):
+                if teams_by_number.get(entity.team, "un") in ("un", "spec"):
                     continue
                 team_names[entity.team] = entity.team_name
                 self[entity.team] = 0

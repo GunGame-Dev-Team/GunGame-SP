@@ -14,18 +14,20 @@ from players.helpers import index_from_userid
 
 # GunGame
 from .events.included.leaders import (
-    GG_Leader_Disconnect, GG_Leader_Lost_Level, GG_New_Leader, GG_Tied_Leader,
+    GG_Leader_Disconnect,
+    GG_Leader_Lost_Level,
+    GG_New_Leader,
+    GG_Tied_Leader,
 )
 from .messages.manager import message_manager
 from .players.dictionary import player_dictionary
-
 
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    '_LeaderManager',
-    'leader_manager',
+    "_LeaderManager",
+    "leader_manager",
 )
 
 
@@ -58,9 +60,9 @@ class _LeaderManager(dict):
             list(
                 filter(
                     None,
-                    self.values()
-                )
-            ) or [1]
+                    self.values(),
+                ),
+            ) or [1],
         )
 
     @property
@@ -109,8 +111,8 @@ class _LeaderManager(dict):
                 event.old_leaders = old_leaders
                 event.leaders = new_leaders
                 event.leader_level = new_level
-            tied_type = 'Singular' if count == 2 else 'Plural'
-            message = f'Leader:Tied:{tied_type}'
+            tied_type = "Singular" if count == 2 else "Plural"  # noqa: PLR2004
+            message = f"Leader:Tied:{tied_type}"
             message_manager.chat_message(
                 message,
                 player.index,
@@ -125,7 +127,7 @@ class _LeaderManager(dict):
                 event.leaders = new_leaders
                 event.leader_level = new_level
             message_manager.chat_message(
-                'Leader:New:Singular',
+                "Leader:New:Singular",
                 player.index,
                 player=player,
             )
@@ -175,14 +177,14 @@ class _LeaderManager(dict):
             except ValueError:
                 return
             message_manager.chat_message(
-                'Leader:New:Singular',
+                "Leader:New:Singular",
                 player.index,
                 player=player,
             )
         else:
             names = [player_dictionary[player].name for player in current]
             message_manager.chat_message(
-                'Leader:New:Plural',
+                "Leader:New:Plural",
                 names=names,
                 level=level,
             )
@@ -191,8 +193,8 @@ class _LeaderManager(dict):
         """Return a string of leader userids."""
         leaders = self.current_leaders
         if leaders is None:
-            return ''
-        return ','.join(map(str, leaders))
+            return ""
+        return ",".join(map(str, leaders))
 
 
 leader_manager = _LeaderManager()
