@@ -15,7 +15,7 @@ from gungame.core.weapons.helpers import remove_idle_weapons
 # =============================================================================
 # >> GAME EVENTS
 # =============================================================================
-@Event('player_death')
+@Event("player_death")
 def _strip_weapons(game_event):
     """Remove idle weapons when player dies."""
     remove_idle_weapons()
