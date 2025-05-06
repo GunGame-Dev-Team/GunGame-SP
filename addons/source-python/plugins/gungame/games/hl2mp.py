@@ -7,8 +7,8 @@
 # =============================================================================
 from entities.entity import Entity
 from events.custom import CustomEvent
-from events.variable import ShortVariable, StringVariable
 from events.resource import ResourceFile
+from events.variable import ShortVariable, StringVariable
 from listeners import OnEntitySpawned
 from players.entity import Player
 
@@ -16,14 +16,15 @@ from players.entity import Player
 # =============================================================================
 # >> CUSTOM EVENTS
 # =============================================================================
+# ruff: noqa: N801
 class Weapon_Fire(CustomEvent):
     """Custom event to fire when players throw grenades."""
 
-    userid = ShortVariable('The userid of the player that fired the weapon.')
-    weapon = StringVariable('The type of weapon that was fired.')
+    userid = ShortVariable("The userid of the player that fired the weapon.")
+    weapon = StringVariable("The type of weapon that was fired.")
 
 
-resource_file = ResourceFile('gungame_hl2mp', Weapon_Fire)
+resource_file = ResourceFile("gungame_hl2mp", Weapon_Fire)
 resource_file.write()
 resource_file.load_events()
 
@@ -39,7 +40,7 @@ def _entity_spawned(base_entity):
     except ValueError:
         return
 
-    if entity.classname != 'npc_grenade_frag':
+    if entity.classname != "npc_grenade_frag":
         return
 
     try:
@@ -49,4 +50,4 @@ def _entity_spawned(base_entity):
 
     with Weapon_Fire() as event:
         event.userid = player.userid
-        event.weapon = 'frag'
+        event.weapon = "frag"
