@@ -13,19 +13,18 @@ from players.entity import Player
 from ._rankings import get_winners_menu
 from ..commands.registration import register_command_callback
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'send_winners_menu',
+    "send_winners_menu",
 )
 
 
 # =============================================================================
 # >> FUNCTIONS
 # =============================================================================
-@register_command_callback('winners', 'Winners:Text')
+@register_command_callback("winners", "Winners:Text")
 def send_winners_menu(index):
     """Send the winners menu to the player."""
     get_winners_menu(Player(index)).send(index)

@@ -10,13 +10,12 @@ from menus import PagedOption
 from menus.base import _translate_text
 from menus.radio import PagedRadioOption
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'ListOption',
-    'StarOption',
+    "ListOption",
+    "StarOption",
 )
 
 
@@ -24,7 +23,8 @@ __all__ = (
 # >> CLASSES
 # =============================================================================
 class ListOption(PagedOption):
-    """Class used to list options in incrementing order.
+    """
+    Class used to list options in incrementing order.
 
     Normally each page in a PagedMenu starts back at 1, but this class
         makes sure the count continues to increment each page.
@@ -41,17 +41,18 @@ class ListOption(PagedOption):
     def _get_highlight_prefix(self):
         """Return highlighted prefix if needed."""
         if isinstance(self, PagedRadioOption) and self.highlight:
-            return '->'
-        return ''
+            return "->"
+        return ""
 
     def _render(self, player_index, choice_index=None):
         """Return the rendered string for the option."""
         text = _translate_text(self.text, player_index)
-        return f'{self._get_highlight_prefix()}{self.choice_index}. {text}\n'
+        return f"{self._get_highlight_prefix()}{self.choice_index}. {text}\n"
 
 
 class StarOption(PagedOption):
-    """Class used to list options without numbers.
+    """
+    Class used to list options without numbers.
 
     Normally each page in a PagedMenu lists options with a corresponding
         number.  This class lists them with a simple * instead.
@@ -59,4 +60,4 @@ class StarOption(PagedOption):
 
     def _render(self, player_index, choice_index=None):
         """Return the rendered string for the option."""
-        return f'* {_translate_text(self.text, player_index)}\n'
+        return f"* {_translate_text(self.text, player_index)}\n"

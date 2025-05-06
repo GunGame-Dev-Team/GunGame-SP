@@ -17,27 +17,26 @@ from ..plugins.manager import gg_plugin_manager
 from ..status import GunGameMatchStatus, GunGameStatus
 from ..teams import team_levels, team_names
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'send_score_menu',
+    "send_score_menu",
 )
 
 
 # =============================================================================
 # >> FUNCTIONS
 # =============================================================================
-@register_command_callback('score', 'Score:Text')
+@register_command_callback("score", "Score:Text")
 def send_score_menu(index):
     """Send the score menu to the player."""
-    menu = PagedMenu(title=menu_strings['Score:Title'])
+    menu = PagedMenu(title=menu_strings["Score:Title"])
     player = player_dictionary.from_index(index)
     if GunGameStatus.MATCH is GunGameMatchStatus.WARMUP:
-        menu.append(menu_strings['Warmup'])
+        menu.append(menu_strings["Warmup"])
     elif GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
-        menu.append(menu_strings['Inactive'])
+        menu.append(menu_strings["Inactive"])
     elif gg_plugin_manager.is_team_game:
         for team in sorted(
             team_levels,
@@ -51,7 +50,7 @@ def send_score_menu(index):
                     value=team,
                     highlight=team == player.team_index,
                     selectable=False,
-                )
+                ),
             )
     else:
         for userid in sorted(
@@ -67,6 +66,6 @@ def send_score_menu(index):
                     value=current_player.uniqueid,
                     highlight=current_player.uniqueid == player.uniqueid,
                     selectable=False,
-                )
+                ),
             )
     menu.send(index)

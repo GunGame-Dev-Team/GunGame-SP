@@ -8,16 +8,15 @@
 # Source.Python
 from translations.strings import LangStrings
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'menu_strings',
+    "menu_strings",
 )
 
 
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
-menu_strings = LangStrings('gungame/menus')
+menu_strings = LangStrings("gungame/menus")
