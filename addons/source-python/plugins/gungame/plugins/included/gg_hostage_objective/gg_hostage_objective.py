@@ -18,9 +18,16 @@ from gungame.core.weapons.manager import weapon_order_manager
 
 # Plugin
 from .configuration import (
-    killed_count, killed_levels, rescued_count, rescued_levels,
-    rescued_skip_knife, rescued_skip_nade, stopped_count, stopped_levels,
-    stopped_skip_knife, stopped_skip_nade,
+    killed_count,
+    killed_levels,
+    rescued_count,
+    rescued_levels,
+    rescued_skip_knife,
+    rescued_skip_nade,
+    stopped_count,
+    stopped_levels,
+    stopped_skip_knife,
+    stopped_skip_nade,
 )
 
 
@@ -29,61 +36,61 @@ from .configuration import (
 # =============================================================================
 def load():
     """Add the player hostage attributes."""
-    player_attributes.register_attribute('hostage_rescues', 0)
-    player_attributes.register_attribute('hostage_stops', 0)
-    player_attributes.register_attribute('hostage_kills', 0)
+    player_attributes.register_attribute("hostage_rescues", 0)
+    player_attributes.register_attribute("hostage_stops", 0)
+    player_attributes.register_attribute("hostage_kills", 0)
 
 
 def unload():
     """Remove the player hostage attributes."""
-    player_attributes.unregister_attribute('hostage_rescues')
-    player_attributes.unregister_attribute('hostage_stops')
-    player_attributes.unregister_attribute('hostage_kills')
+    player_attributes.unregister_attribute("hostage_rescues")
+    player_attributes.unregister_attribute("hostage_stops")
+    player_attributes.unregister_attribute("hostage_kills")
 
 
 # =============================================================================
 # >> GAME EVENTS
 # =============================================================================
-@Event('hostage_rescued')
+@Event("hostage_rescued")
 def _hostage_rescued(game_event):
     """Level the rescuer up."""
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         return
 
-    player = player_dictionary[game_event['userid']]
+    player = player_dictionary[game_event["userid"]]
     player.hostage_rescues += 1
     required = rescued_count.get_int()
     if player.hostage_rescues < required:
         return
     player.hostage_rescues = 0
-    levels = _get_levels_to_increase(player, 'rescued')
+    levels = _get_levels_to_increase(player, "rescued")
     if not levels:
         return
     player.increase_level(
         levels=levels,
-        reason='hostage_rescued',
+        reason="hostage_rescued",
     )
     player.chat_message(
-        message='HostageObjective:Leveled:Rescued',
+        message="HostageObjective:Leveled:Rescued",
         levels=levels,
         count=required,
     )
 
 
-@Event('player_death')
+@Event("player_death")
 def _player_death(game_event):
     """Level the stopper up."""
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         return
 
-    victim = player_dictionary[game_event['userid']]
+    victim = player_dictionary[game_event["userid"]]
     hostages = len([
-        entity for entity in EntityIter('hostage_entity')
+        entity for entity in EntityIter("hostage_entity")
         if entity.leader == victim.inthandle
     ])
     if not hostages:
         return
-    attacker = game_event['attacker']
+    attacker = game_event["attacker"]
     if not attacker:
         return
     player = player_dictionary[attacker]
@@ -93,23 +100,23 @@ def _player_death(game_event):
     required = stopped_count.get_int()
     if player.hostage_stops < required:
         return
-    for x in range(int(player.hostage_stops / required)):
-        levels = _get_levels_to_increase(player, 'stopped')
+    for _ in range(int(player.hostage_stops / required)):
+        levels = _get_levels_to_increase(player, "stopped")
         if not levels:
             return
         player.hostage_stops -= required
         player.increase_level(
             levels=levels,
-            reason='hostage_stopped',
+            reason="hostage_stopped",
         )
         player.chat_message(
-            message='HostageObjective:Leveled:Stopped',
+            message="HostageObjective:Leveled:Stopped",
             levels=levels,
             count=required,
         )
 
 
-@Event('hostage_killed')
+@Event("hostage_killed")
 def _hostage_killed(game_event):
     """Level the killer down."""
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
@@ -119,7 +126,7 @@ def _hostage_killed(game_event):
     min_count = killed_count.get_int()
     if levels < 1 or min_count < 1:
         return
-    attacker = game_event['userid']
+    attacker = game_event["userid"]
     if not attacker:
         return
     player = player_dictionary[attacker]
@@ -130,11 +137,11 @@ def _hostage_killed(game_event):
     starting_level = player.level
     player.decrease_level(
         levels=levels,
-        reason='hostage_killed',
+        reason="hostage_killed",
     )
     if player.level < starting_level:
         player.chat_message(
-            message='HostageObjective:Leveled:Killed',
+            message="HostageObjective:Leveled:Killed",
             player=player,
             count=min_count,
         )
@@ -145,16 +152,17 @@ def _hostage_killed(game_event):
 # =============================================================================
 def _get_levels_to_increase(player, reason):
     """Return the number of levels to increase the player."""
-    if reason == 'rescued':
+    if reason == "rescued":
         base_levels = rescued_levels.get_int()
         skip_nade = rescued_skip_nade.get_int()
         skip_knife = rescued_skip_knife.get_int()
-    elif reason == 'stopped':
+    elif reason == "stopped":
         base_levels = stopped_levels.get_int()
         skip_nade = stopped_skip_nade.get_int()
         skip_knife = stopped_skip_knife.get_int()
     else:
-        raise ValueError(f'Invalid reason given "{reason}".')
+        msg = f'Invalid reason given "{reason}".'
+        raise ValueError(msg)
 
     if base_levels <= 0:
         return 0
@@ -171,7 +179,7 @@ def _get_levels_to_increase(player, reason):
             (skip_weapon in melee_weapons and not skip_knife)
         ):
             player.chat_message(
-                f'HostageObjective:NoSkip:{reason.title()}',
+                f"HostageObjective:NoSkip:{reason.title()}",
                 weapon=skip_weapon,
             )
             return level_increase - 1
