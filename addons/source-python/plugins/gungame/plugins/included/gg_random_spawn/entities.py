@@ -5,11 +5,11 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Site-package
-from configobj import ConfigObj
-
 # Source.Python
 from core import GAME_NAME
+
+# Site-package
+from configobj import ConfigObj
 
 # GunGame
 from gungame.core.paths import GUNGAME_DATA_PATH
