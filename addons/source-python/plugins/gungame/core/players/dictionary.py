@@ -15,13 +15,12 @@ from players.helpers import userid_from_index
 from .attributes import player_attributes
 from .instance import GunGamePlayer
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    '_PlayerDictionary',
-    'player_dictionary',
+    "_PlayerDictionary",
+    "player_dictionary",
 )
 
 
@@ -31,7 +30,7 @@ __all__ = (
 class _PlayerDictionary(dict):
     """Dictionary used to store players for GunGame."""
 
-    _removed_players = defaultdict(dict)
+    _removed_players = defaultdict(dict)  # noqa: RUF012
 
     def __missing__(self, userid):
         """Add a player to the dictionary."""
@@ -98,7 +97,7 @@ class _PlayerDictionary(dict):
             self._removed_players[unique_id][attribute] = getattr(
                 self[userid],
                 attribute,
-                player_attributes[attribute]
+                player_attributes[attribute],
             )
         self[userid].cancel_protect_delay()
         del self[userid]

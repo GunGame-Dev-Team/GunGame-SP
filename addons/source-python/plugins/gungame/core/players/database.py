@@ -1,5 +1,4 @@
 # ../gungame/core/players/database.py
-# pylint: disable=consider-using-f-string
 
 """Stores winner information for all players."""
 
@@ -10,25 +9,25 @@
 from collections import defaultdict
 from contextlib import suppress
 from itertools import chain
-from sqlite3 import connect, DatabaseError
+from sqlite3 import DatabaseError, connect
 from time import time
 
 # GunGame
 from ..config.misc import prune_database
 from ..paths import GUNGAME_DATA_PATH
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'winners_database',
+    "winners_database",
 )
 
 
 # =============================================================================
 # >> CLASSES
 # =============================================================================
+# ruff: noqa: UP031, S608
 class _PlayerDatabase:
     """Class used to hold values for a player in the winner database."""
 
@@ -48,7 +47,7 @@ class _WinsDatabase(defaultdict):
         super().__init__(default_factory)
 
         # Establish the SQL connection
-        self.connection = connect(GUNGAME_DATA_PATH / 'winners.db')
+        self.connection = connect(GUNGAME_DATA_PATH / "winners.db")
         self.connection.text_factory = str
 
         # Get the cursor
@@ -56,7 +55,7 @@ class _WinsDatabase(defaultdict):
 
         # Create the gungame_winners table if it does not already exist
         self.cursor.execute(
-            '''
+            """
             CREATE TABLE IF NOT EXISTS gungame_winners(
               unique_id VARCHAR(20),
               name VARCHAR(31),
@@ -65,22 +64,23 @@ class _WinsDatabase(defaultdict):
               last_win VARCHAR(31),
               PRIMARY KEY(unique_id DESC)
             )
-            '''
+            """,
         )
-        self.cursor.execute('PRAGMA auto_vacuum = 1')
+        self.cursor.execute("PRAGMA auto_vacuum = 1")
 
     def load_database(self):
         """Fill the dictionary with the data from the stored database."""
         # If there is already data, do not load
         if self:
-            raise DatabaseError('Data already loaded!')
+            msg = "Data already loaded!"
+            raise DatabaseError(msg)
 
         # Gather all data from the table
         data = self.cursor.execute(
-            '''
+            """
             SELECT unique_id, name, wins, time_stamp, last_win
               FROM gungame_winners
-            '''
+            """,
         )
         data = data.fetchall()
 
@@ -108,12 +108,12 @@ class _WinsDatabase(defaultdict):
 
             # Add the new winner to the database
             self.cursor.execute(
-                '''
+                """
                 INSERT INTO gungame_winners (
                   name, unique_id, wins, time_stamp, last_win
                 ) VALUES(?, ?, ?, ?, ?)
-                ''',
-                (player.name, player.uniqueid, 0, time_stamp, time_stamp)
+                """,
+                (player.name, player.uniqueid, 0, time_stamp, time_stamp),
             )
 
         # Get the winner's instance
@@ -127,31 +127,33 @@ class _WinsDatabase(defaultdict):
 
         # Update the winner's values in the database
         self.cursor.execute(
-            '''
+            """
             UPDATE gungame_winners
               SET name=?, time_stamp=?, wins=?, last_win=?
               WHERE unique_id=?
-             ''',
+             """,
             (
                 player.name,
                 instance.time_stamp,
                 instance.wins,
                 instance.last_win,
                 player.uniqueid,
-            )
+            ),
         )
 
         # Commit the changes to the database
         self.connection.commit()
 
     def update_player_time_stamp(self, player):
-        """Update the player's time stamp.
+        """
+        Update the player's time stamp.
 
         This occurs on player_activate and is stored for pruning purposes.
         """
         # Is the player not in the database?
         if player.uniqueid not in self:
-            raise KeyError('Player not in database.')
+            msg = "Player not in database."
+            raise KeyError(msg)
 
         # Get the player's instance
         instance = self[player.uniqueid]
@@ -164,12 +166,12 @@ class _WinsDatabase(defaultdict):
 
         # Update the player's name and time stamp in the database
         self.cursor.execute(
-            '''
+            """
             UPDATE gungame_winners
               SET name=?, time_stamp=?
               WHERE unique_id=?
-            ''',
-            (player.name, instance.time_stamp, player.uniqueid)
+            """,
+            (player.name, instance.time_stamp, player.uniqueid),
         )
 
         # Commit the changes to the database
@@ -184,11 +186,11 @@ class _WinsDatabase(defaultdict):
 
         # Retrieve all the unique ids to prune from the database
         self.cursor.execute(
-            '''
+            """
             SELECT unique_id
               FROM gungame_winners
               WHERE time_stamp < strftime("%s", "now", "-%s days")
-            ''' % ('%s', days)
+            """ % ("%s", days),
         )
         unique_ids = list(chain.from_iterable(self.cursor.fetchall()))
 
@@ -198,10 +200,10 @@ class _WinsDatabase(defaultdict):
 
         # Remove the users from the database
         self.cursor.execute(
-            '''
+            """
             DELETE FROM gungame_winners
               WHERE unique_id IN ("%s")
-            ''' % ('","'.join(unique_ids))
+            """ % ('","'.join(unique_ids)),
         )
         self.connection.commit()
 

@@ -18,7 +18,9 @@ from idle_manager import is_client_idle
 
 # GunGame
 from .attributes import (
-    attribute_post_hooks, attribute_pre_hooks, player_attributes,
+    attribute_post_hooks,
+    attribute_pre_hooks,
+    player_attributes,
 )
 from .database import winners_database
 from ..config.misc import spawn_protection
@@ -30,12 +32,11 @@ from ..status import GunGameMatchStatus, GunGameStatus
 from ..weapons.groups import melee_weapons
 from ..weapons.manager import weapon_order_manager
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'GunGamePlayer',
+    "GunGamePlayer",
 )
 
 
@@ -52,18 +53,14 @@ class GunGamePlayer(Player):
 
     def __setattr__(self, attr, value):
         """Verify that the attribute's value should be set."""
-        # Are there any pre-hooks for the attribute?
+        # Do any of the pre-hooks block the setting of the attribute?
         if (
             attr in player_attributes and
             attr in attribute_pre_hooks and
-            hasattr(self, attr)
+            hasattr(self, attr) and
+            not attribute_pre_hooks[attr].call_callbacks(self, value)
         ):
-
-            # Do any of the pre-hooks block the setting of the attribute?
-            if not attribute_pre_hooks[attr].call_callbacks(self, value):
-
-                # Block the attribute from being set
-                return
+            return
 
         # Are there any post-hooks for the attribute?
         if not (
@@ -93,12 +90,13 @@ class GunGamePlayer(Player):
     # =========================================================================
     # >> LEVEL FUNCTIONALITY
     # =========================================================================
-    def increase_level(self, levels, reason, victim=0, sound_name='level_up'):
+    def increase_level(self, levels, reason, victim=0, sound_name="level_up"):
         """Increase the player's level by the given amount."""
         if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
             return
         if not isinstance(levels, int) or levels < 1:
-            raise ValueError(f'Invalid value given for levels "{levels}".')
+            msg = f'Invalid value given for levels "{levels}".'
+            raise ValueError(msg)
         old_level = self.level
         new_level = old_level + levels
         if new_level > weapon_order_manager.max_levels:
@@ -120,13 +118,14 @@ class GunGamePlayer(Player):
             event.reason = reason
 
     def decrease_level(
-        self, levels, reason, attacker=0, sound_name='level_down'
+        self, levels, reason, attacker=0, sound_name="level_down",
     ):
         """Decrease the player's level by the given amount."""
         if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
             return
         if not isinstance(levels, int) or levels < 1:
-            raise ValueError(f'Invalid value given for levels "{levels}".')
+            msg = f'Invalid value given for levels "{levels}".'
+            raise ValueError(msg)
         old_level = self.level
         new_level = max(old_level - levels, 1)
         if self.level == new_level:
@@ -164,17 +163,18 @@ class GunGamePlayer(Player):
 
     def strip_weapons(self, not_filters=None, remove_incendiary=False):
         """Strip weapons from the player."""
-        base_not_filters = {'objective', 'tool'}
+        base_not_filters = {"objective", "tool"}
         if not_filters is None:
             not_filters = set()
         not_filters |= base_not_filters
         if self.level_weapon not in melee_weapons:
-            not_filters |= {'melee'}
+            not_filters |= {"melee"}
         for weapon in self.weapons():
             tags = weapon_manager[weapon.classname].tags
-            if not_filters.intersection(tags):
-                if not remove_incendiary or 'incendiary' not in tags:
-                    continue
+            if not_filters.intersection(tags) and (
+                not remove_incendiary or "incendiary" not in tags
+            ):
+                continue
             if weapon.classname == self.level_weapon_classname:
                 continue
             weapon.remove()
@@ -192,53 +192,53 @@ class GunGamePlayer(Player):
             return self.get_weapon(self.level_weapon_classname)
         return make_object(
             Weapon,
-            self.give_named_item(self.level_weapon_classname)
+            self.give_named_item(self.level_weapon_classname),
         )
 
     # =========================================================================
     # >> MESSAGE FUNCTIONALITY
     # =========================================================================
-    def center_message(self, message='', **tokens):
+    def center_message(self, message="", **tokens):
         """Send a center message to the player."""
         message_manager.center_message(message, self.index, **tokens)
 
-    def chat_message(self, message='', index=0, **tokens):
+    def chat_message(self, message="", index=0, **tokens):
         """Send a chat message to the player."""
         message_manager.chat_message(message, index, self.index, **tokens)
 
-    def echo_message(self, message='', **tokens):
+    def echo_message(self, message="", **tokens):
         """Send an echo message to the player."""
         message_manager.echo_message(message, self.index, **tokens)
 
-    def hint_message(self, message='', **tokens):
+    def hint_message(self, message="", **tokens):
         """Send a hint message to the player."""
         message_manager.hint_message(message, self.index, **tokens)
 
-    # pylint: disable=too-many-arguments
+    # ruff: noqa: PLR0913
     def hud_message(
-        self, message='', x=-1.0, y=-1.0, color1=WHITE,
+        self, message="", x=-1.0, y=-1.0, color1=WHITE,
         color2=WHITE, effect=0, fade_in=0.0, fade_out=0.0,
-        hold=4.0, fx_time=0.0, channel=0, **tokens
+        hold=4.0, fx_time=0.0, channel=0, **tokens,
     ):
         """Send a hud message to the player."""
         message_manager.hud_message(
             message, x, y, color1, color2, effect, fade_in,
-            fade_out, hold, fx_time, channel, self.index, **tokens
+            fade_out, hold, fx_time, channel, self.index, **tokens,
         )
 
-    def keyhint_message(self, message='', **tokens):
+    def keyhint_message(self, message="", **tokens):
         """Send a keyhint message to the player."""
         message_manager.keyhint_message(message, self.index, **tokens)
 
     def motd_message(
-        self, panel_type=2, title='', message='', visible=True, **tokens
+        self, panel_type=2, title="", message="", visible=True, **tokens,
     ):
         """Send a motd message to the player."""
         message_manager.motd_message(
-            panel_type, title, message, visible, self.index, **tokens
+            panel_type, title, message, visible, self.index, **tokens,
         )
 
-    def top_message(self, message='', color=WHITE, time=4, **tokens):
+    def top_message(self, message="", color=WHITE, time=4, **tokens):
         """Send a toptext message to the player."""
         message_manager.top_message(message, color, time, self.index, **tokens)
 
@@ -256,7 +256,7 @@ class GunGamePlayer(Player):
         self._protect_delay = Delay(
             delay=delay,
             callback=self.remove_spawn_protection,
-            kwargs={'from_delay': True},
+            kwargs={"from_delay": True},
             cancel_on_level_end=True,
         )
 
@@ -304,7 +304,7 @@ class GunGamePlayer(Player):
     @wins.setter
     def wins(self, wins):
         """Add a win for the player."""
-        if not (self.is_fake_client() or 'BOT' in self.steamid):
+        if not (self.is_fake_client() or "BOT" in self.steamid):
             winners_database.set_player_wins(self, wins)
 
     @property
@@ -343,7 +343,7 @@ class GunGamePlayer(Player):
             # Sort the tied players by their last win
             sorted_ties = sorted(
                 tied_players,
-                key=lambda key: winners_database[key].last_win
+                key=lambda key: winners_database[key].last_win,
             )
 
             # Get the final rank of the player

@@ -8,19 +8,18 @@
 # Source.Python
 from core import AutoUnload
 
-
 # =============================================================================
 # >> ALL DECLARATION
 # =============================================================================
 __all__ = (
-    'AttributePostHook',
-    'AttributePreHook',
-    '_AttributeBase',
-    '_AttributeHooks',
-    '_PlayerAttributes',
-    'attribute_post_hooks',
-    'attribute_pre_hooks',
-    'player_attributes',
+    "AttributePostHook",
+    "AttributePreHook",
+    "_AttributeBase",
+    "_AttributeHooks",
+    "_PlayerAttributes",
+    "attribute_post_hooks",
+    "attribute_pre_hooks",
+    "player_attributes",
 )
 
 
@@ -36,7 +35,8 @@ class _PlayerAttributes(dict):
         if item in self:
 
             # If not, raise an error
-            raise ValueError(f'Given attribute "{item}" is already registered')
+            msg = f'Given attribute "{item}" is already registered'
+            raise ValueError(msg)
 
         # Add the item to the dictionary
         super().__setitem__(item, value)
@@ -47,7 +47,6 @@ class _PlayerAttributes(dict):
 
         # Add the attribute to existing players
         try:
-            # pylint: disable=import-outside-toplevel
             from .dictionary import player_dictionary
         except ImportError:
             return
@@ -60,7 +59,6 @@ class _PlayerAttributes(dict):
 
         # Remove the attribute from existing players
         try:
-            # pylint: disable=import-outside-toplevel
             from .dictionary import player_dictionary
         except ImportError:
             return
@@ -72,8 +70,8 @@ class _PlayerAttributes(dict):
 player_attributes = _PlayerAttributes()
 
 # Register the core attributes
-player_attributes.register_attribute('level', 1)
-player_attributes.register_attribute('multi_kill', 0)
+player_attributes.register_attribute("level", 1)
+player_attributes.register_attribute("multi_kill", 0)
 
 
 class _AttributeHook(list):
@@ -88,11 +86,13 @@ class _AttributeHook(list):
         """Verify the callback is not a member and is callable."""
         # Is the callback already registered?
         if callback in self:
-            raise ValueError('Callback already registered.')
+            msg = "Callback already registered."
+            raise ValueError(msg)
 
         # Is the callback not callable?
         if not callable(callback):
-            raise ValueError('Callback is not callable.')
+            msg = "Callback is not callable."
+            raise TypeError(msg)
 
         # Add the callback to the list
         super().append(callback)
@@ -101,7 +101,8 @@ class _AttributeHook(list):
         """Verify the given values before removing the callback."""
         # Is the callback registered?
         if callback not in self:
-            raise ValueError('Callback is not registered.')
+            msg = "Callback is not registered."
+            raise ValueError(msg)
 
         # Remove the callback from the list
         super().remove(callback)
@@ -143,7 +144,8 @@ class _AttributeHooks(dict):
         """Verify the attribute before removing the callback."""
         # Is the attribute hooked?
         if attribute not in self:
-            raise ValueError(f'Attribute "{attribute}" is not hooked.')
+            msg = f'Attribute "{attribute}" is not hooked.'
+            raise ValueError(msg)
 
         # Remove the callback from the attribute's list
         self[attribute].remove(callback)
@@ -178,7 +180,8 @@ class _AttributeBase(AutoUnload):
     @property
     def hook_instance(self):
         """All subclasses must define this method."""
-        raise NotImplementedError('hook_instance not defined for class.')
+        msg = "hook_instance not defined for class."
+        raise NotImplementedError(msg)
 
     def _unload_instance(self):
         """Unregister the callback from the attribute."""
