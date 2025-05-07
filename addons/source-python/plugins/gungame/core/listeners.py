@@ -112,7 +112,7 @@ def _player_spawn(game_event):
         return
 
     # Verify that the player is on a team
-    if player.team_index < min(teams_by_number[i] for i in ("t", "ct")):
+    if player.team_index < min(teams_by_name[i] for i in ("t", "ct")):
         return
 
     if not player.level:
@@ -139,7 +139,7 @@ def _player_spawn(game_event):
     player.give_level_weapon()
 
     # Give CTs defusers, if need be
-    if player.team_index == teams_by_number["ct"] and give_defusers.get_bool():
+    if player.team_index == teams_by_name["ct"] and give_defusers.get_bool():
         player.has_defuser = True
 
     # Give player armor, if necessary
