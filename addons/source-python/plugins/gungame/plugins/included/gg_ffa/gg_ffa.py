@@ -7,31 +7,29 @@
 # =============================================================================
 # Python
 from contextlib import suppress
-from importlib import import_module
+from time import time
 
 # Source.Python
 from core import GAME_NAME
 from entities import TakeDamageInfo
 from entities.entity import Entity
 from entities.hooks import EntityCondition, EntityPostHook, EntityPreHook
+from events import Event
+from filters.players import PlayerIter
+from listeners import OnLevelShutdown
+from listeners.tick import Delay, Repeat
 from memory import make_object
 from memory.hooks import use_pre_registers
+from players.entity import Player
 
 # GunGame
 from gungame.core.status import GunGameMatchStatus, GunGameStatus
 
 # =============================================================================
-# >> GAME SPECIFIC IMPORT
-# =============================================================================
-with suppress(ModuleNotFoundError):
-    import_module(f"gungame.plugins.included.gg_ffa.games.{GAME_NAME}")
-
-
-# =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
-# Store a variable to know whether to revert the team or not
 _take_damage_dict = {}
+_flashed_players = {}
 
 
 # =============================================================================
@@ -75,3 +73,65 @@ def _post_take_damage(stack_data, return_value):
 
     index, team = _take_damage_dict.pop(address)
     Entity(index).team_index = team
+
+
+# =============================================================================
+# >> GAME EVENTS
+# =============================================================================
+@Event("player_blind")
+def _player_blind(game_event):
+    """Add the player to a dictionary of flashed players to not remove HUD."""
+    userid = game_event["userid"]
+    player = Player.from_userid(userid)
+    _cancel_delay(userid)
+    _flashed_players[userid] = Delay(
+        delay=player.flash_duration,
+        callback=_remove_radar_from_player,
+        args=(userid,),
+        cancel_on_level_end=True,
+    )
+
+
+@Event("player_disconnect")
+def _player_disconnect(game_event):
+    """Cancel the player's Delay (if it is ongoing)."""
+    _cancel_delay(game_event["userid"])
+
+
+# =============================================================================
+# >> LISTENERS
+# =============================================================================
+@OnLevelShutdown
+def _level_shutdown():
+    """Clear the flash dictionary."""
+    _flashed_players.clear()
+
+
+# =============================================================================
+# >> HELPER FUNCTIONS
+# =============================================================================
+@Repeat
+def _remove_radar():
+    """Remove the radar from all players every half second."""
+    for player in PlayerIter("alive"):
+        if player.userid not in _flashed_players:
+            _remove_radar_from_player(player.userid)
+
+
+def _remove_radar_from_player(userid):
+    """Remove the player's radar."""
+    with suppress(KeyError):
+        del _flashed_players[userid]
+    player = Player.from_userid(userid)
+    player.flash_alpha = 0
+    player.flash_duration = time()
+
+
+def _cancel_delay(userid):
+    """Cancel the given player's Delay."""
+    delay = _flashed_players.pop(userid, None)
+    if delay is not None:
+        delay.cancel()
+
+
+_remove_radar.start(0.5, execute_on_start=True)

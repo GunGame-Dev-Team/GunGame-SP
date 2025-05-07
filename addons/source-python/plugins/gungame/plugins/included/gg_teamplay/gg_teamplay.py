@@ -39,7 +39,6 @@ class _TeamplayManager:
     """Class used to load the proper teamplay gamemode."""
 
     finished_initial_load = False
-    deathmatch_only_game = GAME_NAME in ("bms", "hl2mp")
     current_module = None
 
     def initialize(self):
@@ -52,8 +51,6 @@ class _TeamplayManager:
         if self.current_module is not None:
             msg = "A module is currently loaded, cannot load another."
             raise ValueError(msg)
-        if self.deathmatch_only_game:
-            module = "deathmatch"
         if module is None:
             module = (
                 "deathmatch" if "gg_deathmatch" in gg_plugin_manager
@@ -115,16 +112,11 @@ def _swap_style(game_event):
     if not teamplay_manager.finished_initial_load:
         return
 
-    if teamplay_manager.deathmatch_only_game:
-        return
-
     teamplay_manager.unload_current_module()
-
     module = (
         "deathmatch" if game_event.name == "gg_plugin_loaded" else "rounds"
     )
     teamplay_manager.load_module(module)
-
     weapon_order_manager.restart_game()
 
 
