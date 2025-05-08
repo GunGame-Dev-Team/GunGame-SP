@@ -10,7 +10,6 @@ from contextlib import suppress
 from time import time
 
 # Source.Python
-from core import GAME_NAME
 from entities import TakeDamageInfo
 from entities.entity import Entity
 from entities.hooks import EntityCondition, EntityPostHook, EntityPreHook

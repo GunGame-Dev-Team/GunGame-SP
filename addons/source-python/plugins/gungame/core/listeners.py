@@ -19,7 +19,7 @@ from filters.entities import EntityIter
 from filters.players import PlayerIter
 from listeners import OnLevelEnd, OnLevelInit
 from listeners.tick import Delay
-from players.teams import teams_by_name, teams_by_number
+from players.teams import teams_by_name
 from weapons.manager import weapon_manager
 
 # Site-package
