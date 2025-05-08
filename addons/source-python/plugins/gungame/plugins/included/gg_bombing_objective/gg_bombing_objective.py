@@ -10,7 +10,11 @@ from events import Event
 
 # GunGame
 from gungame.core.players.dictionary import player_dictionary
-from gungame.core.status import GunGameMatchStatus, GunGameStatus
+from gungame.core.status import (
+    GunGameMatchStatus,
+    GunGameRoundStatus,
+    GunGameStatus,
+)
 from gungame.core.weapons.groups import all_grenade_weapons, melee_weapons
 from gungame.core.weapons.manager import weapon_order_manager
 
@@ -31,7 +35,10 @@ from .configuration import (
 @Event("bomb_defused", "bomb_exploded")
 def _bomb_event(game_event):
     """Level the defuser/detonator up."""
-    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+    if (
+        GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE or
+        GunGameStatus.ROUND is GunGameRoundStatus.INACTIVE
+    ):
         return
 
     event_name = game_event.name

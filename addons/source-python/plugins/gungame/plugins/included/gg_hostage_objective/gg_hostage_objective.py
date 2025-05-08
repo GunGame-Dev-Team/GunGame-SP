@@ -12,7 +12,11 @@ from filters.entities import EntityIter
 # GunGame
 from gungame.core.players.attributes import player_attributes
 from gungame.core.players.dictionary import player_dictionary
-from gungame.core.status import GunGameMatchStatus, GunGameStatus
+from gungame.core.status import (
+    GunGameMatchStatus,
+    GunGameRoundStatus,
+    GunGameStatus,
+)
 from gungame.core.weapons.groups import all_grenade_weapons, melee_weapons
 from gungame.core.weapons.manager import weapon_order_manager
 
@@ -54,7 +58,10 @@ def unload():
 @Event("hostage_rescued")
 def _hostage_rescued(game_event):
     """Level the rescuer up."""
-    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+    if (
+        GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE or
+        GunGameStatus.ROUND is GunGameRoundStatus.INACTIVE
+    ):
         return
 
     player = player_dictionary[game_event["userid"]]
@@ -80,7 +87,10 @@ def _hostage_rescued(game_event):
 @Event("player_death")
 def _player_death(game_event):
     """Level the stopper up."""
-    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+    if (
+        GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE or
+        GunGameStatus.ROUND is GunGameRoundStatus.INACTIVE
+    ):
         return
 
     victim = player_dictionary[game_event["userid"]]
@@ -119,7 +129,10 @@ def _player_death(game_event):
 @Event("hostage_killed")
 def _hostage_killed(game_event):
     """Level the killer down."""
-    if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
+    if (
+        GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE or
+        GunGameStatus.ROUND is GunGameRoundStatus.INACTIVE
+    ):
         return
 
     levels = killed_levels.get_int()

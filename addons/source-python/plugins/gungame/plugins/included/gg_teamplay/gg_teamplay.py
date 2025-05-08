@@ -10,7 +10,7 @@ import sys
 from importlib import import_module
 
 # Source.Python
-from core import GAME_NAME, AutoUnload, WeakAutoUnload
+from core import AutoUnload, WeakAutoUnload
 from events import Event
 from events.hooks import EventAction, PreEvent
 from hooks.exceptions import except_hooks
