@@ -11,6 +11,7 @@ from collections import defaultdict
 # Source.Python
 from events import Event
 from listeners.tick import Delay
+from players.entity import Player
 from weapons.manager import weapon_manager
 
 # GunGame
@@ -50,7 +51,7 @@ def _delay_give_new_weapon(game_event):
     _nade_count[player.userid] += 1
     value = max_nades.get_int()
     if not value or _nade_count[player.userid] < value:
-        Delay(
+        player.delay(
             delay=1,
             callback=_give_new_weapon,
             args=(player.userid, weapon),
@@ -70,14 +71,15 @@ def _reset_player_count(game_event):
 # =============================================================================
 def _give_new_weapon(userid, weapon):
     try:
-        player = player_dictionary[userid]
+        player = Player.from_userid(userid)
     except ValueError:
         return
 
     if player.dead:
         return
 
-    if weapon != player.level_weapon:
+    gg_player = player_dictionary[player.userid]
+    if weapon != gg_player.level_weapon:
         return
 
-    player.give_level_weapon()
+    gg_player.give_level_weapon()

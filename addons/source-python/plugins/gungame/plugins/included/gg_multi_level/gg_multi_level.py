@@ -5,6 +5,9 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Python
+from contextlib import suppress
+
 # Source.Python
 from entities.entity import Entity
 from events import Event
@@ -103,7 +106,8 @@ class _MultiLevelManager(dict):
     def __delitem__(self, userid, reset_levels=True):
         """Remove the player from the dictionary and remove the effects."""
         if reset_levels:
-            player_dictionary[userid].multi_levels = 0
+            with suppress(ValueError):
+                player_dictionary[userid].multi_levels = 0
         if userid not in self:
             return
         self[userid].remove_multi_level()
