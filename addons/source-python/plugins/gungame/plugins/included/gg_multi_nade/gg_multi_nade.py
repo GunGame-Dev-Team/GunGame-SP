@@ -10,7 +10,6 @@ from collections import defaultdict
 
 # Source.Python
 from events import Event
-from listeners.tick import Delay
 from players.entity import Player
 from weapons.manager import weapon_manager
 

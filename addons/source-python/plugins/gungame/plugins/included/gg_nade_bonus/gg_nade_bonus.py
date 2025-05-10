@@ -42,7 +42,7 @@ class _NadeBonus:
         """Return the validated bonus weapon."""
         weapon = bonus_weapon.get_string()
         if weapon not in weapon_manager:
-            msg = f'Invalid weapon name given for {bonus_weapon.name}: {weapon}'
+            msg = f"Invalid weapon name given for {bonus_weapon.name}: {weapon}"
             raise ValueError(msg)
         return weapon
 
