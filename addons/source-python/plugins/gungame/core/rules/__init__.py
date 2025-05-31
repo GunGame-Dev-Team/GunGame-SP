@@ -57,7 +57,7 @@ class _GunGameRulesDictionary(OrderedDict):
                         language=language,
                         **convar_tokens,
                     )
-                message += "\t\t" + rule_msg + "\n\n"
+                    message += "\t\t" + rule_msg + "\n\n"
         if not message:
             message = rules_translations["Rules:Empty"].get_string(language)
         return self.header.get_string(language) + ":\n\n" + message
