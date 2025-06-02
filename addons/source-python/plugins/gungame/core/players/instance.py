@@ -290,9 +290,9 @@ class GunGamePlayer(Player):
         """Play the sound to the player."""
         sound_manager.play_sound(sound, self.index)
 
-    def emit_gg_sound(self, sound):
+    def emit_gg_sound(self, sound, *users):
         """Emit the sound from the player."""
-        sound_manager.emit_sound(sound, self.index)
+        sound_manager.emit_sound(sound, self.index, *users)
 
     # =========================================================================
     # >> DATABASE FUNCTIONALITY
