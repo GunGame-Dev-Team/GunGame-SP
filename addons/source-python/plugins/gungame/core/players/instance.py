@@ -161,7 +161,12 @@ class GunGamePlayer(Player):
         """Return the classname of the player's current level weapon."""
         return weapon_manager[self.level_weapon].name
 
-    def strip_weapons(self, not_filters=None, remove_incendiary=False):
+    def strip_weapons(
+        self,
+        not_filters=None,
+        remove_incendiary=False,
+        remove_level_weapon=False,
+    ):
         """Strip weapons from the player."""
         base_not_filters = {"objective", "tool"}
         if not_filters is None:
@@ -175,7 +180,10 @@ class GunGamePlayer(Player):
                 not remove_incendiary or "incendiary" not in tags
             ):
                 continue
-            if weapon.classname == self.level_weapon_classname:
+            if (
+                weapon.classname == self.level_weapon_classname
+                and not remove_level_weapon
+            ):
                 continue
             weapon.remove()
 
@@ -247,7 +255,7 @@ class GunGamePlayer(Player):
     # =========================================================================
     def give_spawn_protection(self):
         """Give the player spawn protection."""
-        delay = spawn_protection.get_float()
+        delay = float(spawn_protection)
         if delay <= 0:
             return
         self.in_spawn_protection = True

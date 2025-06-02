@@ -180,7 +180,7 @@ class _WinsDatabase(defaultdict):
     def prune_database(self):
         """Remove players from the database who haven't played in a while."""
         # 0 = do not prune
-        days = abs(prune_database.get_int())
+        days = abs(int(prune_database))
         if not days:
             return
 

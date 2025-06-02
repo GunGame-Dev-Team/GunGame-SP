@@ -39,7 +39,7 @@ def dissolve_player_ragdoll(game_event):
         return
 
     # Get the type of dissolver to use
-    current_type = dissolver_type.get_int()
+    current_type = int(dissolver_type)
 
     # Is the type valid?
     if current_type < 0 or current_type > _num_dissolve_types + 2:
@@ -55,7 +55,7 @@ def dissolve_player_ragdoll(game_event):
 
     # Delay the dissolving
     Delay(
-        delay=max(0, dissolver_delay.get_int()),
+        delay=max(0, int(dissolver_delay)),
         callback=dissolve_ragdoll,
         args=(game_event["userid"], current_type),
         cancel_on_level_end=True,
@@ -97,7 +97,7 @@ def dissolve_ragdoll(userid, current_type):
         current_type = randrange(_num_dissolve_types)
 
     # Set the magnitude
-    dissolver_entity.magnitude = magnitude.get_int()
+    dissolver_entity.magnitude = int(magnitude)
 
     # Set the dissolve type
     dissolver_entity.dissolve_type = current_type

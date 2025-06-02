@@ -136,7 +136,7 @@ class _LevelWeapon:
     @property
     def multi_kill(self):
         """Return the multi_kill value for the level."""
-        override = multi_kill_override.get_int()
+        override = int(multi_kill_override)
         if self.weapon in _multi_kill_weapons and override:
             return override
         return self._multi_kill

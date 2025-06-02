@@ -61,7 +61,7 @@ def _disable_objectives_on_round(game_event=None):
 
 def _disable_objectives():
     """Disable objectives each round."""
-    objectives = disable_type.get_int()
+    objectives = int(disable_type)
 
     # Do bombing objectives need removed?
     if objectives & ObjectiveType.BOMBING:

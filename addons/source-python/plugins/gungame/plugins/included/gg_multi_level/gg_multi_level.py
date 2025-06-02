@@ -62,8 +62,8 @@ class _MultiLevelPlayer(Player):
         self.sound = sound_manager.emit_sound("multi_level", index)
         self.start_gravity = self.gravity
         self.start_speed = self.speed
-        self.gravity = gravity.get_int() / 100
-        self.speed = speed.get_int() / 100
+        self.gravity = int(gravity) / 100
+        self.speed = int(speed) / 100
         self.give_spark_entity()
         duration = 10 if self.sound is None else self.sound.duration
         self.delay = Delay(
@@ -140,7 +140,7 @@ class _MultiLevelManager(dict):
 
     def _tick(self):
         """Reset multi-level players' gravity each tick."""
-        current_gravity = gravity.get_int() / 100
+        current_gravity = int(gravity) / 100
         for player in self.values():
             player.gravity = current_gravity
 
@@ -160,7 +160,7 @@ def _player_level_up(game_event):
         return
 
     player.multi_levels += 1
-    if player.multi_levels >= levels.get_int():
+    if player.multi_levels >= int(levels):
         # Give or increase multi-level
         multi_level_manager.give_multi_level(player.userid)
 
@@ -186,11 +186,11 @@ def _reset_team_killers(game_event):
         return
 
     # Reset team-kill victim's multi-level?
-    if not tk_victim_reset.get_bool():
+    if not bool(tk_victim_reset):
         del multi_level_manager[userid]
 
     # Reset the team-killer's multi-level?
-    if tk_attacker_reset.get_bool():
+    if bool(tk_attacker_reset):
         del multi_level_manager[attacker]
 
 

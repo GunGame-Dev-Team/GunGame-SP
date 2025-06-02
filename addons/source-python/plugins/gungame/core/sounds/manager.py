@@ -267,7 +267,7 @@ class _SoundManager(defaultdict):
             raise ValueError(msg)
 
         # Is the sound pack ConVar a valid value?
-        pack = sound_pack.get_string()
+        pack = str(sound_pack)
         if pack not in self:
             msg = (
                 f'Invalid sound pack "{sound_pack}".  Change '

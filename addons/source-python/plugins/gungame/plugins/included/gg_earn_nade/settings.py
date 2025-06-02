@@ -24,6 +24,6 @@ earn_nade_settings = gungame_player_settings.add_section(
 
 auto_switch = earn_nade_settings.add_bool_setting(
     name="auto_switch",
-    default=auto_switch_default.get_bool(),
+    default=bool(auto_switch_default),
     text=settings_translations[info.name + ":auto_switch"],
 )

@@ -66,7 +66,7 @@ def _hostage_rescued(game_event):
 
     player = player_dictionary[game_event["userid"]]
     player.hostage_rescues += 1
-    required = rescued_count.get_int()
+    required = int(rescued_count)
     if player.hostage_rescues < required:
         return
     player.hostage_rescues = 0
@@ -107,7 +107,7 @@ def _player_death(game_event):
     if player.team_index == victim.team_index:
         return
     player.hostage_stops += hostages
-    required = stopped_count.get_int()
+    required = int(stopped_count)
     if player.hostage_stops < required:
         return
     for _ in range(int(player.hostage_stops / required)):
@@ -135,8 +135,8 @@ def _hostage_killed(game_event):
     ):
         return
 
-    levels = killed_levels.get_int()
-    min_count = killed_count.get_int()
+    levels = int(killed_levels)
+    min_count = int(killed_count)
     if levels < 1 or min_count < 1:
         return
     attacker = game_event["userid"]
@@ -166,13 +166,13 @@ def _hostage_killed(game_event):
 def _get_levels_to_increase(player, reason):
     """Return the number of levels to increase the player."""
     if reason == "rescued":
-        base_levels = rescued_levels.get_int()
-        skip_nade = rescued_skip_nade.get_int()
-        skip_knife = rescued_skip_knife.get_int()
+        base_levels = int(rescued_levels)
+        skip_nade = int(rescued_skip_nade)
+        skip_knife = int(rescued_skip_knife)
     elif reason == "stopped":
-        base_levels = stopped_levels.get_int()
-        skip_nade = stopped_skip_nade.get_int()
-        skip_knife = stopped_skip_knife.get_int()
+        base_levels = int(stopped_levels)
+        skip_nade = int(stopped_skip_nade)
+        skip_knife = int(stopped_skip_knife)
     else:
         msg = f'Invalid reason given "{reason}".'
         raise ValueError(msg)

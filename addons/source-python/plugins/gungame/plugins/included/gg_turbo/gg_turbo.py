@@ -25,7 +25,7 @@ def _post_level_change(player, attribute, new_value, old_value):
     """Give the player their new weapon."""
     if not new_value or not old_value:
         return
-    if multiple_kills.get_bool():
+    if bool(multiple_kills):
         _give_level_weapon(player.index)
     else:
         Delay(
@@ -45,5 +45,5 @@ def _give_level_weapon(index):
         remove_incendiary=player.level_weapon in incendiary_weapons,
     )
     player.give_level_weapon()
-    if quick_switch.get_bool():
+    if bool(quick_switch):
         player.next_attack = 0.5 if player.level_weapon in sniper_weapons else 0

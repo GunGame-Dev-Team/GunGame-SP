@@ -67,7 +67,7 @@ class _WarmupManager:
     def set_warmup_weapon(self):
         """Set the warmup weapon(s)."""
         # Get the warmup weapon(s)
-        current = warmup_weapon.get_string()
+        current = str(warmup_weapon)
 
         # Is the value a specific weapon?
         if current in _possible_weapons:
@@ -106,7 +106,7 @@ class _WarmupManager:
         if GunGameStatus.MATCH is GunGameMatchStatus.WARMUP:
             return
         self.extensions = 0
-        self.warmup_time = warmup_time.get_int()
+        self.warmup_time = int(warmup_time)
 
         # Was an invalid value given?
         if self.warmup_time <= 0:
@@ -157,10 +157,10 @@ class _WarmupManager:
             return
 
         # Has the player limit been reached?
-        if len(list(_human_no_spec)) > min_players.get_int():
+        if len(list(_human_no_spec)) > int(min_players):
 
             # Get what to do when the player limit is reached
-            current = players_reached.get_int()
+            current = int(players_reached)
 
             # Should warmup end?
             if (
@@ -177,7 +177,7 @@ class _WarmupManager:
                 return
 
         # Should warmup be extended?
-        if remaining == 1 and self.extensions < max_extensions.get_int():
+        if remaining == 1 and self.extensions < int(max_extensions):
             message_manager.center_message(
                 message="Warmup:Extend",
             )

@@ -80,8 +80,8 @@ class _WeaponOrderManager(dict):
 
     def set_start_convars(self):
         """Set all base ConVars on load."""
-        self.set_active_weapon_order(order_file.get_string())
-        self.set_randomize(order_randomize.get_bool())
+        self.set_active_weapon_order(str(order_file))
+        self.set_randomize(bool(order_randomize))
 
     def set_active_weapon_order(self, value):
         """Set the weapon order to the given value."""

@@ -139,11 +139,11 @@ def _player_spawn(game_event):
     player.give_level_weapon()
 
     # Give CTs defusers, if need be
-    if player.team_index == teams_by_name["ct"] and give_defusers.get_bool():
+    if player.team_index == teams_by_name["ct"] and bool(give_defusers):
         player.has_defuser = True
 
     # Give player armor, if necessary
-    armor_type = {1: "kevlar", 2: "assaultsuit"}.get(give_armor.get_int())
+    armor_type = {1: "kevlar", 2: "assaultsuit"}.get(int(give_armor))
     if armor_type is not None:
         for entity in EntityIter("game_player_equip"):
             entity.remove()
@@ -170,7 +170,7 @@ def _player_death(game_event):
     # Is the round active or should kills after the round count?
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE or (
         GunGameStatus.ROUND is GunGameRoundStatus.INACTIVE and
-        not allow_kills_after_round.get_int()
+        not int(allow_kills_after_round)
     ):
         return
 
@@ -190,7 +190,7 @@ def _player_death(game_event):
         _punish_team_kill(killer)
         return
 
-    if killer.in_spawn_protection and not level_on_protect.get_int():
+    if killer.in_spawn_protection and not int(level_on_protect):
         return
 
     # Did the killer kill using their level's weapon?
@@ -198,7 +198,7 @@ def _player_death(game_event):
     if weapon != "prop_physics":
         if weapon_manager[weapon].basename != killer.level_weapon:
             return
-    elif not prop_physics.get_int():
+    elif not int(prop_physics):
         return
 
     # Increase the killer's multi_kill
@@ -231,7 +231,7 @@ def _player_activate(game_event):
         return
 
     # Send the rules menu to the player
-    if send_rules_each_map.get_int():
+    if int(send_rules_each_map):
         send_rules(player.index)
 
     # Is the player just joining the game?
@@ -291,14 +291,14 @@ def _weapon_fire(game_event):
     if GunGameStatus.MATCH is not GunGameMatchStatus.ACTIVE:
         return
 
-    if not cancel_on_fire.get_int():
+    if not int(cancel_on_fire):
         return
 
     player = player_dictionary[game_event["userid"]]
     if not player.in_spawn_protection:
         return
 
-    if cancel_on_fire.get_int():
+    if int(cancel_on_fire):
         player.remove_spawn_protection()
 
 
@@ -314,7 +314,7 @@ def _round_start(game_event):
 
     remove_idle_weapons()
 
-    if afk_type.get_bool():
+    if bool(afk_type):
         return
 
     for player in PlayerIter(
@@ -326,7 +326,7 @@ def _round_start(game_event):
             continue
 
         _afk_player_rounds[index] += 1
-        if _afk_player_rounds[index] >= afk_length.get_int():
+        if _afk_player_rounds[index] >= int(afk_length):
             _punish_afk(index)
 
 
@@ -409,7 +409,7 @@ def _gg_win(game_event):
     winner_sound = sound_manager.play_sound("winner")
 
     # Set the dynamic chat time, if needed
-    if dynamic_chat_time.get_bool() and winner_sound is not None:
+    if bool(dynamic_chat_time) and winner_sound is not None:
         with suppress(MutagenError):
             ConVar("mp_chattime").set_float(winner_sound.duration)
 
@@ -512,11 +512,11 @@ def _post_multi_kill(player, attribute, new_value, old_value):
 @OnClientIdle
 def _client_idle(index):
     """Start tracking afk for punishment."""
-    if not afk_type.get_bool():
+    if not bool(afk_type):
         return
 
     _afk_player_delays[index] = Delay(
-        delay=afk_length.get_float(),
+        delay=float(afk_length),
         callback=_punish_afk,
         args=(index,),
         cancel_on_level_end=True,
@@ -538,7 +538,7 @@ def _remove_index_from_afk_dicts(index):
 def start_match(ending_warmup=False):
     """Start the match if not already started or on hold."""
     # Is warmup supposed to happen?
-    if not ending_warmup and warmup_enabled.get_bool():
+    if not ending_warmup and bool(warmup_enabled):
         warmup_manager.start_warmup()
         return
 
@@ -620,7 +620,7 @@ def _send_level_info(player):
 
 def _punish_suicide(userid):
     """Punish the player for suiciding."""
-    levels = suicide_punish.get_int()
+    levels = int(suicide_punish)
     if not levels:
         return
 
@@ -646,12 +646,12 @@ def _punish_suicide(userid):
 
 def _punish_team_kill(player):
     """Punish the player for team killing."""
-    levels = team_kill_punish.get_int()
+    levels = int(team_kill_punish)
     if not levels:
         return
 
     if player.levels == 1:
-        if level_one_team_kill.get_int():
+        if int(level_one_team_kill):
             player.slay()
             player.chat_message(
                 message="Punishment:TeamKill:Slay",
@@ -670,7 +670,7 @@ def _punish_team_kill(player):
 
 def _punish_afk(index):
     """Punish the player for being afk."""
-    punishment = afk_punish.get_int()
+    punishment = int(afk_punish)
     if not punishment:
         return
 

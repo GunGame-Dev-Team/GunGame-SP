@@ -66,13 +66,13 @@ def _bomb_event(game_event):
 def _get_levels_to_increase(player, event_name):
     """Return the number of levels to increase the player."""
     if event_name == "bomb_defused":
-        base_levels = defused_levels.get_int()
-        skip_nade = defused_skip_nade.get_int()
-        skip_knife = defused_skip_knife.get_int()
+        base_levels = int(defused_levels)
+        skip_nade = int(defused_skip_nade)
+        skip_knife = int(defused_skip_knife)
     elif event_name == "bomb_exploded":
-        base_levels = detonated_levels.get_int()
-        skip_nade = detonated_skip_nade.get_int()
-        skip_knife = detonated_skip_knife.get_int()
+        base_levels = int(detonated_levels)
+        skip_nade = int(detonated_skip_nade)
+        skip_knife = int(detonated_skip_knife)
     else:
         msg = f'Invalid reason given "{event_name}".'
         raise ValueError(msg)

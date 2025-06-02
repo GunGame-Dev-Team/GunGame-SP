@@ -24,6 +24,6 @@ knife_steal_settings = gungame_player_settings.add_section(
 
 no_switch = knife_steal_settings.add_bool_setting(
     name="no_switch",
-    default=no_switch_default.get_bool(),
+    default=bool(no_switch_default),
     text=settings_translations[info.name + ":no_switch"],
 )

@@ -151,7 +151,7 @@ class _TeamManagement:
 
     def set_joining_player_level(self, player):
         """Set the level of the player who joined the team."""
-        level = self.level if join_team_level.get_int() else 1
+        level = self.level if int(join_team_level) else 1
         if level is None:
             level = self.level = 1
         player.level = level
@@ -317,7 +317,7 @@ def _end_match(game_event):
     winner_sound = sound_manager.play_sound("winner")
 
     # Set the dynamic chat time, if needed
-    if dynamic_chat_time.get_bool() and winner_sound is not None:
+    if bool(dynamic_chat_time) and winner_sound is not None:
         with suppress(MutagenError):
             ConVar("mp_chattime").set_float(winner_sound.duration)
 

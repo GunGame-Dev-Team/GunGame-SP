@@ -144,7 +144,7 @@ def _get_header():
     longest = max(map(len, all_weapons)) + 2
     header = "// " + "\n// ".join(
         _weapon_strings["default"].get_string(
-            order_randomize=order_randomize.get_string(),
+            order_randomize=str(order_randomize),
         ).splitlines(),
     )
     for group, weapons in _weapon_groups.items():

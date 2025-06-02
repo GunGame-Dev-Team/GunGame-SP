@@ -48,7 +48,7 @@ def _delay_give_new_weapon(game_event):
         return
 
     _nade_count[player.userid] += 1
-    value = max_nades.get_int()
+    value = int(max_nades)
     if not value or _nade_count[player.userid] < value:
         player.delay(
             delay=1,

@@ -81,20 +81,20 @@ def update_levels(killer, victim, event_weapon):
 
     victim_level = victim.level
 
-    current = limit.get_int()
+    current = int(limit)
     difference = killer_level - victim_level
     if current and difference > current:
         killer.chat_message("KnifeSteal:Difference", levels=difference)
         return
 
-    if victim_level == 1 and not level_one_victim.get_bool():
+    if victim_level == 1 and not bool(level_one_victim):
         if weapon != event_weapon:
             killer.chat_message("KnifeSteal:LevelOne")
         return
 
-    if weapon in all_grenade_weapons and not skip_nade.get_bool():
+    if weapon in all_grenade_weapons and not bool(skip_nade):
         killer.chat_message("KnifeSteal:NoSkip", weapon=weapon)
-        if level_victim_nade.get_bool():
+        if bool(level_victim_nade):
             victim.decrease_level(
                 levels=1,
                 reason="steal",
@@ -104,7 +104,7 @@ def update_levels(killer, victim, event_weapon):
         return
 
     if weapon in melee_weapons:
-        if level_down_knife_level.get_bool():
+        if bool(level_down_knife_level):
             victim.decrease_level(
                 levels=1,
                 reason="steal",
