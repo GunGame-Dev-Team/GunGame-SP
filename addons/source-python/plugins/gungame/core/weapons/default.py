@@ -73,7 +73,6 @@ def create_default_weapon_orders():
     _create_default_order()
     _create_short_order()
     _create_random_order()
-    _create_nade_bonus_order()
 
 
 # =============================================================================
@@ -124,20 +123,6 @@ def _create_random_order():
                 open_file.write(f"{weapon}\n")
             else:
                 open_file.write(f"{weapon} {multi_kill}\n")
-
-
-def _create_nade_bonus_order():
-    """Create the nade bonus weapon order file, if necessary."""
-    nade_bonus = GUNGAME_WEAPON_ORDER_PATH / "nade_bonus.txt"
-    if nade_bonus.is_file():
-        return
-    weapon_copy = sorted(all_secondary_weapons)
-    if not weapon_copy:
-        weapon_copy = sorted(all_primary_weapons)
-    with nade_bonus.open("w") as open_file:
-        open_file.write(_default_header)
-        for weapon in weapon_copy:
-            open_file.write(f"{weapon} 2\n")
 
 
 def _get_header():
