@@ -137,7 +137,7 @@ def _call_callbacks(command, index, team_only=None):
 
 
 # =============================================================================
-# >> EVENTS
+# >> GAME EVENTS
 # =============================================================================
 @Event("gg_plugin_loaded")
 def _register_commands(game_event):
