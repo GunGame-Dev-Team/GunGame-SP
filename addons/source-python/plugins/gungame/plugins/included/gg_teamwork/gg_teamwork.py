@@ -23,6 +23,7 @@ from mutagen import MutagenError
 
 # GunGame
 from gungame.core.config.misc import dynamic_chat_time
+from gungame.core.events.teams import GG_Team_Win
 from gungame.core.messages.hooks import MessagePrefixHook
 from gungame.core.messages.manager import message_manager
 from gungame.core.players.dictionary import player_dictionary
@@ -33,7 +34,6 @@ from gungame.core.weapons.manager import weapon_order_manager
 
 # Plugin
 from .configuration import join_team_level
-from .custom_events import GG_Team_Win
 
 # =============================================================================
 # >> GLOBAL VARIABLES
@@ -359,3 +359,4 @@ def _fire_win_event(team_number):
     with GG_Team_Win() as event:
         event.winner = team_number
         event.loser = 5 - team_number
+        event.style = "teamwork"
