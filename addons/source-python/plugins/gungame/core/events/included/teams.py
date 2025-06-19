@@ -45,4 +45,4 @@ class GG_Team_Win(CustomEvent):
 # =============================================================================
 # >> RESOURCE FILE
 # =============================================================================
-GGResourceFile("plugins", GG_Team_Level_Up, GG_Team_Win)
+GGResourceFile("teams", GG_Team_Level_Up, GG_Team_Win)

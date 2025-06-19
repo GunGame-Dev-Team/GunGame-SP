@@ -16,7 +16,7 @@ from listeners.tick import Delay
 from mathlib import QAngle, Vector
 
 # GunGame
-from gungame.core.paths import GUNGAME_DATA_PATH
+from gungame.core.paths import GUNGAME_CFG_PATH
 
 # Plugin
 from .backups import spawn_point_backups
@@ -26,7 +26,7 @@ from .locations import remove_locations, set_location
 # =============================================================================
 # >> GLOBAL VARIABLES
 # =============================================================================
-SPAWN_POINT_PATH = GUNGAME_DATA_PATH / "spawn_points"
+SPAWN_POINT_PATH = GUNGAME_CFG_PATH / "spawn_points"
 
 
 # =============================================================================
