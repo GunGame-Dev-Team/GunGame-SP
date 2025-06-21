@@ -24,6 +24,7 @@ resource/source-python/translations/gungame/settings/custom_plugins/
 cfg/source-python/gungame/*.ini
 cfg/source-python/gungame/gamemodes
 cfg/source-python/gungame/sound_packs/
+cfg/source-python/gungame/spawn_points/
 cfg/source-python/gungame/weapon_orders/
 
 # PyCharm files

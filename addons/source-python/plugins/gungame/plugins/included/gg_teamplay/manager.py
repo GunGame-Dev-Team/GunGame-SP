@@ -24,7 +24,7 @@ from mutagen import MutagenError
 
 # GunGame
 from gungame.core.config.misc import dynamic_chat_time
-from gungame.core.events.teams import GG_Team_Level_Up, GG_Team_Win
+from gungame.core.events.included.teams import GG_Team_Level_Up, GG_Team_Win
 from gungame.core.messages.manager import message_manager
 from gungame.core.players.attributes import AttributePreHook
 from gungame.core.players.dictionary import player_dictionary

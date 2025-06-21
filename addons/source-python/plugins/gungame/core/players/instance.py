@@ -27,6 +27,7 @@ from ..config.misc import spawn_protection
 from ..events.included.leveling import GG_Level_Down, GG_Level_Up
 from ..events.included.match import GG_Win
 from ..messages.manager import message_manager
+from ..plugins.manager import gg_plugin_manager
 from ..sounds.manager import sound_manager
 from ..status import GunGameMatchStatus, GunGameStatus
 from ..weapons.groups import melee_weapons
@@ -99,7 +100,10 @@ class GunGamePlayer(Player):
             raise ValueError(msg)
         old_level = self.level
         new_level = old_level + levels
-        if new_level > weapon_order_manager.max_levels:
+        if (
+            new_level > weapon_order_manager.max_levels
+            and not gg_plugin_manager.is_team_game
+        ):
             with GG_Win() as event:
                 event.attacker = event.winner = self.userid
                 event.userid = event.loser = victim
