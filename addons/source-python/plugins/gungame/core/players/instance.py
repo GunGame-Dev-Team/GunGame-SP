@@ -100,10 +100,7 @@ class GunGamePlayer(Player):
             raise ValueError(msg)
         old_level = self.level
         new_level = old_level + levels
-        if (
-            new_level > weapon_order_manager.max_levels
-            and not gg_plugin_manager.is_team_game
-        ):
+        if new_level > weapon_order_manager.max_levels:
             with GG_Win() as event:
                 event.attacker = event.winner = self.userid
                 event.userid = event.loser = victim
