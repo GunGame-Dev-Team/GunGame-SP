@@ -15,8 +15,6 @@ from translations.strings import LangStrings
 
 # GunGame
 from .groups import (
-    all_primary_weapons,
-    all_secondary_weapons,
     all_weapons,
     explosive_weapons,
     grenade_weapons,
